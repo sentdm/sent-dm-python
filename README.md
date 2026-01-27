@@ -36,6 +36,10 @@ client = SentDm(
 client.messages.send_to_phone(
     phone_number="+1234567890",
     template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+    template_variables={
+        "name": "John Doe",
+        "order_id": "12345",
+    },
 )
 ```
 
@@ -63,6 +67,10 @@ async def main() -> None:
     await client.messages.send_to_phone(
         phone_number="+1234567890",
         template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+        template_variables={
+            "name": "John Doe",
+            "order_id": "12345",
+        },
     )
 
 
@@ -100,6 +108,10 @@ async def main() -> None:
         await client.messages.send_to_phone(
             phone_number="+1234567890",
             template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+            template_variables={
+                "name": "John Doe",
+                "order_id": "12345",
+            },
         )
 
 
@@ -200,6 +212,10 @@ try:
     client.messages.send_to_phone(
         phone_number="+1234567890",
         template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+        template_variables={
+            "name": "John Doe",
+            "order_id": "12345",
+        },
     )
 except sent_dm.APIConnectionError as e:
     print("The server could not be reached")
@@ -246,6 +262,10 @@ client = SentDm(
 client.with_options(max_retries=5).messages.send_to_phone(
     phone_number="+1234567890",
     template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+    template_variables={
+        "name": "John Doe",
+        "order_id": "12345",
+    },
 )
 ```
 
@@ -272,6 +292,10 @@ client = SentDm(
 client.with_options(timeout=5.0).messages.send_to_phone(
     phone_number="+1234567890",
     template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+    template_variables={
+        "name": "John Doe",
+        "order_id": "12345",
+    },
 )
 ```
 
@@ -316,6 +340,10 @@ client = SentDm()
 response = client.messages.with_raw_response.send_to_phone(
     phone_number="+1234567890",
     template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+    template_variables={
+        "name": "John Doe",
+        "order_id": "12345",
+    },
 )
 print(response.headers.get('X-My-Header'))
 
@@ -337,6 +365,10 @@ To stream the response body, use `.with_streaming_response` instead, which requi
 with client.messages.with_streaming_response.send_to_phone(
     phone_number="+1234567890",
     template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+    template_variables={
+        "name": "John Doe",
+        "order_id": "12345",
+    },
 ) as response:
     print(response.headers.get("X-My-Header"))
 
