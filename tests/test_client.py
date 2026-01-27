@@ -931,22 +931,24 @@ class TestSentDm:
     @mock.patch("sent_dm._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter, client: SentDm) -> None:
-        respx_mock.delete("/v2/templates/7ba7b820-9dad-11d1-80b4-00c04fd430c8").mock(
-            side_effect=httpx.TimeoutException("Test timeout error")
-        )
+        respx_mock.post("/v2/messages/phone").mock(side_effect=httpx.TimeoutException("Test timeout error"))
 
         with pytest.raises(APITimeoutError):
-            client.templates.with_streaming_response.delete("7ba7b820-9dad-11d1-80b4-00c04fd430c8").__enter__()
+            client.messages.with_streaming_response.send_to_phone(
+                phone_number="+1234567890", template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8"
+            ).__enter__()
 
         assert _get_open_connections(client) == 0
 
     @mock.patch("sent_dm._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter, client: SentDm) -> None:
-        respx_mock.delete("/v2/templates/7ba7b820-9dad-11d1-80b4-00c04fd430c8").mock(return_value=httpx.Response(500))
+        respx_mock.post("/v2/messages/phone").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
-            client.templates.with_streaming_response.delete("7ba7b820-9dad-11d1-80b4-00c04fd430c8").__enter__()
+            client.messages.with_streaming_response.send_to_phone(
+                phone_number="+1234567890", template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8"
+            ).__enter__()
         assert _get_open_connections(client) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
@@ -973,9 +975,11 @@ class TestSentDm:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.delete("/v2/templates/7ba7b820-9dad-11d1-80b4-00c04fd430c8").mock(side_effect=retry_handler)
+        respx_mock.post("/v2/messages/phone").mock(side_effect=retry_handler)
 
-        response = client.templates.with_raw_response.delete("7ba7b820-9dad-11d1-80b4-00c04fd430c8")
+        response = client.messages.with_raw_response.send_to_phone(
+            phone_number="+1234567890", template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8"
+        )
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -997,10 +1001,12 @@ class TestSentDm:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.delete("/v2/templates/7ba7b820-9dad-11d1-80b4-00c04fd430c8").mock(side_effect=retry_handler)
+        respx_mock.post("/v2/messages/phone").mock(side_effect=retry_handler)
 
-        response = client.templates.with_raw_response.delete(
-            "7ba7b820-9dad-11d1-80b4-00c04fd430c8", extra_headers={"x-stainless-retry-count": Omit()}
+        response = client.messages.with_raw_response.send_to_phone(
+            phone_number="+1234567890",
+            template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+            extra_headers={"x-stainless-retry-count": Omit()},
         )
 
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
@@ -1022,10 +1028,12 @@ class TestSentDm:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.delete("/v2/templates/7ba7b820-9dad-11d1-80b4-00c04fd430c8").mock(side_effect=retry_handler)
+        respx_mock.post("/v2/messages/phone").mock(side_effect=retry_handler)
 
-        response = client.templates.with_raw_response.delete(
-            "7ba7b820-9dad-11d1-80b4-00c04fd430c8", extra_headers={"x-stainless-retry-count": "42"}
+        response = client.messages.with_raw_response.send_to_phone(
+            phone_number="+1234567890",
+            template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+            extra_headers={"x-stainless-retry-count": "42"},
         )
 
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"
@@ -1908,13 +1916,11 @@ class TestAsyncSentDm:
     @mock.patch("sent_dm._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter, async_client: AsyncSentDm) -> None:
-        respx_mock.delete("/v2/templates/7ba7b820-9dad-11d1-80b4-00c04fd430c8").mock(
-            side_effect=httpx.TimeoutException("Test timeout error")
-        )
+        respx_mock.post("/v2/messages/phone").mock(side_effect=httpx.TimeoutException("Test timeout error"))
 
         with pytest.raises(APITimeoutError):
-            await async_client.templates.with_streaming_response.delete(
-                "7ba7b820-9dad-11d1-80b4-00c04fd430c8"
+            await async_client.messages.with_streaming_response.send_to_phone(
+                phone_number="+1234567890", template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8"
             ).__aenter__()
 
         assert _get_open_connections(async_client) == 0
@@ -1922,11 +1928,11 @@ class TestAsyncSentDm:
     @mock.patch("sent_dm._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter, async_client: AsyncSentDm) -> None:
-        respx_mock.delete("/v2/templates/7ba7b820-9dad-11d1-80b4-00c04fd430c8").mock(return_value=httpx.Response(500))
+        respx_mock.post("/v2/messages/phone").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
-            await async_client.templates.with_streaming_response.delete(
-                "7ba7b820-9dad-11d1-80b4-00c04fd430c8"
+            await async_client.messages.with_streaming_response.send_to_phone(
+                phone_number="+1234567890", template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8"
             ).__aenter__()
         assert _get_open_connections(async_client) == 0
 
@@ -1954,9 +1960,11 @@ class TestAsyncSentDm:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.delete("/v2/templates/7ba7b820-9dad-11d1-80b4-00c04fd430c8").mock(side_effect=retry_handler)
+        respx_mock.post("/v2/messages/phone").mock(side_effect=retry_handler)
 
-        response = await client.templates.with_raw_response.delete("7ba7b820-9dad-11d1-80b4-00c04fd430c8")
+        response = await client.messages.with_raw_response.send_to_phone(
+            phone_number="+1234567890", template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8"
+        )
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -1978,10 +1986,12 @@ class TestAsyncSentDm:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.delete("/v2/templates/7ba7b820-9dad-11d1-80b4-00c04fd430c8").mock(side_effect=retry_handler)
+        respx_mock.post("/v2/messages/phone").mock(side_effect=retry_handler)
 
-        response = await client.templates.with_raw_response.delete(
-            "7ba7b820-9dad-11d1-80b4-00c04fd430c8", extra_headers={"x-stainless-retry-count": Omit()}
+        response = await client.messages.with_raw_response.send_to_phone(
+            phone_number="+1234567890",
+            template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+            extra_headers={"x-stainless-retry-count": Omit()},
         )
 
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
@@ -2003,10 +2013,12 @@ class TestAsyncSentDm:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.delete("/v2/templates/7ba7b820-9dad-11d1-80b4-00c04fd430c8").mock(side_effect=retry_handler)
+        respx_mock.post("/v2/messages/phone").mock(side_effect=retry_handler)
 
-        response = await client.templates.with_raw_response.delete(
-            "7ba7b820-9dad-11d1-80b4-00c04fd430c8", extra_headers={"x-stainless-retry-count": "42"}
+        response = await client.messages.with_raw_response.send_to_phone(
+            phone_number="+1234567890",
+            template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+            extra_headers={"x-stainless-retry-count": "42"},
         )
 
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"

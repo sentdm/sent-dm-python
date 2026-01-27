@@ -36,8 +36,9 @@ client = SentDm(
     sender_id=os.environ.get("SENT_DM_SENDER_ID"),  # This is the default and can be omitted
 )
 
-client.templates.delete(
-    "REPLACE_ME",
+client.messages.send_to_phone(
+    phone_number="+1234567890",
+    template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
 )
 ```
 
@@ -62,8 +63,9 @@ client = AsyncSentDm(
 
 
 async def main() -> None:
-    await client.templates.delete(
-        "REPLACE_ME",
+    await client.messages.send_to_phone(
+        phone_number="+1234567890",
+        template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
     )
 
 
@@ -98,8 +100,9 @@ async def main() -> None:
         sender_id=os.environ.get("SENT_DM_SENDER_ID"),  # This is the default and can be omitted
         http_client=DefaultAioHttpClient(),
     ) as client:
-        await client.templates.delete(
-            "REPLACE_ME",
+        await client.messages.send_to_phone(
+            phone_number="+1234567890",
+            template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         )
 
 
@@ -197,8 +200,9 @@ from sent_dm import SentDm
 client = SentDm()
 
 try:
-    client.templates.delete(
-        "REPLACE_ME",
+    client.messages.send_to_phone(
+        phone_number="+1234567890",
+        template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
     )
 except sent_dm.APIConnectionError as e:
     print("The server could not be reached")
@@ -242,8 +246,9 @@ client = SentDm(
 )
 
 # Or, configure per-request:
-client.with_options(max_retries=5).templates.delete(
-    "REPLACE_ME",
+client.with_options(max_retries=5).messages.send_to_phone(
+    phone_number="+1234567890",
+    template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
 )
 ```
 
@@ -267,8 +272,9 @@ client = SentDm(
 )
 
 # Override per-request:
-client.with_options(timeout=5.0).templates.delete(
-    "REPLACE_ME",
+client.with_options(timeout=5.0).messages.send_to_phone(
+    phone_number="+1234567890",
+    template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
 )
 ```
 
@@ -310,13 +316,14 @@ The "raw" Response object can be accessed by prefixing `.with_raw_response.` to 
 from sent_dm import SentDm
 
 client = SentDm()
-response = client.templates.with_raw_response.delete(
-    "REPLACE_ME",
+response = client.messages.with_raw_response.send_to_phone(
+    phone_number="+1234567890",
+    template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
 )
 print(response.headers.get('X-My-Header'))
 
-template = response.parse()  # get the object that `templates.delete()` would have returned
-print(template)
+message = response.parse()  # get the object that `messages.send_to_phone()` would have returned
+print(message)
 ```
 
 These methods return an [`APIResponse`](https://github.com/stainless-sdks/sent-dm-python/tree/main/src/sent_dm/_response.py) object.
@@ -330,8 +337,9 @@ The above interface eagerly reads the full response body when you make the reque
 To stream the response body, use `.with_streaming_response` instead, which requires a context manager and only reads the response body once you call `.read()`, `.text()`, `.json()`, `.iter_bytes()`, `.iter_text()`, `.iter_lines()` or `.parse()`. In the async client, these are async methods.
 
 ```python
-with client.templates.with_streaming_response.delete(
-    "REPLACE_ME",
+with client.messages.with_streaming_response.send_to_phone(
+    phone_number="+1234567890",
+    template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
 ) as response:
     print(response.headers.get("X-My-Header"))
 
