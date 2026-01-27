@@ -1,7 +1,7 @@
 # Sent Dm Python API library
 
 <!-- prettier-ignore -->
-[![PyPI version](https://img.shields.io/pypi/v/sent_dm.svg?label=pypi%20(stable))](https://pypi.org/project/sent_dm/)
+[![PyPI version](https://img.shields.io/pypi/v/sentdm.svg?label=pypi%20(stable))](https://pypi.org/project/sentdm/)
 
 The Sent Dm Python library provides convenient access to the Sent Dm REST API from any Python 3.9+
 application. The library includes type definitions for all request params and response fields,
@@ -16,12 +16,9 @@ The full API of this library can be found in [api.md](api.md).
 ## Installation
 
 ```sh
-# install from the production repo
-pip install git+ssh://git@github.com/sentdm/sent-dm-python.git
+# install from PyPI
+pip install sentdm
 ```
-
-> [!NOTE]
-> Once this package is [published to PyPI](https://www.stainless.com/docs/guides/publish), this will become: `pip install sent_dm`
 
 ## Usage
 
@@ -81,8 +78,8 @@ By default, the async client uses `httpx` for HTTP requests. However, for improv
 You can enable this by installing `aiohttp`:
 
 ```sh
-# install from the production repo
-pip install 'sent_dm[aiohttp] @ git+ssh://git@github.com/sentdm/sent-dm-python.git'
+# install from PyPI
+pip install sentdm[aiohttp]
 ```
 
 Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
