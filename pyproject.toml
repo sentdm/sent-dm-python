@@ -5,7 +5,7 @@ description = "The official Python library for the sent-dm API"
 dynamic = ["readme"]
 license = "Apache-2.0"
 authors = [
-{ name = "Sent Dm", email = "" },
+{ name = "Sent Dm", email = "support@sent.dm" },
 ]
 
 dependencies = [
