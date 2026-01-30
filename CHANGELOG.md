@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.0 (2026-01-30)
+
+Full Changelog: [v0.4.0...v0.5.0](https://github.com/sentdm/sent-dm-python/compare/v0.4.0...v0.5.0)
+
+### Features
+
+* **client:** add custom JSON encoder for extended type support ([f307d02](https://github.com/sentdm/sent-dm-python/commit/f307d02dc15c86ea022ff03b2e3d7583a9a0a56a))
+
 ## 0.4.0 (2026-01-28)
 
 Full Changelog: [v0.3.0...v0.4.0](https://github.com/sentdm/sent-dm-python/compare/v0.3.0...v0.4.0)
