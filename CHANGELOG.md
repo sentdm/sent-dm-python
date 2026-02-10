@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.1 (2026-02-10)
+
+Full Changelog: [v0.5.0...v0.5.1](https://github.com/sentdm/sent-dm-python/compare/v0.5.0...v0.5.1)
+
+### Chores
+
+* **internal:** bump dependencies ([2ad24e0](https://github.com/sentdm/sent-dm-python/commit/2ad24e0e1c74d4706996b0fa5ae648e236c5c5b7))
+
 ## 0.5.0 (2026-01-30)
 
 Full Changelog: [v0.4.0...v0.5.0](https://github.com/sentdm/sent-dm-python/compare/v0.4.0...v0.5.0)
