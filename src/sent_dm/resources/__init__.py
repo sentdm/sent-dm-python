@@ -32,14 +32,6 @@ from .number_lookup import (
     NumberLookupResourceWithStreamingResponse,
     AsyncNumberLookupResourceWithStreamingResponse,
 )
-from .organizations import (
-    OrganizationsResource,
-    AsyncOrganizationsResource,
-    OrganizationsResourceWithRawResponse,
-    AsyncOrganizationsResourceWithRawResponse,
-    OrganizationsResourceWithStreamingResponse,
-    AsyncOrganizationsResourceWithStreamingResponse,
-)
 
 __all__ = [
     "TemplatesResource",
@@ -66,10 +58,4 @@ __all__ = [
     "AsyncNumberLookupResourceWithRawResponse",
     "NumberLookupResourceWithStreamingResponse",
     "AsyncNumberLookupResourceWithStreamingResponse",
-    "OrganizationsResource",
-    "AsyncOrganizationsResource",
-    "OrganizationsResourceWithRawResponse",
-    "AsyncOrganizationsResourceWithRawResponse",
-    "OrganizationsResourceWithStreamingResponse",
-    "AsyncOrganizationsResourceWithStreamingResponse",
 ]
