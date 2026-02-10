@@ -31,12 +31,11 @@ from ._base_client import (
 )
 
 if TYPE_CHECKING:
-    from .resources import contacts, messages, templates, number_lookup, organizations
+    from .resources import contacts, messages, templates, number_lookup
     from .resources.contacts import ContactsResource, AsyncContactsResource
     from .resources.messages import MessagesResource, AsyncMessagesResource
     from .resources.templates import TemplatesResource, AsyncTemplatesResource
     from .resources.number_lookup import NumberLookupResource, AsyncNumberLookupResource
-    from .resources.organizations.organizations import OrganizationsResource, AsyncOrganizationsResource
 
 __all__ = ["Timeout", "Transport", "ProxiesTypes", "RequestOptions", "SentDm", "AsyncSentDm", "Client", "AsyncClient"]
 
@@ -131,12 +130,6 @@ class SentDm(SyncAPIClient):
         from .resources.number_lookup import NumberLookupResource
 
         return NumberLookupResource(self)
-
-    @cached_property
-    def organizations(self) -> OrganizationsResource:
-        from .resources.organizations import OrganizationsResource
-
-        return OrganizationsResource(self)
 
     @cached_property
     def with_raw_response(self) -> SentDmWithRawResponse:
@@ -354,12 +347,6 @@ class AsyncSentDm(AsyncAPIClient):
         return AsyncNumberLookupResource(self)
 
     @cached_property
-    def organizations(self) -> AsyncOrganizationsResource:
-        from .resources.organizations import AsyncOrganizationsResource
-
-        return AsyncOrganizationsResource(self)
-
-    @cached_property
     def with_raw_response(self) -> AsyncSentDmWithRawResponse:
         return AsyncSentDmWithRawResponse(self)
 
@@ -513,12 +500,6 @@ class SentDmWithRawResponse:
 
         return NumberLookupResourceWithRawResponse(self._client.number_lookup)
 
-    @cached_property
-    def organizations(self) -> organizations.OrganizationsResourceWithRawResponse:
-        from .resources.organizations import OrganizationsResourceWithRawResponse
-
-        return OrganizationsResourceWithRawResponse(self._client.organizations)
-
 
 class AsyncSentDmWithRawResponse:
     _client: AsyncSentDm
@@ -549,12 +530,6 @@ class AsyncSentDmWithRawResponse:
         from .resources.number_lookup import AsyncNumberLookupResourceWithRawResponse
 
         return AsyncNumberLookupResourceWithRawResponse(self._client.number_lookup)
-
-    @cached_property
-    def organizations(self) -> organizations.AsyncOrganizationsResourceWithRawResponse:
-        from .resources.organizations import AsyncOrganizationsResourceWithRawResponse
-
-        return AsyncOrganizationsResourceWithRawResponse(self._client.organizations)
 
 
 class SentDmWithStreamedResponse:
@@ -587,12 +562,6 @@ class SentDmWithStreamedResponse:
 
         return NumberLookupResourceWithStreamingResponse(self._client.number_lookup)
 
-    @cached_property
-    def organizations(self) -> organizations.OrganizationsResourceWithStreamingResponse:
-        from .resources.organizations import OrganizationsResourceWithStreamingResponse
-
-        return OrganizationsResourceWithStreamingResponse(self._client.organizations)
-
 
 class AsyncSentDmWithStreamedResponse:
     _client: AsyncSentDm
@@ -623,12 +592,6 @@ class AsyncSentDmWithStreamedResponse:
         from .resources.number_lookup import AsyncNumberLookupResourceWithStreamingResponse
 
         return AsyncNumberLookupResourceWithStreamingResponse(self._client.number_lookup)
-
-    @cached_property
-    def organizations(self) -> organizations.AsyncOrganizationsResourceWithStreamingResponse:
-        from .resources.organizations import AsyncOrganizationsResourceWithStreamingResponse
-
-        return AsyncOrganizationsResourceWithStreamingResponse(self._client.organizations)
 
 
 Client = SentDm
