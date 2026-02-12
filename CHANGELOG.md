@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.1 (2026-02-12)
+
+Full Changelog: [v0.6.0...v0.6.1](https://github.com/sentdm/sent-dm-python/compare/v0.6.0...v0.6.1)
+
+### Chores
+
+* **internal:** fix lint error on Python 3.14 ([ad77df0](https://github.com/sentdm/sent-dm-python/commit/ad77df0f31ffcb2a91ec062c64f06d9c3b784050))
+
 ## 0.6.0 (2026-02-12)
 
 Full Changelog: [v0.5.1...v0.6.0](https://github.com/sentdm/sent-dm-python/compare/v0.5.1...v0.6.0)
