@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 from .contact_list_item import ContactListItem as ContactListItem
-from .template_response import TemplateResponse as TemplateResponse
 from .template_variable import TemplateVariable as TemplateVariable
 from .contact_list_params import ContactListParams as ContactListParams
 from .template_definition import TemplateDefinition as TemplateDefinition
 from .template_list_params import TemplateListParams as TemplateListParams
+from .template_response_v2 import TemplateResponseV2 as TemplateResponseV2
 from .contact_list_response import ContactListResponse as ContactListResponse
 from .template_body_content import TemplateBodyContent as TemplateBodyContent
 from .template_create_params import TemplateCreateParams as TemplateCreateParams

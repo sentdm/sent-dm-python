@@ -23,7 +23,7 @@ from sent_dm import SentDm, AsyncSentDm, APIResponseValidationError
 from sent_dm._types import Omit
 from sent_dm._utils import asyncify
 from sent_dm._models import BaseModel, FinalRequestOptions
-from sent_dm._exceptions import APIStatusError, APITimeoutError, APIResponseValidationError
+from sent_dm._exceptions import SentDmError, APIStatusError, APITimeoutError, APIResponseValidationError
 from sent_dm._base_client import (
     DEFAULT_TIMEOUT,
     HTTPX_DEFAULT_TIMEOUT,
@@ -433,6 +433,23 @@ class TestSentDm:
 
         test_client.close()
         test_client2.close()
+
+    def test_validate_headers(self) -> None:
+        client = SentDm(base_url=base_url, api_key=api_key, sender_id=sender_id, _strict_response_validation=True)
+        request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
+        assert request.headers.get("x-api-key") == api_key
+        request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
+        assert request.headers.get("x-sender-id") == sender_id
+
+        with pytest.raises(SentDmError):
+            with update_env(
+                **{
+                    "SENT_DM_API_KEY": Omit(),
+                    "SENT_DM_SENDER_ID": Omit(),
+                }
+            ):
+                client2 = SentDm(base_url=base_url, api_key=None, sender_id=None, _strict_response_validation=True)
+            _ = client2
 
     def test_default_query_option(self) -> None:
         client = SentDm(
@@ -1392,6 +1409,23 @@ class TestAsyncSentDm:
 
         await test_client.close()
         await test_client2.close()
+
+    def test_validate_headers(self) -> None:
+        client = AsyncSentDm(base_url=base_url, api_key=api_key, sender_id=sender_id, _strict_response_validation=True)
+        request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
+        assert request.headers.get("x-api-key") == api_key
+        request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
+        assert request.headers.get("x-sender-id") == sender_id
+
+        with pytest.raises(SentDmError):
+            with update_env(
+                **{
+                    "SENT_DM_API_KEY": Omit(),
+                    "SENT_DM_SENDER_ID": Omit(),
+                }
+            ):
+                client2 = AsyncSentDm(base_url=base_url, api_key=None, sender_id=None, _strict_response_validation=True)
+            _ = client2
 
     async def test_default_query_option(self) -> None:
         client = AsyncSentDm(

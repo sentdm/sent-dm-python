@@ -1,24 +1,3 @@
-# Templates
-
-Types:
-
-```python
-from sent_dm.types import (
-    TemplateBodyContent,
-    TemplateDefinition,
-    TemplateResponse,
-    TemplateVariable,
-    TemplateListResponse,
-)
-```
-
-Methods:
-
-- <code title="post /v2/templates">client.templates.<a href="./src/sent_dm/resources/templates.py">create</a>(\*\*<a href="src/sent_dm/types/template_create_params.py">params</a>) -> <a href="./src/sent_dm/types/template_response.py">TemplateResponse</a></code>
-- <code title="get /v2/templates/{id}">client.templates.<a href="./src/sent_dm/resources/templates.py">retrieve</a>(id) -> <a href="./src/sent_dm/types/template_response.py">TemplateResponse</a></code>
-- <code title="get /v2/templates">client.templates.<a href="./src/sent_dm/resources/templates.py">list</a>(\*\*<a href="src/sent_dm/types/template_list_params.py">params</a>) -> <a href="./src/sent_dm/types/template_list_response.py">TemplateListResponse</a></code>
-- <code title="delete /v2/templates/{id}">client.templates.<a href="./src/sent_dm/resources/templates.py">delete</a>(id) -> None</code>
-
 # Contacts
 
 Types:
@@ -47,6 +26,27 @@ Methods:
 - <code title="post /v2/messages/quick-message">client.messages.<a href="./src/sent_dm/resources/messages.py">send_quick_message</a>(\*\*<a href="src/sent_dm/types/message_send_quick_message_params.py">params</a>) -> None</code>
 - <code title="post /v2/messages/contact">client.messages.<a href="./src/sent_dm/resources/messages.py">send_to_contact</a>(\*\*<a href="src/sent_dm/types/message_send_to_contact_params.py">params</a>) -> None</code>
 - <code title="post /v2/messages/phone">client.messages.<a href="./src/sent_dm/resources/messages.py">send_to_phone</a>(\*\*<a href="src/sent_dm/types/message_send_to_phone_params.py">params</a>) -> None</code>
+
+# Templates
+
+Types:
+
+```python
+from sent_dm.types import (
+    TemplateBodyContent,
+    TemplateDefinition,
+    TemplateResponseV2,
+    TemplateVariable,
+    TemplateListResponse,
+)
+```
+
+Methods:
+
+- <code title="post /v2/templates">client.templates.<a href="./src/sent_dm/resources/templates.py">create</a>(\*\*<a href="src/sent_dm/types/template_create_params.py">params</a>) -> <a href="./src/sent_dm/types/template_response_v2.py">TemplateResponseV2</a></code>
+- <code title="get /v2/templates/{id}">client.templates.<a href="./src/sent_dm/resources/templates.py">retrieve</a>(id) -> <a href="./src/sent_dm/types/template_response_v2.py">TemplateResponseV2</a></code>
+- <code title="get /v2/templates">client.templates.<a href="./src/sent_dm/resources/templates.py">list</a>(\*\*<a href="src/sent_dm/types/template_list_params.py">params</a>) -> <a href="./src/sent_dm/types/template_list_response.py">TemplateListResponse</a></code>
+- <code title="delete /v2/templates/{id}">client.templates.<a href="./src/sent_dm/resources/templates.py">delete</a>(id) -> None</code>
 
 # NumberLookup
 

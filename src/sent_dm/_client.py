@@ -108,12 +108,6 @@ class SentDm(SyncAPIClient):
         )
 
     @cached_property
-    def templates(self) -> TemplatesResource:
-        from .resources.templates import TemplatesResource
-
-        return TemplatesResource(self)
-
-    @cached_property
     def contacts(self) -> ContactsResource:
         from .resources.contacts import ContactsResource
 
@@ -124,6 +118,12 @@ class SentDm(SyncAPIClient):
         from .resources.messages import MessagesResource
 
         return MessagesResource(self)
+
+    @cached_property
+    def templates(self) -> TemplatesResource:
+        from .resources.templates import TemplatesResource
+
+        return TemplatesResource(self)
 
     @cached_property
     def number_lookup(self) -> NumberLookupResource:
@@ -323,12 +323,6 @@ class AsyncSentDm(AsyncAPIClient):
         )
 
     @cached_property
-    def templates(self) -> AsyncTemplatesResource:
-        from .resources.templates import AsyncTemplatesResource
-
-        return AsyncTemplatesResource(self)
-
-    @cached_property
     def contacts(self) -> AsyncContactsResource:
         from .resources.contacts import AsyncContactsResource
 
@@ -339,6 +333,12 @@ class AsyncSentDm(AsyncAPIClient):
         from .resources.messages import AsyncMessagesResource
 
         return AsyncMessagesResource(self)
+
+    @cached_property
+    def templates(self) -> AsyncTemplatesResource:
+        from .resources.templates import AsyncTemplatesResource
+
+        return AsyncTemplatesResource(self)
 
     @cached_property
     def number_lookup(self) -> AsyncNumberLookupResource:
@@ -477,12 +477,6 @@ class SentDmWithRawResponse:
         self._client = client
 
     @cached_property
-    def templates(self) -> templates.TemplatesResourceWithRawResponse:
-        from .resources.templates import TemplatesResourceWithRawResponse
-
-        return TemplatesResourceWithRawResponse(self._client.templates)
-
-    @cached_property
     def contacts(self) -> contacts.ContactsResourceWithRawResponse:
         from .resources.contacts import ContactsResourceWithRawResponse
 
@@ -493,6 +487,12 @@ class SentDmWithRawResponse:
         from .resources.messages import MessagesResourceWithRawResponse
 
         return MessagesResourceWithRawResponse(self._client.messages)
+
+    @cached_property
+    def templates(self) -> templates.TemplatesResourceWithRawResponse:
+        from .resources.templates import TemplatesResourceWithRawResponse
+
+        return TemplatesResourceWithRawResponse(self._client.templates)
 
     @cached_property
     def number_lookup(self) -> number_lookup.NumberLookupResourceWithRawResponse:
@@ -508,12 +508,6 @@ class AsyncSentDmWithRawResponse:
         self._client = client
 
     @cached_property
-    def templates(self) -> templates.AsyncTemplatesResourceWithRawResponse:
-        from .resources.templates import AsyncTemplatesResourceWithRawResponse
-
-        return AsyncTemplatesResourceWithRawResponse(self._client.templates)
-
-    @cached_property
     def contacts(self) -> contacts.AsyncContactsResourceWithRawResponse:
         from .resources.contacts import AsyncContactsResourceWithRawResponse
 
@@ -524,6 +518,12 @@ class AsyncSentDmWithRawResponse:
         from .resources.messages import AsyncMessagesResourceWithRawResponse
 
         return AsyncMessagesResourceWithRawResponse(self._client.messages)
+
+    @cached_property
+    def templates(self) -> templates.AsyncTemplatesResourceWithRawResponse:
+        from .resources.templates import AsyncTemplatesResourceWithRawResponse
+
+        return AsyncTemplatesResourceWithRawResponse(self._client.templates)
 
     @cached_property
     def number_lookup(self) -> number_lookup.AsyncNumberLookupResourceWithRawResponse:
@@ -539,12 +539,6 @@ class SentDmWithStreamedResponse:
         self._client = client
 
     @cached_property
-    def templates(self) -> templates.TemplatesResourceWithStreamingResponse:
-        from .resources.templates import TemplatesResourceWithStreamingResponse
-
-        return TemplatesResourceWithStreamingResponse(self._client.templates)
-
-    @cached_property
     def contacts(self) -> contacts.ContactsResourceWithStreamingResponse:
         from .resources.contacts import ContactsResourceWithStreamingResponse
 
@@ -555,6 +549,12 @@ class SentDmWithStreamedResponse:
         from .resources.messages import MessagesResourceWithStreamingResponse
 
         return MessagesResourceWithStreamingResponse(self._client.messages)
+
+    @cached_property
+    def templates(self) -> templates.TemplatesResourceWithStreamingResponse:
+        from .resources.templates import TemplatesResourceWithStreamingResponse
+
+        return TemplatesResourceWithStreamingResponse(self._client.templates)
 
     @cached_property
     def number_lookup(self) -> number_lookup.NumberLookupResourceWithStreamingResponse:
@@ -570,12 +570,6 @@ class AsyncSentDmWithStreamedResponse:
         self._client = client
 
     @cached_property
-    def templates(self) -> templates.AsyncTemplatesResourceWithStreamingResponse:
-        from .resources.templates import AsyncTemplatesResourceWithStreamingResponse
-
-        return AsyncTemplatesResourceWithStreamingResponse(self._client.templates)
-
-    @cached_property
     def contacts(self) -> contacts.AsyncContactsResourceWithStreamingResponse:
         from .resources.contacts import AsyncContactsResourceWithStreamingResponse
 
@@ -586,6 +580,12 @@ class AsyncSentDmWithStreamedResponse:
         from .resources.messages import AsyncMessagesResourceWithStreamingResponse
 
         return AsyncMessagesResourceWithStreamingResponse(self._client.messages)
+
+    @cached_property
+    def templates(self) -> templates.AsyncTemplatesResourceWithStreamingResponse:
+        from .resources.templates import AsyncTemplatesResourceWithStreamingResponse
+
+        return AsyncTemplatesResourceWithStreamingResponse(self._client.templates)
 
     @cached_property
     def number_lookup(self) -> number_lookup.AsyncNumberLookupResourceWithStreamingResponse:
