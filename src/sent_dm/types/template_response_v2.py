@@ -8,10 +8,10 @@ from pydantic import Field as FieldInfo
 from .._models import BaseModel
 from .template_definition import TemplateDefinition
 
-__all__ = ["TemplateResponse"]
+__all__ = ["TemplateResponseV2"]
 
 
-class TemplateResponse(BaseModel):
+class TemplateResponseV2(BaseModel):
     """
     Represents a message template with comprehensive metadata including definition structure
     """

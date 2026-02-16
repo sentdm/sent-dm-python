@@ -34,12 +34,6 @@ from .number_lookup import (
 )
 
 __all__ = [
-    "TemplatesResource",
-    "AsyncTemplatesResource",
-    "TemplatesResourceWithRawResponse",
-    "AsyncTemplatesResourceWithRawResponse",
-    "TemplatesResourceWithStreamingResponse",
-    "AsyncTemplatesResourceWithStreamingResponse",
     "ContactsResource",
     "AsyncContactsResource",
     "ContactsResourceWithRawResponse",
@@ -52,6 +46,12 @@ __all__ = [
     "AsyncMessagesResourceWithRawResponse",
     "MessagesResourceWithStreamingResponse",
     "AsyncMessagesResourceWithStreamingResponse",
+    "TemplatesResource",
+    "AsyncTemplatesResource",
+    "TemplatesResourceWithRawResponse",
+    "AsyncTemplatesResourceWithRawResponse",
+    "TemplatesResourceWithStreamingResponse",
+    "AsyncTemplatesResourceWithStreamingResponse",
     "NumberLookupResource",
     "AsyncNumberLookupResource",
     "NumberLookupResourceWithRawResponse",
