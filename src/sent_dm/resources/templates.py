@@ -18,7 +18,7 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
-from ..types.template_response import TemplateResponse
+from ..types.template_response_v2 import TemplateResponseV2
 from ..types.template_list_response import TemplateListResponse
 from ..types.template_definition_param import TemplateDefinitionParam
 
@@ -58,7 +58,7 @@ class TemplatesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> TemplateResponse:
+    ) -> TemplateResponseV2:
         """
         Creates a new message template for the authenticated customer with comprehensive
         template definitions including headers, body, footer, and interactive buttons.
@@ -101,7 +101,7 @@ class TemplatesResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=TemplateResponse,
+            cast_to=TemplateResponseV2,
         )
 
     def retrieve(
@@ -114,7 +114,7 @@ class TemplatesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> TemplateResponse:
+    ) -> TemplateResponseV2:
         """
         Retrieves a specific message template by its unique identifier for the
         authenticated customer with comprehensive template definitions including
@@ -137,7 +137,7 @@ class TemplatesResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=TemplateResponse,
+            cast_to=TemplateResponseV2,
         )
 
     def list(
@@ -276,7 +276,7 @@ class AsyncTemplatesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> TemplateResponse:
+    ) -> TemplateResponseV2:
         """
         Creates a new message template for the authenticated customer with comprehensive
         template definitions including headers, body, footer, and interactive buttons.
@@ -319,7 +319,7 @@ class AsyncTemplatesResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=TemplateResponse,
+            cast_to=TemplateResponseV2,
         )
 
     async def retrieve(
@@ -332,7 +332,7 @@ class AsyncTemplatesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> TemplateResponse:
+    ) -> TemplateResponseV2:
         """
         Retrieves a specific message template by its unique identifier for the
         authenticated customer with comprehensive template definitions including
@@ -355,7 +355,7 @@ class AsyncTemplatesResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=TemplateResponse,
+            cast_to=TemplateResponseV2,
         )
 
     async def list(

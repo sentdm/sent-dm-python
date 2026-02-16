@@ -25,9 +25,13 @@ pip install sentdm
 The full API of this library can be found in [api.md](api.md).
 
 ```python
+import os
 from sent_dm import SentDm
 
-client = SentDm()
+client = SentDm(
+    api_key=os.environ.get("SENT_DM_API_KEY"),  # This is the default and can be omitted
+    sender_id=os.environ.get("SENT_DM_SENDER_ID"),  # This is the default and can be omitted
+)
 
 client.messages.send_to_phone(
     phone_number="+1234567890",
@@ -49,10 +53,14 @@ so that your API Key is not stored in source control.
 Simply import `AsyncSentDm` instead of `SentDm` and use `await` with each API call:
 
 ```python
+import os
 import asyncio
 from sent_dm import AsyncSentDm
 
-client = AsyncSentDm()
+client = AsyncSentDm(
+    api_key=os.environ.get("SENT_DM_API_KEY"),  # This is the default and can be omitted
+    sender_id=os.environ.get("SENT_DM_SENDER_ID"),  # This is the default and can be omitted
+)
 
 
 async def main() -> None:
@@ -85,6 +93,7 @@ pip install sentdm[aiohttp]
 Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
 
 ```python
+import os
 import asyncio
 from sent_dm import DefaultAioHttpClient
 from sent_dm import AsyncSentDm
@@ -92,6 +101,8 @@ from sent_dm import AsyncSentDm
 
 async def main() -> None:
     async with AsyncSentDm(
+        api_key=os.environ.get("SENT_DM_API_KEY"),  # This is the default and can be omitted
+        sender_id=os.environ.get("SENT_DM_SENDER_ID"),  # This is the default and can be omitted
         http_client=DefaultAioHttpClient(),
     ) as client:
         await client.messages.send_to_phone(
@@ -125,7 +136,7 @@ from sent_dm import SentDm
 
 client = SentDm()
 
-template_response = client.templates.create(
+template_response_v2 = client.templates.create(
     definition={
         "body": {
             "multi_channel": {
@@ -179,7 +190,7 @@ template_response = client.templates.create(
         },
     },
 )
-print(template_response.definition)
+print(template_response_v2.definition)
 ```
 
 ## Handling errors
