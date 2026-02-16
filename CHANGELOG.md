@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.2 (2026-02-16)
+
+Full Changelog: [v0.6.1...v0.6.2](https://github.com/sentdm/sent-dm-python/compare/v0.6.1...v0.6.2)
+
+### Chores
+
+* format all `api.md` files ([0487ff9](https://github.com/sentdm/sent-dm-python/commit/0487ff9ccc71444812022cfc0ab63bc7359d85d2))
+
 ## 0.6.1 (2026-02-12)
 
 Full Changelog: [v0.6.0...v0.6.1](https://github.com/sentdm/sent-dm-python/compare/v0.6.0...v0.6.1)
