@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from typing import Optional
 from typing_extensions import Required, Annotated, TypedDict
 
 from .._utils import PropertyInfo
@@ -11,7 +12,15 @@ __all__ = ["ContactListParams"]
 
 class ContactListParams(TypedDict, total=False):
     page: Required[int]
-    """The page number (zero-indexed). Default is 0."""
+    """Page number (1-indexed)"""
 
     page_size: Required[Annotated[int, PropertyInfo(alias="pageSize")]]
-    """The number of items per page. Default is 20."""
+
+    channel: Optional[str]
+    """Optional channel filter (sms, whatsapp)"""
+
+    phone: Optional[str]
+    """Optional phone number filter (alternative to list view)"""
+
+    search: Optional[str]
+    """Optional search term for filtering contacts"""
