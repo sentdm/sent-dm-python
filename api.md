@@ -54,6 +54,12 @@ Types:
 ```python
 from sent_dm.types import (
     APIResponseTemplate,
+    SentDmServicesCommonContractsPocOsAuthenticationConfig,
+    SentDmServicesCommonContractsPocOsTemplateBody,
+    SentDmServicesCommonContractsPocOsTemplateButton,
+    SentDmServicesCommonContractsPocOsTemplateButtonProps,
+    SentDmServicesCommonContractsPocOsTemplateFooter,
+    SentDmServicesCommonContractsPocOsTemplateHeader,
     Template,
     TemplateBodyContent,
     TemplateDefinition,
@@ -166,6 +172,7 @@ from sent_dm.types.brands import (
     BaseDto,
     CampaignData,
     MessagingUseCaseUs,
+    SentDmServicesEndpointsCustomerApIv3ContractsRequestsCampaignsCampaignUseCaseData,
     TcrCampaignWithUseCases,
     CampaignListResponse,
 )
