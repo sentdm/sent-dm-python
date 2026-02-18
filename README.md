@@ -30,17 +30,21 @@ from sent_dm import SentDm
 
 client = SentDm(
     api_key=os.environ.get("SENT_DM_API_KEY"),  # This is the default and can be omitted
-    sender_id=os.environ.get("SENT_DM_SENDER_ID"),  # This is the default and can be omitted
 )
 
-client.messages.send_to_phone(
-    phone_number="+1234567890",
-    template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
-    template_variables={
-        "name": "John Doe",
-        "order_id": "12345",
+response = client.messages.send(
+    channel=["sms", "whatsapp"],
+    template={
+        "id": "7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+        "name": "order_confirmation",
+        "parameters": {
+            "name": "John Doe",
+            "order_id": "12345",
+        },
     },
+    to=["+14155551234", "+14155555678"],
 )
+print(response.data)
 ```
 
 While you can provide an `api_key` keyword argument,
@@ -59,19 +63,23 @@ from sent_dm import AsyncSentDm
 
 client = AsyncSentDm(
     api_key=os.environ.get("SENT_DM_API_KEY"),  # This is the default and can be omitted
-    sender_id=os.environ.get("SENT_DM_SENDER_ID"),  # This is the default and can be omitted
 )
 
 
 async def main() -> None:
-    await client.messages.send_to_phone(
-        phone_number="+1234567890",
-        template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
-        template_variables={
-            "name": "John Doe",
-            "order_id": "12345",
+    response = await client.messages.send(
+        channel=["sms", "whatsapp"],
+        template={
+            "id": "7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+            "name": "order_confirmation",
+            "parameters": {
+                "name": "John Doe",
+                "order_id": "12345",
+            },
         },
+        to=["+14155551234", "+14155555678"],
     )
+    print(response.data)
 
 
 asyncio.run(main())
@@ -102,17 +110,21 @@ from sent_dm import AsyncSentDm
 async def main() -> None:
     async with AsyncSentDm(
         api_key=os.environ.get("SENT_DM_API_KEY"),  # This is the default and can be omitted
-        sender_id=os.environ.get("SENT_DM_SENDER_ID"),  # This is the default and can be omitted
         http_client=DefaultAioHttpClient(),
     ) as client:
-        await client.messages.send_to_phone(
-            phone_number="+1234567890",
-            template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
-            template_variables={
-                "name": "John Doe",
-                "order_id": "12345",
+        response = await client.messages.send(
+            channel=["sms", "whatsapp"],
+            template={
+                "id": "7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+                "name": "order_confirmation",
+                "parameters": {
+                    "name": "John Doe",
+                    "order_id": "12345",
+                },
             },
+            to=["+14155551234", "+14155555678"],
         )
+        print(response.data)
 
 
 asyncio.run(main())
@@ -136,61 +148,17 @@ from sent_dm import SentDm
 
 client = SentDm()
 
-template_response_v2 = client.templates.create(
-    definition={
-        "body": {
-            "multi_channel": {
-                "template": "Hello {{1:variable}}, thank you for joining our service. We're excited to help you with your messaging needs!",
-                "type": None,
-                "variables": [
-                    {
-                        "id": 1,
-                        "name": "customerName",
-                        "props": {
-                            "alt": None,
-                            "media_type": None,
-                            "sample": "John Doe",
-                            "short_url": None,
-                            "url": None,
-                            "variable_type": "text",
-                        },
-                        "type": "variable",
-                    }
-                ],
-            },
-            "sms": {},
-            "whatsapp": {},
-        },
-        "authentication_config": {},
-        "buttons": [{}],
-        "definition_version": "1.0",
-        "footer": {
-            "template": "Best regards, The SentDM Team",
-            "type": "text",
-            "variables": [{}],
-        },
-        "header": {
-            "template": "Welcome to {{1:variable}}!",
-            "type": "text",
-            "variables": [
-                {
-                    "id": 1,
-                    "name": "companyName",
-                    "props": {
-                        "alt": None,
-                        "media_type": None,
-                        "sample": "SentDM",
-                        "short_url": None,
-                        "url": None,
-                        "variable_type": "text",
-                    },
-                    "type": "variable",
-                }
-            ],
+response = client.messages.send(
+    template={
+        "id": "7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+        "name": "order_confirmation",
+        "parameters": {
+            "name": "John Doe",
+            "order_id": "12345",
         },
     },
 )
-print(template_response_v2.definition)
+print(response.template)
 ```
 
 ## Handling errors
@@ -209,13 +177,17 @@ from sent_dm import SentDm
 client = SentDm()
 
 try:
-    client.messages.send_to_phone(
-        phone_number="+1234567890",
-        template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
-        template_variables={
-            "name": "John Doe",
-            "order_id": "12345",
+    client.messages.send(
+        channel=["sms"],
+        template={
+            "id": "7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+            "name": "order_confirmation",
+            "parameters": {
+                "name": "John Doe",
+                "order_id": "12345",
+            },
         },
+        to=["+14155551234"],
     )
 except sent_dm.APIConnectionError as e:
     print("The server could not be reached")
@@ -259,13 +231,17 @@ client = SentDm(
 )
 
 # Or, configure per-request:
-client.with_options(max_retries=5).messages.send_to_phone(
-    phone_number="+1234567890",
-    template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
-    template_variables={
-        "name": "John Doe",
-        "order_id": "12345",
+client.with_options(max_retries=5).messages.send(
+    channel=["sms"],
+    template={
+        "id": "7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+        "name": "order_confirmation",
+        "parameters": {
+            "name": "John Doe",
+            "order_id": "12345",
+        },
     },
+    to=["+14155551234"],
 )
 ```
 
@@ -289,13 +265,17 @@ client = SentDm(
 )
 
 # Override per-request:
-client.with_options(timeout=5.0).messages.send_to_phone(
-    phone_number="+1234567890",
-    template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
-    template_variables={
-        "name": "John Doe",
-        "order_id": "12345",
+client.with_options(timeout=5.0).messages.send(
+    channel=["sms"],
+    template={
+        "id": "7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+        "name": "order_confirmation",
+        "parameters": {
+            "name": "John Doe",
+            "order_id": "12345",
+        },
     },
+    to=["+14155551234"],
 )
 ```
 
@@ -337,18 +317,22 @@ The "raw" Response object can be accessed by prefixing `.with_raw_response.` to 
 from sent_dm import SentDm
 
 client = SentDm()
-response = client.messages.with_raw_response.send_to_phone(
-    phone_number="+1234567890",
-    template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
-    template_variables={
-        "name": "John Doe",
-        "order_id": "12345",
+response = client.messages.with_raw_response.send(
+    channel=["sms"],
+    template={
+        "id": "7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+        "name": "order_confirmation",
+        "parameters": {
+            "name": "John Doe",
+            "order_id": "12345",
+        },
     },
+    to=["+14155551234"],
 )
 print(response.headers.get('X-My-Header'))
 
-message = response.parse()  # get the object that `messages.send_to_phone()` would have returned
-print(message)
+message = response.parse()  # get the object that `messages.send()` would have returned
+print(message.data)
 ```
 
 These methods return an [`APIResponse`](https://github.com/sentdm/sent-dm-python/tree/main/src/sent_dm/_response.py) object.
@@ -362,13 +346,17 @@ The above interface eagerly reads the full response body when you make the reque
 To stream the response body, use `.with_streaming_response` instead, which requires a context manager and only reads the response body once you call `.read()`, `.text()`, `.json()`, `.iter_bytes()`, `.iter_text()`, `.iter_lines()` or `.parse()`. In the async client, these are async methods.
 
 ```python
-with client.messages.with_streaming_response.send_to_phone(
-    phone_number="+1234567890",
-    template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
-    template_variables={
-        "name": "John Doe",
-        "order_id": "12345",
+with client.messages.with_streaming_response.send(
+    channel=["sms"],
+    template={
+        "id": "7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+        "name": "order_confirmation",
+        "parameters": {
+            "name": "John Doe",
+            "order_id": "12345",
+        },
     },
+    to=["+14155551234"],
 ) as response:
     print(response.headers.get("X-My-Header"))
 

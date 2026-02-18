@@ -6,9 +6,14 @@ from typing import Optional
 
 import httpx
 
-from ..types import template_list_params, template_create_params
+from ..types import (
+    template_list_params,
+    template_create_params,
+    template_delete_params,
+    template_update_params,
+)
 from .._types import Body, Omit, Query, Headers, NoneType, NotGiven, omit, not_given
-from .._utils import maybe_transform, async_maybe_transform
+from .._utils import maybe_transform, strip_not_given, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
 from .._response import (
@@ -18,7 +23,7 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
-from ..types.template_response_v2 import TemplateResponseV2
+from ..types.api_response_template import APIResponseTemplate
 from ..types.template_list_response import TemplateListResponse
 from ..types.template_definition_param import TemplateDefinitionParam
 
@@ -48,36 +53,40 @@ class TemplatesResource(SyncAPIResource):
     def create(
         self,
         *,
-        definition: TemplateDefinitionParam,
         category: Optional[str] | Omit = omit,
+        creation_source: Optional[str] | Omit = omit,
+        definition: TemplateDefinitionParam | Omit = omit,
         language: Optional[str] | Omit = omit,
         submit_for_review: bool | Omit = omit,
+        test_mode: bool | Omit = omit,
+        idempotency_key: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> TemplateResponseV2:
-        """
-        Creates a new message template for the authenticated customer with comprehensive
-        template definitions including headers, body, footer, and interactive buttons.
-        Supports automatic metadata generation using AI (display name, language,
-        category). Optionally submits the template for WhatsApp review. The customer ID
-        is extracted from the authentication token.
+    ) -> APIResponseTemplate:
+        """Creates a new message template with header, body, footer, and buttons.
+
+        The
+        template can be submitted for review immediately or saved as draft for later
+        submission.
 
         Args:
-          definition: Template definition containing header, body, footer, and buttons
+          category: Template category: MARKETING, UTILITY, AUTHENTICATION (optional, auto-detected
+              if not provided)
 
-          category: The template category (e.g., MARKETING, UTILITY, AUTHENTICATION). Can only be
-              set when creating a new template. If not provided, will be auto-generated using
-              AI.
+          creation_source: Source of template creation (default: from-api)
 
-          language: The template language code (e.g., en_US, es_ES). Can only be set when creating a
-              new template. If not provided, will be auto-detected using AI.
+          definition: Template definition including header, body, footer, and buttons
 
-          submit_for_review: When false, the template will be saved as draft. When true, the template will be
-              submitted for review.
+          language: Template language code (e.g., en_US) (optional, auto-detected if not provided)
+
+          submit_for_review: Whether to submit the template for review after creation (default: false)
+
+          test_mode: Test mode flag - when true, the operation is simulated without side effects
+              Useful for testing integrations without actual execution
 
           extra_headers: Send extra headers
 
@@ -87,21 +96,24 @@ class TemplatesResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
+        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
         return self._post(
-            "/v2/templates",
+            "/v3/templates",
             body=maybe_transform(
                 {
-                    "definition": definition,
                     "category": category,
+                    "creation_source": creation_source,
+                    "definition": definition,
                     "language": language,
                     "submit_for_review": submit_for_review,
+                    "test_mode": test_mode,
                 },
                 template_create_params.TemplateCreateParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=TemplateResponseV2,
+            cast_to=APIResponseTemplate,
         )
 
     def retrieve(
@@ -114,12 +126,11 @@ class TemplatesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> TemplateResponseV2:
-        """
-        Retrieves a specific message template by its unique identifier for the
-        authenticated customer with comprehensive template definitions including
-        headers, body, footer, and interactive buttons. The customer ID is extracted
-        from the authentication token.
+    ) -> APIResponseTemplate:
+        """Retrieves a specific template by its ID.
+
+        Returns template details including
+        name, category, language, status, and definition.
 
         Args:
           extra_headers: Send extra headers
@@ -133,11 +144,77 @@ class TemplatesResource(SyncAPIResource):
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
         return self._get(
-            f"/v2/templates/{id}",
+            f"/v3/templates/{id}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=TemplateResponseV2,
+            cast_to=APIResponseTemplate,
+        )
+
+    def update(
+        self,
+        id: str,
+        *,
+        category: Optional[str] | Omit = omit,
+        definition: Optional[TemplateDefinitionParam] | Omit = omit,
+        language: Optional[str] | Omit = omit,
+        name: Optional[str] | Omit = omit,
+        submit_for_review: bool | Omit = omit,
+        test_mode: bool | Omit = omit,
+        idempotency_key: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> APIResponseTemplate:
+        """
+        Updates an existing template's name, category, language, definition, or submits
+        it for review.
+
+        Args:
+          category: Template category: MARKETING, UTILITY, AUTHENTICATION
+
+          definition: Template definition including header, body, footer, and buttons
+
+          language: Template language code (e.g., en_US)
+
+          name: Template display name
+
+          submit_for_review: Whether to submit the template for review after updating (default: false)
+
+          test_mode: Test mode flag - when true, the operation is simulated without side effects
+              Useful for testing integrations without actual execution
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        return self._put(
+            f"/v3/templates/{id}",
+            body=maybe_transform(
+                {
+                    "category": category,
+                    "definition": definition,
+                    "language": language,
+                    "name": name,
+                    "submit_for_review": submit_for_review,
+                    "test_mode": test_mode,
+                },
+                template_update_params.TemplateUpdateParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=APIResponseTemplate,
         )
 
     def list(
@@ -156,22 +233,17 @@ class TemplatesResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> TemplateListResponse:
         """
-        Retrieves all message templates available for the authenticated customer with
-        comprehensive template definitions including headers, body, footer, and
-        interactive buttons. Supports advanced filtering by search term, status, and
-        category, plus pagination. The customer ID is extracted from the authentication
-        token.
+        Retrieves a paginated list of message templates for the authenticated customer.
+        Supports filtering by status, category, and search term.
 
         Args:
-          page: The page number (zero-indexed). Default is 0.
+          page: Page number (1-indexed)
 
-          page_size: The number of items per page (1-1000). Default is 100.
+          category: Optional category filter: MARKETING, UTILITY, AUTHENTICATION
 
-          category: Optional filter by template category (e.g., MARKETING, UTILITY, AUTHENTICATION)
+          search: Optional search term for filtering templates
 
-          search: Optional search term to filter templates by name or content
-
-          status: Optional filter by template status (e.g., APPROVED, PENDING, REJECTED, DRAFT)
+          status: Optional status filter: APPROVED, PENDING, REJECTED
 
           extra_headers: Send extra headers
 
@@ -182,7 +254,7 @@ class TemplatesResource(SyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         return self._get(
-            "/v2/templates",
+            "/v3/templates",
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -206,6 +278,8 @@ class TemplatesResource(SyncAPIResource):
         self,
         id: str,
         *,
+        delete_from_meta: Optional[bool] | Omit = omit,
+        test_mode: bool | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -213,16 +287,18 @@ class TemplatesResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> None:
-        """
-        Deletes a specific message template by its unique identifier for the
-        authenticated customer with smart deletion strategy. Deletion behavior: - If
-        template has NO messages: Permanently deleted from database (hard delete). - If
-        template has messages: Marked as deleted but preserved for message history (soft
-        delete with snapshot). The template must exist and belong to the authenticated
-        customer to be deleted successfully. The customer ID is extracted from the
-        authentication token.
+        """Deletes a template by ID.
+
+        Optionally, you can also delete the template from
+        WhatsApp/Meta by setting delete_from_meta=true.
 
         Args:
+          delete_from_meta: Whether to also delete the template from WhatsApp/Meta (optional, defaults to
+              false)
+
+          test_mode: Test mode flag - when true, the operation is simulated without side effects
+              Useful for testing integrations without actual execution
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -235,7 +311,14 @@ class TemplatesResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return self._delete(
-            f"/v2/templates/{id}",
+            f"/v3/templates/{id}",
+            body=maybe_transform(
+                {
+                    "delete_from_meta": delete_from_meta,
+                    "test_mode": test_mode,
+                },
+                template_delete_params.TemplateDeleteParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -266,36 +349,40 @@ class AsyncTemplatesResource(AsyncAPIResource):
     async def create(
         self,
         *,
-        definition: TemplateDefinitionParam,
         category: Optional[str] | Omit = omit,
+        creation_source: Optional[str] | Omit = omit,
+        definition: TemplateDefinitionParam | Omit = omit,
         language: Optional[str] | Omit = omit,
         submit_for_review: bool | Omit = omit,
+        test_mode: bool | Omit = omit,
+        idempotency_key: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> TemplateResponseV2:
-        """
-        Creates a new message template for the authenticated customer with comprehensive
-        template definitions including headers, body, footer, and interactive buttons.
-        Supports automatic metadata generation using AI (display name, language,
-        category). Optionally submits the template for WhatsApp review. The customer ID
-        is extracted from the authentication token.
+    ) -> APIResponseTemplate:
+        """Creates a new message template with header, body, footer, and buttons.
+
+        The
+        template can be submitted for review immediately or saved as draft for later
+        submission.
 
         Args:
-          definition: Template definition containing header, body, footer, and buttons
+          category: Template category: MARKETING, UTILITY, AUTHENTICATION (optional, auto-detected
+              if not provided)
 
-          category: The template category (e.g., MARKETING, UTILITY, AUTHENTICATION). Can only be
-              set when creating a new template. If not provided, will be auto-generated using
-              AI.
+          creation_source: Source of template creation (default: from-api)
 
-          language: The template language code (e.g., en_US, es_ES). Can only be set when creating a
-              new template. If not provided, will be auto-detected using AI.
+          definition: Template definition including header, body, footer, and buttons
 
-          submit_for_review: When false, the template will be saved as draft. When true, the template will be
-              submitted for review.
+          language: Template language code (e.g., en_US) (optional, auto-detected if not provided)
+
+          submit_for_review: Whether to submit the template for review after creation (default: false)
+
+          test_mode: Test mode flag - when true, the operation is simulated without side effects
+              Useful for testing integrations without actual execution
 
           extra_headers: Send extra headers
 
@@ -305,21 +392,24 @@ class AsyncTemplatesResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
+        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
         return await self._post(
-            "/v2/templates",
+            "/v3/templates",
             body=await async_maybe_transform(
                 {
-                    "definition": definition,
                     "category": category,
+                    "creation_source": creation_source,
+                    "definition": definition,
                     "language": language,
                     "submit_for_review": submit_for_review,
+                    "test_mode": test_mode,
                 },
                 template_create_params.TemplateCreateParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=TemplateResponseV2,
+            cast_to=APIResponseTemplate,
         )
 
     async def retrieve(
@@ -332,12 +422,11 @@ class AsyncTemplatesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> TemplateResponseV2:
-        """
-        Retrieves a specific message template by its unique identifier for the
-        authenticated customer with comprehensive template definitions including
-        headers, body, footer, and interactive buttons. The customer ID is extracted
-        from the authentication token.
+    ) -> APIResponseTemplate:
+        """Retrieves a specific template by its ID.
+
+        Returns template details including
+        name, category, language, status, and definition.
 
         Args:
           extra_headers: Send extra headers
@@ -351,11 +440,77 @@ class AsyncTemplatesResource(AsyncAPIResource):
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
         return await self._get(
-            f"/v2/templates/{id}",
+            f"/v3/templates/{id}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=TemplateResponseV2,
+            cast_to=APIResponseTemplate,
+        )
+
+    async def update(
+        self,
+        id: str,
+        *,
+        category: Optional[str] | Omit = omit,
+        definition: Optional[TemplateDefinitionParam] | Omit = omit,
+        language: Optional[str] | Omit = omit,
+        name: Optional[str] | Omit = omit,
+        submit_for_review: bool | Omit = omit,
+        test_mode: bool | Omit = omit,
+        idempotency_key: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> APIResponseTemplate:
+        """
+        Updates an existing template's name, category, language, definition, or submits
+        it for review.
+
+        Args:
+          category: Template category: MARKETING, UTILITY, AUTHENTICATION
+
+          definition: Template definition including header, body, footer, and buttons
+
+          language: Template language code (e.g., en_US)
+
+          name: Template display name
+
+          submit_for_review: Whether to submit the template for review after updating (default: false)
+
+          test_mode: Test mode flag - when true, the operation is simulated without side effects
+              Useful for testing integrations without actual execution
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        return await self._put(
+            f"/v3/templates/{id}",
+            body=await async_maybe_transform(
+                {
+                    "category": category,
+                    "definition": definition,
+                    "language": language,
+                    "name": name,
+                    "submit_for_review": submit_for_review,
+                    "test_mode": test_mode,
+                },
+                template_update_params.TemplateUpdateParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=APIResponseTemplate,
         )
 
     async def list(
@@ -374,22 +529,17 @@ class AsyncTemplatesResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> TemplateListResponse:
         """
-        Retrieves all message templates available for the authenticated customer with
-        comprehensive template definitions including headers, body, footer, and
-        interactive buttons. Supports advanced filtering by search term, status, and
-        category, plus pagination. The customer ID is extracted from the authentication
-        token.
+        Retrieves a paginated list of message templates for the authenticated customer.
+        Supports filtering by status, category, and search term.
 
         Args:
-          page: The page number (zero-indexed). Default is 0.
+          page: Page number (1-indexed)
 
-          page_size: The number of items per page (1-1000). Default is 100.
+          category: Optional category filter: MARKETING, UTILITY, AUTHENTICATION
 
-          category: Optional filter by template category (e.g., MARKETING, UTILITY, AUTHENTICATION)
+          search: Optional search term for filtering templates
 
-          search: Optional search term to filter templates by name or content
-
-          status: Optional filter by template status (e.g., APPROVED, PENDING, REJECTED, DRAFT)
+          status: Optional status filter: APPROVED, PENDING, REJECTED
 
           extra_headers: Send extra headers
 
@@ -400,7 +550,7 @@ class AsyncTemplatesResource(AsyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         return await self._get(
-            "/v2/templates",
+            "/v3/templates",
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -424,6 +574,8 @@ class AsyncTemplatesResource(AsyncAPIResource):
         self,
         id: str,
         *,
+        delete_from_meta: Optional[bool] | Omit = omit,
+        test_mode: bool | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -431,16 +583,18 @@ class AsyncTemplatesResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> None:
-        """
-        Deletes a specific message template by its unique identifier for the
-        authenticated customer with smart deletion strategy. Deletion behavior: - If
-        template has NO messages: Permanently deleted from database (hard delete). - If
-        template has messages: Marked as deleted but preserved for message history (soft
-        delete with snapshot). The template must exist and belong to the authenticated
-        customer to be deleted successfully. The customer ID is extracted from the
-        authentication token.
+        """Deletes a template by ID.
+
+        Optionally, you can also delete the template from
+        WhatsApp/Meta by setting delete_from_meta=true.
 
         Args:
+          delete_from_meta: Whether to also delete the template from WhatsApp/Meta (optional, defaults to
+              false)
+
+          test_mode: Test mode flag - when true, the operation is simulated without side effects
+              Useful for testing integrations without actual execution
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -453,7 +607,14 @@ class AsyncTemplatesResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return await self._delete(
-            f"/v2/templates/{id}",
+            f"/v3/templates/{id}",
+            body=await async_maybe_transform(
+                {
+                    "delete_from_meta": delete_from_meta,
+                    "test_mode": test_mode,
+                },
+                template_delete_params.TemplateDeleteParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -470,6 +631,9 @@ class TemplatesResourceWithRawResponse:
         )
         self.retrieve = to_raw_response_wrapper(
             templates.retrieve,
+        )
+        self.update = to_raw_response_wrapper(
+            templates.update,
         )
         self.list = to_raw_response_wrapper(
             templates.list,
@@ -489,6 +653,9 @@ class AsyncTemplatesResourceWithRawResponse:
         self.retrieve = async_to_raw_response_wrapper(
             templates.retrieve,
         )
+        self.update = async_to_raw_response_wrapper(
+            templates.update,
+        )
         self.list = async_to_raw_response_wrapper(
             templates.list,
         )
@@ -507,6 +674,9 @@ class TemplatesResourceWithStreamingResponse:
         self.retrieve = to_streamed_response_wrapper(
             templates.retrieve,
         )
+        self.update = to_streamed_response_wrapper(
+            templates.update,
+        )
         self.list = to_streamed_response_wrapper(
             templates.list,
         )
@@ -524,6 +694,9 @@ class AsyncTemplatesResourceWithStreamingResponse:
         )
         self.retrieve = async_to_streamed_response_wrapper(
             templates.retrieve,
+        )
+        self.update = async_to_streamed_response_wrapper(
+            templates.update,
         )
         self.list = async_to_streamed_response_wrapper(
             templates.list,

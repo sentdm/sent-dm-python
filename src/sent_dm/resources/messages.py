@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
-from typing import Dict, Optional
+from typing import Optional
 
 import httpx
 
-from ..types import message_send_to_phone_params, message_send_to_contact_params, message_send_quick_message_params
-from .._types import Body, Omit, Query, Headers, NoneType, NotGiven, omit, not_given
-from .._utils import maybe_transform, async_maybe_transform
+from ..types import message_send_params
+from .._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
+from .._utils import maybe_transform, strip_not_given, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
 from .._response import (
@@ -18,7 +18,9 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
-from ..types.message_retrieve_response import MessageRetrieveResponse
+from ..types.message_send_response import MessageSendResponse
+from ..types.message_retrieve_status_response import MessageRetrieveStatusResponse
+from ..types.message_retrieve_activities_response import MessageRetrieveActivitiesResponse
 
 __all__ = ["MessagesResource", "AsyncMessagesResource"]
 
@@ -43,7 +45,7 @@ class MessagesResource(SyncAPIResource):
         """
         return MessagesResourceWithStreamingResponse(self)
 
-    def retrieve(
+    def retrieve_activities(
         self,
         id: str,
         *,
@@ -53,13 +55,11 @@ class MessagesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> MessageRetrieveResponse:
-        """
-        Retrieves comprehensive details about a specific message using the message ID.
-        Returns complete message data including delivery status, channel information,
-        template details, contact information, and pricing. The customer ID is extracted
-        from the authentication token to ensure the message belongs to the authenticated
-        customer.
+    ) -> MessageRetrieveActivitiesResponse:
+        """Retrieves the activity log for a specific message.
+
+        Activities track the message
+        lifecycle including acceptance, processing, sending, delivery, and any errors.
 
         Args:
           extra_headers: Send extra headers
@@ -73,36 +73,82 @@ class MessagesResource(SyncAPIResource):
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
         return self._get(
-            f"/v2/messages/{id}",
+            f"/v3/messages/{id}/activities",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=MessageRetrieveResponse,
+            cast_to=MessageRetrieveActivitiesResponse,
         )
 
-    def send_quick_message(
+    def retrieve_status(
         self,
+        id: str,
         *,
-        custom_message: str,
-        phone_number: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> None:
-        """Sends a message to a phone number using the default template.
+    ) -> MessageRetrieveStatusResponse:
+        """Retrieves the current status and details of a message by ID.
 
-        This endpoint is
-        rate limited to 5 messages per customer per day. The customer ID is extracted
-        from the authentication token.
+        Includes delivery
+        status, timestamps, and error information if applicable.
 
         Args:
-          custom_message: The custom message content to include in the template
+          extra_headers: Send extra headers
 
-          phone_number: The phone number to send the message to, in international format (e.g.,
-              +1234567890)
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        return self._get(
+            f"/v3/messages/{id}",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=MessageRetrieveStatusResponse,
+        )
+
+    def send(
+        self,
+        *,
+        channel: Optional[SequenceNotStr[str]] | Omit = omit,
+        template: message_send_params.Template | Omit = omit,
+        test_mode: bool | Omit = omit,
+        to: SequenceNotStr[str] | Omit = omit,
+        idempotency_key: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> MessageSendResponse:
+        """Sends a message to one or more recipients using a template.
+
+        Supports
+        multi-channel broadcast — when multiple channels are specified (e.g. ["sms",
+        "whatsapp"]), a separate message is created for each (recipient, channel) pair.
+        Returns immediately with per-recipient message IDs for async tracking via
+        webhooks or the GET /messages/{id} endpoint.
+
+        Args:
+          channel: Channels to broadcast on, e.g. ["whatsapp", "sms"]. Each channel produces a
+              separate message per recipient. "sent" = auto-detect, "rcs" = reserved
+              (skipped). Defaults to ["sent"] (auto-detect) if omitted.
+
+          template: Template reference (by id or name, with optional parameters)
+
+          test_mode: Test mode flag - when true, the operation is simulated without side effects
+              Useful for testing integrations without actual execution
+
+          to: List of recipient phone numbers in E.164 format (multi-recipient fan-out)
 
           extra_headers: Send extra headers
 
@@ -112,129 +158,22 @@ class MessagesResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
+        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
         return self._post(
-            "/v2/messages/quick-message",
+            "/v3/messages",
             body=maybe_transform(
                 {
-                    "custom_message": custom_message,
-                    "phone_number": phone_number,
+                    "channel": channel,
+                    "template": template,
+                    "test_mode": test_mode,
+                    "to": to,
                 },
-                message_send_quick_message_params.MessageSendQuickMessageParams,
+                message_send_params.MessageSendParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=NoneType,
-        )
-
-    def send_to_contact(
-        self,
-        *,
-        contact_id: str,
-        template_id: str,
-        template_variables: Optional[Dict[str, str]] | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> None:
-        """Sends a message to a specific contact using a template.
-
-        The message can be sent
-        via SMS or WhatsApp depending on the contact's capabilities. Optionally specify
-        a webhook URL to receive delivery status updates. The customer ID is extracted
-        from the authentication token.
-
-        Args:
-          contact_id: The unique identifier of the contact to send the message to
-
-          template_id: The unique identifier of the template to use for the message
-
-          template_variables: Optional key-value pairs of template variables to replace in the template body.
-              For example, if your template contains "Hello {{name}}", you would provide {
-              "name": "John Doe" }
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
-        return self._post(
-            "/v2/messages/contact",
-            body=maybe_transform(
-                {
-                    "contact_id": contact_id,
-                    "template_id": template_id,
-                    "template_variables": template_variables,
-                },
-                message_send_to_contact_params.MessageSendToContactParams,
-            ),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=NoneType,
-        )
-
-    def send_to_phone(
-        self,
-        *,
-        phone_number: str,
-        template_id: str,
-        template_variables: Optional[Dict[str, str]] | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> None:
-        """Sends a message to a phone number using a template.
-
-        The phone number doesn't
-        need to be a pre-existing contact. The message can be sent via SMS or WhatsApp.
-        Optionally specify a webhook URL to receive delivery status updates. The
-        customer ID is extracted from the authentication token.
-
-        Args:
-          phone_number: The phone number to send the message to, in international format (e.g.,
-              +1234567890)
-
-          template_id: The unique identifier of the template to use for the message
-
-          template_variables: Optional key-value pairs of template variables to replace in the template body.
-              For example, if your template contains "Hello {{name}}", you would provide {
-              "name": "John Doe" }
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
-        return self._post(
-            "/v2/messages/phone",
-            body=maybe_transform(
-                {
-                    "phone_number": phone_number,
-                    "template_id": template_id,
-                    "template_variables": template_variables,
-                },
-                message_send_to_phone_params.MessageSendToPhoneParams,
-            ),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=NoneType,
+            cast_to=MessageSendResponse,
         )
 
 
@@ -258,7 +197,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         """
         return AsyncMessagesResourceWithStreamingResponse(self)
 
-    async def retrieve(
+    async def retrieve_activities(
         self,
         id: str,
         *,
@@ -268,13 +207,11 @@ class AsyncMessagesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> MessageRetrieveResponse:
-        """
-        Retrieves comprehensive details about a specific message using the message ID.
-        Returns complete message data including delivery status, channel information,
-        template details, contact information, and pricing. The customer ID is extracted
-        from the authentication token to ensure the message belongs to the authenticated
-        customer.
+    ) -> MessageRetrieveActivitiesResponse:
+        """Retrieves the activity log for a specific message.
+
+        Activities track the message
+        lifecycle including acceptance, processing, sending, delivery, and any errors.
 
         Args:
           extra_headers: Send extra headers
@@ -288,36 +225,82 @@ class AsyncMessagesResource(AsyncAPIResource):
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
         return await self._get(
-            f"/v2/messages/{id}",
+            f"/v3/messages/{id}/activities",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=MessageRetrieveResponse,
+            cast_to=MessageRetrieveActivitiesResponse,
         )
 
-    async def send_quick_message(
+    async def retrieve_status(
         self,
+        id: str,
         *,
-        custom_message: str,
-        phone_number: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> None:
-        """Sends a message to a phone number using the default template.
+    ) -> MessageRetrieveStatusResponse:
+        """Retrieves the current status and details of a message by ID.
 
-        This endpoint is
-        rate limited to 5 messages per customer per day. The customer ID is extracted
-        from the authentication token.
+        Includes delivery
+        status, timestamps, and error information if applicable.
 
         Args:
-          custom_message: The custom message content to include in the template
+          extra_headers: Send extra headers
 
-          phone_number: The phone number to send the message to, in international format (e.g.,
-              +1234567890)
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        return await self._get(
+            f"/v3/messages/{id}",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=MessageRetrieveStatusResponse,
+        )
+
+    async def send(
+        self,
+        *,
+        channel: Optional[SequenceNotStr[str]] | Omit = omit,
+        template: message_send_params.Template | Omit = omit,
+        test_mode: bool | Omit = omit,
+        to: SequenceNotStr[str] | Omit = omit,
+        idempotency_key: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> MessageSendResponse:
+        """Sends a message to one or more recipients using a template.
+
+        Supports
+        multi-channel broadcast — when multiple channels are specified (e.g. ["sms",
+        "whatsapp"]), a separate message is created for each (recipient, channel) pair.
+        Returns immediately with per-recipient message IDs for async tracking via
+        webhooks or the GET /messages/{id} endpoint.
+
+        Args:
+          channel: Channels to broadcast on, e.g. ["whatsapp", "sms"]. Each channel produces a
+              separate message per recipient. "sent" = auto-detect, "rcs" = reserved
+              (skipped). Defaults to ["sent"] (auto-detect) if omitted.
+
+          template: Template reference (by id or name, with optional parameters)
+
+          test_mode: Test mode flag - when true, the operation is simulated without side effects
+              Useful for testing integrations without actual execution
+
+          to: List of recipient phone numbers in E.164 format (multi-recipient fan-out)
 
           extra_headers: Send extra headers
 
@@ -327,129 +310,22 @@ class AsyncMessagesResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
+        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
         return await self._post(
-            "/v2/messages/quick-message",
+            "/v3/messages",
             body=await async_maybe_transform(
                 {
-                    "custom_message": custom_message,
-                    "phone_number": phone_number,
+                    "channel": channel,
+                    "template": template,
+                    "test_mode": test_mode,
+                    "to": to,
                 },
-                message_send_quick_message_params.MessageSendQuickMessageParams,
+                message_send_params.MessageSendParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=NoneType,
-        )
-
-    async def send_to_contact(
-        self,
-        *,
-        contact_id: str,
-        template_id: str,
-        template_variables: Optional[Dict[str, str]] | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> None:
-        """Sends a message to a specific contact using a template.
-
-        The message can be sent
-        via SMS or WhatsApp depending on the contact's capabilities. Optionally specify
-        a webhook URL to receive delivery status updates. The customer ID is extracted
-        from the authentication token.
-
-        Args:
-          contact_id: The unique identifier of the contact to send the message to
-
-          template_id: The unique identifier of the template to use for the message
-
-          template_variables: Optional key-value pairs of template variables to replace in the template body.
-              For example, if your template contains "Hello {{name}}", you would provide {
-              "name": "John Doe" }
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
-        return await self._post(
-            "/v2/messages/contact",
-            body=await async_maybe_transform(
-                {
-                    "contact_id": contact_id,
-                    "template_id": template_id,
-                    "template_variables": template_variables,
-                },
-                message_send_to_contact_params.MessageSendToContactParams,
-            ),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=NoneType,
-        )
-
-    async def send_to_phone(
-        self,
-        *,
-        phone_number: str,
-        template_id: str,
-        template_variables: Optional[Dict[str, str]] | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> None:
-        """Sends a message to a phone number using a template.
-
-        The phone number doesn't
-        need to be a pre-existing contact. The message can be sent via SMS or WhatsApp.
-        Optionally specify a webhook URL to receive delivery status updates. The
-        customer ID is extracted from the authentication token.
-
-        Args:
-          phone_number: The phone number to send the message to, in international format (e.g.,
-              +1234567890)
-
-          template_id: The unique identifier of the template to use for the message
-
-          template_variables: Optional key-value pairs of template variables to replace in the template body.
-              For example, if your template contains "Hello {{name}}", you would provide {
-              "name": "John Doe" }
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
-        return await self._post(
-            "/v2/messages/phone",
-            body=await async_maybe_transform(
-                {
-                    "phone_number": phone_number,
-                    "template_id": template_id,
-                    "template_variables": template_variables,
-                },
-                message_send_to_phone_params.MessageSendToPhoneParams,
-            ),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=NoneType,
+            cast_to=MessageSendResponse,
         )
 
 
@@ -457,17 +333,14 @@ class MessagesResourceWithRawResponse:
     def __init__(self, messages: MessagesResource) -> None:
         self._messages = messages
 
-        self.retrieve = to_raw_response_wrapper(
-            messages.retrieve,
+        self.retrieve_activities = to_raw_response_wrapper(
+            messages.retrieve_activities,
         )
-        self.send_quick_message = to_raw_response_wrapper(
-            messages.send_quick_message,
+        self.retrieve_status = to_raw_response_wrapper(
+            messages.retrieve_status,
         )
-        self.send_to_contact = to_raw_response_wrapper(
-            messages.send_to_contact,
-        )
-        self.send_to_phone = to_raw_response_wrapper(
-            messages.send_to_phone,
+        self.send = to_raw_response_wrapper(
+            messages.send,
         )
 
 
@@ -475,17 +348,14 @@ class AsyncMessagesResourceWithRawResponse:
     def __init__(self, messages: AsyncMessagesResource) -> None:
         self._messages = messages
 
-        self.retrieve = async_to_raw_response_wrapper(
-            messages.retrieve,
+        self.retrieve_activities = async_to_raw_response_wrapper(
+            messages.retrieve_activities,
         )
-        self.send_quick_message = async_to_raw_response_wrapper(
-            messages.send_quick_message,
+        self.retrieve_status = async_to_raw_response_wrapper(
+            messages.retrieve_status,
         )
-        self.send_to_contact = async_to_raw_response_wrapper(
-            messages.send_to_contact,
-        )
-        self.send_to_phone = async_to_raw_response_wrapper(
-            messages.send_to_phone,
+        self.send = async_to_raw_response_wrapper(
+            messages.send,
         )
 
 
@@ -493,17 +363,14 @@ class MessagesResourceWithStreamingResponse:
     def __init__(self, messages: MessagesResource) -> None:
         self._messages = messages
 
-        self.retrieve = to_streamed_response_wrapper(
-            messages.retrieve,
+        self.retrieve_activities = to_streamed_response_wrapper(
+            messages.retrieve_activities,
         )
-        self.send_quick_message = to_streamed_response_wrapper(
-            messages.send_quick_message,
+        self.retrieve_status = to_streamed_response_wrapper(
+            messages.retrieve_status,
         )
-        self.send_to_contact = to_streamed_response_wrapper(
-            messages.send_to_contact,
-        )
-        self.send_to_phone = to_streamed_response_wrapper(
-            messages.send_to_phone,
+        self.send = to_streamed_response_wrapper(
+            messages.send,
         )
 
 
@@ -511,15 +378,12 @@ class AsyncMessagesResourceWithStreamingResponse:
     def __init__(self, messages: AsyncMessagesResource) -> None:
         self._messages = messages
 
-        self.retrieve = async_to_streamed_response_wrapper(
-            messages.retrieve,
+        self.retrieve_activities = async_to_streamed_response_wrapper(
+            messages.retrieve_activities,
         )
-        self.send_quick_message = async_to_streamed_response_wrapper(
-            messages.send_quick_message,
+        self.retrieve_status = async_to_streamed_response_wrapper(
+            messages.retrieve_status,
         )
-        self.send_to_contact = async_to_streamed_response_wrapper(
-            messages.send_to_contact,
-        )
-        self.send_to_phone = async_to_streamed_response_wrapper(
-            messages.send_to_phone,
+        self.send = async_to_streamed_response_wrapper(
+            messages.send,
         )

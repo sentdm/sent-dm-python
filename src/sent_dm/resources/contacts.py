@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
+from typing import Optional
+
 import httpx
 
-from ..types import contact_list_params, contact_retrieve_id_params, contact_retrieve_by_phone_params
-from .._types import Body, Query, Headers, NotGiven, not_given
-from .._utils import maybe_transform, async_maybe_transform
+from ..types import contact_list_params, contact_create_params, contact_delete_params, contact_update_params
+from .._types import Body, Omit, Query, Headers, NoneType, NotGiven, omit, not_given
+from .._utils import maybe_transform, strip_not_given, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
 from .._response import (
@@ -16,7 +18,7 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
-from ..types.contact_list_item import ContactListItem
+from ..types.api_response_contact import APIResponseContact
 from ..types.contact_list_response import ContactListResponse
 
 __all__ = ["ContactsResource", "AsyncContactsResource"]
@@ -42,11 +44,152 @@ class ContactsResource(SyncAPIResource):
         """
         return ContactsResourceWithStreamingResponse(self)
 
+    def create(
+        self,
+        *,
+        phone_number: str | Omit = omit,
+        test_mode: bool | Omit = omit,
+        idempotency_key: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> APIResponseContact:
+        """
+        Creates a new contact by phone number and associates it with the authenticated
+        customer.
+
+        Args:
+          phone_number: Phone number of the contact to create
+
+          test_mode: Test mode flag - when true, the operation is simulated without side effects
+              Useful for testing integrations without actual execution
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        return self._post(
+            "/v3/contacts",
+            body=maybe_transform(
+                {
+                    "phone_number": phone_number,
+                    "test_mode": test_mode,
+                },
+                contact_create_params.ContactCreateParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=APIResponseContact,
+        )
+
+    def retrieve(
+        self,
+        id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> APIResponseContact:
+        """Retrieves a specific contact by their unique identifier.
+
+        Returns detailed
+        contact information including phone formats, available channels, and opt-out
+        status.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        return self._get(
+            f"/v3/contacts/{id}",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=APIResponseContact,
+        )
+
+    def update(
+        self,
+        id: str,
+        *,
+        default_channel: Optional[str] | Omit = omit,
+        opt_out: Optional[bool] | Omit = omit,
+        test_mode: bool | Omit = omit,
+        idempotency_key: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> APIResponseContact:
+        """Updates a contact's default channel and/or opt-out status.
+
+        Inherited contacts
+        cannot be updated.
+
+        Args:
+          default_channel: Default messaging channel: "sms" or "whatsapp"
+
+          opt_out: Whether the contact has opted out of messaging
+
+          test_mode: Test mode flag - when true, the operation is simulated without side effects
+              Useful for testing integrations without actual execution
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        return self._patch(
+            f"/v3/contacts/{id}",
+            body=maybe_transform(
+                {
+                    "default_channel": default_channel,
+                    "opt_out": opt_out,
+                    "test_mode": test_mode,
+                },
+                contact_update_params.ContactUpdateParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=APIResponseContact,
+        )
+
     def list(
         self,
         *,
         page: int,
         page_size: int,
+        channel: Optional[str] | Omit = omit,
+        phone: Optional[str] | Omit = omit,
+        search: Optional[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -57,13 +200,16 @@ class ContactsResource(SyncAPIResource):
         """Retrieves a paginated list of contacts for the authenticated customer.
 
         Supports
-        server-side pagination with configurable page size. The customer ID is extracted
-        from the authentication token.
+        filtering by search term, channel, or phone number.
 
         Args:
-          page: The page number (zero-indexed). Default is 0.
+          page: Page number (1-indexed)
 
-          page_size: The number of items per page. Default is 20.
+          channel: Optional channel filter (sms, whatsapp)
+
+          phone: Optional phone number filter (alternative to list view)
+
+          search: Optional search term for filtering contacts
 
           extra_headers: Send extra headers
 
@@ -74,7 +220,7 @@ class ContactsResource(SyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         return self._get(
-            "/v2/contacts",
+            "/v3/contacts",
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -84,6 +230,9 @@ class ContactsResource(SyncAPIResource):
                     {
                         "page": page,
                         "page_size": page_size,
+                        "channel": channel,
+                        "phone": phone,
+                        "search": search,
                     },
                     contact_list_params.ContactListParams,
                 ),
@@ -91,66 +240,25 @@ class ContactsResource(SyncAPIResource):
             cast_to=ContactListResponse,
         )
 
-    def retrieve_by_phone(
+    def delete(
         self,
-        *,
-        phone_number: str,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ContactListItem:
-        """Retrieves a contact by their phone number for the authenticated customer.
-
-        Phone
-        number should be in international format (e.g., +1234567890). The customer ID is
-        extracted from the authentication token.
-
-        Args:
-          phone_number: The phone number in international format (e.g., +1234567890)
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return self._get(
-            "/v2/contacts/phone",
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=maybe_transform(
-                    {"phone_number": phone_number}, contact_retrieve_by_phone_params.ContactRetrieveByPhoneParams
-                ),
-            ),
-            cast_to=ContactListItem,
-        )
-
-    def retrieve_id(
-        self,
-        *,
         id: str,
+        *,
+        body: contact_delete_params.Body,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ContactListItem:
-        """
-        Retrieves a specific contact by their unique identifier for the authenticated
-        customer. The customer ID is extracted from the authentication token. Returns
-        detailed contact information including phone number and creation timestamp.
+    ) -> None:
+        """Dissociates a contact from the authenticated customer.
+
+        Inherited contacts cannot
+        be deleted.
 
         Args:
-          id: The unique identifier (GUID) of the resource to retrieve
+          body: Request to delete/dissociate a contact
 
           extra_headers: Send extra headers
 
@@ -160,16 +268,16 @@ class ContactsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return self._get(
-            "/v2/contacts/id",
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
+        return self._delete(
+            f"/v3/contacts/{id}",
+            body=maybe_transform(body, contact_delete_params.ContactDeleteParams),
             options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=maybe_transform({"id": id}, contact_retrieve_id_params.ContactRetrieveIDParams),
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ContactListItem,
+            cast_to=NoneType,
         )
 
 
@@ -193,11 +301,152 @@ class AsyncContactsResource(AsyncAPIResource):
         """
         return AsyncContactsResourceWithStreamingResponse(self)
 
+    async def create(
+        self,
+        *,
+        phone_number: str | Omit = omit,
+        test_mode: bool | Omit = omit,
+        idempotency_key: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> APIResponseContact:
+        """
+        Creates a new contact by phone number and associates it with the authenticated
+        customer.
+
+        Args:
+          phone_number: Phone number of the contact to create
+
+          test_mode: Test mode flag - when true, the operation is simulated without side effects
+              Useful for testing integrations without actual execution
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        return await self._post(
+            "/v3/contacts",
+            body=await async_maybe_transform(
+                {
+                    "phone_number": phone_number,
+                    "test_mode": test_mode,
+                },
+                contact_create_params.ContactCreateParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=APIResponseContact,
+        )
+
+    async def retrieve(
+        self,
+        id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> APIResponseContact:
+        """Retrieves a specific contact by their unique identifier.
+
+        Returns detailed
+        contact information including phone formats, available channels, and opt-out
+        status.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        return await self._get(
+            f"/v3/contacts/{id}",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=APIResponseContact,
+        )
+
+    async def update(
+        self,
+        id: str,
+        *,
+        default_channel: Optional[str] | Omit = omit,
+        opt_out: Optional[bool] | Omit = omit,
+        test_mode: bool | Omit = omit,
+        idempotency_key: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> APIResponseContact:
+        """Updates a contact's default channel and/or opt-out status.
+
+        Inherited contacts
+        cannot be updated.
+
+        Args:
+          default_channel: Default messaging channel: "sms" or "whatsapp"
+
+          opt_out: Whether the contact has opted out of messaging
+
+          test_mode: Test mode flag - when true, the operation is simulated without side effects
+              Useful for testing integrations without actual execution
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        return await self._patch(
+            f"/v3/contacts/{id}",
+            body=await async_maybe_transform(
+                {
+                    "default_channel": default_channel,
+                    "opt_out": opt_out,
+                    "test_mode": test_mode,
+                },
+                contact_update_params.ContactUpdateParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=APIResponseContact,
+        )
+
     async def list(
         self,
         *,
         page: int,
         page_size: int,
+        channel: Optional[str] | Omit = omit,
+        phone: Optional[str] | Omit = omit,
+        search: Optional[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -208,13 +457,16 @@ class AsyncContactsResource(AsyncAPIResource):
         """Retrieves a paginated list of contacts for the authenticated customer.
 
         Supports
-        server-side pagination with configurable page size. The customer ID is extracted
-        from the authentication token.
+        filtering by search term, channel, or phone number.
 
         Args:
-          page: The page number (zero-indexed). Default is 0.
+          page: Page number (1-indexed)
 
-          page_size: The number of items per page. Default is 20.
+          channel: Optional channel filter (sms, whatsapp)
+
+          phone: Optional phone number filter (alternative to list view)
+
+          search: Optional search term for filtering contacts
 
           extra_headers: Send extra headers
 
@@ -225,7 +477,7 @@ class AsyncContactsResource(AsyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         return await self._get(
-            "/v2/contacts",
+            "/v3/contacts",
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -235,6 +487,9 @@ class AsyncContactsResource(AsyncAPIResource):
                     {
                         "page": page,
                         "page_size": page_size,
+                        "channel": channel,
+                        "phone": phone,
+                        "search": search,
                     },
                     contact_list_params.ContactListParams,
                 ),
@@ -242,66 +497,25 @@ class AsyncContactsResource(AsyncAPIResource):
             cast_to=ContactListResponse,
         )
 
-    async def retrieve_by_phone(
+    async def delete(
         self,
-        *,
-        phone_number: str,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ContactListItem:
-        """Retrieves a contact by their phone number for the authenticated customer.
-
-        Phone
-        number should be in international format (e.g., +1234567890). The customer ID is
-        extracted from the authentication token.
-
-        Args:
-          phone_number: The phone number in international format (e.g., +1234567890)
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return await self._get(
-            "/v2/contacts/phone",
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=await async_maybe_transform(
-                    {"phone_number": phone_number}, contact_retrieve_by_phone_params.ContactRetrieveByPhoneParams
-                ),
-            ),
-            cast_to=ContactListItem,
-        )
-
-    async def retrieve_id(
-        self,
-        *,
         id: str,
+        *,
+        body: contact_delete_params.Body,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ContactListItem:
-        """
-        Retrieves a specific contact by their unique identifier for the authenticated
-        customer. The customer ID is extracted from the authentication token. Returns
-        detailed contact information including phone number and creation timestamp.
+    ) -> None:
+        """Dissociates a contact from the authenticated customer.
+
+        Inherited contacts cannot
+        be deleted.
 
         Args:
-          id: The unique identifier (GUID) of the resource to retrieve
+          body: Request to delete/dissociate a contact
 
           extra_headers: Send extra headers
 
@@ -311,16 +525,16 @@ class AsyncContactsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return await self._get(
-            "/v2/contacts/id",
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
+        return await self._delete(
+            f"/v3/contacts/{id}",
+            body=await async_maybe_transform(body, contact_delete_params.ContactDeleteParams),
             options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=await async_maybe_transform({"id": id}, contact_retrieve_id_params.ContactRetrieveIDParams),
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ContactListItem,
+            cast_to=NoneType,
         )
 
 
@@ -328,14 +542,20 @@ class ContactsResourceWithRawResponse:
     def __init__(self, contacts: ContactsResource) -> None:
         self._contacts = contacts
 
+        self.create = to_raw_response_wrapper(
+            contacts.create,
+        )
+        self.retrieve = to_raw_response_wrapper(
+            contacts.retrieve,
+        )
+        self.update = to_raw_response_wrapper(
+            contacts.update,
+        )
         self.list = to_raw_response_wrapper(
             contacts.list,
         )
-        self.retrieve_by_phone = to_raw_response_wrapper(
-            contacts.retrieve_by_phone,
-        )
-        self.retrieve_id = to_raw_response_wrapper(
-            contacts.retrieve_id,
+        self.delete = to_raw_response_wrapper(
+            contacts.delete,
         )
 
 
@@ -343,14 +563,20 @@ class AsyncContactsResourceWithRawResponse:
     def __init__(self, contacts: AsyncContactsResource) -> None:
         self._contacts = contacts
 
+        self.create = async_to_raw_response_wrapper(
+            contacts.create,
+        )
+        self.retrieve = async_to_raw_response_wrapper(
+            contacts.retrieve,
+        )
+        self.update = async_to_raw_response_wrapper(
+            contacts.update,
+        )
         self.list = async_to_raw_response_wrapper(
             contacts.list,
         )
-        self.retrieve_by_phone = async_to_raw_response_wrapper(
-            contacts.retrieve_by_phone,
-        )
-        self.retrieve_id = async_to_raw_response_wrapper(
-            contacts.retrieve_id,
+        self.delete = async_to_raw_response_wrapper(
+            contacts.delete,
         )
 
 
@@ -358,14 +584,20 @@ class ContactsResourceWithStreamingResponse:
     def __init__(self, contacts: ContactsResource) -> None:
         self._contacts = contacts
 
+        self.create = to_streamed_response_wrapper(
+            contacts.create,
+        )
+        self.retrieve = to_streamed_response_wrapper(
+            contacts.retrieve,
+        )
+        self.update = to_streamed_response_wrapper(
+            contacts.update,
+        )
         self.list = to_streamed_response_wrapper(
             contacts.list,
         )
-        self.retrieve_by_phone = to_streamed_response_wrapper(
-            contacts.retrieve_by_phone,
-        )
-        self.retrieve_id = to_streamed_response_wrapper(
-            contacts.retrieve_id,
+        self.delete = to_streamed_response_wrapper(
+            contacts.delete,
         )
 
 
@@ -373,12 +605,18 @@ class AsyncContactsResourceWithStreamingResponse:
     def __init__(self, contacts: AsyncContactsResource) -> None:
         self._contacts = contacts
 
+        self.create = async_to_streamed_response_wrapper(
+            contacts.create,
+        )
+        self.retrieve = async_to_streamed_response_wrapper(
+            contacts.retrieve,
+        )
+        self.update = async_to_streamed_response_wrapper(
+            contacts.update,
+        )
         self.list = async_to_streamed_response_wrapper(
             contacts.list,
         )
-        self.retrieve_by_phone = async_to_streamed_response_wrapper(
-            contacts.retrieve_by_phone,
-        )
-        self.retrieve_id = async_to_streamed_response_wrapper(
-            contacts.retrieve_id,
+        self.delete = async_to_streamed_response_wrapper(
+            contacts.delete,
         )

@@ -40,7 +40,6 @@ from .utils import update_env
 T = TypeVar("T")
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 api_key = "My API Key"
-sender_id = "My Sender ID"
 
 
 def _get_params(client: BaseClient[Any, Any]) -> dict[str, str]:
@@ -141,10 +140,6 @@ class TestSentDm:
         assert copied.api_key == "another My API Key"
         assert client.api_key == "My API Key"
 
-        copied = client.copy(sender_id="another My Sender ID")
-        assert copied.sender_id == "another My Sender ID"
-        assert client.sender_id == "My Sender ID"
-
     def test_copy_default_options(self, client: SentDm) -> None:
         # options that have a default are overridden correctly
         copied = client.copy(max_retries=7)
@@ -163,11 +158,7 @@ class TestSentDm:
 
     def test_copy_default_headers(self) -> None:
         client = SentDm(
-            base_url=base_url,
-            api_key=api_key,
-            sender_id=sender_id,
-            _strict_response_validation=True,
-            default_headers={"X-Foo": "bar"},
+            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
         assert client.default_headers["X-Foo"] == "bar"
 
@@ -202,11 +193,7 @@ class TestSentDm:
 
     def test_copy_default_query(self) -> None:
         client = SentDm(
-            base_url=base_url,
-            api_key=api_key,
-            sender_id=sender_id,
-            _strict_response_validation=True,
-            default_query={"foo": "bar"},
+            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"foo": "bar"}
         )
         assert _get_params(client)["foo"] == "bar"
 
@@ -331,13 +318,7 @@ class TestSentDm:
         assert timeout == httpx.Timeout(100.0)
 
     def test_client_timeout_option(self) -> None:
-        client = SentDm(
-            base_url=base_url,
-            api_key=api_key,
-            sender_id=sender_id,
-            _strict_response_validation=True,
-            timeout=httpx.Timeout(0),
-        )
+        client = SentDm(base_url=base_url, api_key=api_key, _strict_response_validation=True, timeout=httpx.Timeout(0))
 
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
@@ -349,11 +330,7 @@ class TestSentDm:
         # custom timeout given to the httpx client should be used
         with httpx.Client(timeout=None) as http_client:
             client = SentDm(
-                base_url=base_url,
-                api_key=api_key,
-                sender_id=sender_id,
-                _strict_response_validation=True,
-                http_client=http_client,
+                base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -365,11 +342,7 @@ class TestSentDm:
         # no timeout given to the httpx client should not use the httpx default
         with httpx.Client() as http_client:
             client = SentDm(
-                base_url=base_url,
-                api_key=api_key,
-                sender_id=sender_id,
-                _strict_response_validation=True,
-                http_client=http_client,
+                base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -381,11 +354,7 @@ class TestSentDm:
         # explicitly passing the default timeout currently results in it being ignored
         with httpx.Client(timeout=HTTPX_DEFAULT_TIMEOUT) as http_client:
             client = SentDm(
-                base_url=base_url,
-                api_key=api_key,
-                sender_id=sender_id,
-                _strict_response_validation=True,
-                http_client=http_client,
+                base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -400,18 +369,13 @@ class TestSentDm:
                 SentDm(
                     base_url=base_url,
                     api_key=api_key,
-                    sender_id=sender_id,
                     _strict_response_validation=True,
                     http_client=cast(Any, http_client),
                 )
 
     def test_default_headers_option(self) -> None:
         test_client = SentDm(
-            base_url=base_url,
-            api_key=api_key,
-            sender_id=sender_id,
-            _strict_response_validation=True,
-            default_headers={"X-Foo": "bar"},
+            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
         request = test_client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("x-foo") == "bar"
@@ -420,7 +384,6 @@ class TestSentDm:
         test_client2 = SentDm(
             base_url=base_url,
             api_key=api_key,
-            sender_id=sender_id,
             _strict_response_validation=True,
             default_headers={
                 "X-Foo": "stainless",
@@ -435,29 +398,18 @@ class TestSentDm:
         test_client2.close()
 
     def test_validate_headers(self) -> None:
-        client = SentDm(base_url=base_url, api_key=api_key, sender_id=sender_id, _strict_response_validation=True)
+        client = SentDm(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("x-api-key") == api_key
-        request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
-        assert request.headers.get("x-sender-id") == sender_id
 
         with pytest.raises(SentDmError):
-            with update_env(
-                **{
-                    "SENT_DM_API_KEY": Omit(),
-                    "SENT_DM_SENDER_ID": Omit(),
-                }
-            ):
-                client2 = SentDm(base_url=base_url, api_key=None, sender_id=None, _strict_response_validation=True)
+            with update_env(**{"SENT_DM_API_KEY": Omit()}):
+                client2 = SentDm(base_url=base_url, api_key=None, _strict_response_validation=True)
             _ = client2
 
     def test_default_query_option(self) -> None:
         client = SentDm(
-            base_url=base_url,
-            api_key=api_key,
-            sender_id=sender_id,
-            _strict_response_validation=True,
-            default_query={"query_param": "bar"},
+            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"query_param": "bar"}
         )
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         url = httpx.URL(request.url)
@@ -630,7 +582,6 @@ class TestSentDm:
         with SentDm(
             base_url=base_url,
             api_key=api_key,
-            sender_id=sender_id,
             _strict_response_validation=True,
             http_client=httpx.Client(transport=MockTransport(handler=mock_handler)),
         ) as client:
@@ -724,12 +675,7 @@ class TestSentDm:
         assert response.foo == 2
 
     def test_base_url_setter(self) -> None:
-        client = SentDm(
-            base_url="https://example.com/from_init",
-            api_key=api_key,
-            sender_id=sender_id,
-            _strict_response_validation=True,
-        )
+        client = SentDm(base_url="https://example.com/from_init", api_key=api_key, _strict_response_validation=True)
         assert client.base_url == "https://example.com/from_init/"
 
         client.base_url = "https://example.com/from_setter"  # type: ignore[assignment]
@@ -740,22 +686,16 @@ class TestSentDm:
 
     def test_base_url_env(self) -> None:
         with update_env(SENT_DM_BASE_URL="http://localhost:5000/from/env"):
-            client = SentDm(api_key=api_key, sender_id=sender_id, _strict_response_validation=True)
+            client = SentDm(api_key=api_key, _strict_response_validation=True)
             assert client.base_url == "http://localhost:5000/from/env/"
 
     @pytest.mark.parametrize(
         "client",
         [
+            SentDm(base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True),
             SentDm(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
-                sender_id=sender_id,
-                _strict_response_validation=True,
-            ),
-            SentDm(
-                base_url="http://localhost:5000/custom/path/",
-                api_key=api_key,
-                sender_id=sender_id,
                 _strict_response_validation=True,
                 http_client=httpx.Client(),
             ),
@@ -776,16 +716,10 @@ class TestSentDm:
     @pytest.mark.parametrize(
         "client",
         [
+            SentDm(base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True),
             SentDm(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
-                sender_id=sender_id,
-                _strict_response_validation=True,
-            ),
-            SentDm(
-                base_url="http://localhost:5000/custom/path/",
-                api_key=api_key,
-                sender_id=sender_id,
                 _strict_response_validation=True,
                 http_client=httpx.Client(),
             ),
@@ -806,16 +740,10 @@ class TestSentDm:
     @pytest.mark.parametrize(
         "client",
         [
+            SentDm(base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True),
             SentDm(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
-                sender_id=sender_id,
-                _strict_response_validation=True,
-            ),
-            SentDm(
-                base_url="http://localhost:5000/custom/path/",
-                api_key=api_key,
-                sender_id=sender_id,
                 _strict_response_validation=True,
                 http_client=httpx.Client(),
             ),
@@ -834,7 +762,7 @@ class TestSentDm:
         client.close()
 
     def test_copied_client_does_not_close_http(self) -> None:
-        test_client = SentDm(base_url=base_url, api_key=api_key, sender_id=sender_id, _strict_response_validation=True)
+        test_client = SentDm(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         assert not test_client.is_closed()
 
         copied = test_client.copy()
@@ -845,7 +773,7 @@ class TestSentDm:
         assert not test_client.is_closed()
 
     def test_client_context_manager(self) -> None:
-        test_client = SentDm(base_url=base_url, api_key=api_key, sender_id=sender_id, _strict_response_validation=True)
+        test_client = SentDm(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         with test_client as c2:
             assert c2 is test_client
             assert not c2.is_closed()
@@ -866,13 +794,7 @@ class TestSentDm:
 
     def test_client_max_retries_validation(self) -> None:
         with pytest.raises(TypeError, match=r"max_retries cannot be None"):
-            SentDm(
-                base_url=base_url,
-                api_key=api_key,
-                sender_id=sender_id,
-                _strict_response_validation=True,
-                max_retries=cast(Any, None),
-            )
+            SentDm(base_url=base_url, api_key=api_key, _strict_response_validation=True, max_retries=cast(Any, None))
 
     @pytest.mark.respx(base_url=base_url)
     def test_received_text_for_expected_json(self, respx_mock: MockRouter) -> None:
@@ -881,16 +803,12 @@ class TestSentDm:
 
         respx_mock.get("/foo").mock(return_value=httpx.Response(200, text="my-custom-format"))
 
-        strict_client = SentDm(
-            base_url=base_url, api_key=api_key, sender_id=sender_id, _strict_response_validation=True
-        )
+        strict_client = SentDm(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
         with pytest.raises(APIResponseValidationError):
             strict_client.get("/foo", cast_to=Model)
 
-        non_strict_client = SentDm(
-            base_url=base_url, api_key=api_key, sender_id=sender_id, _strict_response_validation=False
-        )
+        non_strict_client = SentDm(base_url=base_url, api_key=api_key, _strict_response_validation=False)
 
         response = non_strict_client.get("/foo", cast_to=Model)
         assert isinstance(response, str)  # type: ignore[unreachable]
@@ -931,24 +849,20 @@ class TestSentDm:
     @mock.patch("sent_dm._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter, client: SentDm) -> None:
-        respx_mock.post("/v2/messages/phone").mock(side_effect=httpx.TimeoutException("Test timeout error"))
+        respx_mock.post("/v3/messages").mock(side_effect=httpx.TimeoutException("Test timeout error"))
 
         with pytest.raises(APITimeoutError):
-            client.messages.with_streaming_response.send_to_phone(
-                phone_number="+1234567890", template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8"
-            ).__enter__()
+            client.messages.with_streaming_response.send().__enter__()
 
         assert _get_open_connections(client) == 0
 
     @mock.patch("sent_dm._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter, client: SentDm) -> None:
-        respx_mock.post("/v2/messages/phone").mock(return_value=httpx.Response(500))
+        respx_mock.post("/v3/messages").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
-            client.messages.with_streaming_response.send_to_phone(
-                phone_number="+1234567890", template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8"
-            ).__enter__()
+            client.messages.with_streaming_response.send().__enter__()
         assert _get_open_connections(client) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
@@ -975,11 +889,9 @@ class TestSentDm:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/v2/messages/phone").mock(side_effect=retry_handler)
+        respx_mock.post("/v3/messages").mock(side_effect=retry_handler)
 
-        response = client.messages.with_raw_response.send_to_phone(
-            phone_number="+1234567890", template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8"
-        )
+        response = client.messages.with_raw_response.send()
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -1001,13 +913,9 @@ class TestSentDm:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/v2/messages/phone").mock(side_effect=retry_handler)
+        respx_mock.post("/v3/messages").mock(side_effect=retry_handler)
 
-        response = client.messages.with_raw_response.send_to_phone(
-            phone_number="+1234567890",
-            template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
-            extra_headers={"x-stainless-retry-count": Omit()},
-        )
+        response = client.messages.with_raw_response.send(extra_headers={"x-stainless-retry-count": Omit()})
 
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
 
@@ -1028,13 +936,9 @@ class TestSentDm:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/v2/messages/phone").mock(side_effect=retry_handler)
+        respx_mock.post("/v3/messages").mock(side_effect=retry_handler)
 
-        response = client.messages.with_raw_response.send_to_phone(
-            phone_number="+1234567890",
-            template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
-            extra_headers={"x-stainless-retry-count": "42"},
-        )
+        response = client.messages.with_raw_response.send(extra_headers={"x-stainless-retry-count": "42"})
 
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"
 
@@ -1115,10 +1019,6 @@ class TestAsyncSentDm:
         assert copied.api_key == "another My API Key"
         assert async_client.api_key == "My API Key"
 
-        copied = async_client.copy(sender_id="another My Sender ID")
-        assert copied.sender_id == "another My Sender ID"
-        assert async_client.sender_id == "My Sender ID"
-
     def test_copy_default_options(self, async_client: AsyncSentDm) -> None:
         # options that have a default are overridden correctly
         copied = async_client.copy(max_retries=7)
@@ -1137,11 +1037,7 @@ class TestAsyncSentDm:
 
     async def test_copy_default_headers(self) -> None:
         client = AsyncSentDm(
-            base_url=base_url,
-            api_key=api_key,
-            sender_id=sender_id,
-            _strict_response_validation=True,
-            default_headers={"X-Foo": "bar"},
+            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
         assert client.default_headers["X-Foo"] == "bar"
 
@@ -1176,11 +1072,7 @@ class TestAsyncSentDm:
 
     async def test_copy_default_query(self) -> None:
         client = AsyncSentDm(
-            base_url=base_url,
-            api_key=api_key,
-            sender_id=sender_id,
-            _strict_response_validation=True,
-            default_query={"foo": "bar"},
+            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"foo": "bar"}
         )
         assert _get_params(client)["foo"] == "bar"
 
@@ -1308,11 +1200,7 @@ class TestAsyncSentDm:
 
     async def test_client_timeout_option(self) -> None:
         client = AsyncSentDm(
-            base_url=base_url,
-            api_key=api_key,
-            sender_id=sender_id,
-            _strict_response_validation=True,
-            timeout=httpx.Timeout(0),
+            base_url=base_url, api_key=api_key, _strict_response_validation=True, timeout=httpx.Timeout(0)
         )
 
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -1325,11 +1213,7 @@ class TestAsyncSentDm:
         # custom timeout given to the httpx client should be used
         async with httpx.AsyncClient(timeout=None) as http_client:
             client = AsyncSentDm(
-                base_url=base_url,
-                api_key=api_key,
-                sender_id=sender_id,
-                _strict_response_validation=True,
-                http_client=http_client,
+                base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -1341,11 +1225,7 @@ class TestAsyncSentDm:
         # no timeout given to the httpx client should not use the httpx default
         async with httpx.AsyncClient() as http_client:
             client = AsyncSentDm(
-                base_url=base_url,
-                api_key=api_key,
-                sender_id=sender_id,
-                _strict_response_validation=True,
-                http_client=http_client,
+                base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -1357,11 +1237,7 @@ class TestAsyncSentDm:
         # explicitly passing the default timeout currently results in it being ignored
         async with httpx.AsyncClient(timeout=HTTPX_DEFAULT_TIMEOUT) as http_client:
             client = AsyncSentDm(
-                base_url=base_url,
-                api_key=api_key,
-                sender_id=sender_id,
-                _strict_response_validation=True,
-                http_client=http_client,
+                base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -1376,18 +1252,13 @@ class TestAsyncSentDm:
                 AsyncSentDm(
                     base_url=base_url,
                     api_key=api_key,
-                    sender_id=sender_id,
                     _strict_response_validation=True,
                     http_client=cast(Any, http_client),
                 )
 
     async def test_default_headers_option(self) -> None:
         test_client = AsyncSentDm(
-            base_url=base_url,
-            api_key=api_key,
-            sender_id=sender_id,
-            _strict_response_validation=True,
-            default_headers={"X-Foo": "bar"},
+            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
         request = test_client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("x-foo") == "bar"
@@ -1396,7 +1267,6 @@ class TestAsyncSentDm:
         test_client2 = AsyncSentDm(
             base_url=base_url,
             api_key=api_key,
-            sender_id=sender_id,
             _strict_response_validation=True,
             default_headers={
                 "X-Foo": "stainless",
@@ -1411,29 +1281,18 @@ class TestAsyncSentDm:
         await test_client2.close()
 
     def test_validate_headers(self) -> None:
-        client = AsyncSentDm(base_url=base_url, api_key=api_key, sender_id=sender_id, _strict_response_validation=True)
+        client = AsyncSentDm(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("x-api-key") == api_key
-        request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
-        assert request.headers.get("x-sender-id") == sender_id
 
         with pytest.raises(SentDmError):
-            with update_env(
-                **{
-                    "SENT_DM_API_KEY": Omit(),
-                    "SENT_DM_SENDER_ID": Omit(),
-                }
-            ):
-                client2 = AsyncSentDm(base_url=base_url, api_key=None, sender_id=None, _strict_response_validation=True)
+            with update_env(**{"SENT_DM_API_KEY": Omit()}):
+                client2 = AsyncSentDm(base_url=base_url, api_key=None, _strict_response_validation=True)
             _ = client2
 
     async def test_default_query_option(self) -> None:
         client = AsyncSentDm(
-            base_url=base_url,
-            api_key=api_key,
-            sender_id=sender_id,
-            _strict_response_validation=True,
-            default_query={"query_param": "bar"},
+            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"query_param": "bar"}
         )
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         url = httpx.URL(request.url)
@@ -1606,7 +1465,6 @@ class TestAsyncSentDm:
         async with AsyncSentDm(
             base_url=base_url,
             api_key=api_key,
-            sender_id=sender_id,
             _strict_response_validation=True,
             http_client=httpx.AsyncClient(transport=MockTransport(handler=mock_handler)),
         ) as client:
@@ -1705,10 +1563,7 @@ class TestAsyncSentDm:
 
     async def test_base_url_setter(self) -> None:
         client = AsyncSentDm(
-            base_url="https://example.com/from_init",
-            api_key=api_key,
-            sender_id=sender_id,
-            _strict_response_validation=True,
+            base_url="https://example.com/from_init", api_key=api_key, _strict_response_validation=True
         )
         assert client.base_url == "https://example.com/from_init/"
 
@@ -1720,22 +1575,18 @@ class TestAsyncSentDm:
 
     async def test_base_url_env(self) -> None:
         with update_env(SENT_DM_BASE_URL="http://localhost:5000/from/env"):
-            client = AsyncSentDm(api_key=api_key, sender_id=sender_id, _strict_response_validation=True)
+            client = AsyncSentDm(api_key=api_key, _strict_response_validation=True)
             assert client.base_url == "http://localhost:5000/from/env/"
 
     @pytest.mark.parametrize(
         "client",
         [
             AsyncSentDm(
-                base_url="http://localhost:5000/custom/path/",
-                api_key=api_key,
-                sender_id=sender_id,
-                _strict_response_validation=True,
+                base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
             ),
             AsyncSentDm(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
-                sender_id=sender_id,
                 _strict_response_validation=True,
                 http_client=httpx.AsyncClient(),
             ),
@@ -1757,15 +1608,11 @@ class TestAsyncSentDm:
         "client",
         [
             AsyncSentDm(
-                base_url="http://localhost:5000/custom/path/",
-                api_key=api_key,
-                sender_id=sender_id,
-                _strict_response_validation=True,
+                base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
             ),
             AsyncSentDm(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
-                sender_id=sender_id,
                 _strict_response_validation=True,
                 http_client=httpx.AsyncClient(),
             ),
@@ -1787,15 +1634,11 @@ class TestAsyncSentDm:
         "client",
         [
             AsyncSentDm(
-                base_url="http://localhost:5000/custom/path/",
-                api_key=api_key,
-                sender_id=sender_id,
-                _strict_response_validation=True,
+                base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
             ),
             AsyncSentDm(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
-                sender_id=sender_id,
                 _strict_response_validation=True,
                 http_client=httpx.AsyncClient(),
             ),
@@ -1814,9 +1657,7 @@ class TestAsyncSentDm:
         await client.close()
 
     async def test_copied_client_does_not_close_http(self) -> None:
-        test_client = AsyncSentDm(
-            base_url=base_url, api_key=api_key, sender_id=sender_id, _strict_response_validation=True
-        )
+        test_client = AsyncSentDm(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         assert not test_client.is_closed()
 
         copied = test_client.copy()
@@ -1828,9 +1669,7 @@ class TestAsyncSentDm:
         assert not test_client.is_closed()
 
     async def test_client_context_manager(self) -> None:
-        test_client = AsyncSentDm(
-            base_url=base_url, api_key=api_key, sender_id=sender_id, _strict_response_validation=True
-        )
+        test_client = AsyncSentDm(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         async with test_client as c2:
             assert c2 is test_client
             assert not c2.is_closed()
@@ -1852,11 +1691,7 @@ class TestAsyncSentDm:
     async def test_client_max_retries_validation(self) -> None:
         with pytest.raises(TypeError, match=r"max_retries cannot be None"):
             AsyncSentDm(
-                base_url=base_url,
-                api_key=api_key,
-                sender_id=sender_id,
-                _strict_response_validation=True,
-                max_retries=cast(Any, None),
+                base_url=base_url, api_key=api_key, _strict_response_validation=True, max_retries=cast(Any, None)
             )
 
     @pytest.mark.respx(base_url=base_url)
@@ -1866,16 +1701,12 @@ class TestAsyncSentDm:
 
         respx_mock.get("/foo").mock(return_value=httpx.Response(200, text="my-custom-format"))
 
-        strict_client = AsyncSentDm(
-            base_url=base_url, api_key=api_key, sender_id=sender_id, _strict_response_validation=True
-        )
+        strict_client = AsyncSentDm(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
         with pytest.raises(APIResponseValidationError):
             await strict_client.get("/foo", cast_to=Model)
 
-        non_strict_client = AsyncSentDm(
-            base_url=base_url, api_key=api_key, sender_id=sender_id, _strict_response_validation=False
-        )
+        non_strict_client = AsyncSentDm(base_url=base_url, api_key=api_key, _strict_response_validation=False)
 
         response = await non_strict_client.get("/foo", cast_to=Model)
         assert isinstance(response, str)  # type: ignore[unreachable]
@@ -1916,24 +1747,20 @@ class TestAsyncSentDm:
     @mock.patch("sent_dm._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter, async_client: AsyncSentDm) -> None:
-        respx_mock.post("/v2/messages/phone").mock(side_effect=httpx.TimeoutException("Test timeout error"))
+        respx_mock.post("/v3/messages").mock(side_effect=httpx.TimeoutException("Test timeout error"))
 
         with pytest.raises(APITimeoutError):
-            await async_client.messages.with_streaming_response.send_to_phone(
-                phone_number="+1234567890", template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8"
-            ).__aenter__()
+            await async_client.messages.with_streaming_response.send().__aenter__()
 
         assert _get_open_connections(async_client) == 0
 
     @mock.patch("sent_dm._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter, async_client: AsyncSentDm) -> None:
-        respx_mock.post("/v2/messages/phone").mock(return_value=httpx.Response(500))
+        respx_mock.post("/v3/messages").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
-            await async_client.messages.with_streaming_response.send_to_phone(
-                phone_number="+1234567890", template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8"
-            ).__aenter__()
+            await async_client.messages.with_streaming_response.send().__aenter__()
         assert _get_open_connections(async_client) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
@@ -1960,11 +1787,9 @@ class TestAsyncSentDm:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/v2/messages/phone").mock(side_effect=retry_handler)
+        respx_mock.post("/v3/messages").mock(side_effect=retry_handler)
 
-        response = await client.messages.with_raw_response.send_to_phone(
-            phone_number="+1234567890", template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8"
-        )
+        response = await client.messages.with_raw_response.send()
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -1986,13 +1811,9 @@ class TestAsyncSentDm:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/v2/messages/phone").mock(side_effect=retry_handler)
+        respx_mock.post("/v3/messages").mock(side_effect=retry_handler)
 
-        response = await client.messages.with_raw_response.send_to_phone(
-            phone_number="+1234567890",
-            template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
-            extra_headers={"x-stainless-retry-count": Omit()},
-        )
+        response = await client.messages.with_raw_response.send(extra_headers={"x-stainless-retry-count": Omit()})
 
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
 
@@ -2013,13 +1834,9 @@ class TestAsyncSentDm:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/v2/messages/phone").mock(side_effect=retry_handler)
+        respx_mock.post("/v3/messages").mock(side_effect=retry_handler)
 
-        response = await client.messages.with_raw_response.send_to_phone(
-            phone_number="+1234567890",
-            template_id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
-            extra_headers={"x-stainless-retry-count": "42"},
-        )
+        response = await client.messages.with_raw_response.send(extra_headers={"x-stainless-retry-count": "42"})
 
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"
 

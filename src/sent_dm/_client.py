@@ -31,11 +31,16 @@ from ._base_client import (
 )
 
 if TYPE_CHECKING:
-    from .resources import contacts, messages, templates, number_lookup
+    from .resources import me, users, brands, lookup, contacts, messages, profiles, webhooks, templates
+    from .resources.me import MeResource, AsyncMeResource
+    from .resources.users import UsersResource, AsyncUsersResource
+    from .resources.lookup import LookupResource, AsyncLookupResource
     from .resources.contacts import ContactsResource, AsyncContactsResource
     from .resources.messages import MessagesResource, AsyncMessagesResource
+    from .resources.profiles import ProfilesResource, AsyncProfilesResource
+    from .resources.webhooks import WebhooksResource, AsyncWebhooksResource
     from .resources.templates import TemplatesResource, AsyncTemplatesResource
-    from .resources.number_lookup import NumberLookupResource, AsyncNumberLookupResource
+    from .resources.brands.brands import BrandsResource, AsyncBrandsResource
 
 __all__ = ["Timeout", "Transport", "ProxiesTypes", "RequestOptions", "SentDm", "AsyncSentDm", "Client", "AsyncClient"]
 
@@ -43,13 +48,11 @@ __all__ = ["Timeout", "Transport", "ProxiesTypes", "RequestOptions", "SentDm", "
 class SentDm(SyncAPIClient):
     # client options
     api_key: str
-    sender_id: str
 
     def __init__(
         self,
         *,
         api_key: str | None = None,
-        sender_id: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: float | Timeout | None | NotGiven = not_given,
         max_retries: int = DEFAULT_MAX_RETRIES,
@@ -71,9 +74,7 @@ class SentDm(SyncAPIClient):
     ) -> None:
         """Construct a new synchronous SentDm client instance.
 
-        This automatically infers the following arguments from their corresponding environment variables if they are not provided:
-        - `api_key` from `SENT_DM_API_KEY`
-        - `sender_id` from `SENT_DM_SENDER_ID`
+        This automatically infers the `api_key` argument from the `SENT_DM_API_KEY` environment variable if it is not provided.
         """
         if api_key is None:
             api_key = os.environ.get("SENT_DM_API_KEY")
@@ -82,14 +83,6 @@ class SentDm(SyncAPIClient):
                 "The api_key client option must be set either by passing api_key to the client or by setting the SENT_DM_API_KEY environment variable"
             )
         self.api_key = api_key
-
-        if sender_id is None:
-            sender_id = os.environ.get("SENT_DM_SENDER_ID")
-        if sender_id is None:
-            raise SentDmError(
-                "The sender_id client option must be set either by passing sender_id to the client or by setting the SENT_DM_SENDER_ID environment variable"
-            )
-        self.sender_id = sender_id
 
         if base_url is None:
             base_url = os.environ.get("SENT_DM_BASE_URL")
@@ -108,16 +101,16 @@ class SentDm(SyncAPIClient):
         )
 
     @cached_property
-    def contacts(self) -> ContactsResource:
-        from .resources.contacts import ContactsResource
+    def webhooks(self) -> WebhooksResource:
+        from .resources.webhooks import WebhooksResource
 
-        return ContactsResource(self)
+        return WebhooksResource(self)
 
     @cached_property
-    def messages(self) -> MessagesResource:
-        from .resources.messages import MessagesResource
+    def users(self) -> UsersResource:
+        from .resources.users import UsersResource
 
-        return MessagesResource(self)
+        return UsersResource(self)
 
     @cached_property
     def templates(self) -> TemplatesResource:
@@ -126,10 +119,40 @@ class SentDm(SyncAPIClient):
         return TemplatesResource(self)
 
     @cached_property
-    def number_lookup(self) -> NumberLookupResource:
-        from .resources.number_lookup import NumberLookupResource
+    def profiles(self) -> ProfilesResource:
+        from .resources.profiles import ProfilesResource
 
-        return NumberLookupResource(self)
+        return ProfilesResource(self)
+
+    @cached_property
+    def messages(self) -> MessagesResource:
+        from .resources.messages import MessagesResource
+
+        return MessagesResource(self)
+
+    @cached_property
+    def lookup(self) -> LookupResource:
+        from .resources.lookup import LookupResource
+
+        return LookupResource(self)
+
+    @cached_property
+    def contacts(self) -> ContactsResource:
+        from .resources.contacts import ContactsResource
+
+        return ContactsResource(self)
+
+    @cached_property
+    def brands(self) -> BrandsResource:
+        from .resources.brands import BrandsResource
+
+        return BrandsResource(self)
+
+    @cached_property
+    def me(self) -> MeResource:
+        from .resources.me import MeResource
+
+        return MeResource(self)
 
     @cached_property
     def with_raw_response(self) -> SentDmWithRawResponse:
@@ -147,17 +170,8 @@ class SentDm(SyncAPIClient):
     @property
     @override
     def auth_headers(self) -> dict[str, str]:
-        return {**self._customer_api_key, **self._customer_sender_id}
-
-    @property
-    def _customer_api_key(self) -> dict[str, str]:
         api_key = self.api_key
         return {"x-api-key": api_key}
-
-    @property
-    def _customer_sender_id(self) -> dict[str, str]:
-        sender_id = self.sender_id
-        return {"x-sender-id": sender_id}
 
     @property
     @override
@@ -172,7 +186,6 @@ class SentDm(SyncAPIClient):
         self,
         *,
         api_key: str | None = None,
-        sender_id: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: float | Timeout | None | NotGiven = not_given,
         http_client: httpx.Client | None = None,
@@ -207,7 +220,6 @@ class SentDm(SyncAPIClient):
         http_client = http_client or self._client
         return self.__class__(
             api_key=api_key or self.api_key,
-            sender_id=sender_id or self.sender_id,
             base_url=base_url or self.base_url,
             timeout=self.timeout if isinstance(timeout, NotGiven) else timeout,
             http_client=http_client,
@@ -258,13 +270,11 @@ class SentDm(SyncAPIClient):
 class AsyncSentDm(AsyncAPIClient):
     # client options
     api_key: str
-    sender_id: str
 
     def __init__(
         self,
         *,
         api_key: str | None = None,
-        sender_id: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: float | Timeout | None | NotGiven = not_given,
         max_retries: int = DEFAULT_MAX_RETRIES,
@@ -286,9 +296,7 @@ class AsyncSentDm(AsyncAPIClient):
     ) -> None:
         """Construct a new async AsyncSentDm client instance.
 
-        This automatically infers the following arguments from their corresponding environment variables if they are not provided:
-        - `api_key` from `SENT_DM_API_KEY`
-        - `sender_id` from `SENT_DM_SENDER_ID`
+        This automatically infers the `api_key` argument from the `SENT_DM_API_KEY` environment variable if it is not provided.
         """
         if api_key is None:
             api_key = os.environ.get("SENT_DM_API_KEY")
@@ -297,14 +305,6 @@ class AsyncSentDm(AsyncAPIClient):
                 "The api_key client option must be set either by passing api_key to the client or by setting the SENT_DM_API_KEY environment variable"
             )
         self.api_key = api_key
-
-        if sender_id is None:
-            sender_id = os.environ.get("SENT_DM_SENDER_ID")
-        if sender_id is None:
-            raise SentDmError(
-                "The sender_id client option must be set either by passing sender_id to the client or by setting the SENT_DM_SENDER_ID environment variable"
-            )
-        self.sender_id = sender_id
 
         if base_url is None:
             base_url = os.environ.get("SENT_DM_BASE_URL")
@@ -323,16 +323,16 @@ class AsyncSentDm(AsyncAPIClient):
         )
 
     @cached_property
-    def contacts(self) -> AsyncContactsResource:
-        from .resources.contacts import AsyncContactsResource
+    def webhooks(self) -> AsyncWebhooksResource:
+        from .resources.webhooks import AsyncWebhooksResource
 
-        return AsyncContactsResource(self)
+        return AsyncWebhooksResource(self)
 
     @cached_property
-    def messages(self) -> AsyncMessagesResource:
-        from .resources.messages import AsyncMessagesResource
+    def users(self) -> AsyncUsersResource:
+        from .resources.users import AsyncUsersResource
 
-        return AsyncMessagesResource(self)
+        return AsyncUsersResource(self)
 
     @cached_property
     def templates(self) -> AsyncTemplatesResource:
@@ -341,10 +341,40 @@ class AsyncSentDm(AsyncAPIClient):
         return AsyncTemplatesResource(self)
 
     @cached_property
-    def number_lookup(self) -> AsyncNumberLookupResource:
-        from .resources.number_lookup import AsyncNumberLookupResource
+    def profiles(self) -> AsyncProfilesResource:
+        from .resources.profiles import AsyncProfilesResource
 
-        return AsyncNumberLookupResource(self)
+        return AsyncProfilesResource(self)
+
+    @cached_property
+    def messages(self) -> AsyncMessagesResource:
+        from .resources.messages import AsyncMessagesResource
+
+        return AsyncMessagesResource(self)
+
+    @cached_property
+    def lookup(self) -> AsyncLookupResource:
+        from .resources.lookup import AsyncLookupResource
+
+        return AsyncLookupResource(self)
+
+    @cached_property
+    def contacts(self) -> AsyncContactsResource:
+        from .resources.contacts import AsyncContactsResource
+
+        return AsyncContactsResource(self)
+
+    @cached_property
+    def brands(self) -> AsyncBrandsResource:
+        from .resources.brands import AsyncBrandsResource
+
+        return AsyncBrandsResource(self)
+
+    @cached_property
+    def me(self) -> AsyncMeResource:
+        from .resources.me import AsyncMeResource
+
+        return AsyncMeResource(self)
 
     @cached_property
     def with_raw_response(self) -> AsyncSentDmWithRawResponse:
@@ -362,17 +392,8 @@ class AsyncSentDm(AsyncAPIClient):
     @property
     @override
     def auth_headers(self) -> dict[str, str]:
-        return {**self._customer_api_key, **self._customer_sender_id}
-
-    @property
-    def _customer_api_key(self) -> dict[str, str]:
         api_key = self.api_key
         return {"x-api-key": api_key}
-
-    @property
-    def _customer_sender_id(self) -> dict[str, str]:
-        sender_id = self.sender_id
-        return {"x-sender-id": sender_id}
 
     @property
     @override
@@ -387,7 +408,6 @@ class AsyncSentDm(AsyncAPIClient):
         self,
         *,
         api_key: str | None = None,
-        sender_id: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: float | Timeout | None | NotGiven = not_given,
         http_client: httpx.AsyncClient | None = None,
@@ -422,7 +442,6 @@ class AsyncSentDm(AsyncAPIClient):
         http_client = http_client or self._client
         return self.__class__(
             api_key=api_key or self.api_key,
-            sender_id=sender_id or self.sender_id,
             base_url=base_url or self.base_url,
             timeout=self.timeout if isinstance(timeout, NotGiven) else timeout,
             http_client=http_client,
@@ -477,16 +496,16 @@ class SentDmWithRawResponse:
         self._client = client
 
     @cached_property
-    def contacts(self) -> contacts.ContactsResourceWithRawResponse:
-        from .resources.contacts import ContactsResourceWithRawResponse
+    def webhooks(self) -> webhooks.WebhooksResourceWithRawResponse:
+        from .resources.webhooks import WebhooksResourceWithRawResponse
 
-        return ContactsResourceWithRawResponse(self._client.contacts)
+        return WebhooksResourceWithRawResponse(self._client.webhooks)
 
     @cached_property
-    def messages(self) -> messages.MessagesResourceWithRawResponse:
-        from .resources.messages import MessagesResourceWithRawResponse
+    def users(self) -> users.UsersResourceWithRawResponse:
+        from .resources.users import UsersResourceWithRawResponse
 
-        return MessagesResourceWithRawResponse(self._client.messages)
+        return UsersResourceWithRawResponse(self._client.users)
 
     @cached_property
     def templates(self) -> templates.TemplatesResourceWithRawResponse:
@@ -495,10 +514,40 @@ class SentDmWithRawResponse:
         return TemplatesResourceWithRawResponse(self._client.templates)
 
     @cached_property
-    def number_lookup(self) -> number_lookup.NumberLookupResourceWithRawResponse:
-        from .resources.number_lookup import NumberLookupResourceWithRawResponse
+    def profiles(self) -> profiles.ProfilesResourceWithRawResponse:
+        from .resources.profiles import ProfilesResourceWithRawResponse
 
-        return NumberLookupResourceWithRawResponse(self._client.number_lookup)
+        return ProfilesResourceWithRawResponse(self._client.profiles)
+
+    @cached_property
+    def messages(self) -> messages.MessagesResourceWithRawResponse:
+        from .resources.messages import MessagesResourceWithRawResponse
+
+        return MessagesResourceWithRawResponse(self._client.messages)
+
+    @cached_property
+    def lookup(self) -> lookup.LookupResourceWithRawResponse:
+        from .resources.lookup import LookupResourceWithRawResponse
+
+        return LookupResourceWithRawResponse(self._client.lookup)
+
+    @cached_property
+    def contacts(self) -> contacts.ContactsResourceWithRawResponse:
+        from .resources.contacts import ContactsResourceWithRawResponse
+
+        return ContactsResourceWithRawResponse(self._client.contacts)
+
+    @cached_property
+    def brands(self) -> brands.BrandsResourceWithRawResponse:
+        from .resources.brands import BrandsResourceWithRawResponse
+
+        return BrandsResourceWithRawResponse(self._client.brands)
+
+    @cached_property
+    def me(self) -> me.MeResourceWithRawResponse:
+        from .resources.me import MeResourceWithRawResponse
+
+        return MeResourceWithRawResponse(self._client.me)
 
 
 class AsyncSentDmWithRawResponse:
@@ -508,16 +557,16 @@ class AsyncSentDmWithRawResponse:
         self._client = client
 
     @cached_property
-    def contacts(self) -> contacts.AsyncContactsResourceWithRawResponse:
-        from .resources.contacts import AsyncContactsResourceWithRawResponse
+    def webhooks(self) -> webhooks.AsyncWebhooksResourceWithRawResponse:
+        from .resources.webhooks import AsyncWebhooksResourceWithRawResponse
 
-        return AsyncContactsResourceWithRawResponse(self._client.contacts)
+        return AsyncWebhooksResourceWithRawResponse(self._client.webhooks)
 
     @cached_property
-    def messages(self) -> messages.AsyncMessagesResourceWithRawResponse:
-        from .resources.messages import AsyncMessagesResourceWithRawResponse
+    def users(self) -> users.AsyncUsersResourceWithRawResponse:
+        from .resources.users import AsyncUsersResourceWithRawResponse
 
-        return AsyncMessagesResourceWithRawResponse(self._client.messages)
+        return AsyncUsersResourceWithRawResponse(self._client.users)
 
     @cached_property
     def templates(self) -> templates.AsyncTemplatesResourceWithRawResponse:
@@ -526,10 +575,40 @@ class AsyncSentDmWithRawResponse:
         return AsyncTemplatesResourceWithRawResponse(self._client.templates)
 
     @cached_property
-    def number_lookup(self) -> number_lookup.AsyncNumberLookupResourceWithRawResponse:
-        from .resources.number_lookup import AsyncNumberLookupResourceWithRawResponse
+    def profiles(self) -> profiles.AsyncProfilesResourceWithRawResponse:
+        from .resources.profiles import AsyncProfilesResourceWithRawResponse
 
-        return AsyncNumberLookupResourceWithRawResponse(self._client.number_lookup)
+        return AsyncProfilesResourceWithRawResponse(self._client.profiles)
+
+    @cached_property
+    def messages(self) -> messages.AsyncMessagesResourceWithRawResponse:
+        from .resources.messages import AsyncMessagesResourceWithRawResponse
+
+        return AsyncMessagesResourceWithRawResponse(self._client.messages)
+
+    @cached_property
+    def lookup(self) -> lookup.AsyncLookupResourceWithRawResponse:
+        from .resources.lookup import AsyncLookupResourceWithRawResponse
+
+        return AsyncLookupResourceWithRawResponse(self._client.lookup)
+
+    @cached_property
+    def contacts(self) -> contacts.AsyncContactsResourceWithRawResponse:
+        from .resources.contacts import AsyncContactsResourceWithRawResponse
+
+        return AsyncContactsResourceWithRawResponse(self._client.contacts)
+
+    @cached_property
+    def brands(self) -> brands.AsyncBrandsResourceWithRawResponse:
+        from .resources.brands import AsyncBrandsResourceWithRawResponse
+
+        return AsyncBrandsResourceWithRawResponse(self._client.brands)
+
+    @cached_property
+    def me(self) -> me.AsyncMeResourceWithRawResponse:
+        from .resources.me import AsyncMeResourceWithRawResponse
+
+        return AsyncMeResourceWithRawResponse(self._client.me)
 
 
 class SentDmWithStreamedResponse:
@@ -539,16 +618,16 @@ class SentDmWithStreamedResponse:
         self._client = client
 
     @cached_property
-    def contacts(self) -> contacts.ContactsResourceWithStreamingResponse:
-        from .resources.contacts import ContactsResourceWithStreamingResponse
+    def webhooks(self) -> webhooks.WebhooksResourceWithStreamingResponse:
+        from .resources.webhooks import WebhooksResourceWithStreamingResponse
 
-        return ContactsResourceWithStreamingResponse(self._client.contacts)
+        return WebhooksResourceWithStreamingResponse(self._client.webhooks)
 
     @cached_property
-    def messages(self) -> messages.MessagesResourceWithStreamingResponse:
-        from .resources.messages import MessagesResourceWithStreamingResponse
+    def users(self) -> users.UsersResourceWithStreamingResponse:
+        from .resources.users import UsersResourceWithStreamingResponse
 
-        return MessagesResourceWithStreamingResponse(self._client.messages)
+        return UsersResourceWithStreamingResponse(self._client.users)
 
     @cached_property
     def templates(self) -> templates.TemplatesResourceWithStreamingResponse:
@@ -557,10 +636,40 @@ class SentDmWithStreamedResponse:
         return TemplatesResourceWithStreamingResponse(self._client.templates)
 
     @cached_property
-    def number_lookup(self) -> number_lookup.NumberLookupResourceWithStreamingResponse:
-        from .resources.number_lookup import NumberLookupResourceWithStreamingResponse
+    def profiles(self) -> profiles.ProfilesResourceWithStreamingResponse:
+        from .resources.profiles import ProfilesResourceWithStreamingResponse
 
-        return NumberLookupResourceWithStreamingResponse(self._client.number_lookup)
+        return ProfilesResourceWithStreamingResponse(self._client.profiles)
+
+    @cached_property
+    def messages(self) -> messages.MessagesResourceWithStreamingResponse:
+        from .resources.messages import MessagesResourceWithStreamingResponse
+
+        return MessagesResourceWithStreamingResponse(self._client.messages)
+
+    @cached_property
+    def lookup(self) -> lookup.LookupResourceWithStreamingResponse:
+        from .resources.lookup import LookupResourceWithStreamingResponse
+
+        return LookupResourceWithStreamingResponse(self._client.lookup)
+
+    @cached_property
+    def contacts(self) -> contacts.ContactsResourceWithStreamingResponse:
+        from .resources.contacts import ContactsResourceWithStreamingResponse
+
+        return ContactsResourceWithStreamingResponse(self._client.contacts)
+
+    @cached_property
+    def brands(self) -> brands.BrandsResourceWithStreamingResponse:
+        from .resources.brands import BrandsResourceWithStreamingResponse
+
+        return BrandsResourceWithStreamingResponse(self._client.brands)
+
+    @cached_property
+    def me(self) -> me.MeResourceWithStreamingResponse:
+        from .resources.me import MeResourceWithStreamingResponse
+
+        return MeResourceWithStreamingResponse(self._client.me)
 
 
 class AsyncSentDmWithStreamedResponse:
@@ -570,16 +679,16 @@ class AsyncSentDmWithStreamedResponse:
         self._client = client
 
     @cached_property
-    def contacts(self) -> contacts.AsyncContactsResourceWithStreamingResponse:
-        from .resources.contacts import AsyncContactsResourceWithStreamingResponse
+    def webhooks(self) -> webhooks.AsyncWebhooksResourceWithStreamingResponse:
+        from .resources.webhooks import AsyncWebhooksResourceWithStreamingResponse
 
-        return AsyncContactsResourceWithStreamingResponse(self._client.contacts)
+        return AsyncWebhooksResourceWithStreamingResponse(self._client.webhooks)
 
     @cached_property
-    def messages(self) -> messages.AsyncMessagesResourceWithStreamingResponse:
-        from .resources.messages import AsyncMessagesResourceWithStreamingResponse
+    def users(self) -> users.AsyncUsersResourceWithStreamingResponse:
+        from .resources.users import AsyncUsersResourceWithStreamingResponse
 
-        return AsyncMessagesResourceWithStreamingResponse(self._client.messages)
+        return AsyncUsersResourceWithStreamingResponse(self._client.users)
 
     @cached_property
     def templates(self) -> templates.AsyncTemplatesResourceWithStreamingResponse:
@@ -588,10 +697,40 @@ class AsyncSentDmWithStreamedResponse:
         return AsyncTemplatesResourceWithStreamingResponse(self._client.templates)
 
     @cached_property
-    def number_lookup(self) -> number_lookup.AsyncNumberLookupResourceWithStreamingResponse:
-        from .resources.number_lookup import AsyncNumberLookupResourceWithStreamingResponse
+    def profiles(self) -> profiles.AsyncProfilesResourceWithStreamingResponse:
+        from .resources.profiles import AsyncProfilesResourceWithStreamingResponse
 
-        return AsyncNumberLookupResourceWithStreamingResponse(self._client.number_lookup)
+        return AsyncProfilesResourceWithStreamingResponse(self._client.profiles)
+
+    @cached_property
+    def messages(self) -> messages.AsyncMessagesResourceWithStreamingResponse:
+        from .resources.messages import AsyncMessagesResourceWithStreamingResponse
+
+        return AsyncMessagesResourceWithStreamingResponse(self._client.messages)
+
+    @cached_property
+    def lookup(self) -> lookup.AsyncLookupResourceWithStreamingResponse:
+        from .resources.lookup import AsyncLookupResourceWithStreamingResponse
+
+        return AsyncLookupResourceWithStreamingResponse(self._client.lookup)
+
+    @cached_property
+    def contacts(self) -> contacts.AsyncContactsResourceWithStreamingResponse:
+        from .resources.contacts import AsyncContactsResourceWithStreamingResponse
+
+        return AsyncContactsResourceWithStreamingResponse(self._client.contacts)
+
+    @cached_property
+    def brands(self) -> brands.AsyncBrandsResourceWithStreamingResponse:
+        from .resources.brands import AsyncBrandsResourceWithStreamingResponse
+
+        return AsyncBrandsResourceWithStreamingResponse(self._client.brands)
+
+    @cached_property
+    def me(self) -> me.AsyncMeResourceWithStreamingResponse:
+        from .resources.me import AsyncMeResourceWithStreamingResponse
+
+        return AsyncMeResourceWithStreamingResponse(self._client.me)
 
 
 Client = SentDm
