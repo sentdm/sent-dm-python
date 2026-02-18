@@ -2,21 +2,36 @@
 
 from typing import List, Optional
 
-from pydantic import Field as FieldInfo
-
 from .._models import BaseModel
-from .template_response_v2 import TemplateResponseV2
+from .api_meta import APIMeta
+from .template import Template
+from .api_error import APIError
+from .pagination_meta import PaginationMeta
 
-__all__ = ["TemplateListResponse"]
+__all__ = ["TemplateListResponse", "Data"]
+
+
+class Data(BaseModel):
+    """The response data (null if error)"""
+
+    pagination: Optional[PaginationMeta] = None
+    """Pagination metadata"""
+
+    templates: Optional[List[Template]] = None
+    """List of templates"""
 
 
 class TemplateListResponse(BaseModel):
-    items: Optional[List[TemplateResponseV2]] = None
+    """Standard API response envelope for all v3 endpoints"""
 
-    page: Optional[int] = None
+    data: Optional[Data] = None
+    """The response data (null if error)"""
 
-    page_size: Optional[int] = FieldInfo(alias="pageSize", default=None)
+    error: Optional[APIError] = None
+    """Error details (null if successful)"""
 
-    total_count: Optional[int] = FieldInfo(alias="totalCount", default=None)
+    meta: Optional[APIMeta] = None
+    """Metadata about the request and response"""
 
-    total_pages: Optional[int] = FieldInfo(alias="totalPages", default=None)
+    success: Optional[bool] = None
+    """Indicates whether the request was successful"""

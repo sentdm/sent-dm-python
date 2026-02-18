@@ -2,21 +2,36 @@
 
 from typing import List, Optional
 
-from pydantic import Field as FieldInfo
-
+from .contact import Contact
 from .._models import BaseModel
-from .contact_list_item import ContactListItem
+from .api_meta import APIMeta
+from .api_error import APIError
+from .pagination_meta import PaginationMeta
 
-__all__ = ["ContactListResponse"]
+__all__ = ["ContactListResponse", "Data"]
+
+
+class Data(BaseModel):
+    """The response data (null if error)"""
+
+    contacts: Optional[List[Contact]] = None
+    """List of contacts"""
+
+    pagination: Optional[PaginationMeta] = None
+    """Pagination metadata"""
 
 
 class ContactListResponse(BaseModel):
-    items: Optional[List[ContactListItem]] = None
+    """Standard API response envelope for all v3 endpoints"""
 
-    page: Optional[int] = None
+    data: Optional[Data] = None
+    """The response data (null if error)"""
 
-    page_size: Optional[int] = FieldInfo(alias="pageSize", default=None)
+    error: Optional[APIError] = None
+    """Error details (null if successful)"""
 
-    total_count: Optional[int] = FieldInfo(alias="totalCount", default=None)
+    meta: Optional[APIMeta] = None
+    """Metadata about the request and response"""
 
-    total_pages: Optional[int] = FieldInfo(alias="totalPages", default=None)
+    success: Optional[bool] = None
+    """Indicates whether the request was successful"""

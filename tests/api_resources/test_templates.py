@@ -10,7 +10,7 @@ import pytest
 from sent_dm import SentDm, AsyncSentDm
 from tests.utils import assert_matches_type
 from sent_dm.types import (
-    TemplateResponseV2,
+    APIResponseTemplate,
     TemplateListResponse,
 )
 
@@ -23,34 +23,47 @@ class TestTemplates:
     @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_method_create(self, client: SentDm) -> None:
-        template = client.templates.create(
-            definition={"body": {}},
-        )
-        assert_matches_type(TemplateResponseV2, template, path=["response"])
+        template = client.templates.create()
+        assert_matches_type(APIResponseTemplate, template, path=["response"])
 
     @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_method_create_with_all_params(self, client: SentDm) -> None:
         template = client.templates.create(
+            category="MARKETING",
+            creation_source=None,
             definition={
                 "body": {
                     "multi_channel": {
-                        "template": "Hello {{1:variable}}, thank you for joining our service. We're excited to help you with your messaging needs!",
+                        "template": "Hello {{0:variable}}! Welcome to {{1:variable}}.",
                         "type": None,
                         "variables": [
                             {
-                                "id": 1,
-                                "name": "customerName",
+                                "id": 0,
+                                "name": "name",
                                 "props": {
                                     "alt": None,
                                     "media_type": None,
-                                    "sample": "John Doe",
+                                    "sample": "John",
                                     "short_url": None,
                                     "url": None,
                                     "variable_type": "text",
                                 },
                                 "type": "variable",
-                            }
+                            },
+                            {
+                                "id": 1,
+                                "name": "company",
+                                "props": {
+                                    "alt": None,
+                                    "media_type": None,
+                                    "sample": "SentDM",
+                                    "short_url": None,
+                                    "url": None,
+                                    "variable_type": "text",
+                                },
+                                "type": "variable",
+                            },
                         ],
                     },
                     "sms": {
@@ -118,8 +131,8 @@ class TestTemplates:
                 ],
                 "definition_version": "1.0",
                 "footer": {
-                    "template": "Best regards, The SentDM Team",
-                    "type": "text",
+                    "template": "template",
+                    "type": "type",
                     "variables": [
                         {
                             "id": 0,
@@ -137,54 +150,51 @@ class TestTemplates:
                     ],
                 },
                 "header": {
-                    "template": "Welcome to {{1:variable}}!",
-                    "type": "text",
+                    "template": "template",
+                    "type": "type",
                     "variables": [
                         {
-                            "id": 1,
-                            "name": "companyName",
+                            "id": 0,
+                            "name": "name",
                             "props": {
-                                "alt": None,
-                                "media_type": None,
-                                "sample": "SentDM",
-                                "short_url": None,
-                                "url": None,
-                                "variable_type": "text",
+                                "alt": "alt",
+                                "media_type": "mediaType",
+                                "sample": "sample",
+                                "short_url": "shortUrl",
+                                "url": "url",
+                                "variable_type": "variableType",
                             },
-                            "type": "variable",
+                            "type": "type",
                         }
                     ],
                 },
             },
-            category="MARKETING",
             language="en_US",
             submit_for_review=False,
+            test_mode=False,
+            idempotency_key="req_abc123_retry1",
         )
-        assert_matches_type(TemplateResponseV2, template, path=["response"])
+        assert_matches_type(APIResponseTemplate, template, path=["response"])
 
     @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_raw_response_create(self, client: SentDm) -> None:
-        response = client.templates.with_raw_response.create(
-            definition={"body": {}},
-        )
+        response = client.templates.with_raw_response.create()
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         template = response.parse()
-        assert_matches_type(TemplateResponseV2, template, path=["response"])
+        assert_matches_type(APIResponseTemplate, template, path=["response"])
 
     @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     def test_streaming_response_create(self, client: SentDm) -> None:
-        with client.templates.with_streaming_response.create(
-            definition={"body": {}},
-        ) as response:
+        with client.templates.with_streaming_response.create() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             template = response.parse()
-            assert_matches_type(TemplateResponseV2, template, path=["response"])
+            assert_matches_type(APIResponseTemplate, template, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -194,7 +204,7 @@ class TestTemplates:
         template = client.templates.retrieve(
             "7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         )
-        assert_matches_type(TemplateResponseV2, template, path=["response"])
+        assert_matches_type(APIResponseTemplate, template, path=["response"])
 
     @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
@@ -206,7 +216,7 @@ class TestTemplates:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         template = response.parse()
-        assert_matches_type(TemplateResponseV2, template, path=["response"])
+        assert_matches_type(APIResponseTemplate, template, path=["response"])
 
     @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
@@ -218,7 +228,7 @@ class TestTemplates:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             template = response.parse()
-            assert_matches_type(TemplateResponseV2, template, path=["response"])
+            assert_matches_type(APIResponseTemplate, template, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -228,6 +238,186 @@ class TestTemplates:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             client.templates.with_raw_response.retrieve(
                 "",
+            )
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    def test_method_update(self, client: SentDm) -> None:
+        template = client.templates.update(
+            id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+        )
+        assert_matches_type(APIResponseTemplate, template, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    def test_method_update_with_all_params(self, client: SentDm) -> None:
+        template = client.templates.update(
+            id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+            category="MARKETING",
+            definition={
+                "body": {
+                    "multi_channel": {
+                        "template": "template",
+                        "type": "type",
+                        "variables": [
+                            {
+                                "id": 0,
+                                "name": "name",
+                                "props": {
+                                    "alt": "alt",
+                                    "media_type": "mediaType",
+                                    "sample": "sample",
+                                    "short_url": "shortUrl",
+                                    "url": "url",
+                                    "variable_type": "variableType",
+                                },
+                                "type": "type",
+                            }
+                        ],
+                    },
+                    "sms": {
+                        "template": "template",
+                        "type": "type",
+                        "variables": [
+                            {
+                                "id": 0,
+                                "name": "name",
+                                "props": {
+                                    "alt": "alt",
+                                    "media_type": "mediaType",
+                                    "sample": "sample",
+                                    "short_url": "shortUrl",
+                                    "url": "url",
+                                    "variable_type": "variableType",
+                                },
+                                "type": "type",
+                            }
+                        ],
+                    },
+                    "whatsapp": {
+                        "template": "template",
+                        "type": "type",
+                        "variables": [
+                            {
+                                "id": 0,
+                                "name": "name",
+                                "props": {
+                                    "alt": "alt",
+                                    "media_type": "mediaType",
+                                    "sample": "sample",
+                                    "short_url": "shortUrl",
+                                    "url": "url",
+                                    "variable_type": "variableType",
+                                },
+                                "type": "type",
+                            }
+                        ],
+                    },
+                },
+                "authentication_config": {
+                    "add_security_recommendation": True,
+                    "code_expiration_minutes": 0,
+                },
+                "buttons": [
+                    {
+                        "id": 0,
+                        "props": {
+                            "active_for": 0,
+                            "autofill_text": "autofillText",
+                            "country_code": "countryCode",
+                            "offer_code": "offerCode",
+                            "otp_type": "otpType",
+                            "package_name": "packageName",
+                            "phone_number": "phoneNumber",
+                            "quick_reply_type": "quickReplyType",
+                            "signature_hash": "signatureHash",
+                            "text": "text",
+                            "url": "url",
+                            "url_type": "urlType",
+                        },
+                        "type": "type",
+                    }
+                ],
+                "definition_version": "definitionVersion",
+                "footer": {
+                    "template": "template",
+                    "type": "type",
+                    "variables": [
+                        {
+                            "id": 0,
+                            "name": "name",
+                            "props": {
+                                "alt": "alt",
+                                "media_type": "mediaType",
+                                "sample": "sample",
+                                "short_url": "shortUrl",
+                                "url": "url",
+                                "variable_type": "variableType",
+                            },
+                            "type": "type",
+                        }
+                    ],
+                },
+                "header": {
+                    "template": "template",
+                    "type": "type",
+                    "variables": [
+                        {
+                            "id": 0,
+                            "name": "name",
+                            "props": {
+                                "alt": "alt",
+                                "media_type": "mediaType",
+                                "sample": "sample",
+                                "short_url": "shortUrl",
+                                "url": "url",
+                                "variable_type": "variableType",
+                            },
+                            "type": "type",
+                        }
+                    ],
+                },
+            },
+            language=None,
+            name="Updated Welcome Message",
+            submit_for_review=False,
+            test_mode=False,
+            idempotency_key="req_abc123_retry1",
+        )
+        assert_matches_type(APIResponseTemplate, template, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    def test_raw_response_update(self, client: SentDm) -> None:
+        response = client.templates.with_raw_response.update(
+            id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        template = response.parse()
+        assert_matches_type(APIResponseTemplate, template, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    def test_streaming_response_update(self, client: SentDm) -> None:
+        with client.templates.with_streaming_response.update(
+            id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            template = response.parse()
+            assert_matches_type(APIResponseTemplate, template, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    def test_path_params_update(self, client: SentDm) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            client.templates.with_raw_response.update(
+                id="",
             )
 
     @pytest.mark.skip(reason="Prism tests are disabled")
@@ -283,7 +473,17 @@ class TestTemplates:
     @parametrize
     def test_method_delete(self, client: SentDm) -> None:
         template = client.templates.delete(
-            "7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+            id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+        )
+        assert template is None
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    def test_method_delete_with_all_params(self, client: SentDm) -> None:
+        template = client.templates.delete(
+            id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+            delete_from_meta=False,
+            test_mode=False,
         )
         assert template is None
 
@@ -291,7 +491,7 @@ class TestTemplates:
     @parametrize
     def test_raw_response_delete(self, client: SentDm) -> None:
         response = client.templates.with_raw_response.delete(
-            "7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+            id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         )
 
         assert response.is_closed is True
@@ -303,7 +503,7 @@ class TestTemplates:
     @parametrize
     def test_streaming_response_delete(self, client: SentDm) -> None:
         with client.templates.with_streaming_response.delete(
-            "7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+            id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -318,7 +518,7 @@ class TestTemplates:
     def test_path_params_delete(self, client: SentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             client.templates.with_raw_response.delete(
-                "",
+                id="",
             )
 
 
@@ -330,34 +530,47 @@ class TestAsyncTemplates:
     @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_method_create(self, async_client: AsyncSentDm) -> None:
-        template = await async_client.templates.create(
-            definition={"body": {}},
-        )
-        assert_matches_type(TemplateResponseV2, template, path=["response"])
+        template = await async_client.templates.create()
+        assert_matches_type(APIResponseTemplate, template, path=["response"])
 
     @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_method_create_with_all_params(self, async_client: AsyncSentDm) -> None:
         template = await async_client.templates.create(
+            category="MARKETING",
+            creation_source=None,
             definition={
                 "body": {
                     "multi_channel": {
-                        "template": "Hello {{1:variable}}, thank you for joining our service. We're excited to help you with your messaging needs!",
+                        "template": "Hello {{0:variable}}! Welcome to {{1:variable}}.",
                         "type": None,
                         "variables": [
                             {
-                                "id": 1,
-                                "name": "customerName",
+                                "id": 0,
+                                "name": "name",
                                 "props": {
                                     "alt": None,
                                     "media_type": None,
-                                    "sample": "John Doe",
+                                    "sample": "John",
                                     "short_url": None,
                                     "url": None,
                                     "variable_type": "text",
                                 },
                                 "type": "variable",
-                            }
+                            },
+                            {
+                                "id": 1,
+                                "name": "company",
+                                "props": {
+                                    "alt": None,
+                                    "media_type": None,
+                                    "sample": "SentDM",
+                                    "short_url": None,
+                                    "url": None,
+                                    "variable_type": "text",
+                                },
+                                "type": "variable",
+                            },
                         ],
                     },
                     "sms": {
@@ -425,8 +638,8 @@ class TestAsyncTemplates:
                 ],
                 "definition_version": "1.0",
                 "footer": {
-                    "template": "Best regards, The SentDM Team",
-                    "type": "text",
+                    "template": "template",
+                    "type": "type",
                     "variables": [
                         {
                             "id": 0,
@@ -444,54 +657,51 @@ class TestAsyncTemplates:
                     ],
                 },
                 "header": {
-                    "template": "Welcome to {{1:variable}}!",
-                    "type": "text",
+                    "template": "template",
+                    "type": "type",
                     "variables": [
                         {
-                            "id": 1,
-                            "name": "companyName",
+                            "id": 0,
+                            "name": "name",
                             "props": {
-                                "alt": None,
-                                "media_type": None,
-                                "sample": "SentDM",
-                                "short_url": None,
-                                "url": None,
-                                "variable_type": "text",
+                                "alt": "alt",
+                                "media_type": "mediaType",
+                                "sample": "sample",
+                                "short_url": "shortUrl",
+                                "url": "url",
+                                "variable_type": "variableType",
                             },
-                            "type": "variable",
+                            "type": "type",
                         }
                     ],
                 },
             },
-            category="MARKETING",
             language="en_US",
             submit_for_review=False,
+            test_mode=False,
+            idempotency_key="req_abc123_retry1",
         )
-        assert_matches_type(TemplateResponseV2, template, path=["response"])
+        assert_matches_type(APIResponseTemplate, template, path=["response"])
 
     @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_raw_response_create(self, async_client: AsyncSentDm) -> None:
-        response = await async_client.templates.with_raw_response.create(
-            definition={"body": {}},
-        )
+        response = await async_client.templates.with_raw_response.create()
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         template = await response.parse()
-        assert_matches_type(TemplateResponseV2, template, path=["response"])
+        assert_matches_type(APIResponseTemplate, template, path=["response"])
 
     @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
     async def test_streaming_response_create(self, async_client: AsyncSentDm) -> None:
-        async with async_client.templates.with_streaming_response.create(
-            definition={"body": {}},
-        ) as response:
+        async with async_client.templates.with_streaming_response.create() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             template = await response.parse()
-            assert_matches_type(TemplateResponseV2, template, path=["response"])
+            assert_matches_type(APIResponseTemplate, template, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -501,7 +711,7 @@ class TestAsyncTemplates:
         template = await async_client.templates.retrieve(
             "7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         )
-        assert_matches_type(TemplateResponseV2, template, path=["response"])
+        assert_matches_type(APIResponseTemplate, template, path=["response"])
 
     @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
@@ -513,7 +723,7 @@ class TestAsyncTemplates:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         template = await response.parse()
-        assert_matches_type(TemplateResponseV2, template, path=["response"])
+        assert_matches_type(APIResponseTemplate, template, path=["response"])
 
     @pytest.mark.skip(reason="Prism tests are disabled")
     @parametrize
@@ -525,7 +735,7 @@ class TestAsyncTemplates:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             template = await response.parse()
-            assert_matches_type(TemplateResponseV2, template, path=["response"])
+            assert_matches_type(APIResponseTemplate, template, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -535,6 +745,186 @@ class TestAsyncTemplates:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             await async_client.templates.with_raw_response.retrieve(
                 "",
+            )
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    async def test_method_update(self, async_client: AsyncSentDm) -> None:
+        template = await async_client.templates.update(
+            id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+        )
+        assert_matches_type(APIResponseTemplate, template, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    async def test_method_update_with_all_params(self, async_client: AsyncSentDm) -> None:
+        template = await async_client.templates.update(
+            id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+            category="MARKETING",
+            definition={
+                "body": {
+                    "multi_channel": {
+                        "template": "template",
+                        "type": "type",
+                        "variables": [
+                            {
+                                "id": 0,
+                                "name": "name",
+                                "props": {
+                                    "alt": "alt",
+                                    "media_type": "mediaType",
+                                    "sample": "sample",
+                                    "short_url": "shortUrl",
+                                    "url": "url",
+                                    "variable_type": "variableType",
+                                },
+                                "type": "type",
+                            }
+                        ],
+                    },
+                    "sms": {
+                        "template": "template",
+                        "type": "type",
+                        "variables": [
+                            {
+                                "id": 0,
+                                "name": "name",
+                                "props": {
+                                    "alt": "alt",
+                                    "media_type": "mediaType",
+                                    "sample": "sample",
+                                    "short_url": "shortUrl",
+                                    "url": "url",
+                                    "variable_type": "variableType",
+                                },
+                                "type": "type",
+                            }
+                        ],
+                    },
+                    "whatsapp": {
+                        "template": "template",
+                        "type": "type",
+                        "variables": [
+                            {
+                                "id": 0,
+                                "name": "name",
+                                "props": {
+                                    "alt": "alt",
+                                    "media_type": "mediaType",
+                                    "sample": "sample",
+                                    "short_url": "shortUrl",
+                                    "url": "url",
+                                    "variable_type": "variableType",
+                                },
+                                "type": "type",
+                            }
+                        ],
+                    },
+                },
+                "authentication_config": {
+                    "add_security_recommendation": True,
+                    "code_expiration_minutes": 0,
+                },
+                "buttons": [
+                    {
+                        "id": 0,
+                        "props": {
+                            "active_for": 0,
+                            "autofill_text": "autofillText",
+                            "country_code": "countryCode",
+                            "offer_code": "offerCode",
+                            "otp_type": "otpType",
+                            "package_name": "packageName",
+                            "phone_number": "phoneNumber",
+                            "quick_reply_type": "quickReplyType",
+                            "signature_hash": "signatureHash",
+                            "text": "text",
+                            "url": "url",
+                            "url_type": "urlType",
+                        },
+                        "type": "type",
+                    }
+                ],
+                "definition_version": "definitionVersion",
+                "footer": {
+                    "template": "template",
+                    "type": "type",
+                    "variables": [
+                        {
+                            "id": 0,
+                            "name": "name",
+                            "props": {
+                                "alt": "alt",
+                                "media_type": "mediaType",
+                                "sample": "sample",
+                                "short_url": "shortUrl",
+                                "url": "url",
+                                "variable_type": "variableType",
+                            },
+                            "type": "type",
+                        }
+                    ],
+                },
+                "header": {
+                    "template": "template",
+                    "type": "type",
+                    "variables": [
+                        {
+                            "id": 0,
+                            "name": "name",
+                            "props": {
+                                "alt": "alt",
+                                "media_type": "mediaType",
+                                "sample": "sample",
+                                "short_url": "shortUrl",
+                                "url": "url",
+                                "variable_type": "variableType",
+                            },
+                            "type": "type",
+                        }
+                    ],
+                },
+            },
+            language=None,
+            name="Updated Welcome Message",
+            submit_for_review=False,
+            test_mode=False,
+            idempotency_key="req_abc123_retry1",
+        )
+        assert_matches_type(APIResponseTemplate, template, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    async def test_raw_response_update(self, async_client: AsyncSentDm) -> None:
+        response = await async_client.templates.with_raw_response.update(
+            id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        template = await response.parse()
+        assert_matches_type(APIResponseTemplate, template, path=["response"])
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    async def test_streaming_response_update(self, async_client: AsyncSentDm) -> None:
+        async with async_client.templates.with_streaming_response.update(
+            id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            template = await response.parse()
+            assert_matches_type(APIResponseTemplate, template, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    async def test_path_params_update(self, async_client: AsyncSentDm) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            await async_client.templates.with_raw_response.update(
+                id="",
             )
 
     @pytest.mark.skip(reason="Prism tests are disabled")
@@ -590,7 +980,17 @@ class TestAsyncTemplates:
     @parametrize
     async def test_method_delete(self, async_client: AsyncSentDm) -> None:
         template = await async_client.templates.delete(
-            "7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+            id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+        )
+        assert template is None
+
+    @pytest.mark.skip(reason="Prism tests are disabled")
+    @parametrize
+    async def test_method_delete_with_all_params(self, async_client: AsyncSentDm) -> None:
+        template = await async_client.templates.delete(
+            id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+            delete_from_meta=False,
+            test_mode=False,
         )
         assert template is None
 
@@ -598,7 +998,7 @@ class TestAsyncTemplates:
     @parametrize
     async def test_raw_response_delete(self, async_client: AsyncSentDm) -> None:
         response = await async_client.templates.with_raw_response.delete(
-            "7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+            id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         )
 
         assert response.is_closed is True
@@ -610,7 +1010,7 @@ class TestAsyncTemplates:
     @parametrize
     async def test_streaming_response_delete(self, async_client: AsyncSentDm) -> None:
         async with async_client.templates.with_streaming_response.delete(
-            "7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+            id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -625,5 +1025,5 @@ class TestAsyncTemplates:
     async def test_path_params_delete(self, async_client: AsyncSentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             await async_client.templates.with_raw_response.delete(
-                "",
+                id="",
             )
