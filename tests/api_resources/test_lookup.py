@@ -17,7 +17,7 @@ base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 class TestLookup:
     parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=["loose", "strict"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_retrieve_phone_info(self, client: SentDm) -> None:
         lookup = client.lookup.retrieve_phone_info(
@@ -25,7 +25,7 @@ class TestLookup:
         )
         assert_matches_type(LookupRetrievePhoneInfoResponse, lookup, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_retrieve_phone_info(self, client: SentDm) -> None:
         response = client.lookup.with_raw_response.retrieve_phone_info(
@@ -37,7 +37,7 @@ class TestLookup:
         lookup = response.parse()
         assert_matches_type(LookupRetrievePhoneInfoResponse, lookup, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_retrieve_phone_info(self, client: SentDm) -> None:
         with client.lookup.with_streaming_response.retrieve_phone_info(
@@ -51,7 +51,7 @@ class TestLookup:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_path_params_retrieve_phone_info(self, client: SentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `phone_number` but received ''"):
@@ -65,7 +65,7 @@ class TestAsyncLookup:
         "async_client", [False, True, {"http_client": "aiohttp"}], indirect=True, ids=["loose", "strict", "aiohttp"]
     )
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_retrieve_phone_info(self, async_client: AsyncSentDm) -> None:
         lookup = await async_client.lookup.retrieve_phone_info(
@@ -73,7 +73,7 @@ class TestAsyncLookup:
         )
         assert_matches_type(LookupRetrievePhoneInfoResponse, lookup, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_retrieve_phone_info(self, async_client: AsyncSentDm) -> None:
         response = await async_client.lookup.with_raw_response.retrieve_phone_info(
@@ -85,7 +85,7 @@ class TestAsyncLookup:
         lookup = await response.parse()
         assert_matches_type(LookupRetrievePhoneInfoResponse, lookup, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_retrieve_phone_info(self, async_client: AsyncSentDm) -> None:
         async with async_client.lookup.with_streaming_response.retrieve_phone_info(
@@ -99,7 +99,7 @@ class TestAsyncLookup:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_path_params_retrieve_phone_info(self, async_client: AsyncSentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `phone_number` but received ''"):
