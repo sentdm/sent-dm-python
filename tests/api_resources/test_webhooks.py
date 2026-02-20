@@ -24,13 +24,13 @@ base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 class TestWebhooks:
     parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=["loose", "strict"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_create(self, client: SentDm) -> None:
         webhook = client.webhooks.create()
         assert_matches_type(APIResponseWebhook, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_create_with_all_params(self, client: SentDm) -> None:
         webhook = client.webhooks.create(
@@ -44,7 +44,7 @@ class TestWebhooks:
         )
         assert_matches_type(APIResponseWebhook, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_create(self, client: SentDm) -> None:
         response = client.webhooks.with_raw_response.create()
@@ -54,7 +54,7 @@ class TestWebhooks:
         webhook = response.parse()
         assert_matches_type(APIResponseWebhook, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_create(self, client: SentDm) -> None:
         with client.webhooks.with_streaming_response.create() as response:
@@ -66,7 +66,7 @@ class TestWebhooks:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_retrieve(self, client: SentDm) -> None:
         webhook = client.webhooks.retrieve(
@@ -74,7 +74,7 @@ class TestWebhooks:
         )
         assert_matches_type(APIResponseWebhook, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_retrieve(self, client: SentDm) -> None:
         response = client.webhooks.with_raw_response.retrieve(
@@ -86,7 +86,7 @@ class TestWebhooks:
         webhook = response.parse()
         assert_matches_type(APIResponseWebhook, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_retrieve(self, client: SentDm) -> None:
         with client.webhooks.with_streaming_response.retrieve(
@@ -100,7 +100,7 @@ class TestWebhooks:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_path_params_retrieve(self, client: SentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
@@ -108,7 +108,7 @@ class TestWebhooks:
                 "",
             )
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_update(self, client: SentDm) -> None:
         webhook = client.webhooks.update(
@@ -116,7 +116,7 @@ class TestWebhooks:
         )
         assert_matches_type(APIResponseWebhook, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_update_with_all_params(self, client: SentDm) -> None:
         webhook = client.webhooks.update(
@@ -131,7 +131,7 @@ class TestWebhooks:
         )
         assert_matches_type(APIResponseWebhook, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_update(self, client: SentDm) -> None:
         response = client.webhooks.with_raw_response.update(
@@ -143,7 +143,7 @@ class TestWebhooks:
         webhook = response.parse()
         assert_matches_type(APIResponseWebhook, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_update(self, client: SentDm) -> None:
         with client.webhooks.with_streaming_response.update(
@@ -157,7 +157,7 @@ class TestWebhooks:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_path_params_update(self, client: SentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
@@ -165,7 +165,7 @@ class TestWebhooks:
                 id="",
             )
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_list(self, client: SentDm) -> None:
         webhook = client.webhooks.list(
@@ -174,7 +174,7 @@ class TestWebhooks:
         )
         assert_matches_type(WebhookListResponse, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_list_with_all_params(self, client: SentDm) -> None:
         webhook = client.webhooks.list(
@@ -185,7 +185,7 @@ class TestWebhooks:
         )
         assert_matches_type(WebhookListResponse, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_list(self, client: SentDm) -> None:
         response = client.webhooks.with_raw_response.list(
@@ -198,7 +198,7 @@ class TestWebhooks:
         webhook = response.parse()
         assert_matches_type(WebhookListResponse, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_list(self, client: SentDm) -> None:
         with client.webhooks.with_streaming_response.list(
@@ -213,7 +213,7 @@ class TestWebhooks:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_delete(self, client: SentDm) -> None:
         webhook = client.webhooks.delete(
@@ -221,7 +221,7 @@ class TestWebhooks:
         )
         assert webhook is None
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_delete(self, client: SentDm) -> None:
         response = client.webhooks.with_raw_response.delete(
@@ -233,7 +233,7 @@ class TestWebhooks:
         webhook = response.parse()
         assert webhook is None
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_delete(self, client: SentDm) -> None:
         with client.webhooks.with_streaming_response.delete(
@@ -247,7 +247,7 @@ class TestWebhooks:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_path_params_delete(self, client: SentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
@@ -255,13 +255,13 @@ class TestWebhooks:
                 "",
             )
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_list_event_types(self, client: SentDm) -> None:
         webhook = client.webhooks.list_event_types()
         assert_matches_type(WebhookListEventTypesResponse, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_list_event_types(self, client: SentDm) -> None:
         response = client.webhooks.with_raw_response.list_event_types()
@@ -271,7 +271,7 @@ class TestWebhooks:
         webhook = response.parse()
         assert_matches_type(WebhookListEventTypesResponse, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_list_event_types(self, client: SentDm) -> None:
         with client.webhooks.with_streaming_response.list_event_types() as response:
@@ -283,7 +283,7 @@ class TestWebhooks:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_list_events(self, client: SentDm) -> None:
         webhook = client.webhooks.list_events(
@@ -293,7 +293,7 @@ class TestWebhooks:
         )
         assert_matches_type(WebhookListEventsResponse, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_list_events_with_all_params(self, client: SentDm) -> None:
         webhook = client.webhooks.list_events(
@@ -304,7 +304,7 @@ class TestWebhooks:
         )
         assert_matches_type(WebhookListEventsResponse, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_list_events(self, client: SentDm) -> None:
         response = client.webhooks.with_raw_response.list_events(
@@ -318,7 +318,7 @@ class TestWebhooks:
         webhook = response.parse()
         assert_matches_type(WebhookListEventsResponse, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_list_events(self, client: SentDm) -> None:
         with client.webhooks.with_streaming_response.list_events(
@@ -334,7 +334,7 @@ class TestWebhooks:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_path_params_list_events(self, client: SentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
@@ -344,7 +344,7 @@ class TestWebhooks:
                 page_size=0,
             )
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_rotate_secret(self, client: SentDm) -> None:
         webhook = client.webhooks.rotate_secret(
@@ -353,7 +353,7 @@ class TestWebhooks:
         )
         assert_matches_type(WebhookRotateSecretResponse, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_rotate_secret_with_all_params(self, client: SentDm) -> None:
         webhook = client.webhooks.rotate_secret(
@@ -363,7 +363,7 @@ class TestWebhooks:
         )
         assert_matches_type(WebhookRotateSecretResponse, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_rotate_secret(self, client: SentDm) -> None:
         response = client.webhooks.with_raw_response.rotate_secret(
@@ -376,7 +376,7 @@ class TestWebhooks:
         webhook = response.parse()
         assert_matches_type(WebhookRotateSecretResponse, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_rotate_secret(self, client: SentDm) -> None:
         with client.webhooks.with_streaming_response.rotate_secret(
@@ -391,7 +391,7 @@ class TestWebhooks:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_path_params_rotate_secret(self, client: SentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
@@ -400,7 +400,7 @@ class TestWebhooks:
                 body={},
             )
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_test(self, client: SentDm) -> None:
         webhook = client.webhooks.test(
@@ -408,7 +408,7 @@ class TestWebhooks:
         )
         assert_matches_type(WebhookTestResponse, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_test_with_all_params(self, client: SentDm) -> None:
         webhook = client.webhooks.test(
@@ -419,7 +419,7 @@ class TestWebhooks:
         )
         assert_matches_type(WebhookTestResponse, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_test(self, client: SentDm) -> None:
         response = client.webhooks.with_raw_response.test(
@@ -431,7 +431,7 @@ class TestWebhooks:
         webhook = response.parse()
         assert_matches_type(WebhookTestResponse, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_test(self, client: SentDm) -> None:
         with client.webhooks.with_streaming_response.test(
@@ -445,7 +445,7 @@ class TestWebhooks:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_path_params_test(self, client: SentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
@@ -453,7 +453,7 @@ class TestWebhooks:
                 id="",
             )
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_toggle_status(self, client: SentDm) -> None:
         webhook = client.webhooks.toggle_status(
@@ -461,7 +461,7 @@ class TestWebhooks:
         )
         assert_matches_type(APIResponseWebhook, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_toggle_status_with_all_params(self, client: SentDm) -> None:
         webhook = client.webhooks.toggle_status(
@@ -472,7 +472,7 @@ class TestWebhooks:
         )
         assert_matches_type(APIResponseWebhook, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_toggle_status(self, client: SentDm) -> None:
         response = client.webhooks.with_raw_response.toggle_status(
@@ -484,7 +484,7 @@ class TestWebhooks:
         webhook = response.parse()
         assert_matches_type(APIResponseWebhook, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_toggle_status(self, client: SentDm) -> None:
         with client.webhooks.with_streaming_response.toggle_status(
@@ -498,7 +498,7 @@ class TestWebhooks:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_path_params_toggle_status(self, client: SentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
@@ -512,13 +512,13 @@ class TestAsyncWebhooks:
         "async_client", [False, True, {"http_client": "aiohttp"}], indirect=True, ids=["loose", "strict", "aiohttp"]
     )
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_create(self, async_client: AsyncSentDm) -> None:
         webhook = await async_client.webhooks.create()
         assert_matches_type(APIResponseWebhook, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_create_with_all_params(self, async_client: AsyncSentDm) -> None:
         webhook = await async_client.webhooks.create(
@@ -532,7 +532,7 @@ class TestAsyncWebhooks:
         )
         assert_matches_type(APIResponseWebhook, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_create(self, async_client: AsyncSentDm) -> None:
         response = await async_client.webhooks.with_raw_response.create()
@@ -542,7 +542,7 @@ class TestAsyncWebhooks:
         webhook = await response.parse()
         assert_matches_type(APIResponseWebhook, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_create(self, async_client: AsyncSentDm) -> None:
         async with async_client.webhooks.with_streaming_response.create() as response:
@@ -554,7 +554,7 @@ class TestAsyncWebhooks:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_retrieve(self, async_client: AsyncSentDm) -> None:
         webhook = await async_client.webhooks.retrieve(
@@ -562,7 +562,7 @@ class TestAsyncWebhooks:
         )
         assert_matches_type(APIResponseWebhook, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_retrieve(self, async_client: AsyncSentDm) -> None:
         response = await async_client.webhooks.with_raw_response.retrieve(
@@ -574,7 +574,7 @@ class TestAsyncWebhooks:
         webhook = await response.parse()
         assert_matches_type(APIResponseWebhook, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_retrieve(self, async_client: AsyncSentDm) -> None:
         async with async_client.webhooks.with_streaming_response.retrieve(
@@ -588,7 +588,7 @@ class TestAsyncWebhooks:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_path_params_retrieve(self, async_client: AsyncSentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
@@ -596,7 +596,7 @@ class TestAsyncWebhooks:
                 "",
             )
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_update(self, async_client: AsyncSentDm) -> None:
         webhook = await async_client.webhooks.update(
@@ -604,7 +604,7 @@ class TestAsyncWebhooks:
         )
         assert_matches_type(APIResponseWebhook, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_update_with_all_params(self, async_client: AsyncSentDm) -> None:
         webhook = await async_client.webhooks.update(
@@ -619,7 +619,7 @@ class TestAsyncWebhooks:
         )
         assert_matches_type(APIResponseWebhook, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_update(self, async_client: AsyncSentDm) -> None:
         response = await async_client.webhooks.with_raw_response.update(
@@ -631,7 +631,7 @@ class TestAsyncWebhooks:
         webhook = await response.parse()
         assert_matches_type(APIResponseWebhook, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_update(self, async_client: AsyncSentDm) -> None:
         async with async_client.webhooks.with_streaming_response.update(
@@ -645,7 +645,7 @@ class TestAsyncWebhooks:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_path_params_update(self, async_client: AsyncSentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
@@ -653,7 +653,7 @@ class TestAsyncWebhooks:
                 id="",
             )
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_list(self, async_client: AsyncSentDm) -> None:
         webhook = await async_client.webhooks.list(
@@ -662,7 +662,7 @@ class TestAsyncWebhooks:
         )
         assert_matches_type(WebhookListResponse, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_list_with_all_params(self, async_client: AsyncSentDm) -> None:
         webhook = await async_client.webhooks.list(
@@ -673,7 +673,7 @@ class TestAsyncWebhooks:
         )
         assert_matches_type(WebhookListResponse, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_list(self, async_client: AsyncSentDm) -> None:
         response = await async_client.webhooks.with_raw_response.list(
@@ -686,7 +686,7 @@ class TestAsyncWebhooks:
         webhook = await response.parse()
         assert_matches_type(WebhookListResponse, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_list(self, async_client: AsyncSentDm) -> None:
         async with async_client.webhooks.with_streaming_response.list(
@@ -701,7 +701,7 @@ class TestAsyncWebhooks:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_delete(self, async_client: AsyncSentDm) -> None:
         webhook = await async_client.webhooks.delete(
@@ -709,7 +709,7 @@ class TestAsyncWebhooks:
         )
         assert webhook is None
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_delete(self, async_client: AsyncSentDm) -> None:
         response = await async_client.webhooks.with_raw_response.delete(
@@ -721,7 +721,7 @@ class TestAsyncWebhooks:
         webhook = await response.parse()
         assert webhook is None
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_delete(self, async_client: AsyncSentDm) -> None:
         async with async_client.webhooks.with_streaming_response.delete(
@@ -735,7 +735,7 @@ class TestAsyncWebhooks:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_path_params_delete(self, async_client: AsyncSentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
@@ -743,13 +743,13 @@ class TestAsyncWebhooks:
                 "",
             )
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_list_event_types(self, async_client: AsyncSentDm) -> None:
         webhook = await async_client.webhooks.list_event_types()
         assert_matches_type(WebhookListEventTypesResponse, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_list_event_types(self, async_client: AsyncSentDm) -> None:
         response = await async_client.webhooks.with_raw_response.list_event_types()
@@ -759,7 +759,7 @@ class TestAsyncWebhooks:
         webhook = await response.parse()
         assert_matches_type(WebhookListEventTypesResponse, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_list_event_types(self, async_client: AsyncSentDm) -> None:
         async with async_client.webhooks.with_streaming_response.list_event_types() as response:
@@ -771,7 +771,7 @@ class TestAsyncWebhooks:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_list_events(self, async_client: AsyncSentDm) -> None:
         webhook = await async_client.webhooks.list_events(
@@ -781,7 +781,7 @@ class TestAsyncWebhooks:
         )
         assert_matches_type(WebhookListEventsResponse, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_list_events_with_all_params(self, async_client: AsyncSentDm) -> None:
         webhook = await async_client.webhooks.list_events(
@@ -792,7 +792,7 @@ class TestAsyncWebhooks:
         )
         assert_matches_type(WebhookListEventsResponse, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_list_events(self, async_client: AsyncSentDm) -> None:
         response = await async_client.webhooks.with_raw_response.list_events(
@@ -806,7 +806,7 @@ class TestAsyncWebhooks:
         webhook = await response.parse()
         assert_matches_type(WebhookListEventsResponse, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_list_events(self, async_client: AsyncSentDm) -> None:
         async with async_client.webhooks.with_streaming_response.list_events(
@@ -822,7 +822,7 @@ class TestAsyncWebhooks:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_path_params_list_events(self, async_client: AsyncSentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
@@ -832,7 +832,7 @@ class TestAsyncWebhooks:
                 page_size=0,
             )
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_rotate_secret(self, async_client: AsyncSentDm) -> None:
         webhook = await async_client.webhooks.rotate_secret(
@@ -841,7 +841,7 @@ class TestAsyncWebhooks:
         )
         assert_matches_type(WebhookRotateSecretResponse, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_rotate_secret_with_all_params(self, async_client: AsyncSentDm) -> None:
         webhook = await async_client.webhooks.rotate_secret(
@@ -851,7 +851,7 @@ class TestAsyncWebhooks:
         )
         assert_matches_type(WebhookRotateSecretResponse, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_rotate_secret(self, async_client: AsyncSentDm) -> None:
         response = await async_client.webhooks.with_raw_response.rotate_secret(
@@ -864,7 +864,7 @@ class TestAsyncWebhooks:
         webhook = await response.parse()
         assert_matches_type(WebhookRotateSecretResponse, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_rotate_secret(self, async_client: AsyncSentDm) -> None:
         async with async_client.webhooks.with_streaming_response.rotate_secret(
@@ -879,7 +879,7 @@ class TestAsyncWebhooks:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_path_params_rotate_secret(self, async_client: AsyncSentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
@@ -888,7 +888,7 @@ class TestAsyncWebhooks:
                 body={},
             )
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_test(self, async_client: AsyncSentDm) -> None:
         webhook = await async_client.webhooks.test(
@@ -896,7 +896,7 @@ class TestAsyncWebhooks:
         )
         assert_matches_type(WebhookTestResponse, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_test_with_all_params(self, async_client: AsyncSentDm) -> None:
         webhook = await async_client.webhooks.test(
@@ -907,7 +907,7 @@ class TestAsyncWebhooks:
         )
         assert_matches_type(WebhookTestResponse, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_test(self, async_client: AsyncSentDm) -> None:
         response = await async_client.webhooks.with_raw_response.test(
@@ -919,7 +919,7 @@ class TestAsyncWebhooks:
         webhook = await response.parse()
         assert_matches_type(WebhookTestResponse, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_test(self, async_client: AsyncSentDm) -> None:
         async with async_client.webhooks.with_streaming_response.test(
@@ -933,7 +933,7 @@ class TestAsyncWebhooks:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_path_params_test(self, async_client: AsyncSentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
@@ -941,7 +941,7 @@ class TestAsyncWebhooks:
                 id="",
             )
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_toggle_status(self, async_client: AsyncSentDm) -> None:
         webhook = await async_client.webhooks.toggle_status(
@@ -949,7 +949,7 @@ class TestAsyncWebhooks:
         )
         assert_matches_type(APIResponseWebhook, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_toggle_status_with_all_params(self, async_client: AsyncSentDm) -> None:
         webhook = await async_client.webhooks.toggle_status(
@@ -960,7 +960,7 @@ class TestAsyncWebhooks:
         )
         assert_matches_type(APIResponseWebhook, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_toggle_status(self, async_client: AsyncSentDm) -> None:
         response = await async_client.webhooks.with_raw_response.toggle_status(
@@ -972,7 +972,7 @@ class TestAsyncWebhooks:
         webhook = await response.parse()
         assert_matches_type(APIResponseWebhook, webhook, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_toggle_status(self, async_client: AsyncSentDm) -> None:
         async with async_client.webhooks.with_streaming_response.toggle_status(
@@ -986,7 +986,7 @@ class TestAsyncWebhooks:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_path_params_toggle_status(self, async_client: AsyncSentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
