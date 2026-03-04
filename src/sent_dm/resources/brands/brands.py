@@ -32,8 +32,11 @@ __all__ = ["BrandsResource", "AsyncBrandsResource"]
 
 
 class BrandsResource(SyncAPIResource):
+    """Register and manage 10DLC brands for SMS compliance"""
+
     @cached_property
     def campaigns(self) -> CampaignsResource:
+        """Register and manage 10DLC brands for SMS compliance"""
         return CampaignsResource(self._client)
 
     @cached_property
@@ -217,8 +220,11 @@ class BrandsResource(SyncAPIResource):
 
 
 class AsyncBrandsResource(AsyncAPIResource):
+    """Register and manage 10DLC brands for SMS compliance"""
+
     @cached_property
     def campaigns(self) -> AsyncCampaignsResource:
+        """Register and manage 10DLC brands for SMS compliance"""
         return AsyncCampaignsResource(self._client)
 
     @cached_property
@@ -420,6 +426,7 @@ class BrandsResourceWithRawResponse:
 
     @cached_property
     def campaigns(self) -> CampaignsResourceWithRawResponse:
+        """Register and manage 10DLC brands for SMS compliance"""
         return CampaignsResourceWithRawResponse(self._brands.campaigns)
 
 
@@ -442,6 +449,7 @@ class AsyncBrandsResourceWithRawResponse:
 
     @cached_property
     def campaigns(self) -> AsyncCampaignsResourceWithRawResponse:
+        """Register and manage 10DLC brands for SMS compliance"""
         return AsyncCampaignsResourceWithRawResponse(self._brands.campaigns)
 
 
@@ -464,6 +472,7 @@ class BrandsResourceWithStreamingResponse:
 
     @cached_property
     def campaigns(self) -> CampaignsResourceWithStreamingResponse:
+        """Register and manage 10DLC brands for SMS compliance"""
         return CampaignsResourceWithStreamingResponse(self._brands.campaigns)
 
 
@@ -486,4 +495,5 @@ class AsyncBrandsResourceWithStreamingResponse:
 
     @cached_property
     def campaigns(self) -> AsyncCampaignsResourceWithStreamingResponse:
+        """Register and manage 10DLC brands for SMS compliance"""
         return AsyncCampaignsResourceWithStreamingResponse(self._brands.campaigns)
