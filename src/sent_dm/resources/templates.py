@@ -31,6 +31,8 @@ __all__ = ["TemplatesResource", "AsyncTemplatesResource"]
 
 
 class TemplatesResource(SyncAPIResource):
+    """Manage message templates with variable substitution"""
+
     @cached_property
     def with_raw_response(self) -> TemplatesResourceWithRawResponse:
         """
@@ -327,6 +329,8 @@ class TemplatesResource(SyncAPIResource):
 
 
 class AsyncTemplatesResource(AsyncAPIResource):
+    """Manage message templates with variable substitution"""
+
     @cached_property
     def with_raw_response(self) -> AsyncTemplatesResourceWithRawResponse:
         """
