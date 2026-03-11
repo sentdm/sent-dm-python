@@ -4,14 +4,15 @@ from __future__ import annotations
 
 from typing_extensions import Required, Annotated, TypedDict
 
-from .._utils import PropertyInfo
+from ..._utils import PropertyInfo
+from .campaign_data_param import CampaignDataParam
 
-__all__ = ["ProfileCompleteParams"]
+__all__ = ["CampaignCreateParams"]
 
 
-class ProfileCompleteParams(TypedDict, total=False):
-    web_hook_url: Required[Annotated[str, PropertyInfo(alias="webHookUrl")]]
-    """Webhook URL to call when profile completion finishes (success or failure)"""
+class CampaignCreateParams(TypedDict, total=False):
+    campaign: Required[CampaignDataParam]
+    """Campaign data"""
 
     sandbox: bool
     """

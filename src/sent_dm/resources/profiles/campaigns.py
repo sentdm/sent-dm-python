@@ -2,54 +2,54 @@
 
 from __future__ import annotations
 
-from typing import Optional
-
 import httpx
 
-from ..types import contact_list_params, contact_create_params, contact_delete_params, contact_update_params
-from .._types import Body, Omit, Query, Headers, NoneType, NotGiven, omit, not_given
-from .._utils import maybe_transform, strip_not_given, async_maybe_transform
-from .._compat import cached_property
-from .._resource import SyncAPIResource, AsyncAPIResource
-from .._response import (
+from ..._types import Body, Omit, Query, Headers, NoneType, NotGiven, omit, not_given
+from ..._utils import maybe_transform, strip_not_given, async_maybe_transform
+from ..._compat import cached_property
+from ..._resource import SyncAPIResource, AsyncAPIResource
+from ..._response import (
     to_raw_response_wrapper,
     to_streamed_response_wrapper,
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from .._base_client import make_request_options
-from ..types.contact_list_response import ContactListResponse
-from ..types.api_response_of_contact import APIResponseOfContact
+from ..._base_client import make_request_options
+from ...types.profiles import campaign_create_params, campaign_delete_params, campaign_update_params
+from ...types.profiles.campaign_data_param import CampaignDataParam
+from ...types.profiles.campaign_list_response import CampaignListResponse
+from ...types.profiles.api_response_of_tcr_campaign_with_use_cases import APIResponseOfTcrCampaignWithUseCases
 
-__all__ = ["ContactsResource", "AsyncContactsResource"]
+__all__ = ["CampaignsResource", "AsyncCampaignsResource"]
 
 
-class ContactsResource(SyncAPIResource):
-    """Create, update, and manage customer contact lists"""
+class CampaignsResource(SyncAPIResource):
+    """Manage organization profiles"""
 
     @cached_property
-    def with_raw_response(self) -> ContactsResourceWithRawResponse:
+    def with_raw_response(self) -> CampaignsResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/sentdm/sent-dm-python#accessing-raw-response-data-eg-headers
         """
-        return ContactsResourceWithRawResponse(self)
+        return CampaignsResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> ContactsResourceWithStreamingResponse:
+    def with_streaming_response(self) -> CampaignsResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/sentdm/sent-dm-python#with_streaming_response
         """
-        return ContactsResourceWithStreamingResponse(self)
+        return CampaignsResourceWithStreamingResponse(self)
 
     def create(
         self,
+        profile_id: str,
         *,
-        phone_number: str | Omit = omit,
+        campaign: CampaignDataParam,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -59,13 +59,14 @@ class ContactsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfContact:
-        """
-        Creates a new contact by phone number and associates it with the authenticated
-        customer.
+    ) -> APIResponseOfTcrCampaignWithUseCases:
+        """Creates a new campaign scoped under the brand of the specified profile.
+
+        Each
+        campaign must include at least one use case with sample messages.
 
         Args:
-          phone_number: Phone number of the contact to create
+          campaign: Campaign data
 
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
@@ -78,6 +79,8 @@ class ContactsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
+        if not profile_id:
+            raise ValueError(f"Expected a non-empty value for `profile_id` but received {profile_id!r}")
         extra_headers = {
             **strip_not_given(
                 {
@@ -88,64 +91,26 @@ class ContactsResource(SyncAPIResource):
             **(extra_headers or {}),
         }
         return self._post(
-            "/v3/contacts",
+            f"/v3/profiles/{profile_id}/campaigns",
             body=maybe_transform(
                 {
-                    "phone_number": phone_number,
+                    "campaign": campaign,
                     "sandbox": sandbox,
                 },
-                contact_create_params.ContactCreateParams,
+                campaign_create_params.CampaignCreateParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfContact,
-        )
-
-    def retrieve(
-        self,
-        id: str,
-        *,
-        x_profile_id: str | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfContact:
-        """Retrieves a specific contact by their unique identifier.
-
-        Returns detailed
-        contact information including phone formats, available channels, and opt-out
-        status.
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not id:
-            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
-        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
-        return self._get(
-            f"/v3/contacts/{id}",
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=APIResponseOfContact,
+            cast_to=APIResponseOfTcrCampaignWithUseCases,
         )
 
     def update(
         self,
-        id: str,
+        campaign_id: str,
         *,
-        default_channel: Optional[str] | Omit = omit,
-        opt_out: Optional[bool] | Omit = omit,
+        profile_id: str,
+        campaign: CampaignDataParam,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -155,16 +120,14 @@ class ContactsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfContact:
-        """Updates a contact's default channel and/or opt-out status.
+    ) -> APIResponseOfTcrCampaignWithUseCases:
+        """Updates an existing campaign under the brand of the specified profile.
 
-        Inherited contacts
-        cannot be updated.
+        Cannot
+        update campaigns that have already been submitted to TCR.
 
         Args:
-          default_channel: Default messaging channel: "sms" or "whatsapp"
-
-          opt_out: Whether the contact has opted out of messaging
+          campaign: Campaign data
 
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
@@ -177,8 +140,10 @@ class ContactsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not id:
-            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        if not profile_id:
+            raise ValueError(f"Expected a non-empty value for `profile_id` but received {profile_id!r}")
+        if not campaign_id:
+            raise ValueError(f"Expected a non-empty value for `campaign_id` but received {campaign_id!r}")
         extra_headers = {
             **strip_not_given(
                 {
@@ -188,30 +153,25 @@ class ContactsResource(SyncAPIResource):
             ),
             **(extra_headers or {}),
         }
-        return self._patch(
-            f"/v3/contacts/{id}",
+        return self._put(
+            f"/v3/profiles/{profile_id}/campaigns/{campaign_id}",
             body=maybe_transform(
                 {
-                    "default_channel": default_channel,
-                    "opt_out": opt_out,
+                    "campaign": campaign,
                     "sandbox": sandbox,
                 },
-                contact_update_params.ContactUpdateParams,
+                campaign_update_params.CampaignUpdateParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfContact,
+            cast_to=APIResponseOfTcrCampaignWithUseCases,
         )
 
     def list(
         self,
+        profile_id: str,
         *,
-        page: int,
-        page_size: int,
-        channel: Optional[str] | Omit = omit,
-        phone: Optional[str] | Omit = omit,
-        search: Optional[str] | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -219,23 +179,12 @@ class ContactsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ContactListResponse:
-        """Retrieves a paginated list of contacts for the authenticated customer.
-
-        Supports
-        filtering by search term, channel, or phone number.
+    ) -> CampaignListResponse:
+        """
+        Retrieves all campaigns linked to the profile's brand, including use cases and
+        sample messages. Returns inherited campaigns if inherit_tcr_campaign=true.
 
         Args:
-          page: Page number (1-indexed)
-
-          page_size: Number of items per page
-
-          channel: Optional channel filter (sms, whatsapp)
-
-          phone: Optional phone number filter (alternative to list view)
-
-          search: Optional search term for filtering contacts
-
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -244,33 +193,23 @@ class ContactsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
+        if not profile_id:
+            raise ValueError(f"Expected a non-empty value for `profile_id` but received {profile_id!r}")
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._get(
-            "/v3/contacts",
+            f"/v3/profiles/{profile_id}/campaigns",
             options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=maybe_transform(
-                    {
-                        "page": page,
-                        "page_size": page_size,
-                        "channel": channel,
-                        "phone": phone,
-                        "search": search,
-                    },
-                    contact_list_params.ContactListParams,
-                ),
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ContactListResponse,
+            cast_to=CampaignListResponse,
         )
 
     def delete(
         self,
-        id: str,
+        campaign_id: str,
         *,
-        body: contact_delete_params.Body,
+        profile_id: str,
+        body: campaign_delete_params.Body,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -279,13 +218,13 @@ class ContactsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> None:
-        """Dissociates a contact from the authenticated customer.
+        """Deletes a campaign by ID from the brand of the specified profile.
 
-        Inherited contacts cannot
-        be deleted.
+        The profile
+        must belong to the authenticated organization.
 
         Args:
-          body: Request to delete/dissociate a contact
+          body: Request to delete a campaign from a brand
 
           extra_headers: Send extra headers
 
@@ -295,13 +234,15 @@ class ContactsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not id:
-            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        if not profile_id:
+            raise ValueError(f"Expected a non-empty value for `profile_id` but received {profile_id!r}")
+        if not campaign_id:
+            raise ValueError(f"Expected a non-empty value for `campaign_id` but received {campaign_id!r}")
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._delete(
-            f"/v3/contacts/{id}",
-            body=maybe_transform(body, contact_delete_params.ContactDeleteParams),
+            f"/v3/profiles/{profile_id}/campaigns/{campaign_id}",
+            body=maybe_transform(body, campaign_delete_params.CampaignDeleteParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -309,32 +250,33 @@ class ContactsResource(SyncAPIResource):
         )
 
 
-class AsyncContactsResource(AsyncAPIResource):
-    """Create, update, and manage customer contact lists"""
+class AsyncCampaignsResource(AsyncAPIResource):
+    """Manage organization profiles"""
 
     @cached_property
-    def with_raw_response(self) -> AsyncContactsResourceWithRawResponse:
+    def with_raw_response(self) -> AsyncCampaignsResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/sentdm/sent-dm-python#accessing-raw-response-data-eg-headers
         """
-        return AsyncContactsResourceWithRawResponse(self)
+        return AsyncCampaignsResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> AsyncContactsResourceWithStreamingResponse:
+    def with_streaming_response(self) -> AsyncCampaignsResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/sentdm/sent-dm-python#with_streaming_response
         """
-        return AsyncContactsResourceWithStreamingResponse(self)
+        return AsyncCampaignsResourceWithStreamingResponse(self)
 
     async def create(
         self,
+        profile_id: str,
         *,
-        phone_number: str | Omit = omit,
+        campaign: CampaignDataParam,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -344,13 +286,14 @@ class AsyncContactsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfContact:
-        """
-        Creates a new contact by phone number and associates it with the authenticated
-        customer.
+    ) -> APIResponseOfTcrCampaignWithUseCases:
+        """Creates a new campaign scoped under the brand of the specified profile.
+
+        Each
+        campaign must include at least one use case with sample messages.
 
         Args:
-          phone_number: Phone number of the contact to create
+          campaign: Campaign data
 
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
@@ -363,6 +306,8 @@ class AsyncContactsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
+        if not profile_id:
+            raise ValueError(f"Expected a non-empty value for `profile_id` but received {profile_id!r}")
         extra_headers = {
             **strip_not_given(
                 {
@@ -373,64 +318,26 @@ class AsyncContactsResource(AsyncAPIResource):
             **(extra_headers or {}),
         }
         return await self._post(
-            "/v3/contacts",
+            f"/v3/profiles/{profile_id}/campaigns",
             body=await async_maybe_transform(
                 {
-                    "phone_number": phone_number,
+                    "campaign": campaign,
                     "sandbox": sandbox,
                 },
-                contact_create_params.ContactCreateParams,
+                campaign_create_params.CampaignCreateParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfContact,
-        )
-
-    async def retrieve(
-        self,
-        id: str,
-        *,
-        x_profile_id: str | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfContact:
-        """Retrieves a specific contact by their unique identifier.
-
-        Returns detailed
-        contact information including phone formats, available channels, and opt-out
-        status.
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not id:
-            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
-        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
-        return await self._get(
-            f"/v3/contacts/{id}",
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=APIResponseOfContact,
+            cast_to=APIResponseOfTcrCampaignWithUseCases,
         )
 
     async def update(
         self,
-        id: str,
+        campaign_id: str,
         *,
-        default_channel: Optional[str] | Omit = omit,
-        opt_out: Optional[bool] | Omit = omit,
+        profile_id: str,
+        campaign: CampaignDataParam,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -440,16 +347,14 @@ class AsyncContactsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfContact:
-        """Updates a contact's default channel and/or opt-out status.
+    ) -> APIResponseOfTcrCampaignWithUseCases:
+        """Updates an existing campaign under the brand of the specified profile.
 
-        Inherited contacts
-        cannot be updated.
+        Cannot
+        update campaigns that have already been submitted to TCR.
 
         Args:
-          default_channel: Default messaging channel: "sms" or "whatsapp"
-
-          opt_out: Whether the contact has opted out of messaging
+          campaign: Campaign data
 
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
@@ -462,8 +367,10 @@ class AsyncContactsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not id:
-            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        if not profile_id:
+            raise ValueError(f"Expected a non-empty value for `profile_id` but received {profile_id!r}")
+        if not campaign_id:
+            raise ValueError(f"Expected a non-empty value for `campaign_id` but received {campaign_id!r}")
         extra_headers = {
             **strip_not_given(
                 {
@@ -473,30 +380,25 @@ class AsyncContactsResource(AsyncAPIResource):
             ),
             **(extra_headers or {}),
         }
-        return await self._patch(
-            f"/v3/contacts/{id}",
+        return await self._put(
+            f"/v3/profiles/{profile_id}/campaigns/{campaign_id}",
             body=await async_maybe_transform(
                 {
-                    "default_channel": default_channel,
-                    "opt_out": opt_out,
+                    "campaign": campaign,
                     "sandbox": sandbox,
                 },
-                contact_update_params.ContactUpdateParams,
+                campaign_update_params.CampaignUpdateParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfContact,
+            cast_to=APIResponseOfTcrCampaignWithUseCases,
         )
 
     async def list(
         self,
+        profile_id: str,
         *,
-        page: int,
-        page_size: int,
-        channel: Optional[str] | Omit = omit,
-        phone: Optional[str] | Omit = omit,
-        search: Optional[str] | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -504,23 +406,12 @@ class AsyncContactsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ContactListResponse:
-        """Retrieves a paginated list of contacts for the authenticated customer.
-
-        Supports
-        filtering by search term, channel, or phone number.
+    ) -> CampaignListResponse:
+        """
+        Retrieves all campaigns linked to the profile's brand, including use cases and
+        sample messages. Returns inherited campaigns if inherit_tcr_campaign=true.
 
         Args:
-          page: Page number (1-indexed)
-
-          page_size: Number of items per page
-
-          channel: Optional channel filter (sms, whatsapp)
-
-          phone: Optional phone number filter (alternative to list view)
-
-          search: Optional search term for filtering contacts
-
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -529,33 +420,23 @@ class AsyncContactsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
+        if not profile_id:
+            raise ValueError(f"Expected a non-empty value for `profile_id` but received {profile_id!r}")
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._get(
-            "/v3/contacts",
+            f"/v3/profiles/{profile_id}/campaigns",
             options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=await async_maybe_transform(
-                    {
-                        "page": page,
-                        "page_size": page_size,
-                        "channel": channel,
-                        "phone": phone,
-                        "search": search,
-                    },
-                    contact_list_params.ContactListParams,
-                ),
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ContactListResponse,
+            cast_to=CampaignListResponse,
         )
 
     async def delete(
         self,
-        id: str,
+        campaign_id: str,
         *,
-        body: contact_delete_params.Body,
+        profile_id: str,
+        body: campaign_delete_params.Body,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -564,13 +445,13 @@ class AsyncContactsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> None:
-        """Dissociates a contact from the authenticated customer.
+        """Deletes a campaign by ID from the brand of the specified profile.
 
-        Inherited contacts cannot
-        be deleted.
+        The profile
+        must belong to the authenticated organization.
 
         Args:
-          body: Request to delete/dissociate a contact
+          body: Request to delete a campaign from a brand
 
           extra_headers: Send extra headers
 
@@ -580,13 +461,15 @@ class AsyncContactsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not id:
-            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        if not profile_id:
+            raise ValueError(f"Expected a non-empty value for `profile_id` but received {profile_id!r}")
+        if not campaign_id:
+            raise ValueError(f"Expected a non-empty value for `campaign_id` but received {campaign_id!r}")
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._delete(
-            f"/v3/contacts/{id}",
-            body=await async_maybe_transform(body, contact_delete_params.ContactDeleteParams),
+            f"/v3/profiles/{profile_id}/campaigns/{campaign_id}",
+            body=await async_maybe_transform(body, campaign_delete_params.CampaignDeleteParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -594,85 +477,73 @@ class AsyncContactsResource(AsyncAPIResource):
         )
 
 
-class ContactsResourceWithRawResponse:
-    def __init__(self, contacts: ContactsResource) -> None:
-        self._contacts = contacts
+class CampaignsResourceWithRawResponse:
+    def __init__(self, campaigns: CampaignsResource) -> None:
+        self._campaigns = campaigns
 
         self.create = to_raw_response_wrapper(
-            contacts.create,
-        )
-        self.retrieve = to_raw_response_wrapper(
-            contacts.retrieve,
+            campaigns.create,
         )
         self.update = to_raw_response_wrapper(
-            contacts.update,
+            campaigns.update,
         )
         self.list = to_raw_response_wrapper(
-            contacts.list,
+            campaigns.list,
         )
         self.delete = to_raw_response_wrapper(
-            contacts.delete,
+            campaigns.delete,
         )
 
 
-class AsyncContactsResourceWithRawResponse:
-    def __init__(self, contacts: AsyncContactsResource) -> None:
-        self._contacts = contacts
+class AsyncCampaignsResourceWithRawResponse:
+    def __init__(self, campaigns: AsyncCampaignsResource) -> None:
+        self._campaigns = campaigns
 
         self.create = async_to_raw_response_wrapper(
-            contacts.create,
-        )
-        self.retrieve = async_to_raw_response_wrapper(
-            contacts.retrieve,
+            campaigns.create,
         )
         self.update = async_to_raw_response_wrapper(
-            contacts.update,
+            campaigns.update,
         )
         self.list = async_to_raw_response_wrapper(
-            contacts.list,
+            campaigns.list,
         )
         self.delete = async_to_raw_response_wrapper(
-            contacts.delete,
+            campaigns.delete,
         )
 
 
-class ContactsResourceWithStreamingResponse:
-    def __init__(self, contacts: ContactsResource) -> None:
-        self._contacts = contacts
+class CampaignsResourceWithStreamingResponse:
+    def __init__(self, campaigns: CampaignsResource) -> None:
+        self._campaigns = campaigns
 
         self.create = to_streamed_response_wrapper(
-            contacts.create,
-        )
-        self.retrieve = to_streamed_response_wrapper(
-            contacts.retrieve,
+            campaigns.create,
         )
         self.update = to_streamed_response_wrapper(
-            contacts.update,
+            campaigns.update,
         )
         self.list = to_streamed_response_wrapper(
-            contacts.list,
+            campaigns.list,
         )
         self.delete = to_streamed_response_wrapper(
-            contacts.delete,
+            campaigns.delete,
         )
 
 
-class AsyncContactsResourceWithStreamingResponse:
-    def __init__(self, contacts: AsyncContactsResource) -> None:
-        self._contacts = contacts
+class AsyncCampaignsResourceWithStreamingResponse:
+    def __init__(self, campaigns: AsyncCampaignsResource) -> None:
+        self._campaigns = campaigns
 
         self.create = async_to_streamed_response_wrapper(
-            contacts.create,
-        )
-        self.retrieve = async_to_streamed_response_wrapper(
-            contacts.retrieve,
+            campaigns.create,
         )
         self.update = async_to_streamed_response_wrapper(
-            contacts.update,
+            campaigns.update,
         )
         self.list = async_to_streamed_response_wrapper(
-            contacts.list,
+            campaigns.list,
         )
         self.delete = async_to_streamed_response_wrapper(
-            contacts.delete,
+            campaigns.delete,
         )
