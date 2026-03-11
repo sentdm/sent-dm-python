@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.8.1 (2026-03-11)
+
+Full Changelog: [v0.8.0...v0.8.1](https://github.com/sentdm/sent-dm-python/compare/v0.8.0...v0.8.1)
+
+### Chores
+
+* **ci:** bump uv version ([d78a321](https://github.com/sentdm/sent-dm-python/commit/d78a321a68d21ef2c3d2b026a300f08676cb763c))
+* **ci:** skip uploading artifacts on stainless-internal branches ([bea8db4](https://github.com/sentdm/sent-dm-python/commit/bea8db458b817c77e4a0fbb3c2dbe2ec0a49a1e0))
+* **internal:** codegen related update ([2d412a1](https://github.com/sentdm/sent-dm-python/commit/2d412a10404c8b67d8b078122d1bce7fc7428a01))
+* **internal:** make `test_proxy_environment_variables` more resilient to env ([99f2ac4](https://github.com/sentdm/sent-dm-python/commit/99f2ac4367e0e62c9ad06e95c535080e928fd5a7))
+* **internal:** refactor authentication internals ([5b5b2e3](https://github.com/sentdm/sent-dm-python/commit/5b5b2e32d87fc7447fd435f9db4f41ce8bccab24))
+
 ## 0.8.0 (2026-02-18)
 
 Full Changelog: [v0.7.0...v0.8.0](https://github.com/sentdm/sent-dm-python/compare/v0.7.0...v0.8.0)
