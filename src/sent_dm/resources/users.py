@@ -48,6 +48,7 @@ class UsersResource(SyncAPIResource):
         self,
         user_id: str,
         *,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -70,6 +71,7 @@ class UsersResource(SyncAPIResource):
         """
         if not user_id:
             raise ValueError(f"Expected a non-empty value for `user_id` but received {user_id!r}")
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._get(
             f"/v3/users/{user_id}",
             options=make_request_options(
@@ -81,6 +83,7 @@ class UsersResource(SyncAPIResource):
     def list(
         self,
         *,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -92,7 +95,17 @@ class UsersResource(SyncAPIResource):
         Retrieves all users who have access to the organization or profile identified by
         the API key, including their roles and status. Shows invited users (pending
         acceptance) and active users. Requires developer role or higher.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
         """
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._get(
             "/v3/users",
             options=make_request_options(
@@ -107,8 +120,9 @@ class UsersResource(SyncAPIResource):
         email: str | Omit = omit,
         name: str | Omit = omit,
         role: str | Omit = omit,
-        test_mode: bool | Omit = omit,
+        sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -128,8 +142,8 @@ class UsersResource(SyncAPIResource):
 
           role: User role: admin, billing, or developer (required)
 
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
           extra_headers: Send extra headers
 
@@ -139,7 +153,15 @@ class UsersResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
         return self._post(
             "/v3/users",
             body=maybe_transform(
@@ -147,7 +169,7 @@ class UsersResource(SyncAPIResource):
                     "email": email,
                     "name": name,
                     "role": role,
-                    "test_mode": test_mode,
+                    "sandbox": sandbox,
                 },
                 user_invite_params.UserInviteParams,
             ),
@@ -159,10 +181,10 @@ class UsersResource(SyncAPIResource):
 
     def remove(
         self,
-        path_user_id: str,
+        user_id: str,
         *,
-        test_mode: bool | Omit = omit,
-        body_user_id: str | Omit = omit,
+        body: user_remove_params.Body,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -176,10 +198,7 @@ class UsersResource(SyncAPIResource):
         cannot remove yourself or remove the last admin.
 
         Args:
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
-
-          body_user_id: User ID from route parameter
+          body: Request to remove a user from an organization
 
           extra_headers: Send extra headers
 
@@ -189,18 +208,13 @@ class UsersResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not path_user_id:
-            raise ValueError(f"Expected a non-empty value for `path_user_id` but received {path_user_id!r}")
+        if not user_id:
+            raise ValueError(f"Expected a non-empty value for `user_id` but received {user_id!r}")
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._delete(
-            f"/v3/users/{path_user_id}",
-            body=maybe_transform(
-                {
-                    "test_mode": test_mode,
-                    "body_user_id": body_user_id,
-                },
-                user_remove_params.UserRemoveParams,
-            ),
+            f"/v3/users/{user_id}",
+            body=maybe_transform(body, user_remove_params.UserRemoveParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -209,12 +223,12 @@ class UsersResource(SyncAPIResource):
 
     def update_role(
         self,
-        path_user_id: str,
+        user_id: str,
         *,
         role: str | Omit = omit,
-        test_mode: bool | Omit = omit,
-        body_user_id: str | Omit = omit,
+        sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -230,10 +244,8 @@ class UsersResource(SyncAPIResource):
         Args:
           role: User role: admin, billing, or developer (required)
 
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
-
-          body_user_id: User ID from route parameter
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
           extra_headers: Send extra headers
 
@@ -243,16 +255,23 @@ class UsersResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not path_user_id:
-            raise ValueError(f"Expected a non-empty value for `path_user_id` but received {path_user_id!r}")
-        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        if not user_id:
+            raise ValueError(f"Expected a non-empty value for `user_id` but received {user_id!r}")
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
         return self._patch(
-            f"/v3/users/{path_user_id}",
+            f"/v3/users/{user_id}",
             body=maybe_transform(
                 {
                     "role": role,
-                    "test_mode": test_mode,
-                    "body_user_id": body_user_id,
+                    "sandbox": sandbox,
                 },
                 user_update_role_params.UserUpdateRoleParams,
             ),
@@ -289,6 +308,7 @@ class AsyncUsersResource(AsyncAPIResource):
         self,
         user_id: str,
         *,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -311,6 +331,7 @@ class AsyncUsersResource(AsyncAPIResource):
         """
         if not user_id:
             raise ValueError(f"Expected a non-empty value for `user_id` but received {user_id!r}")
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._get(
             f"/v3/users/{user_id}",
             options=make_request_options(
@@ -322,6 +343,7 @@ class AsyncUsersResource(AsyncAPIResource):
     async def list(
         self,
         *,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -333,7 +355,17 @@ class AsyncUsersResource(AsyncAPIResource):
         Retrieves all users who have access to the organization or profile identified by
         the API key, including their roles and status. Shows invited users (pending
         acceptance) and active users. Requires developer role or higher.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
         """
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._get(
             "/v3/users",
             options=make_request_options(
@@ -348,8 +380,9 @@ class AsyncUsersResource(AsyncAPIResource):
         email: str | Omit = omit,
         name: str | Omit = omit,
         role: str | Omit = omit,
-        test_mode: bool | Omit = omit,
+        sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -369,8 +402,8 @@ class AsyncUsersResource(AsyncAPIResource):
 
           role: User role: admin, billing, or developer (required)
 
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
           extra_headers: Send extra headers
 
@@ -380,7 +413,15 @@ class AsyncUsersResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
         return await self._post(
             "/v3/users",
             body=await async_maybe_transform(
@@ -388,7 +429,7 @@ class AsyncUsersResource(AsyncAPIResource):
                     "email": email,
                     "name": name,
                     "role": role,
-                    "test_mode": test_mode,
+                    "sandbox": sandbox,
                 },
                 user_invite_params.UserInviteParams,
             ),
@@ -400,10 +441,10 @@ class AsyncUsersResource(AsyncAPIResource):
 
     async def remove(
         self,
-        path_user_id: str,
+        user_id: str,
         *,
-        test_mode: bool | Omit = omit,
-        body_user_id: str | Omit = omit,
+        body: user_remove_params.Body,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -417,10 +458,7 @@ class AsyncUsersResource(AsyncAPIResource):
         cannot remove yourself or remove the last admin.
 
         Args:
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
-
-          body_user_id: User ID from route parameter
+          body: Request to remove a user from an organization
 
           extra_headers: Send extra headers
 
@@ -430,18 +468,13 @@ class AsyncUsersResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not path_user_id:
-            raise ValueError(f"Expected a non-empty value for `path_user_id` but received {path_user_id!r}")
+        if not user_id:
+            raise ValueError(f"Expected a non-empty value for `user_id` but received {user_id!r}")
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._delete(
-            f"/v3/users/{path_user_id}",
-            body=await async_maybe_transform(
-                {
-                    "test_mode": test_mode,
-                    "body_user_id": body_user_id,
-                },
-                user_remove_params.UserRemoveParams,
-            ),
+            f"/v3/users/{user_id}",
+            body=await async_maybe_transform(body, user_remove_params.UserRemoveParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -450,12 +483,12 @@ class AsyncUsersResource(AsyncAPIResource):
 
     async def update_role(
         self,
-        path_user_id: str,
+        user_id: str,
         *,
         role: str | Omit = omit,
-        test_mode: bool | Omit = omit,
-        body_user_id: str | Omit = omit,
+        sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -471,10 +504,8 @@ class AsyncUsersResource(AsyncAPIResource):
         Args:
           role: User role: admin, billing, or developer (required)
 
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
-
-          body_user_id: User ID from route parameter
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
           extra_headers: Send extra headers
 
@@ -484,16 +515,23 @@ class AsyncUsersResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not path_user_id:
-            raise ValueError(f"Expected a non-empty value for `path_user_id` but received {path_user_id!r}")
-        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        if not user_id:
+            raise ValueError(f"Expected a non-empty value for `user_id` but received {user_id!r}")
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
         return await self._patch(
-            f"/v3/users/{path_user_id}",
+            f"/v3/users/{user_id}",
             body=await async_maybe_transform(
                 {
                     "role": role,
-                    "test_mode": test_mode,
-                    "body_user_id": body_user_id,
+                    "sandbox": sandbox,
                 },
                 user_update_role_params.UserUpdateRoleParams,
             ),

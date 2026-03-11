@@ -13,10 +13,12 @@ class ContactCreateParams(TypedDict, total=False):
     phone_number: str
     """Phone number of the contact to create"""
 
-    test_mode: bool
+    sandbox: bool
     """
-    Test mode flag - when true, the operation is simulated without side effects
-    Useful for testing integrations without actual execution
+    Sandbox flag - when true, the operation is simulated without side effects Useful
+    for testing integrations without actual execution
     """
 
     idempotency_key: Annotated[str, PropertyInfo(alias="Idempotency-Key")]
+
+    x_profile_id: Annotated[str, PropertyInfo(alias="x-profile-id")]

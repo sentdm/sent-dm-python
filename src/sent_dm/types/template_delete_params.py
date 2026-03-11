@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 from typing import Optional
-from typing_extensions import TypedDict
+from typing_extensions import Annotated, TypedDict
+
+from .._utils import PropertyInfo
 
 __all__ = ["TemplateDeleteParams"]
 
@@ -15,8 +17,10 @@ class TemplateDeleteParams(TypedDict, total=False):
     false)
     """
 
-    test_mode: bool
+    sandbox: bool
     """
-    Test mode flag - when true, the operation is simulated without side effects
-    Useful for testing integrations without actual execution
+    Sandbox flag - when true, the operation is simulated without side effects Useful
+    for testing integrations without actual execution
     """
+
+    x_profile_id: Annotated[str, PropertyInfo(alias="x-profile-id")]

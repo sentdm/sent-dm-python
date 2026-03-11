@@ -20,19 +20,21 @@ class MessageSendParams(TypedDict, total=False):
     (auto-detect) if omitted.
     """
 
+    sandbox: bool
+    """
+    Sandbox flag - when true, the operation is simulated without side effects Useful
+    for testing integrations without actual execution
+    """
+
     template: Template
     """Template reference (by id or name, with optional parameters)"""
-
-    test_mode: bool
-    """
-    Test mode flag - when true, the operation is simulated without side effects
-    Useful for testing integrations without actual execution
-    """
 
     to: SequenceNotStr[str]
     """List of recipient phone numbers in E.164 format (multi-recipient fan-out)"""
 
     idempotency_key: Annotated[str, PropertyInfo(alias="Idempotency-Key")]
+
+    x_profile_id: Annotated[str, PropertyInfo(alias="x-profile-id")]
 
 
 class Template(TypedDict, total=False):

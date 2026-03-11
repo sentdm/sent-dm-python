@@ -15,6 +15,8 @@ class WebhookRotateSecretParams(TypedDict, total=False):
 
     idempotency_key: Annotated[str, PropertyInfo(alias="Idempotency-Key")]
 
+    x_profile_id: Annotated[str, PropertyInfo(alias="x-profile-id")]
+
 
 class Body(MutationRequestParam, total=False):
     pass
