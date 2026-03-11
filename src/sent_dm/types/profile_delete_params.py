@@ -2,19 +2,22 @@
 
 from __future__ import annotations
 
-from typing_extensions import Annotated, TypedDict
+from typing_extensions import Required, Annotated, TypedDict
 
 from .._utils import PropertyInfo
+from .mutation_request_param import MutationRequestParam
 
-__all__ = ["ProfileDeleteParams"]
+__all__ = ["ProfileDeleteParams", "Body"]
 
 
 class ProfileDeleteParams(TypedDict, total=False):
-    body_profile_id: Annotated[str, PropertyInfo(alias="profile_id")]
-    """Profile ID from route parameter"""
+    body: Required[Body]
+    """Request to delete a profile"""
 
-    test_mode: bool
-    """
-    Test mode flag - when true, the operation is simulated without side effects
-    Useful for testing integrations without actual execution
-    """
+    x_profile_id: Annotated[str, PropertyInfo(alias="x-profile-id")]
+
+
+class Body(MutationRequestParam, total=False):
+    """Request to delete a profile"""
+
+    pass

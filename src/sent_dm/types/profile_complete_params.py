@@ -13,10 +13,12 @@ class ProfileCompleteParams(TypedDict, total=False):
     web_hook_url: Required[Annotated[str, PropertyInfo(alias="webHookUrl")]]
     """Webhook URL to call when profile completion finishes (success or failure)"""
 
-    test_mode: bool
+    sandbox: bool
     """
-    Test mode flag - when true, the operation is simulated without side effects
-    Useful for testing integrations without actual execution
+    Sandbox flag - when true, the operation is simulated without side effects Useful
+    for testing integrations without actual execution
     """
 
     idempotency_key: Annotated[str, PropertyInfo(alias="Idempotency-Key")]
+
+    x_profile_id: Annotated[str, PropertyInfo(alias="x-profile-id")]

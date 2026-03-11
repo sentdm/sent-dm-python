@@ -59,9 +59,10 @@ class TemplatesResource(SyncAPIResource):
         creation_source: Optional[str] | Omit = omit,
         definition: TemplateDefinitionParam | Omit = omit,
         language: Optional[str] | Omit = omit,
+        sandbox: bool | Omit = omit,
         submit_for_review: bool | Omit = omit,
-        test_mode: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -85,10 +86,10 @@ class TemplatesResource(SyncAPIResource):
 
           language: Template language code (e.g., en_US) (optional, auto-detected if not provided)
 
-          submit_for_review: Whether to submit the template for review after creation (default: false)
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
+          submit_for_review: Whether to submit the template for review after creation (default: false)
 
           extra_headers: Send extra headers
 
@@ -98,7 +99,15 @@ class TemplatesResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
         return self._post(
             "/v3/templates",
             body=maybe_transform(
@@ -107,8 +116,8 @@ class TemplatesResource(SyncAPIResource):
                     "creation_source": creation_source,
                     "definition": definition,
                     "language": language,
+                    "sandbox": sandbox,
                     "submit_for_review": submit_for_review,
-                    "test_mode": test_mode,
                 },
                 template_create_params.TemplateCreateParams,
             ),
@@ -122,6 +131,7 @@ class TemplatesResource(SyncAPIResource):
         self,
         id: str,
         *,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -145,6 +155,7 @@ class TemplatesResource(SyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._get(
             f"/v3/templates/{id}",
             options=make_request_options(
@@ -161,9 +172,10 @@ class TemplatesResource(SyncAPIResource):
         definition: Optional[TemplateDefinitionParam] | Omit = omit,
         language: Optional[str] | Omit = omit,
         name: Optional[str] | Omit = omit,
+        sandbox: bool | Omit = omit,
         submit_for_review: bool | Omit = omit,
-        test_mode: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -184,10 +196,10 @@ class TemplatesResource(SyncAPIResource):
 
           name: Template display name
 
-          submit_for_review: Whether to submit the template for review after updating (default: false)
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
+          submit_for_review: Whether to submit the template for review after updating (default: false)
 
           extra_headers: Send extra headers
 
@@ -199,7 +211,15 @@ class TemplatesResource(SyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
-        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
         return self._put(
             f"/v3/templates/{id}",
             body=maybe_transform(
@@ -208,8 +228,8 @@ class TemplatesResource(SyncAPIResource):
                     "definition": definition,
                     "language": language,
                     "name": name,
+                    "sandbox": sandbox,
                     "submit_for_review": submit_for_review,
-                    "test_mode": test_mode,
                 },
                 template_update_params.TemplateUpdateParams,
             ),
@@ -225,8 +245,10 @@ class TemplatesResource(SyncAPIResource):
         page: int,
         page_size: int,
         category: Optional[str] | Omit = omit,
+        is_welcome_playground: Optional[bool] | Omit = omit,
         search: Optional[str] | Omit = omit,
         status: Optional[str] | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -241,7 +263,11 @@ class TemplatesResource(SyncAPIResource):
         Args:
           page: Page number (1-indexed)
 
+          page_size: Number of items per page
+
           category: Optional category filter: MARKETING, UTILITY, AUTHENTICATION
+
+          is_welcome_playground: Optional filter by welcome playground flag
 
           search: Optional search term for filtering templates
 
@@ -255,6 +281,7 @@ class TemplatesResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._get(
             "/v3/templates",
             options=make_request_options(
@@ -267,6 +294,7 @@ class TemplatesResource(SyncAPIResource):
                         "page": page,
                         "page_size": page_size,
                         "category": category,
+                        "is_welcome_playground": is_welcome_playground,
                         "search": search,
                         "status": status,
                     },
@@ -281,7 +309,8 @@ class TemplatesResource(SyncAPIResource):
         id: str,
         *,
         delete_from_meta: Optional[bool] | Omit = omit,
-        test_mode: bool | Omit = omit,
+        sandbox: bool | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -298,8 +327,8 @@ class TemplatesResource(SyncAPIResource):
           delete_from_meta: Whether to also delete the template from WhatsApp/Meta (optional, defaults to
               false)
 
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
           extra_headers: Send extra headers
 
@@ -312,12 +341,13 @@ class TemplatesResource(SyncAPIResource):
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._delete(
             f"/v3/templates/{id}",
             body=maybe_transform(
                 {
                     "delete_from_meta": delete_from_meta,
-                    "test_mode": test_mode,
+                    "sandbox": sandbox,
                 },
                 template_delete_params.TemplateDeleteParams,
             ),
@@ -357,9 +387,10 @@ class AsyncTemplatesResource(AsyncAPIResource):
         creation_source: Optional[str] | Omit = omit,
         definition: TemplateDefinitionParam | Omit = omit,
         language: Optional[str] | Omit = omit,
+        sandbox: bool | Omit = omit,
         submit_for_review: bool | Omit = omit,
-        test_mode: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -383,10 +414,10 @@ class AsyncTemplatesResource(AsyncAPIResource):
 
           language: Template language code (e.g., en_US) (optional, auto-detected if not provided)
 
-          submit_for_review: Whether to submit the template for review after creation (default: false)
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
+          submit_for_review: Whether to submit the template for review after creation (default: false)
 
           extra_headers: Send extra headers
 
@@ -396,7 +427,15 @@ class AsyncTemplatesResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
         return await self._post(
             "/v3/templates",
             body=await async_maybe_transform(
@@ -405,8 +444,8 @@ class AsyncTemplatesResource(AsyncAPIResource):
                     "creation_source": creation_source,
                     "definition": definition,
                     "language": language,
+                    "sandbox": sandbox,
                     "submit_for_review": submit_for_review,
-                    "test_mode": test_mode,
                 },
                 template_create_params.TemplateCreateParams,
             ),
@@ -420,6 +459,7 @@ class AsyncTemplatesResource(AsyncAPIResource):
         self,
         id: str,
         *,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -443,6 +483,7 @@ class AsyncTemplatesResource(AsyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._get(
             f"/v3/templates/{id}",
             options=make_request_options(
@@ -459,9 +500,10 @@ class AsyncTemplatesResource(AsyncAPIResource):
         definition: Optional[TemplateDefinitionParam] | Omit = omit,
         language: Optional[str] | Omit = omit,
         name: Optional[str] | Omit = omit,
+        sandbox: bool | Omit = omit,
         submit_for_review: bool | Omit = omit,
-        test_mode: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -482,10 +524,10 @@ class AsyncTemplatesResource(AsyncAPIResource):
 
           name: Template display name
 
-          submit_for_review: Whether to submit the template for review after updating (default: false)
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
+          submit_for_review: Whether to submit the template for review after updating (default: false)
 
           extra_headers: Send extra headers
 
@@ -497,7 +539,15 @@ class AsyncTemplatesResource(AsyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
-        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
         return await self._put(
             f"/v3/templates/{id}",
             body=await async_maybe_transform(
@@ -506,8 +556,8 @@ class AsyncTemplatesResource(AsyncAPIResource):
                     "definition": definition,
                     "language": language,
                     "name": name,
+                    "sandbox": sandbox,
                     "submit_for_review": submit_for_review,
-                    "test_mode": test_mode,
                 },
                 template_update_params.TemplateUpdateParams,
             ),
@@ -523,8 +573,10 @@ class AsyncTemplatesResource(AsyncAPIResource):
         page: int,
         page_size: int,
         category: Optional[str] | Omit = omit,
+        is_welcome_playground: Optional[bool] | Omit = omit,
         search: Optional[str] | Omit = omit,
         status: Optional[str] | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -539,7 +591,11 @@ class AsyncTemplatesResource(AsyncAPIResource):
         Args:
           page: Page number (1-indexed)
 
+          page_size: Number of items per page
+
           category: Optional category filter: MARKETING, UTILITY, AUTHENTICATION
+
+          is_welcome_playground: Optional filter by welcome playground flag
 
           search: Optional search term for filtering templates
 
@@ -553,6 +609,7 @@ class AsyncTemplatesResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._get(
             "/v3/templates",
             options=make_request_options(
@@ -565,6 +622,7 @@ class AsyncTemplatesResource(AsyncAPIResource):
                         "page": page,
                         "page_size": page_size,
                         "category": category,
+                        "is_welcome_playground": is_welcome_playground,
                         "search": search,
                         "status": status,
                     },
@@ -579,7 +637,8 @@ class AsyncTemplatesResource(AsyncAPIResource):
         id: str,
         *,
         delete_from_meta: Optional[bool] | Omit = omit,
-        test_mode: bool | Omit = omit,
+        sandbox: bool | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -596,8 +655,8 @@ class AsyncTemplatesResource(AsyncAPIResource):
           delete_from_meta: Whether to also delete the template from WhatsApp/Meta (optional, defaults to
               false)
 
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
           extra_headers: Send extra headers
 
@@ -610,12 +669,13 @@ class AsyncTemplatesResource(AsyncAPIResource):
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._delete(
             f"/v3/templates/{id}",
             body=await async_maybe_transform(
                 {
                     "delete_from_meta": delete_from_meta,
-                    "test_mode": test_mode,
+                    "sandbox": sandbox,
                 },
                 template_delete_params.TemplateDeleteParams,
             ),

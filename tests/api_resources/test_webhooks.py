@@ -38,9 +38,10 @@ class TestWebhooks:
             endpoint_url="https://example.com/webhooks/orders",
             event_types=["messages", "templates"],
             retry_count=3,
-            test_mode=False,
+            sandbox=False,
             timeout_seconds=30,
             idempotency_key="req_abc123_retry1",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(APIResponseWebhook, webhook, path=["response"])
 
@@ -70,7 +71,16 @@ class TestWebhooks:
     @parametrize
     def test_method_retrieve(self, client: SentDm) -> None:
         webhook = client.webhooks.retrieve(
-            "d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
+            id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
+        )
+        assert_matches_type(APIResponseWebhook, webhook, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_retrieve_with_all_params(self, client: SentDm) -> None:
+        webhook = client.webhooks.retrieve(
+            id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(APIResponseWebhook, webhook, path=["response"])
 
@@ -78,7 +88,7 @@ class TestWebhooks:
     @parametrize
     def test_raw_response_retrieve(self, client: SentDm) -> None:
         response = client.webhooks.with_raw_response.retrieve(
-            "d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
+            id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
         )
 
         assert response.is_closed is True
@@ -90,7 +100,7 @@ class TestWebhooks:
     @parametrize
     def test_streaming_response_retrieve(self, client: SentDm) -> None:
         with client.webhooks.with_streaming_response.retrieve(
-            "d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
+            id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -105,7 +115,7 @@ class TestWebhooks:
     def test_path_params_retrieve(self, client: SentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             client.webhooks.with_raw_response.retrieve(
-                "",
+                id="",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
@@ -125,9 +135,10 @@ class TestWebhooks:
             endpoint_url="https://example.com/webhooks/orders-v2",
             event_types=["messages", "templates"],
             retry_count=5,
-            test_mode=False,
+            sandbox=False,
             timeout_seconds=60,
             idempotency_key="req_abc123_retry1",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(APIResponseWebhook, webhook, path=["response"])
 
@@ -182,6 +193,7 @@ class TestWebhooks:
             page_size=0,
             is_active=True,
             search="search",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(WebhookListResponse, webhook, path=["response"])
 
@@ -217,7 +229,16 @@ class TestWebhooks:
     @parametrize
     def test_method_delete(self, client: SentDm) -> None:
         webhook = client.webhooks.delete(
-            "d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
+            id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
+        )
+        assert webhook is None
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_delete_with_all_params(self, client: SentDm) -> None:
+        webhook = client.webhooks.delete(
+            id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert webhook is None
 
@@ -225,7 +246,7 @@ class TestWebhooks:
     @parametrize
     def test_raw_response_delete(self, client: SentDm) -> None:
         response = client.webhooks.with_raw_response.delete(
-            "d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
+            id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
         )
 
         assert response.is_closed is True
@@ -237,7 +258,7 @@ class TestWebhooks:
     @parametrize
     def test_streaming_response_delete(self, client: SentDm) -> None:
         with client.webhooks.with_streaming_response.delete(
-            "d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
+            id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -252,13 +273,21 @@ class TestWebhooks:
     def test_path_params_delete(self, client: SentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             client.webhooks.with_raw_response.delete(
-                "",
+                id="",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_list_event_types(self, client: SentDm) -> None:
         webhook = client.webhooks.list_event_types()
+        assert_matches_type(WebhookListEventTypesResponse, webhook, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_list_event_types_with_all_params(self, client: SentDm) -> None:
+        webhook = client.webhooks.list_event_types(
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+        )
         assert_matches_type(WebhookListEventTypesResponse, webhook, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
@@ -301,6 +330,7 @@ class TestWebhooks:
             page=0,
             page_size=0,
             search="search",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(WebhookListEventsResponse, webhook, path=["response"])
 
@@ -358,8 +388,9 @@ class TestWebhooks:
     def test_method_rotate_secret_with_all_params(self, client: SentDm) -> None:
         webhook = client.webhooks.rotate_secret(
             id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
-            body={"test_mode": False},
+            body={"sandbox": False},
             idempotency_key="req_abc123_retry1",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(WebhookRotateSecretResponse, webhook, path=["response"])
 
@@ -414,8 +445,9 @@ class TestWebhooks:
         webhook = client.webhooks.test(
             id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
             event_type="message.sent",
-            test_mode=False,
+            sandbox=False,
             idempotency_key="req_abc123_retry1",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(WebhookTestResponse, webhook, path=["response"])
 
@@ -467,8 +499,9 @@ class TestWebhooks:
         webhook = client.webhooks.toggle_status(
             id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
             is_active=False,
-            test_mode=False,
+            sandbox=False,
             idempotency_key="req_abc123_retry1",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(APIResponseWebhook, webhook, path=["response"])
 
@@ -526,9 +559,10 @@ class TestAsyncWebhooks:
             endpoint_url="https://example.com/webhooks/orders",
             event_types=["messages", "templates"],
             retry_count=3,
-            test_mode=False,
+            sandbox=False,
             timeout_seconds=30,
             idempotency_key="req_abc123_retry1",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(APIResponseWebhook, webhook, path=["response"])
 
@@ -558,7 +592,16 @@ class TestAsyncWebhooks:
     @parametrize
     async def test_method_retrieve(self, async_client: AsyncSentDm) -> None:
         webhook = await async_client.webhooks.retrieve(
-            "d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
+            id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
+        )
+        assert_matches_type(APIResponseWebhook, webhook, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_retrieve_with_all_params(self, async_client: AsyncSentDm) -> None:
+        webhook = await async_client.webhooks.retrieve(
+            id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(APIResponseWebhook, webhook, path=["response"])
 
@@ -566,7 +609,7 @@ class TestAsyncWebhooks:
     @parametrize
     async def test_raw_response_retrieve(self, async_client: AsyncSentDm) -> None:
         response = await async_client.webhooks.with_raw_response.retrieve(
-            "d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
+            id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
         )
 
         assert response.is_closed is True
@@ -578,7 +621,7 @@ class TestAsyncWebhooks:
     @parametrize
     async def test_streaming_response_retrieve(self, async_client: AsyncSentDm) -> None:
         async with async_client.webhooks.with_streaming_response.retrieve(
-            "d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
+            id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -593,7 +636,7 @@ class TestAsyncWebhooks:
     async def test_path_params_retrieve(self, async_client: AsyncSentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             await async_client.webhooks.with_raw_response.retrieve(
-                "",
+                id="",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
@@ -613,9 +656,10 @@ class TestAsyncWebhooks:
             endpoint_url="https://example.com/webhooks/orders-v2",
             event_types=["messages", "templates"],
             retry_count=5,
-            test_mode=False,
+            sandbox=False,
             timeout_seconds=60,
             idempotency_key="req_abc123_retry1",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(APIResponseWebhook, webhook, path=["response"])
 
@@ -670,6 +714,7 @@ class TestAsyncWebhooks:
             page_size=0,
             is_active=True,
             search="search",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(WebhookListResponse, webhook, path=["response"])
 
@@ -705,7 +750,16 @@ class TestAsyncWebhooks:
     @parametrize
     async def test_method_delete(self, async_client: AsyncSentDm) -> None:
         webhook = await async_client.webhooks.delete(
-            "d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
+            id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
+        )
+        assert webhook is None
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_delete_with_all_params(self, async_client: AsyncSentDm) -> None:
+        webhook = await async_client.webhooks.delete(
+            id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert webhook is None
 
@@ -713,7 +767,7 @@ class TestAsyncWebhooks:
     @parametrize
     async def test_raw_response_delete(self, async_client: AsyncSentDm) -> None:
         response = await async_client.webhooks.with_raw_response.delete(
-            "d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
+            id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
         )
 
         assert response.is_closed is True
@@ -725,7 +779,7 @@ class TestAsyncWebhooks:
     @parametrize
     async def test_streaming_response_delete(self, async_client: AsyncSentDm) -> None:
         async with async_client.webhooks.with_streaming_response.delete(
-            "d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
+            id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -740,13 +794,21 @@ class TestAsyncWebhooks:
     async def test_path_params_delete(self, async_client: AsyncSentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             await async_client.webhooks.with_raw_response.delete(
-                "",
+                id="",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_list_event_types(self, async_client: AsyncSentDm) -> None:
         webhook = await async_client.webhooks.list_event_types()
+        assert_matches_type(WebhookListEventTypesResponse, webhook, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_list_event_types_with_all_params(self, async_client: AsyncSentDm) -> None:
+        webhook = await async_client.webhooks.list_event_types(
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+        )
         assert_matches_type(WebhookListEventTypesResponse, webhook, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
@@ -789,6 +851,7 @@ class TestAsyncWebhooks:
             page=0,
             page_size=0,
             search="search",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(WebhookListEventsResponse, webhook, path=["response"])
 
@@ -846,8 +909,9 @@ class TestAsyncWebhooks:
     async def test_method_rotate_secret_with_all_params(self, async_client: AsyncSentDm) -> None:
         webhook = await async_client.webhooks.rotate_secret(
             id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
-            body={"test_mode": False},
+            body={"sandbox": False},
             idempotency_key="req_abc123_retry1",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(WebhookRotateSecretResponse, webhook, path=["response"])
 
@@ -902,8 +966,9 @@ class TestAsyncWebhooks:
         webhook = await async_client.webhooks.test(
             id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
             event_type="message.sent",
-            test_mode=False,
+            sandbox=False,
             idempotency_key="req_abc123_retry1",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(WebhookTestResponse, webhook, path=["response"])
 
@@ -955,8 +1020,9 @@ class TestAsyncWebhooks:
         webhook = await async_client.webhooks.toggle_status(
             id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
             is_active=False,
-            test_mode=False,
+            sandbox=False,
             idempotency_key="req_abc123_retry1",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(APIResponseWebhook, webhook, path=["response"])
 

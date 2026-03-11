@@ -32,16 +32,14 @@ from ._base_client import (
 )
 
 if TYPE_CHECKING:
-    from .resources import me, users, brands, lookup, contacts, messages, profiles, webhooks, templates
+    from .resources import me, users, contacts, messages, profiles, webhooks, templates
     from .resources.me import MeResource, AsyncMeResource
     from .resources.users import UsersResource, AsyncUsersResource
-    from .resources.lookup import LookupResource, AsyncLookupResource
     from .resources.contacts import ContactsResource, AsyncContactsResource
     from .resources.messages import MessagesResource, AsyncMessagesResource
     from .resources.profiles import ProfilesResource, AsyncProfilesResource
     from .resources.webhooks import WebhooksResource, AsyncWebhooksResource
     from .resources.templates import TemplatesResource, AsyncTemplatesResource
-    from .resources.brands.brands import BrandsResource, AsyncBrandsResource
 
 __all__ = ["Timeout", "Transport", "ProxiesTypes", "RequestOptions", "SentDm", "AsyncSentDm", "Client", "AsyncClient"]
 
@@ -137,24 +135,11 @@ class SentDm(SyncAPIClient):
         return MessagesResource(self)
 
     @cached_property
-    def lookup(self) -> LookupResource:
-        from .resources.lookup import LookupResource
-
-        return LookupResource(self)
-
-    @cached_property
     def contacts(self) -> ContactsResource:
         """Create, update, and manage customer contact lists"""
         from .resources.contacts import ContactsResource
 
         return ContactsResource(self)
-
-    @cached_property
-    def brands(self) -> BrandsResource:
-        """Register and manage 10DLC brands for SMS compliance"""
-        from .resources.brands import BrandsResource
-
-        return BrandsResource(self)
 
     @cached_property
     def me(self) -> MeResource:
@@ -372,24 +357,11 @@ class AsyncSentDm(AsyncAPIClient):
         return AsyncMessagesResource(self)
 
     @cached_property
-    def lookup(self) -> AsyncLookupResource:
-        from .resources.lookup import AsyncLookupResource
-
-        return AsyncLookupResource(self)
-
-    @cached_property
     def contacts(self) -> AsyncContactsResource:
         """Create, update, and manage customer contact lists"""
         from .resources.contacts import AsyncContactsResource
 
         return AsyncContactsResource(self)
-
-    @cached_property
-    def brands(self) -> AsyncBrandsResource:
-        """Register and manage 10DLC brands for SMS compliance"""
-        from .resources.brands import AsyncBrandsResource
-
-        return AsyncBrandsResource(self)
 
     @cached_property
     def me(self) -> AsyncMeResource:
@@ -558,24 +530,11 @@ class SentDmWithRawResponse:
         return MessagesResourceWithRawResponse(self._client.messages)
 
     @cached_property
-    def lookup(self) -> lookup.LookupResourceWithRawResponse:
-        from .resources.lookup import LookupResourceWithRawResponse
-
-        return LookupResourceWithRawResponse(self._client.lookup)
-
-    @cached_property
     def contacts(self) -> contacts.ContactsResourceWithRawResponse:
         """Create, update, and manage customer contact lists"""
         from .resources.contacts import ContactsResourceWithRawResponse
 
         return ContactsResourceWithRawResponse(self._client.contacts)
-
-    @cached_property
-    def brands(self) -> brands.BrandsResourceWithRawResponse:
-        """Register and manage 10DLC brands for SMS compliance"""
-        from .resources.brands import BrandsResourceWithRawResponse
-
-        return BrandsResourceWithRawResponse(self._client.brands)
 
     @cached_property
     def me(self) -> me.MeResourceWithRawResponse:
@@ -627,24 +586,11 @@ class AsyncSentDmWithRawResponse:
         return AsyncMessagesResourceWithRawResponse(self._client.messages)
 
     @cached_property
-    def lookup(self) -> lookup.AsyncLookupResourceWithRawResponse:
-        from .resources.lookup import AsyncLookupResourceWithRawResponse
-
-        return AsyncLookupResourceWithRawResponse(self._client.lookup)
-
-    @cached_property
     def contacts(self) -> contacts.AsyncContactsResourceWithRawResponse:
         """Create, update, and manage customer contact lists"""
         from .resources.contacts import AsyncContactsResourceWithRawResponse
 
         return AsyncContactsResourceWithRawResponse(self._client.contacts)
-
-    @cached_property
-    def brands(self) -> brands.AsyncBrandsResourceWithRawResponse:
-        """Register and manage 10DLC brands for SMS compliance"""
-        from .resources.brands import AsyncBrandsResourceWithRawResponse
-
-        return AsyncBrandsResourceWithRawResponse(self._client.brands)
 
     @cached_property
     def me(self) -> me.AsyncMeResourceWithRawResponse:
@@ -696,24 +642,11 @@ class SentDmWithStreamedResponse:
         return MessagesResourceWithStreamingResponse(self._client.messages)
 
     @cached_property
-    def lookup(self) -> lookup.LookupResourceWithStreamingResponse:
-        from .resources.lookup import LookupResourceWithStreamingResponse
-
-        return LookupResourceWithStreamingResponse(self._client.lookup)
-
-    @cached_property
     def contacts(self) -> contacts.ContactsResourceWithStreamingResponse:
         """Create, update, and manage customer contact lists"""
         from .resources.contacts import ContactsResourceWithStreamingResponse
 
         return ContactsResourceWithStreamingResponse(self._client.contacts)
-
-    @cached_property
-    def brands(self) -> brands.BrandsResourceWithStreamingResponse:
-        """Register and manage 10DLC brands for SMS compliance"""
-        from .resources.brands import BrandsResourceWithStreamingResponse
-
-        return BrandsResourceWithStreamingResponse(self._client.brands)
 
     @cached_property
     def me(self) -> me.MeResourceWithStreamingResponse:
@@ -765,24 +698,11 @@ class AsyncSentDmWithStreamedResponse:
         return AsyncMessagesResourceWithStreamingResponse(self._client.messages)
 
     @cached_property
-    def lookup(self) -> lookup.AsyncLookupResourceWithStreamingResponse:
-        from .resources.lookup import AsyncLookupResourceWithStreamingResponse
-
-        return AsyncLookupResourceWithStreamingResponse(self._client.lookup)
-
-    @cached_property
     def contacts(self) -> contacts.AsyncContactsResourceWithStreamingResponse:
         """Create, update, and manage customer contact lists"""
         from .resources.contacts import AsyncContactsResourceWithStreamingResponse
 
         return AsyncContactsResourceWithStreamingResponse(self._client.contacts)
-
-    @cached_property
-    def brands(self) -> brands.AsyncBrandsResourceWithStreamingResponse:
-        """Register and manage 10DLC brands for SMS compliance"""
-        from .resources.brands import AsyncBrandsResourceWithStreamingResponse
-
-        return AsyncBrandsResourceWithStreamingResponse(self._client.brands)
 
     @cached_property
     def me(self) -> me.AsyncMeResourceWithStreamingResponse:

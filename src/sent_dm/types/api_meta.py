@@ -14,9 +14,6 @@ class APIMeta(BaseModel):
     request_id: Optional[str] = None
     """Unique identifier for this request (for tracing and support)"""
 
-    response_time_ms: Optional[int] = None
-    """Response time in milliseconds (optional)"""
-
     timestamp: Optional[datetime] = None
     """Server timestamp when the response was generated"""
 

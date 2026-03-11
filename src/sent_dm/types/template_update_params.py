@@ -24,13 +24,15 @@ class TemplateUpdateParams(TypedDict, total=False):
     name: Optional[str]
     """Template display name"""
 
+    sandbox: bool
+    """
+    Sandbox flag - when true, the operation is simulated without side effects Useful
+    for testing integrations without actual execution
+    """
+
     submit_for_review: bool
     """Whether to submit the template for review after updating (default: false)"""
 
-    test_mode: bool
-    """
-    Test mode flag - when true, the operation is simulated without side effects
-    Useful for testing integrations without actual execution
-    """
-
     idempotency_key: Annotated[str, PropertyInfo(alias="Idempotency-Key")]
+
+    x_profile_id: Annotated[str, PropertyInfo(alias="x-profile-id")]

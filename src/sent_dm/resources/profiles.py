@@ -6,7 +6,12 @@ from typing import Optional
 
 import httpx
 
-from ..types import profile_create_params, profile_delete_params, profile_update_params, profile_complete_params
+from ..types import (
+    profile_create_params,
+    profile_delete_params,
+    profile_update_params,
+    profile_complete_params,
+)
 from .._types import Body, Omit, Query, Headers, NoneType, NotGiven, omit, not_given
 from .._utils import maybe_transform, strip_not_given, async_maybe_transform
 from .._compat import cached_property
@@ -18,6 +23,7 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
+from ..types.brand_data_param import BrandDataParam
 from ..types.profile_list_response import ProfileListResponse
 from ..types.api_response_of_profile_detail import APIResponseOfProfileDetail
 
@@ -51,7 +57,9 @@ class ProfilesResource(SyncAPIResource):
         *,
         allow_contact_sharing: bool | Omit = omit,
         allow_template_sharing: bool | Omit = omit,
+        billing_contact: Optional[profile_create_params.BillingContact] | Omit = omit,
         billing_model: Optional[str] | Omit = omit,
+        brand: Optional[BrandDataParam] | Omit = omit,
         description: Optional[str] | Omit = omit,
         icon: Optional[str] | Omit = omit,
         inherit_contacts: Optional[bool] | Omit = omit,
@@ -59,9 +67,12 @@ class ProfilesResource(SyncAPIResource):
         inherit_tcr_campaign: Optional[bool] | Omit = omit,
         inherit_templates: Optional[bool] | Omit = omit,
         name: str | Omit = omit,
+        payment_details: Optional[profile_create_params.PaymentDetails] | Omit = omit,
+        sandbox: bool | Omit = omit,
         short_name: Optional[str] | Omit = omit,
-        test_mode: bool | Omit = omit,
+        whatsapp_business_account: Optional[profile_create_params.WhatsappBusinessAccount] | Omit = omit,
         idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -75,14 +86,61 @@ class ProfilesResource(SyncAPIResource):
         different brands, departments, or use cases, each with their own messaging
         configuration and settings. Requires admin role in the organization.
 
+        ## WhatsApp Business Account
+
+        Every profile must be linked to a WhatsApp Business Account. There are two ways
+        to do this:
+
+        **1. Inherit from organization (default)** — Omit the
+        `whatsapp_business_account` field. The profile will share the organization's
+        WhatsApp Business Account, which must have been set up via WhatsApp Embedded
+        Signup. This is the recommended path for most use cases.
+
+        **2. Direct credentials** — Provide a `whatsapp_business_account` object with
+        `waba_id`, `phone_number_id`, and `access_token`. Use this when the profile
+        needs its own independent WhatsApp Business Account. Obtain these from Meta
+        Business Manager by creating a System User with `whatsapp_business_messaging`
+        and `whatsapp_business_management` permissions.
+
+        If the `whatsapp_business_account` field is omitted and the organization has no
+        WhatsApp Business Account configured, the request will be rejected with
+        HTTP 422.
+
+        ## Brand
+
+        Include the optional `brand` field to create the brand for this profile at the
+        same time. Cannot be used when `inherit_tcr_brand` is `true`.
+
+        ## Payment Details
+
+        When `billing_model` is `"profile"` or `"profile_and_organization"` you may
+        include a `payment_details` object containing the card number, expiry (MM/YY),
+        CVC, and billing ZIP code. Payment details are **never stored** on our servers
+        and are forwarded directly to the payment processor. Providing `payment_details`
+        when `billing_model` is `"organization"` is not allowed.
+
         Args:
           allow_contact_sharing: Whether contacts are shared across profiles (default: false)
 
           allow_template_sharing: Whether templates are shared across profiles (default: false)
 
+          billing_contact: Billing contact for this profile. Required when billing_model is "profile" or
+              "profile_and_organization". Identifies who receives invoices and who is
+              responsible for payment.
+
           billing_model:
               Billing model: profile, organization, or profile_and_organization (default:
-              profile)
+              profile).
+
+              - "organization": the organization's billing details are used; no profile-level
+                billing info needed.
+              - "profile": the profile is billed independently; billing_contact is required.
+              - "profile_and_organization": the profile is billed first with the organization
+                as fallback; billing_contact is required.
+
+          brand: Brand and KYC information for this profile (optional). When provided, creates
+              the brand associated with this profile. Cannot be set when inherit_tcr_brand is
+              true.
 
           description: Profile description (optional)
 
@@ -98,10 +156,22 @@ class ProfilesResource(SyncAPIResource):
 
           name: Profile name (required)
 
-          short_name: Profile short name/abbreviation (optional)
+          payment_details: Payment card details for this profile (optional). Accepted when billing_model is
+              "profile" or "profile_and_organization". Not persisted on our servers —
+              forwarded to the payment processor.
 
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
+
+          short_name: Profile short name/abbreviation (optional). Must be 3–11 characters, contain
+              only letters, numbers, and spaces, and include at least one letter. Example:
+              "SALES", "Mkt 2", "Support1".
+
+          whatsapp_business_account: Direct WhatsApp Business Account credentials for this profile. When provided,
+              the profile uses its own WhatsApp Business Account instead of inheriting from
+              the organization. When omitted, the profile inherits the organization's WhatsApp
+              Business Account (requires the organization to have completed WhatsApp Embedded
+              Signup).
 
           extra_headers: Send extra headers
 
@@ -111,14 +181,24 @@ class ProfilesResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
         return self._post(
             "/v3/profiles",
             body=maybe_transform(
                 {
                     "allow_contact_sharing": allow_contact_sharing,
                     "allow_template_sharing": allow_template_sharing,
+                    "billing_contact": billing_contact,
                     "billing_model": billing_model,
+                    "brand": brand,
                     "description": description,
                     "icon": icon,
                     "inherit_contacts": inherit_contacts,
@@ -126,8 +206,10 @@ class ProfilesResource(SyncAPIResource):
                     "inherit_tcr_campaign": inherit_tcr_campaign,
                     "inherit_templates": inherit_templates,
                     "name": name,
+                    "payment_details": payment_details,
+                    "sandbox": sandbox,
                     "short_name": short_name,
-                    "test_mode": test_mode,
+                    "whatsapp_business_account": whatsapp_business_account,
                 },
                 profile_create_params.ProfileCreateParams,
             ),
@@ -141,6 +223,7 @@ class ProfilesResource(SyncAPIResource):
         self,
         profile_id: str,
         *,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -150,7 +233,8 @@ class ProfilesResource(SyncAPIResource):
     ) -> APIResponseOfProfileDetail:
         """
         Retrieves detailed information about a specific sender profile within an
-        organization.
+        organization, including brand and KYC information if a brand has been
+        configured.
 
         Args:
           extra_headers: Send extra headers
@@ -163,6 +247,7 @@ class ProfilesResource(SyncAPIResource):
         """
         if not profile_id:
             raise ValueError(f"Expected a non-empty value for `profile_id` but received {profile_id!r}")
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._get(
             f"/v3/profiles/{profile_id}",
             options=make_request_options(
@@ -173,12 +258,14 @@ class ProfilesResource(SyncAPIResource):
 
     def update(
         self,
-        path_profile_id: str,
+        profile_id: str,
         *,
         allow_contact_sharing: Optional[bool] | Omit = omit,
         allow_number_change_during_onboarding: Optional[bool] | Omit = omit,
         allow_template_sharing: Optional[bool] | Omit = omit,
+        billing_contact: Optional[profile_update_params.BillingContact] | Omit = omit,
         billing_model: Optional[str] | Omit = omit,
+        brand: Optional[BrandDataParam] | Omit = omit,
         description: Optional[str] | Omit = omit,
         icon: Optional[str] | Omit = omit,
         inherit_contacts: Optional[bool] | Omit = omit,
@@ -186,14 +273,15 @@ class ProfilesResource(SyncAPIResource):
         inherit_tcr_campaign: Optional[bool] | Omit = omit,
         inherit_templates: Optional[bool] | Omit = omit,
         name: Optional[str] | Omit = omit,
-        body_profile_id: str | Omit = omit,
+        payment_details: Optional[profile_update_params.PaymentDetails] | Omit = omit,
+        sandbox: bool | Omit = omit,
         sending_phone_number: Optional[str] | Omit = omit,
         sending_phone_number_profile_id: Optional[str] | Omit = omit,
         sending_whatsapp_number_profile_id: Optional[str] | Omit = omit,
         short_name: Optional[str] | Omit = omit,
-        test_mode: bool | Omit = omit,
         whatsapp_phone_number: Optional[str] | Omit = omit,
         idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -206,6 +294,22 @@ class ProfilesResource(SyncAPIResource):
         Requires admin role in the
         organization. Only provided fields will be updated (partial update).
 
+        ## Brand Management
+
+        Include the optional `brand` field to create or update the brand associated with
+        this profile. The brand holds KYC and TCR compliance data (legal business info,
+        contact details, messaging vertical). Once a brand has been submitted to TCR it
+        cannot be modified. Setting `inherit_tcr_brand: true` and providing `brand` in
+        the same request is not allowed.
+
+        ## Payment Details
+
+        When `billing_model` is `"profile"` or `"profile_and_organization"` you may
+        include a `payment_details` object containing the card number, expiry (MM/YY),
+        CVC, and billing ZIP code. Payment details are **never stored** on our servers
+        and are forwarded directly to the payment processor. Providing `payment_details`
+        when `billing_model` is `"organization"` is not allowed.
+
         Args:
           allow_contact_sharing: Whether contacts are shared across profiles (optional)
 
@@ -213,7 +317,22 @@ class ProfilesResource(SyncAPIResource):
 
           allow_template_sharing: Whether templates are shared across profiles (optional)
 
-          billing_model: Billing model: profile, organization, or profile_and_organization (optional)
+          billing_contact: Billing contact for this profile. Required when billing_model is "profile" or
+              "profile_and_organization" and no billing contact has been configured yet.
+              Identifies who receives invoices and who is responsible for payment.
+
+          billing_model: Billing model: profile, organization, or profile_and_organization (optional).
+
+              - "organization": the organization's billing details are used; no profile-level
+                billing info needed.
+              - "profile": the profile is billed independently; billing_contact is required.
+              - "profile_and_organization": the profile is billed first with the organization
+                as fallback; billing_contact is required.
+
+          brand: Brand and KYC information for this profile (optional). When provided, creates or
+              updates the brand associated with this profile. Cannot be set when
+              inherit_tcr_brand is true. Once a brand has been submitted to TCR it cannot be
+              modified.
 
           description: Profile description (optional)
 
@@ -229,7 +348,12 @@ class ProfilesResource(SyncAPIResource):
 
           name: Profile name (optional)
 
-          body_profile_id: Profile ID from route parameter
+          payment_details: Payment card details for this profile (optional). Accepted when billing_model is
+              "profile" or "profile_and_organization". Not persisted on our servers —
+              forwarded to the payment processor.
+
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
           sending_phone_number: Direct phone number for SMS sending (optional)
 
@@ -237,10 +361,9 @@ class ProfilesResource(SyncAPIResource):
 
           sending_whatsapp_number_profile_id: Reference to another profile to use for WhatsApp configuration (optional)
 
-          short_name: Profile short name/abbreviation (optional)
-
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
+          short_name: Profile short name/abbreviation (optional). Must be 3–11 characters, contain
+              only letters, numbers, and spaces, and include at least one letter. Example:
+              "SALES", "Mkt 2", "Support1".
 
           whatsapp_phone_number: Direct phone number for WhatsApp sending (optional)
 
@@ -252,17 +375,27 @@ class ProfilesResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not path_profile_id:
-            raise ValueError(f"Expected a non-empty value for `path_profile_id` but received {path_profile_id!r}")
-        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        if not profile_id:
+            raise ValueError(f"Expected a non-empty value for `profile_id` but received {profile_id!r}")
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
         return self._patch(
-            f"/v3/profiles/{path_profile_id}",
+            f"/v3/profiles/{profile_id}",
             body=maybe_transform(
                 {
                     "allow_contact_sharing": allow_contact_sharing,
                     "allow_number_change_during_onboarding": allow_number_change_during_onboarding,
                     "allow_template_sharing": allow_template_sharing,
+                    "billing_contact": billing_contact,
                     "billing_model": billing_model,
+                    "brand": brand,
                     "description": description,
                     "icon": icon,
                     "inherit_contacts": inherit_contacts,
@@ -270,12 +403,12 @@ class ProfilesResource(SyncAPIResource):
                     "inherit_tcr_campaign": inherit_tcr_campaign,
                     "inherit_templates": inherit_templates,
                     "name": name,
-                    "body_profile_id": body_profile_id,
+                    "payment_details": payment_details,
+                    "sandbox": sandbox,
                     "sending_phone_number": sending_phone_number,
                     "sending_phone_number_profile_id": sending_phone_number_profile_id,
                     "sending_whatsapp_number_profile_id": sending_whatsapp_number_profile_id,
                     "short_name": short_name,
-                    "test_mode": test_mode,
                     "whatsapp_phone_number": whatsapp_phone_number,
                 },
                 profile_update_params.ProfileUpdateParams,
@@ -289,6 +422,7 @@ class ProfilesResource(SyncAPIResource):
     def list(
         self,
         *,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -296,12 +430,22 @@ class ProfilesResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ProfileListResponse:
-        """Retrieves all sender profiles within an organization.
-
-        Profiles represent
-        different brands, departments, or use cases within an organization, each with
-        their own messaging configuration.
         """
+        Retrieves all sender profiles within an organization, including brand
+        information for each profile. Profiles represent different brands, departments,
+        or use cases within an organization, each with their own messaging
+        configuration.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._get(
             "/v3/profiles",
             options=make_request_options(
@@ -312,10 +456,10 @@ class ProfilesResource(SyncAPIResource):
 
     def delete(
         self,
-        path_profile_id: str,
+        profile_id: str,
         *,
-        body_profile_id: str | Omit = omit,
-        test_mode: bool | Omit = omit,
+        body: profile_delete_params.Body,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -329,10 +473,7 @@ class ProfilesResource(SyncAPIResource):
         retained. Requires admin role in the organization.
 
         Args:
-          body_profile_id: Profile ID from route parameter
-
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
+          body: Request to delete a profile
 
           extra_headers: Send extra headers
 
@@ -342,18 +483,13 @@ class ProfilesResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not path_profile_id:
-            raise ValueError(f"Expected a non-empty value for `path_profile_id` but received {path_profile_id!r}")
+        if not profile_id:
+            raise ValueError(f"Expected a non-empty value for `profile_id` but received {profile_id!r}")
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._delete(
-            f"/v3/profiles/{path_profile_id}",
-            body=maybe_transform(
-                {
-                    "body_profile_id": body_profile_id,
-                    "test_mode": test_mode,
-                },
-                profile_delete_params.ProfileDeleteParams,
-            ),
+            f"/v3/profiles/{profile_id}",
+            body=maybe_transform(body, profile_delete_params.ProfileDeleteParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -365,8 +501,9 @@ class ProfilesResource(SyncAPIResource):
         profile_id: str,
         *,
         web_hook_url: str,
-        test_mode: bool | Omit = omit,
+        sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -398,8 +535,8 @@ class ProfilesResource(SyncAPIResource):
         Args:
           web_hook_url: Webhook URL to call when profile completion finishes (success or failure)
 
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
           extra_headers: Send extra headers
 
@@ -411,13 +548,21 @@ class ProfilesResource(SyncAPIResource):
         """
         if not profile_id:
             raise ValueError(f"Expected a non-empty value for `profile_id` but received {profile_id!r}")
-        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
         return self._post(
             f"/v3/profiles/{profile_id}/complete",
             body=maybe_transform(
                 {
                     "web_hook_url": web_hook_url,
-                    "test_mode": test_mode,
+                    "sandbox": sandbox,
                 },
                 profile_complete_params.ProfileCompleteParams,
             ),
@@ -455,7 +600,9 @@ class AsyncProfilesResource(AsyncAPIResource):
         *,
         allow_contact_sharing: bool | Omit = omit,
         allow_template_sharing: bool | Omit = omit,
+        billing_contact: Optional[profile_create_params.BillingContact] | Omit = omit,
         billing_model: Optional[str] | Omit = omit,
+        brand: Optional[BrandDataParam] | Omit = omit,
         description: Optional[str] | Omit = omit,
         icon: Optional[str] | Omit = omit,
         inherit_contacts: Optional[bool] | Omit = omit,
@@ -463,9 +610,12 @@ class AsyncProfilesResource(AsyncAPIResource):
         inherit_tcr_campaign: Optional[bool] | Omit = omit,
         inherit_templates: Optional[bool] | Omit = omit,
         name: str | Omit = omit,
+        payment_details: Optional[profile_create_params.PaymentDetails] | Omit = omit,
+        sandbox: bool | Omit = omit,
         short_name: Optional[str] | Omit = omit,
-        test_mode: bool | Omit = omit,
+        whatsapp_business_account: Optional[profile_create_params.WhatsappBusinessAccount] | Omit = omit,
         idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -479,14 +629,61 @@ class AsyncProfilesResource(AsyncAPIResource):
         different brands, departments, or use cases, each with their own messaging
         configuration and settings. Requires admin role in the organization.
 
+        ## WhatsApp Business Account
+
+        Every profile must be linked to a WhatsApp Business Account. There are two ways
+        to do this:
+
+        **1. Inherit from organization (default)** — Omit the
+        `whatsapp_business_account` field. The profile will share the organization's
+        WhatsApp Business Account, which must have been set up via WhatsApp Embedded
+        Signup. This is the recommended path for most use cases.
+
+        **2. Direct credentials** — Provide a `whatsapp_business_account` object with
+        `waba_id`, `phone_number_id`, and `access_token`. Use this when the profile
+        needs its own independent WhatsApp Business Account. Obtain these from Meta
+        Business Manager by creating a System User with `whatsapp_business_messaging`
+        and `whatsapp_business_management` permissions.
+
+        If the `whatsapp_business_account` field is omitted and the organization has no
+        WhatsApp Business Account configured, the request will be rejected with
+        HTTP 422.
+
+        ## Brand
+
+        Include the optional `brand` field to create the brand for this profile at the
+        same time. Cannot be used when `inherit_tcr_brand` is `true`.
+
+        ## Payment Details
+
+        When `billing_model` is `"profile"` or `"profile_and_organization"` you may
+        include a `payment_details` object containing the card number, expiry (MM/YY),
+        CVC, and billing ZIP code. Payment details are **never stored** on our servers
+        and are forwarded directly to the payment processor. Providing `payment_details`
+        when `billing_model` is `"organization"` is not allowed.
+
         Args:
           allow_contact_sharing: Whether contacts are shared across profiles (default: false)
 
           allow_template_sharing: Whether templates are shared across profiles (default: false)
 
+          billing_contact: Billing contact for this profile. Required when billing_model is "profile" or
+              "profile_and_organization". Identifies who receives invoices and who is
+              responsible for payment.
+
           billing_model:
               Billing model: profile, organization, or profile_and_organization (default:
-              profile)
+              profile).
+
+              - "organization": the organization's billing details are used; no profile-level
+                billing info needed.
+              - "profile": the profile is billed independently; billing_contact is required.
+              - "profile_and_organization": the profile is billed first with the organization
+                as fallback; billing_contact is required.
+
+          brand: Brand and KYC information for this profile (optional). When provided, creates
+              the brand associated with this profile. Cannot be set when inherit_tcr_brand is
+              true.
 
           description: Profile description (optional)
 
@@ -502,10 +699,22 @@ class AsyncProfilesResource(AsyncAPIResource):
 
           name: Profile name (required)
 
-          short_name: Profile short name/abbreviation (optional)
+          payment_details: Payment card details for this profile (optional). Accepted when billing_model is
+              "profile" or "profile_and_organization". Not persisted on our servers —
+              forwarded to the payment processor.
 
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
+
+          short_name: Profile short name/abbreviation (optional). Must be 3–11 characters, contain
+              only letters, numbers, and spaces, and include at least one letter. Example:
+              "SALES", "Mkt 2", "Support1".
+
+          whatsapp_business_account: Direct WhatsApp Business Account credentials for this profile. When provided,
+              the profile uses its own WhatsApp Business Account instead of inheriting from
+              the organization. When omitted, the profile inherits the organization's WhatsApp
+              Business Account (requires the organization to have completed WhatsApp Embedded
+              Signup).
 
           extra_headers: Send extra headers
 
@@ -515,14 +724,24 @@ class AsyncProfilesResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
         return await self._post(
             "/v3/profiles",
             body=await async_maybe_transform(
                 {
                     "allow_contact_sharing": allow_contact_sharing,
                     "allow_template_sharing": allow_template_sharing,
+                    "billing_contact": billing_contact,
                     "billing_model": billing_model,
+                    "brand": brand,
                     "description": description,
                     "icon": icon,
                     "inherit_contacts": inherit_contacts,
@@ -530,8 +749,10 @@ class AsyncProfilesResource(AsyncAPIResource):
                     "inherit_tcr_campaign": inherit_tcr_campaign,
                     "inherit_templates": inherit_templates,
                     "name": name,
+                    "payment_details": payment_details,
+                    "sandbox": sandbox,
                     "short_name": short_name,
-                    "test_mode": test_mode,
+                    "whatsapp_business_account": whatsapp_business_account,
                 },
                 profile_create_params.ProfileCreateParams,
             ),
@@ -545,6 +766,7 @@ class AsyncProfilesResource(AsyncAPIResource):
         self,
         profile_id: str,
         *,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -554,7 +776,8 @@ class AsyncProfilesResource(AsyncAPIResource):
     ) -> APIResponseOfProfileDetail:
         """
         Retrieves detailed information about a specific sender profile within an
-        organization.
+        organization, including brand and KYC information if a brand has been
+        configured.
 
         Args:
           extra_headers: Send extra headers
@@ -567,6 +790,7 @@ class AsyncProfilesResource(AsyncAPIResource):
         """
         if not profile_id:
             raise ValueError(f"Expected a non-empty value for `profile_id` but received {profile_id!r}")
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._get(
             f"/v3/profiles/{profile_id}",
             options=make_request_options(
@@ -577,12 +801,14 @@ class AsyncProfilesResource(AsyncAPIResource):
 
     async def update(
         self,
-        path_profile_id: str,
+        profile_id: str,
         *,
         allow_contact_sharing: Optional[bool] | Omit = omit,
         allow_number_change_during_onboarding: Optional[bool] | Omit = omit,
         allow_template_sharing: Optional[bool] | Omit = omit,
+        billing_contact: Optional[profile_update_params.BillingContact] | Omit = omit,
         billing_model: Optional[str] | Omit = omit,
+        brand: Optional[BrandDataParam] | Omit = omit,
         description: Optional[str] | Omit = omit,
         icon: Optional[str] | Omit = omit,
         inherit_contacts: Optional[bool] | Omit = omit,
@@ -590,14 +816,15 @@ class AsyncProfilesResource(AsyncAPIResource):
         inherit_tcr_campaign: Optional[bool] | Omit = omit,
         inherit_templates: Optional[bool] | Omit = omit,
         name: Optional[str] | Omit = omit,
-        body_profile_id: str | Omit = omit,
+        payment_details: Optional[profile_update_params.PaymentDetails] | Omit = omit,
+        sandbox: bool | Omit = omit,
         sending_phone_number: Optional[str] | Omit = omit,
         sending_phone_number_profile_id: Optional[str] | Omit = omit,
         sending_whatsapp_number_profile_id: Optional[str] | Omit = omit,
         short_name: Optional[str] | Omit = omit,
-        test_mode: bool | Omit = omit,
         whatsapp_phone_number: Optional[str] | Omit = omit,
         idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -610,6 +837,22 @@ class AsyncProfilesResource(AsyncAPIResource):
         Requires admin role in the
         organization. Only provided fields will be updated (partial update).
 
+        ## Brand Management
+
+        Include the optional `brand` field to create or update the brand associated with
+        this profile. The brand holds KYC and TCR compliance data (legal business info,
+        contact details, messaging vertical). Once a brand has been submitted to TCR it
+        cannot be modified. Setting `inherit_tcr_brand: true` and providing `brand` in
+        the same request is not allowed.
+
+        ## Payment Details
+
+        When `billing_model` is `"profile"` or `"profile_and_organization"` you may
+        include a `payment_details` object containing the card number, expiry (MM/YY),
+        CVC, and billing ZIP code. Payment details are **never stored** on our servers
+        and are forwarded directly to the payment processor. Providing `payment_details`
+        when `billing_model` is `"organization"` is not allowed.
+
         Args:
           allow_contact_sharing: Whether contacts are shared across profiles (optional)
 
@@ -617,7 +860,22 @@ class AsyncProfilesResource(AsyncAPIResource):
 
           allow_template_sharing: Whether templates are shared across profiles (optional)
 
-          billing_model: Billing model: profile, organization, or profile_and_organization (optional)
+          billing_contact: Billing contact for this profile. Required when billing_model is "profile" or
+              "profile_and_organization" and no billing contact has been configured yet.
+              Identifies who receives invoices and who is responsible for payment.
+
+          billing_model: Billing model: profile, organization, or profile_and_organization (optional).
+
+              - "organization": the organization's billing details are used; no profile-level
+                billing info needed.
+              - "profile": the profile is billed independently; billing_contact is required.
+              - "profile_and_organization": the profile is billed first with the organization
+                as fallback; billing_contact is required.
+
+          brand: Brand and KYC information for this profile (optional). When provided, creates or
+              updates the brand associated with this profile. Cannot be set when
+              inherit_tcr_brand is true. Once a brand has been submitted to TCR it cannot be
+              modified.
 
           description: Profile description (optional)
 
@@ -633,7 +891,12 @@ class AsyncProfilesResource(AsyncAPIResource):
 
           name: Profile name (optional)
 
-          body_profile_id: Profile ID from route parameter
+          payment_details: Payment card details for this profile (optional). Accepted when billing_model is
+              "profile" or "profile_and_organization". Not persisted on our servers —
+              forwarded to the payment processor.
+
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
           sending_phone_number: Direct phone number for SMS sending (optional)
 
@@ -641,10 +904,9 @@ class AsyncProfilesResource(AsyncAPIResource):
 
           sending_whatsapp_number_profile_id: Reference to another profile to use for WhatsApp configuration (optional)
 
-          short_name: Profile short name/abbreviation (optional)
-
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
+          short_name: Profile short name/abbreviation (optional). Must be 3–11 characters, contain
+              only letters, numbers, and spaces, and include at least one letter. Example:
+              "SALES", "Mkt 2", "Support1".
 
           whatsapp_phone_number: Direct phone number for WhatsApp sending (optional)
 
@@ -656,17 +918,27 @@ class AsyncProfilesResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not path_profile_id:
-            raise ValueError(f"Expected a non-empty value for `path_profile_id` but received {path_profile_id!r}")
-        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        if not profile_id:
+            raise ValueError(f"Expected a non-empty value for `profile_id` but received {profile_id!r}")
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
         return await self._patch(
-            f"/v3/profiles/{path_profile_id}",
+            f"/v3/profiles/{profile_id}",
             body=await async_maybe_transform(
                 {
                     "allow_contact_sharing": allow_contact_sharing,
                     "allow_number_change_during_onboarding": allow_number_change_during_onboarding,
                     "allow_template_sharing": allow_template_sharing,
+                    "billing_contact": billing_contact,
                     "billing_model": billing_model,
+                    "brand": brand,
                     "description": description,
                     "icon": icon,
                     "inherit_contacts": inherit_contacts,
@@ -674,12 +946,12 @@ class AsyncProfilesResource(AsyncAPIResource):
                     "inherit_tcr_campaign": inherit_tcr_campaign,
                     "inherit_templates": inherit_templates,
                     "name": name,
-                    "body_profile_id": body_profile_id,
+                    "payment_details": payment_details,
+                    "sandbox": sandbox,
                     "sending_phone_number": sending_phone_number,
                     "sending_phone_number_profile_id": sending_phone_number_profile_id,
                     "sending_whatsapp_number_profile_id": sending_whatsapp_number_profile_id,
                     "short_name": short_name,
-                    "test_mode": test_mode,
                     "whatsapp_phone_number": whatsapp_phone_number,
                 },
                 profile_update_params.ProfileUpdateParams,
@@ -693,6 +965,7 @@ class AsyncProfilesResource(AsyncAPIResource):
     async def list(
         self,
         *,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -700,12 +973,22 @@ class AsyncProfilesResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ProfileListResponse:
-        """Retrieves all sender profiles within an organization.
-
-        Profiles represent
-        different brands, departments, or use cases within an organization, each with
-        their own messaging configuration.
         """
+        Retrieves all sender profiles within an organization, including brand
+        information for each profile. Profiles represent different brands, departments,
+        or use cases within an organization, each with their own messaging
+        configuration.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._get(
             "/v3/profiles",
             options=make_request_options(
@@ -716,10 +999,10 @@ class AsyncProfilesResource(AsyncAPIResource):
 
     async def delete(
         self,
-        path_profile_id: str,
+        profile_id: str,
         *,
-        body_profile_id: str | Omit = omit,
-        test_mode: bool | Omit = omit,
+        body: profile_delete_params.Body,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -733,10 +1016,7 @@ class AsyncProfilesResource(AsyncAPIResource):
         retained. Requires admin role in the organization.
 
         Args:
-          body_profile_id: Profile ID from route parameter
-
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
+          body: Request to delete a profile
 
           extra_headers: Send extra headers
 
@@ -746,18 +1026,13 @@ class AsyncProfilesResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not path_profile_id:
-            raise ValueError(f"Expected a non-empty value for `path_profile_id` but received {path_profile_id!r}")
+        if not profile_id:
+            raise ValueError(f"Expected a non-empty value for `profile_id` but received {profile_id!r}")
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._delete(
-            f"/v3/profiles/{path_profile_id}",
-            body=await async_maybe_transform(
-                {
-                    "body_profile_id": body_profile_id,
-                    "test_mode": test_mode,
-                },
-                profile_delete_params.ProfileDeleteParams,
-            ),
+            f"/v3/profiles/{profile_id}",
+            body=await async_maybe_transform(body, profile_delete_params.ProfileDeleteParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -769,8 +1044,9 @@ class AsyncProfilesResource(AsyncAPIResource):
         profile_id: str,
         *,
         web_hook_url: str,
-        test_mode: bool | Omit = omit,
+        sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -802,8 +1078,8 @@ class AsyncProfilesResource(AsyncAPIResource):
         Args:
           web_hook_url: Webhook URL to call when profile completion finishes (success or failure)
 
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
           extra_headers: Send extra headers
 
@@ -815,13 +1091,21 @@ class AsyncProfilesResource(AsyncAPIResource):
         """
         if not profile_id:
             raise ValueError(f"Expected a non-empty value for `profile_id` but received {profile_id!r}")
-        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
         return await self._post(
             f"/v3/profiles/{profile_id}/complete",
             body=await async_maybe_transform(
                 {
                     "web_hook_url": web_hook_url,
-                    "test_mode": test_mode,
+                    "sandbox": sandbox,
                 },
                 profile_complete_params.ProfileCompleteParams,
             ),

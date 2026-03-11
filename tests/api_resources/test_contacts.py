@@ -31,8 +31,9 @@ class TestContacts:
     def test_method_create_with_all_params(self, client: SentDm) -> None:
         contact = client.contacts.create(
             phone_number="+1234567890",
-            test_mode=False,
+            sandbox=False,
             idempotency_key="req_abc123_retry1",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(APIResponseContact, contact, path=["response"])
 
@@ -62,7 +63,16 @@ class TestContacts:
     @parametrize
     def test_method_retrieve(self, client: SentDm) -> None:
         contact = client.contacts.retrieve(
-            "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+            id="6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+        )
+        assert_matches_type(APIResponseContact, contact, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_retrieve_with_all_params(self, client: SentDm) -> None:
+        contact = client.contacts.retrieve(
+            id="6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(APIResponseContact, contact, path=["response"])
 
@@ -70,7 +80,7 @@ class TestContacts:
     @parametrize
     def test_raw_response_retrieve(self, client: SentDm) -> None:
         response = client.contacts.with_raw_response.retrieve(
-            "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+            id="6ba7b810-9dad-11d1-80b4-00c04fd430c8",
         )
 
         assert response.is_closed is True
@@ -82,7 +92,7 @@ class TestContacts:
     @parametrize
     def test_streaming_response_retrieve(self, client: SentDm) -> None:
         with client.contacts.with_streaming_response.retrieve(
-            "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+            id="6ba7b810-9dad-11d1-80b4-00c04fd430c8",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -97,7 +107,7 @@ class TestContacts:
     def test_path_params_retrieve(self, client: SentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             client.contacts.with_raw_response.retrieve(
-                "",
+                id="",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
@@ -115,8 +125,9 @@ class TestContacts:
             id="6ba7b810-9dad-11d1-80b4-00c04fd430c8",
             default_channel="whatsapp",
             opt_out=False,
-            test_mode=False,
+            sandbox=False,
             idempotency_key="req_abc123_retry1",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(APIResponseContact, contact, path=["response"])
 
@@ -172,6 +183,7 @@ class TestContacts:
             channel="channel",
             phone="phone",
             search="search",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(ContactListResponse, contact, path=["response"])
 
@@ -217,7 +229,8 @@ class TestContacts:
     def test_method_delete_with_all_params(self, client: SentDm) -> None:
         contact = client.contacts.delete(
             id="6ba7b810-9dad-11d1-80b4-00c04fd430c8",
-            body={"test_mode": False},
+            body={"sandbox": False},
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert contact is None
 
@@ -275,8 +288,9 @@ class TestAsyncContacts:
     async def test_method_create_with_all_params(self, async_client: AsyncSentDm) -> None:
         contact = await async_client.contacts.create(
             phone_number="+1234567890",
-            test_mode=False,
+            sandbox=False,
             idempotency_key="req_abc123_retry1",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(APIResponseContact, contact, path=["response"])
 
@@ -306,7 +320,16 @@ class TestAsyncContacts:
     @parametrize
     async def test_method_retrieve(self, async_client: AsyncSentDm) -> None:
         contact = await async_client.contacts.retrieve(
-            "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+            id="6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+        )
+        assert_matches_type(APIResponseContact, contact, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_retrieve_with_all_params(self, async_client: AsyncSentDm) -> None:
+        contact = await async_client.contacts.retrieve(
+            id="6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(APIResponseContact, contact, path=["response"])
 
@@ -314,7 +337,7 @@ class TestAsyncContacts:
     @parametrize
     async def test_raw_response_retrieve(self, async_client: AsyncSentDm) -> None:
         response = await async_client.contacts.with_raw_response.retrieve(
-            "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+            id="6ba7b810-9dad-11d1-80b4-00c04fd430c8",
         )
 
         assert response.is_closed is True
@@ -326,7 +349,7 @@ class TestAsyncContacts:
     @parametrize
     async def test_streaming_response_retrieve(self, async_client: AsyncSentDm) -> None:
         async with async_client.contacts.with_streaming_response.retrieve(
-            "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+            id="6ba7b810-9dad-11d1-80b4-00c04fd430c8",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -341,7 +364,7 @@ class TestAsyncContacts:
     async def test_path_params_retrieve(self, async_client: AsyncSentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             await async_client.contacts.with_raw_response.retrieve(
-                "",
+                id="",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
@@ -359,8 +382,9 @@ class TestAsyncContacts:
             id="6ba7b810-9dad-11d1-80b4-00c04fd430c8",
             default_channel="whatsapp",
             opt_out=False,
-            test_mode=False,
+            sandbox=False,
             idempotency_key="req_abc123_retry1",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(APIResponseContact, contact, path=["response"])
 
@@ -416,6 +440,7 @@ class TestAsyncContacts:
             channel="channel",
             phone="phone",
             search="search",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(ContactListResponse, contact, path=["response"])
 
@@ -461,7 +486,8 @@ class TestAsyncContacts:
     async def test_method_delete_with_all_params(self, async_client: AsyncSentDm) -> None:
         contact = await async_client.contacts.delete(
             id="6ba7b810-9dad-11d1-80b4-00c04fd430c8",
-            body={"test_mode": False},
+            body={"sandbox": False},
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert contact is None
 

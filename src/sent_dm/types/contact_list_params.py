@@ -14,7 +14,8 @@ class ContactListParams(TypedDict, total=False):
     page: Required[int]
     """Page number (1-indexed)"""
 
-    page_size: Required[Annotated[int, PropertyInfo(alias="pageSize")]]
+    page_size: Required[int]
+    """Number of items per page"""
 
     channel: Optional[str]
     """Optional channel filter (sms, whatsapp)"""
@@ -24,3 +25,5 @@ class ContactListParams(TypedDict, total=False):
 
     search: Optional[str]
     """Optional search term for filtering contacts"""
+
+    x_profile_id: Annotated[str, PropertyInfo(alias="x-profile-id")]

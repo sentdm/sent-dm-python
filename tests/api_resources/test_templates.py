@@ -44,6 +44,7 @@ class TestTemplates:
                                 "props": {
                                     "alt": None,
                                     "media_type": None,
+                                    "regex": None,
                                     "sample": "John",
                                     "short_url": None,
                                     "url": None,
@@ -57,6 +58,7 @@ class TestTemplates:
                                 "props": {
                                     "alt": None,
                                     "media_type": None,
+                                    "regex": None,
                                     "sample": "SentDM",
                                     "short_url": None,
                                     "url": None,
@@ -76,6 +78,7 @@ class TestTemplates:
                                 "props": {
                                     "alt": "alt",
                                     "media_type": "mediaType",
+                                    "regex": "regex",
                                     "sample": "sample",
                                     "short_url": "shortUrl",
                                     "url": "url",
@@ -95,6 +98,7 @@ class TestTemplates:
                                 "props": {
                                     "alt": "alt",
                                     "media_type": "mediaType",
+                                    "regex": "regex",
                                     "sample": "sample",
                                     "short_url": "shortUrl",
                                     "url": "url",
@@ -140,6 +144,7 @@ class TestTemplates:
                             "props": {
                                 "alt": "alt",
                                 "media_type": "mediaType",
+                                "regex": "regex",
                                 "sample": "sample",
                                 "short_url": "shortUrl",
                                 "url": "url",
@@ -159,6 +164,7 @@ class TestTemplates:
                             "props": {
                                 "alt": "alt",
                                 "media_type": "mediaType",
+                                "regex": "regex",
                                 "sample": "sample",
                                 "short_url": "shortUrl",
                                 "url": "url",
@@ -170,9 +176,10 @@ class TestTemplates:
                 },
             },
             language="en_US",
+            sandbox=False,
             submit_for_review=False,
-            test_mode=False,
             idempotency_key="req_abc123_retry1",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(APIResponseTemplate, template, path=["response"])
 
@@ -202,7 +209,16 @@ class TestTemplates:
     @parametrize
     def test_method_retrieve(self, client: SentDm) -> None:
         template = client.templates.retrieve(
-            "7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+            id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+        )
+        assert_matches_type(APIResponseTemplate, template, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_retrieve_with_all_params(self, client: SentDm) -> None:
+        template = client.templates.retrieve(
+            id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(APIResponseTemplate, template, path=["response"])
 
@@ -210,7 +226,7 @@ class TestTemplates:
     @parametrize
     def test_raw_response_retrieve(self, client: SentDm) -> None:
         response = client.templates.with_raw_response.retrieve(
-            "7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+            id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         )
 
         assert response.is_closed is True
@@ -222,7 +238,7 @@ class TestTemplates:
     @parametrize
     def test_streaming_response_retrieve(self, client: SentDm) -> None:
         with client.templates.with_streaming_response.retrieve(
-            "7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+            id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -237,7 +253,7 @@ class TestTemplates:
     def test_path_params_retrieve(self, client: SentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             client.templates.with_raw_response.retrieve(
-                "",
+                id="",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
@@ -266,6 +282,7 @@ class TestTemplates:
                                 "props": {
                                     "alt": "alt",
                                     "media_type": "mediaType",
+                                    "regex": "regex",
                                     "sample": "sample",
                                     "short_url": "shortUrl",
                                     "url": "url",
@@ -285,6 +302,7 @@ class TestTemplates:
                                 "props": {
                                     "alt": "alt",
                                     "media_type": "mediaType",
+                                    "regex": "regex",
                                     "sample": "sample",
                                     "short_url": "shortUrl",
                                     "url": "url",
@@ -304,6 +322,7 @@ class TestTemplates:
                                 "props": {
                                     "alt": "alt",
                                     "media_type": "mediaType",
+                                    "regex": "regex",
                                     "sample": "sample",
                                     "short_url": "shortUrl",
                                     "url": "url",
@@ -349,6 +368,7 @@ class TestTemplates:
                             "props": {
                                 "alt": "alt",
                                 "media_type": "mediaType",
+                                "regex": "regex",
                                 "sample": "sample",
                                 "short_url": "shortUrl",
                                 "url": "url",
@@ -368,6 +388,7 @@ class TestTemplates:
                             "props": {
                                 "alt": "alt",
                                 "media_type": "mediaType",
+                                "regex": "regex",
                                 "sample": "sample",
                                 "short_url": "shortUrl",
                                 "url": "url",
@@ -380,9 +401,10 @@ class TestTemplates:
             },
             language=None,
             name="Updated Welcome Message",
+            sandbox=False,
             submit_for_review=False,
-            test_mode=False,
             idempotency_key="req_abc123_retry1",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(APIResponseTemplate, template, path=["response"])
 
@@ -436,8 +458,10 @@ class TestTemplates:
             page=0,
             page_size=0,
             category="category",
+            is_welcome_playground=True,
             search="search",
             status="status",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(TemplateListResponse, template, path=["response"])
 
@@ -483,7 +507,8 @@ class TestTemplates:
         template = client.templates.delete(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
             delete_from_meta=False,
-            test_mode=False,
+            sandbox=False,
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert template is None
 
@@ -551,6 +576,7 @@ class TestAsyncTemplates:
                                 "props": {
                                     "alt": None,
                                     "media_type": None,
+                                    "regex": None,
                                     "sample": "John",
                                     "short_url": None,
                                     "url": None,
@@ -564,6 +590,7 @@ class TestAsyncTemplates:
                                 "props": {
                                     "alt": None,
                                     "media_type": None,
+                                    "regex": None,
                                     "sample": "SentDM",
                                     "short_url": None,
                                     "url": None,
@@ -583,6 +610,7 @@ class TestAsyncTemplates:
                                 "props": {
                                     "alt": "alt",
                                     "media_type": "mediaType",
+                                    "regex": "regex",
                                     "sample": "sample",
                                     "short_url": "shortUrl",
                                     "url": "url",
@@ -602,6 +630,7 @@ class TestAsyncTemplates:
                                 "props": {
                                     "alt": "alt",
                                     "media_type": "mediaType",
+                                    "regex": "regex",
                                     "sample": "sample",
                                     "short_url": "shortUrl",
                                     "url": "url",
@@ -647,6 +676,7 @@ class TestAsyncTemplates:
                             "props": {
                                 "alt": "alt",
                                 "media_type": "mediaType",
+                                "regex": "regex",
                                 "sample": "sample",
                                 "short_url": "shortUrl",
                                 "url": "url",
@@ -666,6 +696,7 @@ class TestAsyncTemplates:
                             "props": {
                                 "alt": "alt",
                                 "media_type": "mediaType",
+                                "regex": "regex",
                                 "sample": "sample",
                                 "short_url": "shortUrl",
                                 "url": "url",
@@ -677,9 +708,10 @@ class TestAsyncTemplates:
                 },
             },
             language="en_US",
+            sandbox=False,
             submit_for_review=False,
-            test_mode=False,
             idempotency_key="req_abc123_retry1",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(APIResponseTemplate, template, path=["response"])
 
@@ -709,7 +741,16 @@ class TestAsyncTemplates:
     @parametrize
     async def test_method_retrieve(self, async_client: AsyncSentDm) -> None:
         template = await async_client.templates.retrieve(
-            "7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+            id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+        )
+        assert_matches_type(APIResponseTemplate, template, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_retrieve_with_all_params(self, async_client: AsyncSentDm) -> None:
+        template = await async_client.templates.retrieve(
+            id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(APIResponseTemplate, template, path=["response"])
 
@@ -717,7 +758,7 @@ class TestAsyncTemplates:
     @parametrize
     async def test_raw_response_retrieve(self, async_client: AsyncSentDm) -> None:
         response = await async_client.templates.with_raw_response.retrieve(
-            "7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+            id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         )
 
         assert response.is_closed is True
@@ -729,7 +770,7 @@ class TestAsyncTemplates:
     @parametrize
     async def test_streaming_response_retrieve(self, async_client: AsyncSentDm) -> None:
         async with async_client.templates.with_streaming_response.retrieve(
-            "7ba7b820-9dad-11d1-80b4-00c04fd430c8",
+            id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -744,7 +785,7 @@ class TestAsyncTemplates:
     async def test_path_params_retrieve(self, async_client: AsyncSentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             await async_client.templates.with_raw_response.retrieve(
-                "",
+                id="",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
@@ -773,6 +814,7 @@ class TestAsyncTemplates:
                                 "props": {
                                     "alt": "alt",
                                     "media_type": "mediaType",
+                                    "regex": "regex",
                                     "sample": "sample",
                                     "short_url": "shortUrl",
                                     "url": "url",
@@ -792,6 +834,7 @@ class TestAsyncTemplates:
                                 "props": {
                                     "alt": "alt",
                                     "media_type": "mediaType",
+                                    "regex": "regex",
                                     "sample": "sample",
                                     "short_url": "shortUrl",
                                     "url": "url",
@@ -811,6 +854,7 @@ class TestAsyncTemplates:
                                 "props": {
                                     "alt": "alt",
                                     "media_type": "mediaType",
+                                    "regex": "regex",
                                     "sample": "sample",
                                     "short_url": "shortUrl",
                                     "url": "url",
@@ -856,6 +900,7 @@ class TestAsyncTemplates:
                             "props": {
                                 "alt": "alt",
                                 "media_type": "mediaType",
+                                "regex": "regex",
                                 "sample": "sample",
                                 "short_url": "shortUrl",
                                 "url": "url",
@@ -875,6 +920,7 @@ class TestAsyncTemplates:
                             "props": {
                                 "alt": "alt",
                                 "media_type": "mediaType",
+                                "regex": "regex",
                                 "sample": "sample",
                                 "short_url": "shortUrl",
                                 "url": "url",
@@ -887,9 +933,10 @@ class TestAsyncTemplates:
             },
             language=None,
             name="Updated Welcome Message",
+            sandbox=False,
             submit_for_review=False,
-            test_mode=False,
             idempotency_key="req_abc123_retry1",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(APIResponseTemplate, template, path=["response"])
 
@@ -943,8 +990,10 @@ class TestAsyncTemplates:
             page=0,
             page_size=0,
             category="category",
+            is_welcome_playground=True,
             search="search",
             status="status",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(TemplateListResponse, template, path=["response"])
 
@@ -990,7 +1039,8 @@ class TestAsyncTemplates:
         template = await async_client.templates.delete(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
             delete_from_meta=False,
-            test_mode=False,
+            sandbox=False,
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert template is None
 

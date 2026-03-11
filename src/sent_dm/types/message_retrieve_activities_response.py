@@ -13,11 +13,20 @@ __all__ = ["MessageRetrieveActivitiesResponse", "Data", "DataActivity"]
 class DataActivity(BaseModel):
     """A single message activity event for v3 API"""
 
-    content: Optional[str] = None
-    """Additional content or payload for the activity (e.g., channel response)"""
+    active_contact_price: Optional[str] = None
+    """
+    Active contact markup applied on top of the channel cost, formatted to 4 decimal
+    places.
+    """
 
     description: Optional[str] = None
     """Human-readable description of the activity"""
+
+    price: Optional[str] = None
+    """
+    Channel cost for this activity (e.g., SMS/WhatsApp provider cost), formatted to
+    4 decimal places.
+    """
 
     status: Optional[str] = None
     """Activity status (e.g., ACCEPTED, PROCESSED, SENT, DELIVERED, FAILED)"""

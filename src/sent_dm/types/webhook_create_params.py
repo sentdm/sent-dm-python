@@ -19,12 +19,14 @@ class WebhookCreateParams(TypedDict, total=False):
 
     retry_count: int
 
-    test_mode: bool
+    sandbox: bool
     """
-    Test mode flag - when true, the operation is simulated without side effects
-    Useful for testing integrations without actual execution
+    Sandbox flag - when true, the operation is simulated without side effects Useful
+    for testing integrations without actual execution
     """
 
     timeout_seconds: int
 
     idempotency_key: Annotated[str, PropertyInfo(alias="Idempotency-Key")]
+
+    x_profile_id: Annotated[str, PropertyInfo(alias="x-profile-id")]

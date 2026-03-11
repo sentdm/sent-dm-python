@@ -14,13 +14,19 @@ class TemplateListParams(TypedDict, total=False):
     page: Required[int]
     """Page number (1-indexed)"""
 
-    page_size: Required[Annotated[int, PropertyInfo(alias="pageSize")]]
+    page_size: Required[int]
+    """Number of items per page"""
 
     category: Optional[str]
     """Optional category filter: MARKETING, UTILITY, AUTHENTICATION"""
+
+    is_welcome_playground: Optional[bool]
+    """Optional filter by welcome playground flag"""
 
     search: Optional[str]
     """Optional search term for filtering templates"""
 
     status: Optional[str]
     """Optional status filter: APPROVED, PENDING, REJECTED"""
+
+    x_profile_id: Annotated[str, PropertyInfo(alias="x-profile-id")]

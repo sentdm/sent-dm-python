@@ -25,7 +25,16 @@ class TestMessages:
     @parametrize
     def test_method_retrieve_activities(self, client: SentDm) -> None:
         message = client.messages.retrieve_activities(
-            "8ba7b830-9dad-11d1-80b4-00c04fd430c8",
+            id="8ba7b830-9dad-11d1-80b4-00c04fd430c8",
+        )
+        assert_matches_type(MessageRetrieveActivitiesResponse, message, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_retrieve_activities_with_all_params(self, client: SentDm) -> None:
+        message = client.messages.retrieve_activities(
+            id="8ba7b830-9dad-11d1-80b4-00c04fd430c8",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(MessageRetrieveActivitiesResponse, message, path=["response"])
 
@@ -33,7 +42,7 @@ class TestMessages:
     @parametrize
     def test_raw_response_retrieve_activities(self, client: SentDm) -> None:
         response = client.messages.with_raw_response.retrieve_activities(
-            "8ba7b830-9dad-11d1-80b4-00c04fd430c8",
+            id="8ba7b830-9dad-11d1-80b4-00c04fd430c8",
         )
 
         assert response.is_closed is True
@@ -45,7 +54,7 @@ class TestMessages:
     @parametrize
     def test_streaming_response_retrieve_activities(self, client: SentDm) -> None:
         with client.messages.with_streaming_response.retrieve_activities(
-            "8ba7b830-9dad-11d1-80b4-00c04fd430c8",
+            id="8ba7b830-9dad-11d1-80b4-00c04fd430c8",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -60,14 +69,23 @@ class TestMessages:
     def test_path_params_retrieve_activities(self, client: SentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             client.messages.with_raw_response.retrieve_activities(
-                "",
+                id="",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_retrieve_status(self, client: SentDm) -> None:
         message = client.messages.retrieve_status(
-            "8ba7b830-9dad-11d1-80b4-00c04fd430c8",
+            id="8ba7b830-9dad-11d1-80b4-00c04fd430c8",
+        )
+        assert_matches_type(MessageRetrieveStatusResponse, message, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_retrieve_status_with_all_params(self, client: SentDm) -> None:
+        message = client.messages.retrieve_status(
+            id="8ba7b830-9dad-11d1-80b4-00c04fd430c8",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(MessageRetrieveStatusResponse, message, path=["response"])
 
@@ -75,7 +93,7 @@ class TestMessages:
     @parametrize
     def test_raw_response_retrieve_status(self, client: SentDm) -> None:
         response = client.messages.with_raw_response.retrieve_status(
-            "8ba7b830-9dad-11d1-80b4-00c04fd430c8",
+            id="8ba7b830-9dad-11d1-80b4-00c04fd430c8",
         )
 
         assert response.is_closed is True
@@ -87,7 +105,7 @@ class TestMessages:
     @parametrize
     def test_streaming_response_retrieve_status(self, client: SentDm) -> None:
         with client.messages.with_streaming_response.retrieve_status(
-            "8ba7b830-9dad-11d1-80b4-00c04fd430c8",
+            id="8ba7b830-9dad-11d1-80b4-00c04fd430c8",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -102,7 +120,7 @@ class TestMessages:
     def test_path_params_retrieve_status(self, client: SentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             client.messages.with_raw_response.retrieve_status(
-                "",
+                id="",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
@@ -116,6 +134,7 @@ class TestMessages:
     def test_method_send_with_all_params(self, client: SentDm) -> None:
         message = client.messages.send(
             channel=["sms", "whatsapp"],
+            sandbox=False,
             template={
                 "id": "7ba7b820-9dad-11d1-80b4-00c04fd430c8",
                 "name": "order_confirmation",
@@ -124,9 +143,9 @@ class TestMessages:
                     "order_id": "12345",
                 },
             },
-            test_mode=False,
             to=["+14155551234", "+14155555678"],
             idempotency_key="req_abc123_retry1",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(MessageSendResponse, message, path=["response"])
 
@@ -162,7 +181,16 @@ class TestAsyncMessages:
     @parametrize
     async def test_method_retrieve_activities(self, async_client: AsyncSentDm) -> None:
         message = await async_client.messages.retrieve_activities(
-            "8ba7b830-9dad-11d1-80b4-00c04fd430c8",
+            id="8ba7b830-9dad-11d1-80b4-00c04fd430c8",
+        )
+        assert_matches_type(MessageRetrieveActivitiesResponse, message, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_retrieve_activities_with_all_params(self, async_client: AsyncSentDm) -> None:
+        message = await async_client.messages.retrieve_activities(
+            id="8ba7b830-9dad-11d1-80b4-00c04fd430c8",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(MessageRetrieveActivitiesResponse, message, path=["response"])
 
@@ -170,7 +198,7 @@ class TestAsyncMessages:
     @parametrize
     async def test_raw_response_retrieve_activities(self, async_client: AsyncSentDm) -> None:
         response = await async_client.messages.with_raw_response.retrieve_activities(
-            "8ba7b830-9dad-11d1-80b4-00c04fd430c8",
+            id="8ba7b830-9dad-11d1-80b4-00c04fd430c8",
         )
 
         assert response.is_closed is True
@@ -182,7 +210,7 @@ class TestAsyncMessages:
     @parametrize
     async def test_streaming_response_retrieve_activities(self, async_client: AsyncSentDm) -> None:
         async with async_client.messages.with_streaming_response.retrieve_activities(
-            "8ba7b830-9dad-11d1-80b4-00c04fd430c8",
+            id="8ba7b830-9dad-11d1-80b4-00c04fd430c8",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -197,14 +225,23 @@ class TestAsyncMessages:
     async def test_path_params_retrieve_activities(self, async_client: AsyncSentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             await async_client.messages.with_raw_response.retrieve_activities(
-                "",
+                id="",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_retrieve_status(self, async_client: AsyncSentDm) -> None:
         message = await async_client.messages.retrieve_status(
-            "8ba7b830-9dad-11d1-80b4-00c04fd430c8",
+            id="8ba7b830-9dad-11d1-80b4-00c04fd430c8",
+        )
+        assert_matches_type(MessageRetrieveStatusResponse, message, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_retrieve_status_with_all_params(self, async_client: AsyncSentDm) -> None:
+        message = await async_client.messages.retrieve_status(
+            id="8ba7b830-9dad-11d1-80b4-00c04fd430c8",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(MessageRetrieveStatusResponse, message, path=["response"])
 
@@ -212,7 +249,7 @@ class TestAsyncMessages:
     @parametrize
     async def test_raw_response_retrieve_status(self, async_client: AsyncSentDm) -> None:
         response = await async_client.messages.with_raw_response.retrieve_status(
-            "8ba7b830-9dad-11d1-80b4-00c04fd430c8",
+            id="8ba7b830-9dad-11d1-80b4-00c04fd430c8",
         )
 
         assert response.is_closed is True
@@ -224,7 +261,7 @@ class TestAsyncMessages:
     @parametrize
     async def test_streaming_response_retrieve_status(self, async_client: AsyncSentDm) -> None:
         async with async_client.messages.with_streaming_response.retrieve_status(
-            "8ba7b830-9dad-11d1-80b4-00c04fd430c8",
+            id="8ba7b830-9dad-11d1-80b4-00c04fd430c8",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -239,7 +276,7 @@ class TestAsyncMessages:
     async def test_path_params_retrieve_status(self, async_client: AsyncSentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             await async_client.messages.with_raw_response.retrieve_status(
-                "",
+                id="",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
@@ -253,6 +290,7 @@ class TestAsyncMessages:
     async def test_method_send_with_all_params(self, async_client: AsyncSentDm) -> None:
         message = await async_client.messages.send(
             channel=["sms", "whatsapp"],
+            sandbox=False,
             template={
                 "id": "7ba7b820-9dad-11d1-80b4-00c04fd430c8",
                 "name": "order_confirmation",
@@ -261,9 +299,9 @@ class TestAsyncMessages:
                     "order_id": "12345",
                 },
             },
-            test_mode=False,
             to=["+14155551234", "+14155555678"],
             idempotency_key="req_abc123_retry1",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(MessageSendResponse, message, path=["response"])
 
