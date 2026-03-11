@@ -21,6 +21,7 @@ from ._types import (
 )
 from ._utils import is_given, get_async_library
 from ._compat import cached_property
+from ._models import SecurityOptions
 from ._version import __version__
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
 from ._exceptions import SentDmError, APIStatusError
@@ -102,30 +103,35 @@ class SentDm(SyncAPIClient):
 
     @cached_property
     def webhooks(self) -> WebhooksResource:
+        """Configure webhook endpoints for real-time event delivery"""
         from .resources.webhooks import WebhooksResource
 
         return WebhooksResource(self)
 
     @cached_property
     def users(self) -> UsersResource:
+        """Invite, update, and manage organization users and roles"""
         from .resources.users import UsersResource
 
         return UsersResource(self)
 
     @cached_property
     def templates(self) -> TemplatesResource:
+        """Manage message templates with variable substitution"""
         from .resources.templates import TemplatesResource
 
         return TemplatesResource(self)
 
     @cached_property
     def profiles(self) -> ProfilesResource:
+        """Manage organization profiles"""
         from .resources.profiles import ProfilesResource
 
         return ProfilesResource(self)
 
     @cached_property
     def messages(self) -> MessagesResource:
+        """Send and track SMS and WhatsApp messages"""
         from .resources.messages import MessagesResource
 
         return MessagesResource(self)
@@ -138,18 +144,21 @@ class SentDm(SyncAPIClient):
 
     @cached_property
     def contacts(self) -> ContactsResource:
+        """Create, update, and manage customer contact lists"""
         from .resources.contacts import ContactsResource
 
         return ContactsResource(self)
 
     @cached_property
     def brands(self) -> BrandsResource:
+        """Register and manage 10DLC brands for SMS compliance"""
         from .resources.brands import BrandsResource
 
         return BrandsResource(self)
 
     @cached_property
     def me(self) -> MeResource:
+        """Retrieve account details"""
         from .resources.me import MeResource
 
         return MeResource(self)
@@ -167,9 +176,14 @@ class SentDm(SyncAPIClient):
     def qs(self) -> Querystring:
         return Querystring(array_format="comma")
 
-    @property
     @override
-    def auth_headers(self) -> dict[str, str]:
+    def _auth_headers(self, security: SecurityOptions) -> dict[str, str]:
+        return {
+            **(self._customer_api_key if security.get("customer_api_key", False) else {}),
+        }
+
+    @property
+    def _customer_api_key(self) -> dict[str, str]:
         api_key = self.api_key
         return {"x-api-key": api_key}
 
@@ -324,30 +338,35 @@ class AsyncSentDm(AsyncAPIClient):
 
     @cached_property
     def webhooks(self) -> AsyncWebhooksResource:
+        """Configure webhook endpoints for real-time event delivery"""
         from .resources.webhooks import AsyncWebhooksResource
 
         return AsyncWebhooksResource(self)
 
     @cached_property
     def users(self) -> AsyncUsersResource:
+        """Invite, update, and manage organization users and roles"""
         from .resources.users import AsyncUsersResource
 
         return AsyncUsersResource(self)
 
     @cached_property
     def templates(self) -> AsyncTemplatesResource:
+        """Manage message templates with variable substitution"""
         from .resources.templates import AsyncTemplatesResource
 
         return AsyncTemplatesResource(self)
 
     @cached_property
     def profiles(self) -> AsyncProfilesResource:
+        """Manage organization profiles"""
         from .resources.profiles import AsyncProfilesResource
 
         return AsyncProfilesResource(self)
 
     @cached_property
     def messages(self) -> AsyncMessagesResource:
+        """Send and track SMS and WhatsApp messages"""
         from .resources.messages import AsyncMessagesResource
 
         return AsyncMessagesResource(self)
@@ -360,18 +379,21 @@ class AsyncSentDm(AsyncAPIClient):
 
     @cached_property
     def contacts(self) -> AsyncContactsResource:
+        """Create, update, and manage customer contact lists"""
         from .resources.contacts import AsyncContactsResource
 
         return AsyncContactsResource(self)
 
     @cached_property
     def brands(self) -> AsyncBrandsResource:
+        """Register and manage 10DLC brands for SMS compliance"""
         from .resources.brands import AsyncBrandsResource
 
         return AsyncBrandsResource(self)
 
     @cached_property
     def me(self) -> AsyncMeResource:
+        """Retrieve account details"""
         from .resources.me import AsyncMeResource
 
         return AsyncMeResource(self)
@@ -389,9 +411,14 @@ class AsyncSentDm(AsyncAPIClient):
     def qs(self) -> Querystring:
         return Querystring(array_format="comma")
 
-    @property
     @override
-    def auth_headers(self) -> dict[str, str]:
+    def _auth_headers(self, security: SecurityOptions) -> dict[str, str]:
+        return {
+            **(self._customer_api_key if security.get("customer_api_key", False) else {}),
+        }
+
+    @property
+    def _customer_api_key(self) -> dict[str, str]:
         api_key = self.api_key
         return {"x-api-key": api_key}
 
@@ -497,30 +524,35 @@ class SentDmWithRawResponse:
 
     @cached_property
     def webhooks(self) -> webhooks.WebhooksResourceWithRawResponse:
+        """Configure webhook endpoints for real-time event delivery"""
         from .resources.webhooks import WebhooksResourceWithRawResponse
 
         return WebhooksResourceWithRawResponse(self._client.webhooks)
 
     @cached_property
     def users(self) -> users.UsersResourceWithRawResponse:
+        """Invite, update, and manage organization users and roles"""
         from .resources.users import UsersResourceWithRawResponse
 
         return UsersResourceWithRawResponse(self._client.users)
 
     @cached_property
     def templates(self) -> templates.TemplatesResourceWithRawResponse:
+        """Manage message templates with variable substitution"""
         from .resources.templates import TemplatesResourceWithRawResponse
 
         return TemplatesResourceWithRawResponse(self._client.templates)
 
     @cached_property
     def profiles(self) -> profiles.ProfilesResourceWithRawResponse:
+        """Manage organization profiles"""
         from .resources.profiles import ProfilesResourceWithRawResponse
 
         return ProfilesResourceWithRawResponse(self._client.profiles)
 
     @cached_property
     def messages(self) -> messages.MessagesResourceWithRawResponse:
+        """Send and track SMS and WhatsApp messages"""
         from .resources.messages import MessagesResourceWithRawResponse
 
         return MessagesResourceWithRawResponse(self._client.messages)
@@ -533,18 +565,21 @@ class SentDmWithRawResponse:
 
     @cached_property
     def contacts(self) -> contacts.ContactsResourceWithRawResponse:
+        """Create, update, and manage customer contact lists"""
         from .resources.contacts import ContactsResourceWithRawResponse
 
         return ContactsResourceWithRawResponse(self._client.contacts)
 
     @cached_property
     def brands(self) -> brands.BrandsResourceWithRawResponse:
+        """Register and manage 10DLC brands for SMS compliance"""
         from .resources.brands import BrandsResourceWithRawResponse
 
         return BrandsResourceWithRawResponse(self._client.brands)
 
     @cached_property
     def me(self) -> me.MeResourceWithRawResponse:
+        """Retrieve account details"""
         from .resources.me import MeResourceWithRawResponse
 
         return MeResourceWithRawResponse(self._client.me)
@@ -558,30 +593,35 @@ class AsyncSentDmWithRawResponse:
 
     @cached_property
     def webhooks(self) -> webhooks.AsyncWebhooksResourceWithRawResponse:
+        """Configure webhook endpoints for real-time event delivery"""
         from .resources.webhooks import AsyncWebhooksResourceWithRawResponse
 
         return AsyncWebhooksResourceWithRawResponse(self._client.webhooks)
 
     @cached_property
     def users(self) -> users.AsyncUsersResourceWithRawResponse:
+        """Invite, update, and manage organization users and roles"""
         from .resources.users import AsyncUsersResourceWithRawResponse
 
         return AsyncUsersResourceWithRawResponse(self._client.users)
 
     @cached_property
     def templates(self) -> templates.AsyncTemplatesResourceWithRawResponse:
+        """Manage message templates with variable substitution"""
         from .resources.templates import AsyncTemplatesResourceWithRawResponse
 
         return AsyncTemplatesResourceWithRawResponse(self._client.templates)
 
     @cached_property
     def profiles(self) -> profiles.AsyncProfilesResourceWithRawResponse:
+        """Manage organization profiles"""
         from .resources.profiles import AsyncProfilesResourceWithRawResponse
 
         return AsyncProfilesResourceWithRawResponse(self._client.profiles)
 
     @cached_property
     def messages(self) -> messages.AsyncMessagesResourceWithRawResponse:
+        """Send and track SMS and WhatsApp messages"""
         from .resources.messages import AsyncMessagesResourceWithRawResponse
 
         return AsyncMessagesResourceWithRawResponse(self._client.messages)
@@ -594,18 +634,21 @@ class AsyncSentDmWithRawResponse:
 
     @cached_property
     def contacts(self) -> contacts.AsyncContactsResourceWithRawResponse:
+        """Create, update, and manage customer contact lists"""
         from .resources.contacts import AsyncContactsResourceWithRawResponse
 
         return AsyncContactsResourceWithRawResponse(self._client.contacts)
 
     @cached_property
     def brands(self) -> brands.AsyncBrandsResourceWithRawResponse:
+        """Register and manage 10DLC brands for SMS compliance"""
         from .resources.brands import AsyncBrandsResourceWithRawResponse
 
         return AsyncBrandsResourceWithRawResponse(self._client.brands)
 
     @cached_property
     def me(self) -> me.AsyncMeResourceWithRawResponse:
+        """Retrieve account details"""
         from .resources.me import AsyncMeResourceWithRawResponse
 
         return AsyncMeResourceWithRawResponse(self._client.me)
@@ -619,30 +662,35 @@ class SentDmWithStreamedResponse:
 
     @cached_property
     def webhooks(self) -> webhooks.WebhooksResourceWithStreamingResponse:
+        """Configure webhook endpoints for real-time event delivery"""
         from .resources.webhooks import WebhooksResourceWithStreamingResponse
 
         return WebhooksResourceWithStreamingResponse(self._client.webhooks)
 
     @cached_property
     def users(self) -> users.UsersResourceWithStreamingResponse:
+        """Invite, update, and manage organization users and roles"""
         from .resources.users import UsersResourceWithStreamingResponse
 
         return UsersResourceWithStreamingResponse(self._client.users)
 
     @cached_property
     def templates(self) -> templates.TemplatesResourceWithStreamingResponse:
+        """Manage message templates with variable substitution"""
         from .resources.templates import TemplatesResourceWithStreamingResponse
 
         return TemplatesResourceWithStreamingResponse(self._client.templates)
 
     @cached_property
     def profiles(self) -> profiles.ProfilesResourceWithStreamingResponse:
+        """Manage organization profiles"""
         from .resources.profiles import ProfilesResourceWithStreamingResponse
 
         return ProfilesResourceWithStreamingResponse(self._client.profiles)
 
     @cached_property
     def messages(self) -> messages.MessagesResourceWithStreamingResponse:
+        """Send and track SMS and WhatsApp messages"""
         from .resources.messages import MessagesResourceWithStreamingResponse
 
         return MessagesResourceWithStreamingResponse(self._client.messages)
@@ -655,18 +703,21 @@ class SentDmWithStreamedResponse:
 
     @cached_property
     def contacts(self) -> contacts.ContactsResourceWithStreamingResponse:
+        """Create, update, and manage customer contact lists"""
         from .resources.contacts import ContactsResourceWithStreamingResponse
 
         return ContactsResourceWithStreamingResponse(self._client.contacts)
 
     @cached_property
     def brands(self) -> brands.BrandsResourceWithStreamingResponse:
+        """Register and manage 10DLC brands for SMS compliance"""
         from .resources.brands import BrandsResourceWithStreamingResponse
 
         return BrandsResourceWithStreamingResponse(self._client.brands)
 
     @cached_property
     def me(self) -> me.MeResourceWithStreamingResponse:
+        """Retrieve account details"""
         from .resources.me import MeResourceWithStreamingResponse
 
         return MeResourceWithStreamingResponse(self._client.me)
@@ -680,30 +731,35 @@ class AsyncSentDmWithStreamedResponse:
 
     @cached_property
     def webhooks(self) -> webhooks.AsyncWebhooksResourceWithStreamingResponse:
+        """Configure webhook endpoints for real-time event delivery"""
         from .resources.webhooks import AsyncWebhooksResourceWithStreamingResponse
 
         return AsyncWebhooksResourceWithStreamingResponse(self._client.webhooks)
 
     @cached_property
     def users(self) -> users.AsyncUsersResourceWithStreamingResponse:
+        """Invite, update, and manage organization users and roles"""
         from .resources.users import AsyncUsersResourceWithStreamingResponse
 
         return AsyncUsersResourceWithStreamingResponse(self._client.users)
 
     @cached_property
     def templates(self) -> templates.AsyncTemplatesResourceWithStreamingResponse:
+        """Manage message templates with variable substitution"""
         from .resources.templates import AsyncTemplatesResourceWithStreamingResponse
 
         return AsyncTemplatesResourceWithStreamingResponse(self._client.templates)
 
     @cached_property
     def profiles(self) -> profiles.AsyncProfilesResourceWithStreamingResponse:
+        """Manage organization profiles"""
         from .resources.profiles import AsyncProfilesResourceWithStreamingResponse
 
         return AsyncProfilesResourceWithStreamingResponse(self._client.profiles)
 
     @cached_property
     def messages(self) -> messages.AsyncMessagesResourceWithStreamingResponse:
+        """Send and track SMS and WhatsApp messages"""
         from .resources.messages import AsyncMessagesResourceWithStreamingResponse
 
         return AsyncMessagesResourceWithStreamingResponse(self._client.messages)
@@ -716,18 +772,21 @@ class AsyncSentDmWithStreamedResponse:
 
     @cached_property
     def contacts(self) -> contacts.AsyncContactsResourceWithStreamingResponse:
+        """Create, update, and manage customer contact lists"""
         from .resources.contacts import AsyncContactsResourceWithStreamingResponse
 
         return AsyncContactsResourceWithStreamingResponse(self._client.contacts)
 
     @cached_property
     def brands(self) -> brands.AsyncBrandsResourceWithStreamingResponse:
+        """Register and manage 10DLC brands for SMS compliance"""
         from .resources.brands import AsyncBrandsResourceWithStreamingResponse
 
         return AsyncBrandsResourceWithStreamingResponse(self._client.brands)
 
     @cached_property
     def me(self) -> me.AsyncMeResourceWithStreamingResponse:
+        """Retrieve account details"""
         from .resources.me import AsyncMeResourceWithStreamingResponse
 
         return AsyncMeResourceWithStreamingResponse(self._client.me)

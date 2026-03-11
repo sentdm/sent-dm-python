@@ -24,6 +24,8 @@ __all__ = ["CampaignsResource", "AsyncCampaignsResource"]
 
 
 class CampaignsResource(SyncAPIResource):
+    """Register and manage 10DLC brands for SMS compliance"""
+
     @cached_property
     def with_raw_response(self) -> CampaignsResourceWithRawResponse:
         """
@@ -228,6 +230,8 @@ class CampaignsResource(SyncAPIResource):
 
 
 class AsyncCampaignsResource(AsyncAPIResource):
+    """Register and manage 10DLC brands for SMS compliance"""
+
     @cached_property
     def with_raw_response(self) -> AsyncCampaignsResourceWithRawResponse:
         """
