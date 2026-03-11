@@ -388,8 +388,8 @@ class TestProfiles:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_complete(self, client: SentDm) -> None:
-        profile = client.profiles.complete(
+    def test_method_complete_setup(self, client: SentDm) -> None:
+        profile = client.profiles.complete_setup(
             profile_id="660e8400-e29b-41d4-a716-446655440000",
             web_hook_url="https://your-app.com/webhook/profile-complete",
         )
@@ -397,8 +397,8 @@ class TestProfiles:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_complete_with_all_params(self, client: SentDm) -> None:
-        profile = client.profiles.complete(
+    def test_method_complete_setup_with_all_params(self, client: SentDm) -> None:
+        profile = client.profiles.complete_setup(
             profile_id="660e8400-e29b-41d4-a716-446655440000",
             web_hook_url="https://your-app.com/webhook/profile-complete",
             sandbox=False,
@@ -409,8 +409,8 @@ class TestProfiles:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_raw_response_complete(self, client: SentDm) -> None:
-        response = client.profiles.with_raw_response.complete(
+    def test_raw_response_complete_setup(self, client: SentDm) -> None:
+        response = client.profiles.with_raw_response.complete_setup(
             profile_id="660e8400-e29b-41d4-a716-446655440000",
             web_hook_url="https://your-app.com/webhook/profile-complete",
         )
@@ -422,8 +422,8 @@ class TestProfiles:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_streaming_response_complete(self, client: SentDm) -> None:
-        with client.profiles.with_streaming_response.complete(
+    def test_streaming_response_complete_setup(self, client: SentDm) -> None:
+        with client.profiles.with_streaming_response.complete_setup(
             profile_id="660e8400-e29b-41d4-a716-446655440000",
             web_hook_url="https://your-app.com/webhook/profile-complete",
         ) as response:
@@ -437,9 +437,9 @@ class TestProfiles:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_path_params_complete(self, client: SentDm) -> None:
+    def test_path_params_complete_setup(self, client: SentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `profile_id` but received ''"):
-            client.profiles.with_raw_response.complete(
+            client.profiles.with_raw_response.complete_setup(
                 profile_id="",
                 web_hook_url="https://your-app.com/webhook/profile-complete",
             )
@@ -818,8 +818,8 @@ class TestAsyncProfiles:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_complete(self, async_client: AsyncSentDm) -> None:
-        profile = await async_client.profiles.complete(
+    async def test_method_complete_setup(self, async_client: AsyncSentDm) -> None:
+        profile = await async_client.profiles.complete_setup(
             profile_id="660e8400-e29b-41d4-a716-446655440000",
             web_hook_url="https://your-app.com/webhook/profile-complete",
         )
@@ -827,8 +827,8 @@ class TestAsyncProfiles:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_complete_with_all_params(self, async_client: AsyncSentDm) -> None:
-        profile = await async_client.profiles.complete(
+    async def test_method_complete_setup_with_all_params(self, async_client: AsyncSentDm) -> None:
+        profile = await async_client.profiles.complete_setup(
             profile_id="660e8400-e29b-41d4-a716-446655440000",
             web_hook_url="https://your-app.com/webhook/profile-complete",
             sandbox=False,
@@ -839,8 +839,8 @@ class TestAsyncProfiles:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_raw_response_complete(self, async_client: AsyncSentDm) -> None:
-        response = await async_client.profiles.with_raw_response.complete(
+    async def test_raw_response_complete_setup(self, async_client: AsyncSentDm) -> None:
+        response = await async_client.profiles.with_raw_response.complete_setup(
             profile_id="660e8400-e29b-41d4-a716-446655440000",
             web_hook_url="https://your-app.com/webhook/profile-complete",
         )
@@ -852,8 +852,8 @@ class TestAsyncProfiles:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_streaming_response_complete(self, async_client: AsyncSentDm) -> None:
-        async with async_client.profiles.with_streaming_response.complete(
+    async def test_streaming_response_complete_setup(self, async_client: AsyncSentDm) -> None:
+        async with async_client.profiles.with_streaming_response.complete_setup(
             profile_id="660e8400-e29b-41d4-a716-446655440000",
             web_hook_url="https://your-app.com/webhook/profile-complete",
         ) as response:
@@ -867,9 +867,9 @@ class TestAsyncProfiles:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_path_params_complete(self, async_client: AsyncSentDm) -> None:
+    async def test_path_params_complete_setup(self, async_client: AsyncSentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `profile_id` but received ''"):
-            await async_client.profiles.with_raw_response.complete(
+            await async_client.profiles.with_raw_response.complete_setup(
                 profile_id="",
                 web_hook_url="https://your-app.com/webhook/profile-complete",
             )

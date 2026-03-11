@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from typing_extensions import TypedDict
 
-__all__ = ["MutationRequestParam"]
+__all__ = ["MutationRequestBaseParam"]
 
 
-class MutationRequestParam(TypedDict, total=False):
+class MutationRequestBaseParam(TypedDict, total=False):
     sandbox: bool
     """
     Sandbox flag - when true, the operation is simulated without side effects Useful

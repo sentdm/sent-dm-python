@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing_extensions import Required, Annotated, TypedDict
 
 from .._utils import PropertyInfo
-from .mutation_request_param import MutationRequestParam
+from .mutation_request_base_param import MutationRequestBaseParam
 
 __all__ = ["WebhookRotateSecretParams", "Body"]
 
@@ -18,5 +18,5 @@ class WebhookRotateSecretParams(TypedDict, total=False):
     x_profile_id: Annotated[str, PropertyInfo(alias="x-profile-id")]
 
 
-class Body(MutationRequestParam, total=False):
+class Body(MutationRequestBaseParam, total=False):
     pass

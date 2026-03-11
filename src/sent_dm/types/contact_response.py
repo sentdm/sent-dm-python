@@ -5,10 +5,10 @@ from datetime import datetime
 
 from .._models import BaseModel
 
-__all__ = ["Contact"]
+__all__ = ["ContactResponse"]
 
 
-class Contact(BaseModel):
+class ContactResponse(BaseModel):
     """
     Contact response for v3 API
     Uses snake_case for JSON property names

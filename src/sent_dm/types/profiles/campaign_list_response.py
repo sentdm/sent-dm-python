@@ -1,19 +1,19 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import Optional
+from typing import List, Optional
 
-from .contact import Contact
-from .._models import BaseModel
-from .api_meta import APIMeta
-from .api_error import APIError
+from ..._models import BaseModel
+from ..api_meta import APIMeta
+from ..api_error import APIError
+from .tcr_campaign_with_use_cases import TcrCampaignWithUseCases
 
-__all__ = ["APIResponseContact"]
+__all__ = ["CampaignListResponse"]
 
 
-class APIResponseContact(BaseModel):
+class CampaignListResponse(BaseModel):
     """Standard API response envelope for all v3 endpoints"""
 
-    data: Optional[Contact] = None
+    data: Optional[List[TcrCampaignWithUseCases]] = None
     """The response data (null if error)"""
 
     error: Optional[APIError] = None

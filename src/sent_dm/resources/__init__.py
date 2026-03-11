@@ -16,6 +16,14 @@ from .users import (
     UsersResourceWithStreamingResponse,
     AsyncUsersResourceWithStreamingResponse,
 )
+from .numbers import (
+    NumbersResource,
+    AsyncNumbersResource,
+    NumbersResourceWithRawResponse,
+    AsyncNumbersResourceWithRawResponse,
+    NumbersResourceWithStreamingResponse,
+    AsyncNumbersResourceWithStreamingResponse,
+)
 from .contacts import (
     ContactsResource,
     AsyncContactsResource,
@@ -82,6 +90,12 @@ __all__ = [
     "AsyncProfilesResourceWithRawResponse",
     "ProfilesResourceWithStreamingResponse",
     "AsyncProfilesResourceWithStreamingResponse",
+    "NumbersResource",
+    "AsyncNumbersResource",
+    "NumbersResourceWithRawResponse",
+    "AsyncNumbersResourceWithRawResponse",
+    "NumbersResourceWithStreamingResponse",
+    "AsyncNumbersResourceWithStreamingResponse",
     "MessagesResource",
     "AsyncMessagesResource",
     "MessagesResourceWithRawResponse",

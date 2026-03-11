@@ -6,9 +6,11 @@ from typing import Optional
 from typing_extensions import Required, Annotated, TypedDict
 
 from .._utils import PropertyInfo
-from .brand_data_param import BrandDataParam
+from .payment_details_param import PaymentDetailsParam
+from .brands_brand_data_param import BrandsBrandDataParam
+from .billing_contact_info_param import BillingContactInfoParam
 
-__all__ = ["ProfileCreateParams", "BillingContact", "PaymentDetails", "WhatsappBusinessAccount"]
+__all__ = ["ProfileCreateParams", "WhatsappBusinessAccount"]
 
 
 class ProfileCreateParams(TypedDict, total=False):
@@ -18,7 +20,7 @@ class ProfileCreateParams(TypedDict, total=False):
     allow_template_sharing: bool
     """Whether templates are shared across profiles (default: false)"""
 
-    billing_contact: Optional[BillingContact]
+    billing_contact: Optional[BillingContactInfoParam]
     """Billing contact for this profile.
 
     Required when billing_model is "profile" or "profile_and_organization".
@@ -37,7 +39,7 @@ class ProfileCreateParams(TypedDict, total=False):
       as fallback; billing_contact is required.
     """
 
-    brand: Optional[BrandDataParam]
+    brand: Optional[BrandsBrandDataParam]
     """
     Brand and KYC information for this profile (optional). When provided, creates
     the brand associated with this profile. Cannot be set when inherit_tcr_brand is
@@ -65,7 +67,7 @@ class ProfileCreateParams(TypedDict, total=False):
     name: str
     """Profile name (required)"""
 
-    payment_details: Optional[PaymentDetails]
+    payment_details: Optional[PaymentDetailsParam]
     """
     Payment card details for this profile (optional). Accepted when billing_model is
     "profile" or "profile_and_organization". Not persisted on our servers —
@@ -97,49 +99,6 @@ class ProfileCreateParams(TypedDict, total=False):
     idempotency_key: Annotated[str, PropertyInfo(alias="Idempotency-Key")]
 
     x_profile_id: Annotated[str, PropertyInfo(alias="x-profile-id")]
-
-
-class BillingContact(TypedDict, total=False):
-    """Billing contact for this profile.
-
-    Required when billing_model is "profile" or "profile_and_organization".
-    Identifies who receives invoices and who is responsible for payment.
-    """
-
-    email: Required[str]
-    """Email address where invoices will be sent (required)"""
-
-    name: Required[str]
-    """Full name of the billing contact or company (required)"""
-
-    address: Optional[str]
-    """Billing address (optional).
-
-    Free-form text including street, city, state, postal code, and country.
-    """
-
-    phone: Optional[str]
-    """Phone number for the billing contact (optional)"""
-
-
-class PaymentDetails(TypedDict, total=False):
-    """
-    Payment card details for this profile (optional).
-    Accepted when billing_model is "profile" or "profile_and_organization".
-    Not persisted on our servers — forwarded to the payment processor.
-    """
-
-    card_number: Required[str]
-    """Card number (digits only, 13–19 characters)"""
-
-    cvc: Required[str]
-    """Card security code (3–4 digits)"""
-
-    expiry: Required[str]
-    """Card expiry date in MM/YY format (e.g. "09/27")"""
-
-    zip_code: Required[str]
-    """Billing ZIP / postal code associated with the card"""
 
 
 class WhatsappBusinessAccount(TypedDict, total=False):
