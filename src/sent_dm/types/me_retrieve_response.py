@@ -8,7 +8,61 @@ from .api_meta import APIMeta
 from .api_error import APIError
 from .profile_settings import ProfileSettings
 
-__all__ = ["MeRetrieveResponse", "Data", "DataProfile"]
+__all__ = [
+    "MeRetrieveResponse",
+    "Data",
+    "DataChannels",
+    "DataChannelsRcs",
+    "DataChannelsSMS",
+    "DataChannelsWhatsapp",
+    "DataProfile",
+]
+
+
+class DataChannelsRcs(BaseModel):
+    """RCS channel (provider: vibes)"""
+
+    configured: Optional[bool] = None
+    """Whether RCS is configured for this account"""
+
+    phone_number: Optional[str] = None
+    """RCS-enabled phone number in E.164 format"""
+
+
+class DataChannelsSMS(BaseModel):
+    """SMS channel (providers: telnyx, sinch)"""
+
+    configured: Optional[bool] = None
+    """Whether SMS is configured for this account"""
+
+    phone_number: Optional[str] = None
+    """Sending phone number in E.164 format"""
+
+
+class DataChannelsWhatsapp(BaseModel):
+    """WhatsApp Business channel (provider: meta)"""
+
+    business_name: Optional[str] = None
+    """WhatsApp Business display name"""
+
+    configured: Optional[bool] = None
+    """Whether WhatsApp is configured for this account"""
+
+    phone_number: Optional[str] = None
+    """WhatsApp phone number in E.164 format"""
+
+
+class DataChannels(BaseModel):
+    """Messaging channel configuration"""
+
+    rcs: Optional[DataChannelsRcs] = None
+    """RCS channel (provider: vibes)"""
+
+    sms: Optional[DataChannelsSMS] = None
+    """SMS channel (providers: telnyx, sinch)"""
+
+    whatsapp: Optional[DataChannelsWhatsapp] = None
+    """WhatsApp Business channel (provider: meta)"""
 
 
 class DataProfile(BaseModel):
@@ -49,7 +103,10 @@ class Data(BaseModel):
     """The response data (null if error)"""
 
     id: Optional[str] = None
-    """Customer ID (organization or profile)"""
+    """Customer ID (organization, account, or profile)"""
+
+    channels: Optional[DataChannels] = None
+    """Messaging channel configuration"""
 
     created_at: Optional[datetime] = None
     """When the account was created"""
@@ -57,22 +114,40 @@ class Data(BaseModel):
     description: Optional[str] = None
     """Account description"""
 
+    email: Optional[str] = None
+    """Contact email address"""
+
     icon: Optional[str] = None
     """Account icon URL"""
 
     name: Optional[str] = None
     """Account name"""
 
+    organization_id: Optional[str] = None
+    """Organization ID (only for profile type — the parent organization)"""
+
     profiles: Optional[List[DataProfile]] = None
-    """List of profiles (only for organization type)"""
+    """
+    List of profiles (populated for organization type, empty for user and profile
+    types)
+    """
 
     settings: Optional[ProfileSettings] = None
     """Profile settings (only for profile type)"""
+
+    short_name: Optional[str] = None
+    """Short name / abbreviation (only for profile type)"""
 
     status: Optional[str] = None
     """
     Profile status (only for profile type): incomplete, pending_review, approved,
     etc.
+    """
+
+    type: Optional[str] = None
+    """
+    Account type: "organization" (has profiles), "user" (no profiles), or "profile"
+    (child of an organization)
     """
 
 

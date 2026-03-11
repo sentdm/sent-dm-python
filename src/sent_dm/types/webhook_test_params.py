@@ -12,10 +12,12 @@ __all__ = ["WebhookTestParams"]
 class WebhookTestParams(TypedDict, total=False):
     event_type: str
 
-    test_mode: bool
+    sandbox: bool
     """
-    Test mode flag - when true, the operation is simulated without side effects
-    Useful for testing integrations without actual execution
+    Sandbox flag - when true, the operation is simulated without side effects Useful
+    for testing integrations without actual execution
     """
 
     idempotency_key: Annotated[str, PropertyInfo(alias="Idempotency-Key")]
+
+    x_profile_id: Annotated[str, PropertyInfo(alias="x-profile-id")]

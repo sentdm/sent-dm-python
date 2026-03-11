@@ -65,9 +65,10 @@ class WebhooksResource(SyncAPIResource):
         endpoint_url: str | Omit = omit,
         event_types: SequenceNotStr[str] | Omit = omit,
         retry_count: int | Omit = omit,
-        test_mode: bool | Omit = omit,
+        sandbox: bool | Omit = omit,
         timeout_seconds: int | Omit = omit,
         idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -79,8 +80,8 @@ class WebhooksResource(SyncAPIResource):
         Creates a new webhook endpoint for the authenticated customer.
 
         Args:
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
           extra_headers: Send extra headers
 
@@ -90,7 +91,15 @@ class WebhooksResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
         return self._post(
             "/v3/webhooks",
             body=maybe_transform(
@@ -99,7 +108,7 @@ class WebhooksResource(SyncAPIResource):
                     "endpoint_url": endpoint_url,
                     "event_types": event_types,
                     "retry_count": retry_count,
-                    "test_mode": test_mode,
+                    "sandbox": sandbox,
                     "timeout_seconds": timeout_seconds,
                 },
                 webhook_create_params.WebhookCreateParams,
@@ -114,6 +123,7 @@ class WebhooksResource(SyncAPIResource):
         self,
         id: str,
         *,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -135,6 +145,7 @@ class WebhooksResource(SyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._get(
             f"/v3/webhooks/{id}",
             options=make_request_options(
@@ -151,9 +162,10 @@ class WebhooksResource(SyncAPIResource):
         endpoint_url: str | Omit = omit,
         event_types: SequenceNotStr[str] | Omit = omit,
         retry_count: int | Omit = omit,
-        test_mode: bool | Omit = omit,
+        sandbox: bool | Omit = omit,
         timeout_seconds: int | Omit = omit,
         idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -165,8 +177,8 @@ class WebhooksResource(SyncAPIResource):
         Updates an existing webhook for the authenticated customer.
 
         Args:
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
           extra_headers: Send extra headers
 
@@ -178,7 +190,15 @@ class WebhooksResource(SyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
-        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
         return self._put(
             f"/v3/webhooks/{id}",
             body=maybe_transform(
@@ -187,7 +207,7 @@ class WebhooksResource(SyncAPIResource):
                     "endpoint_url": endpoint_url,
                     "event_types": event_types,
                     "retry_count": retry_count,
-                    "test_mode": test_mode,
+                    "sandbox": sandbox,
                     "timeout_seconds": timeout_seconds,
                 },
                 webhook_update_params.WebhookUpdateParams,
@@ -205,6 +225,7 @@ class WebhooksResource(SyncAPIResource):
         page_size: int,
         is_active: Optional[bool] | Omit = omit,
         search: Optional[str] | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -224,6 +245,7 @@ class WebhooksResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._get(
             "/v3/webhooks",
             options=make_request_options(
@@ -248,6 +270,7 @@ class WebhooksResource(SyncAPIResource):
         self,
         id: str,
         *,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -270,6 +293,7 @@ class WebhooksResource(SyncAPIResource):
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._delete(
             f"/v3/webhooks/{id}",
             options=make_request_options(
@@ -281,6 +305,7 @@ class WebhooksResource(SyncAPIResource):
     def list_event_types(
         self,
         *,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -288,7 +313,19 @@ class WebhooksResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> WebhookListEventTypesResponse:
-        """Retrieves all available webhook event types that can be subscribed to."""
+        """
+        Retrieves all available webhook event types that can be subscribed to.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._get(
             "/v3/webhooks/event-types",
             options=make_request_options(
@@ -304,6 +341,7 @@ class WebhooksResource(SyncAPIResource):
         page: int,
         page_size: int,
         search: Optional[str] | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -325,6 +363,7 @@ class WebhooksResource(SyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._get(
             f"/v3/webhooks/{id}/events",
             options=make_request_options(
@@ -350,6 +389,7 @@ class WebhooksResource(SyncAPIResource):
         *,
         body: webhook_rotate_secret_params.Body,
         idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -373,7 +413,15 @@ class WebhooksResource(SyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
-        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
         return self._post(
             f"/v3/webhooks/{id}/rotate-secret",
             body=maybe_transform(body, webhook_rotate_secret_params.WebhookRotateSecretParams),
@@ -388,8 +436,9 @@ class WebhooksResource(SyncAPIResource):
         id: str,
         *,
         event_type: str | Omit = omit,
-        test_mode: bool | Omit = omit,
+        sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -401,8 +450,8 @@ class WebhooksResource(SyncAPIResource):
         Sends a test event to the specified webhook endpoint to verify connectivity.
 
         Args:
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
           extra_headers: Send extra headers
 
@@ -414,13 +463,21 @@ class WebhooksResource(SyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
-        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
         return self._post(
             f"/v3/webhooks/{id}/test",
             body=maybe_transform(
                 {
                     "event_type": event_type,
-                    "test_mode": test_mode,
+                    "sandbox": sandbox,
                 },
                 webhook_test_params.WebhookTestParams,
             ),
@@ -435,8 +492,9 @@ class WebhooksResource(SyncAPIResource):
         id: str,
         *,
         is_active: bool | Omit = omit,
-        test_mode: bool | Omit = omit,
+        sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -448,8 +506,8 @@ class WebhooksResource(SyncAPIResource):
         Activates or deactivates a webhook for the authenticated customer.
 
         Args:
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
           extra_headers: Send extra headers
 
@@ -461,13 +519,21 @@ class WebhooksResource(SyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
-        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
         return self._patch(
             f"/v3/webhooks/{id}/toggle-status",
             body=maybe_transform(
                 {
                     "is_active": is_active,
-                    "test_mode": test_mode,
+                    "sandbox": sandbox,
                 },
                 webhook_toggle_status_params.WebhookToggleStatusParams,
             ),
@@ -507,9 +573,10 @@ class AsyncWebhooksResource(AsyncAPIResource):
         endpoint_url: str | Omit = omit,
         event_types: SequenceNotStr[str] | Omit = omit,
         retry_count: int | Omit = omit,
-        test_mode: bool | Omit = omit,
+        sandbox: bool | Omit = omit,
         timeout_seconds: int | Omit = omit,
         idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -521,8 +588,8 @@ class AsyncWebhooksResource(AsyncAPIResource):
         Creates a new webhook endpoint for the authenticated customer.
 
         Args:
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
           extra_headers: Send extra headers
 
@@ -532,7 +599,15 @@ class AsyncWebhooksResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
         return await self._post(
             "/v3/webhooks",
             body=await async_maybe_transform(
@@ -541,7 +616,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
                     "endpoint_url": endpoint_url,
                     "event_types": event_types,
                     "retry_count": retry_count,
-                    "test_mode": test_mode,
+                    "sandbox": sandbox,
                     "timeout_seconds": timeout_seconds,
                 },
                 webhook_create_params.WebhookCreateParams,
@@ -556,6 +631,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
         self,
         id: str,
         *,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -577,6 +653,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._get(
             f"/v3/webhooks/{id}",
             options=make_request_options(
@@ -593,9 +670,10 @@ class AsyncWebhooksResource(AsyncAPIResource):
         endpoint_url: str | Omit = omit,
         event_types: SequenceNotStr[str] | Omit = omit,
         retry_count: int | Omit = omit,
-        test_mode: bool | Omit = omit,
+        sandbox: bool | Omit = omit,
         timeout_seconds: int | Omit = omit,
         idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -607,8 +685,8 @@ class AsyncWebhooksResource(AsyncAPIResource):
         Updates an existing webhook for the authenticated customer.
 
         Args:
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
           extra_headers: Send extra headers
 
@@ -620,7 +698,15 @@ class AsyncWebhooksResource(AsyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
-        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
         return await self._put(
             f"/v3/webhooks/{id}",
             body=await async_maybe_transform(
@@ -629,7 +715,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
                     "endpoint_url": endpoint_url,
                     "event_types": event_types,
                     "retry_count": retry_count,
-                    "test_mode": test_mode,
+                    "sandbox": sandbox,
                     "timeout_seconds": timeout_seconds,
                 },
                 webhook_update_params.WebhookUpdateParams,
@@ -647,6 +733,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
         page_size: int,
         is_active: Optional[bool] | Omit = omit,
         search: Optional[str] | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -666,6 +753,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._get(
             "/v3/webhooks",
             options=make_request_options(
@@ -690,6 +778,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
         self,
         id: str,
         *,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -712,6 +801,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._delete(
             f"/v3/webhooks/{id}",
             options=make_request_options(
@@ -723,6 +813,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
     async def list_event_types(
         self,
         *,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -730,7 +821,19 @@ class AsyncWebhooksResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> WebhookListEventTypesResponse:
-        """Retrieves all available webhook event types that can be subscribed to."""
+        """
+        Retrieves all available webhook event types that can be subscribed to.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._get(
             "/v3/webhooks/event-types",
             options=make_request_options(
@@ -746,6 +849,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
         page: int,
         page_size: int,
         search: Optional[str] | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -767,6 +871,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._get(
             f"/v3/webhooks/{id}/events",
             options=make_request_options(
@@ -792,6 +897,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
         *,
         body: webhook_rotate_secret_params.Body,
         idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -815,7 +921,15 @@ class AsyncWebhooksResource(AsyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
-        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
         return await self._post(
             f"/v3/webhooks/{id}/rotate-secret",
             body=await async_maybe_transform(body, webhook_rotate_secret_params.WebhookRotateSecretParams),
@@ -830,8 +944,9 @@ class AsyncWebhooksResource(AsyncAPIResource):
         id: str,
         *,
         event_type: str | Omit = omit,
-        test_mode: bool | Omit = omit,
+        sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -843,8 +958,8 @@ class AsyncWebhooksResource(AsyncAPIResource):
         Sends a test event to the specified webhook endpoint to verify connectivity.
 
         Args:
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
           extra_headers: Send extra headers
 
@@ -856,13 +971,21 @@ class AsyncWebhooksResource(AsyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
-        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
         return await self._post(
             f"/v3/webhooks/{id}/test",
             body=await async_maybe_transform(
                 {
                     "event_type": event_type,
-                    "test_mode": test_mode,
+                    "sandbox": sandbox,
                 },
                 webhook_test_params.WebhookTestParams,
             ),
@@ -877,8 +1000,9 @@ class AsyncWebhooksResource(AsyncAPIResource):
         id: str,
         *,
         is_active: bool | Omit = omit,
-        test_mode: bool | Omit = omit,
+        sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -890,8 +1014,8 @@ class AsyncWebhooksResource(AsyncAPIResource):
         Activates or deactivates a webhook for the authenticated customer.
 
         Args:
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
           extra_headers: Send extra headers
 
@@ -903,13 +1027,21 @@ class AsyncWebhooksResource(AsyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
-        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
         return await self._patch(
             f"/v3/webhooks/{id}/toggle-status",
             body=await async_maybe_transform(
                 {
                     "is_active": is_active,
-                    "test_mode": test_mode,
+                    "sandbox": sandbox,
                 },
                 webhook_toggle_status_params.WebhookToggleStatusParams,
             ),

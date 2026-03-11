@@ -8,8 +8,8 @@ __all__ = ["MutationRequestParam"]
 
 
 class MutationRequestParam(TypedDict, total=False):
-    test_mode: bool
+    sandbox: bool
     """
-    Test mode flag - when true, the operation is simulated without side effects
-    Useful for testing integrations without actual execution
+    Sandbox flag - when true, the operation is simulated without side effects Useful
+    for testing integrations without actual execution
     """

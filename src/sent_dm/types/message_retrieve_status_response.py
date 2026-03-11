@@ -46,6 +46,8 @@ class Data(BaseModel):
 
     id: Optional[str] = None
 
+    active_contact_price: Optional[float] = None
+
     channel: Optional[str] = None
 
     contact_id: Optional[str] = None

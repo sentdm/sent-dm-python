@@ -13,6 +13,8 @@ __all__ = ["WebhookListEventsParams"]
 class WebhookListEventsParams(TypedDict, total=False):
     page: Required[int]
 
-    page_size: Required[Annotated[int, PropertyInfo(alias="pageSize")]]
+    page_size: Required[int]
 
     search: Optional[str]
+
+    x_profile_id: Annotated[str, PropertyInfo(alias="x-profile-id")]

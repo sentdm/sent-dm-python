@@ -32,17 +32,73 @@ class TestProfiles:
         profile = client.profiles.create(
             allow_contact_sharing=True,
             allow_template_sharing=False,
+            billing_contact={
+                "email": "billing@acmecorp.com",
+                "name": "Acme Corp",
+                "address": "123 Main Street, New York, NY 10001, US",
+                "phone": "+12025551234",
+            },
             billing_model="profile",
+            brand={
+                "compliance": {
+                    "brand_relationship": "SMALL_ACCOUNT",
+                    "vertical": "PROFESSIONAL",
+                    "destination_countries": [
+                        {
+                            "id": "US",
+                            "is_main": False,
+                        }
+                    ],
+                    "expected_messaging_volume": "10000",
+                    "is_tcr_application": True,
+                    "notes": None,
+                    "phone_number_prefix": "+1",
+                    "primary_use_case": "Customer notifications and appointment reminders",
+                },
+                "contact": {
+                    "name": "John Smith",
+                    "business_name": "Acme Corp",
+                    "email": "john@acmecorp.com",
+                    "phone": "+12025551234",
+                    "phone_country_code": "1",
+                    "role": "CEO",
+                },
+                "business": {
+                    "city": "New York",
+                    "country": "US",
+                    "country_of_registration": "US",
+                    "entity_type": "PRIVATE_PROFIT",
+                    "legal_name": "Acme Corporation LLC",
+                    "postal_code": "10001",
+                    "state": "NY",
+                    "street": "123 Main Street",
+                    "tax_id": "12-3456789",
+                    "tax_id_type": "us_ein",
+                    "url": "https://acmecorp.com",
+                },
+            },
             description="Sales department sender profile",
             icon="https://example.com/sales-icon.png",
             inherit_contacts=True,
-            inherit_tcr_brand=True,
-            inherit_tcr_campaign=True,
+            inherit_tcr_brand=False,
+            inherit_tcr_campaign=False,
             inherit_templates=True,
             name="Sales Team",
+            payment_details={
+                "card_number": "4111111111111111",
+                "cvc": "123",
+                "expiry": "09/27",
+                "zip_code": "10001",
+            },
+            sandbox=False,
             short_name="SALES",
-            test_mode=False,
+            whatsapp_business_account={
+                "access_token": "EAAxxxxxxxxxxxxxxx",
+                "waba_id": "123456789012345",
+                "phone_number_id": "987654321098765",
+            },
             idempotency_key="req_abc123_retry1",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
 
@@ -72,7 +128,16 @@ class TestProfiles:
     @parametrize
     def test_method_retrieve(self, client: SentDm) -> None:
         profile = client.profiles.retrieve(
-            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            profile_id="profileId",
+        )
+        assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_retrieve_with_all_params(self, client: SentDm) -> None:
+        profile = client.profiles.retrieve(
+            profile_id="profileId",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
 
@@ -80,7 +145,7 @@ class TestProfiles:
     @parametrize
     def test_raw_response_retrieve(self, client: SentDm) -> None:
         response = client.profiles.with_raw_response.retrieve(
-            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            profile_id="profileId",
         )
 
         assert response.is_closed is True
@@ -92,7 +157,7 @@ class TestProfiles:
     @parametrize
     def test_streaming_response_retrieve(self, client: SentDm) -> None:
         with client.profiles.with_streaming_response.retrieve(
-            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            profile_id="profileId",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -107,14 +172,14 @@ class TestProfiles:
     def test_path_params_retrieve(self, client: SentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `profile_id` but received ''"):
             client.profiles.with_raw_response.retrieve(
-                "",
+                profile_id="",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_update(self, client: SentDm) -> None:
         profile = client.profiles.update(
-            path_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            profile_id="profileId",
         )
         assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
 
@@ -122,11 +187,55 @@ class TestProfiles:
     @parametrize
     def test_method_update_with_all_params(self, client: SentDm) -> None:
         profile = client.profiles.update(
-            path_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            profile_id="profileId",
             allow_contact_sharing=True,
             allow_number_change_during_onboarding=None,
             allow_template_sharing=None,
+            billing_contact={
+                "email": "dev@stainless.com",
+                "name": "x",
+                "address": "address",
+                "phone": "phone",
+            },
             billing_model="organization",
+            brand={
+                "compliance": {
+                    "brand_relationship": "SMALL_ACCOUNT",
+                    "vertical": "PROFESSIONAL",
+                    "destination_countries": [
+                        {
+                            "id": "US",
+                            "is_main": False,
+                        }
+                    ],
+                    "expected_messaging_volume": "10000",
+                    "is_tcr_application": True,
+                    "notes": None,
+                    "phone_number_prefix": "+1",
+                    "primary_use_case": "Customer notifications and appointment reminders",
+                },
+                "contact": {
+                    "name": "John Smith",
+                    "business_name": "Acme Corp",
+                    "email": "john@acmecorp.com",
+                    "phone": "+12025551234",
+                    "phone_country_code": "1",
+                    "role": "CEO",
+                },
+                "business": {
+                    "city": "New York",
+                    "country": "US",
+                    "country_of_registration": "US",
+                    "entity_type": "PRIVATE_PROFIT",
+                    "legal_name": "Acme Corporation LLC",
+                    "postal_code": "10001",
+                    "state": "NY",
+                    "street": "123 Main Street",
+                    "tax_id": "12-3456789",
+                    "tax_id_type": "us_ein",
+                    "url": "https://acmecorp.com",
+                },
+            },
             description="Updated sales department sender profile",
             icon=None,
             inherit_contacts=None,
@@ -134,14 +243,20 @@ class TestProfiles:
             inherit_tcr_campaign=None,
             inherit_templates=None,
             name="Sales Team - Updated",
-            body_profile_id="770e8400-e29b-41d4-a716-446655440002",
+            payment_details={
+                "card_number": "3216699102256101",
+                "cvc": "3216",
+                "expiry": "11/66",
+                "zip_code": "x",
+            },
+            sandbox=False,
             sending_phone_number=None,
             sending_phone_number_profile_id=None,
             sending_whatsapp_number_profile_id=None,
-            short_name=None,
-            test_mode=False,
+            short_name="SALES",
             whatsapp_phone_number=None,
             idempotency_key="req_abc123_retry1",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
 
@@ -149,7 +264,7 @@ class TestProfiles:
     @parametrize
     def test_raw_response_update(self, client: SentDm) -> None:
         response = client.profiles.with_raw_response.update(
-            path_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            profile_id="profileId",
         )
 
         assert response.is_closed is True
@@ -161,7 +276,7 @@ class TestProfiles:
     @parametrize
     def test_streaming_response_update(self, client: SentDm) -> None:
         with client.profiles.with_streaming_response.update(
-            path_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            profile_id="profileId",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -174,15 +289,23 @@ class TestProfiles:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_path_params_update(self, client: SentDm) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `path_profile_id` but received ''"):
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `profile_id` but received ''"):
             client.profiles.with_raw_response.update(
-                path_profile_id="",
+                profile_id="",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_list(self, client: SentDm) -> None:
         profile = client.profiles.list()
+        assert_matches_type(ProfileListResponse, profile, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_list_with_all_params(self, client: SentDm) -> None:
+        profile = client.profiles.list(
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+        )
         assert_matches_type(ProfileListResponse, profile, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
@@ -211,7 +334,8 @@ class TestProfiles:
     @parametrize
     def test_method_delete(self, client: SentDm) -> None:
         profile = client.profiles.delete(
-            path_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            profile_id="profileId",
+            body={},
         )
         assert profile is None
 
@@ -219,9 +343,9 @@ class TestProfiles:
     @parametrize
     def test_method_delete_with_all_params(self, client: SentDm) -> None:
         profile = client.profiles.delete(
-            path_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            body_profile_id="770e8400-e29b-41d4-a716-446655440002",
-            test_mode=False,
+            profile_id="profileId",
+            body={"sandbox": False},
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert profile is None
 
@@ -229,7 +353,8 @@ class TestProfiles:
     @parametrize
     def test_raw_response_delete(self, client: SentDm) -> None:
         response = client.profiles.with_raw_response.delete(
-            path_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            profile_id="profileId",
+            body={},
         )
 
         assert response.is_closed is True
@@ -241,7 +366,8 @@ class TestProfiles:
     @parametrize
     def test_streaming_response_delete(self, client: SentDm) -> None:
         with client.profiles.with_streaming_response.delete(
-            path_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            profile_id="profileId",
+            body={},
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -254,9 +380,10 @@ class TestProfiles:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_path_params_delete(self, client: SentDm) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `path_profile_id` but received ''"):
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `profile_id` but received ''"):
             client.profiles.with_raw_response.delete(
-                path_profile_id="",
+                profile_id="",
+                body={},
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
@@ -274,8 +401,9 @@ class TestProfiles:
         profile = client.profiles.complete(
             profile_id="660e8400-e29b-41d4-a716-446655440000",
             web_hook_url="https://your-app.com/webhook/profile-complete",
-            test_mode=False,
+            sandbox=False,
             idempotency_key="req_abc123_retry1",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(object, profile, path=["response"])
 
@@ -334,17 +462,73 @@ class TestAsyncProfiles:
         profile = await async_client.profiles.create(
             allow_contact_sharing=True,
             allow_template_sharing=False,
+            billing_contact={
+                "email": "billing@acmecorp.com",
+                "name": "Acme Corp",
+                "address": "123 Main Street, New York, NY 10001, US",
+                "phone": "+12025551234",
+            },
             billing_model="profile",
+            brand={
+                "compliance": {
+                    "brand_relationship": "SMALL_ACCOUNT",
+                    "vertical": "PROFESSIONAL",
+                    "destination_countries": [
+                        {
+                            "id": "US",
+                            "is_main": False,
+                        }
+                    ],
+                    "expected_messaging_volume": "10000",
+                    "is_tcr_application": True,
+                    "notes": None,
+                    "phone_number_prefix": "+1",
+                    "primary_use_case": "Customer notifications and appointment reminders",
+                },
+                "contact": {
+                    "name": "John Smith",
+                    "business_name": "Acme Corp",
+                    "email": "john@acmecorp.com",
+                    "phone": "+12025551234",
+                    "phone_country_code": "1",
+                    "role": "CEO",
+                },
+                "business": {
+                    "city": "New York",
+                    "country": "US",
+                    "country_of_registration": "US",
+                    "entity_type": "PRIVATE_PROFIT",
+                    "legal_name": "Acme Corporation LLC",
+                    "postal_code": "10001",
+                    "state": "NY",
+                    "street": "123 Main Street",
+                    "tax_id": "12-3456789",
+                    "tax_id_type": "us_ein",
+                    "url": "https://acmecorp.com",
+                },
+            },
             description="Sales department sender profile",
             icon="https://example.com/sales-icon.png",
             inherit_contacts=True,
-            inherit_tcr_brand=True,
-            inherit_tcr_campaign=True,
+            inherit_tcr_brand=False,
+            inherit_tcr_campaign=False,
             inherit_templates=True,
             name="Sales Team",
+            payment_details={
+                "card_number": "4111111111111111",
+                "cvc": "123",
+                "expiry": "09/27",
+                "zip_code": "10001",
+            },
+            sandbox=False,
             short_name="SALES",
-            test_mode=False,
+            whatsapp_business_account={
+                "access_token": "EAAxxxxxxxxxxxxxxx",
+                "waba_id": "123456789012345",
+                "phone_number_id": "987654321098765",
+            },
             idempotency_key="req_abc123_retry1",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
 
@@ -374,7 +558,16 @@ class TestAsyncProfiles:
     @parametrize
     async def test_method_retrieve(self, async_client: AsyncSentDm) -> None:
         profile = await async_client.profiles.retrieve(
-            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            profile_id="profileId",
+        )
+        assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_retrieve_with_all_params(self, async_client: AsyncSentDm) -> None:
+        profile = await async_client.profiles.retrieve(
+            profile_id="profileId",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
 
@@ -382,7 +575,7 @@ class TestAsyncProfiles:
     @parametrize
     async def test_raw_response_retrieve(self, async_client: AsyncSentDm) -> None:
         response = await async_client.profiles.with_raw_response.retrieve(
-            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            profile_id="profileId",
         )
 
         assert response.is_closed is True
@@ -394,7 +587,7 @@ class TestAsyncProfiles:
     @parametrize
     async def test_streaming_response_retrieve(self, async_client: AsyncSentDm) -> None:
         async with async_client.profiles.with_streaming_response.retrieve(
-            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            profile_id="profileId",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -409,14 +602,14 @@ class TestAsyncProfiles:
     async def test_path_params_retrieve(self, async_client: AsyncSentDm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `profile_id` but received ''"):
             await async_client.profiles.with_raw_response.retrieve(
-                "",
+                profile_id="",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_update(self, async_client: AsyncSentDm) -> None:
         profile = await async_client.profiles.update(
-            path_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            profile_id="profileId",
         )
         assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
 
@@ -424,11 +617,55 @@ class TestAsyncProfiles:
     @parametrize
     async def test_method_update_with_all_params(self, async_client: AsyncSentDm) -> None:
         profile = await async_client.profiles.update(
-            path_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            profile_id="profileId",
             allow_contact_sharing=True,
             allow_number_change_during_onboarding=None,
             allow_template_sharing=None,
+            billing_contact={
+                "email": "dev@stainless.com",
+                "name": "x",
+                "address": "address",
+                "phone": "phone",
+            },
             billing_model="organization",
+            brand={
+                "compliance": {
+                    "brand_relationship": "SMALL_ACCOUNT",
+                    "vertical": "PROFESSIONAL",
+                    "destination_countries": [
+                        {
+                            "id": "US",
+                            "is_main": False,
+                        }
+                    ],
+                    "expected_messaging_volume": "10000",
+                    "is_tcr_application": True,
+                    "notes": None,
+                    "phone_number_prefix": "+1",
+                    "primary_use_case": "Customer notifications and appointment reminders",
+                },
+                "contact": {
+                    "name": "John Smith",
+                    "business_name": "Acme Corp",
+                    "email": "john@acmecorp.com",
+                    "phone": "+12025551234",
+                    "phone_country_code": "1",
+                    "role": "CEO",
+                },
+                "business": {
+                    "city": "New York",
+                    "country": "US",
+                    "country_of_registration": "US",
+                    "entity_type": "PRIVATE_PROFIT",
+                    "legal_name": "Acme Corporation LLC",
+                    "postal_code": "10001",
+                    "state": "NY",
+                    "street": "123 Main Street",
+                    "tax_id": "12-3456789",
+                    "tax_id_type": "us_ein",
+                    "url": "https://acmecorp.com",
+                },
+            },
             description="Updated sales department sender profile",
             icon=None,
             inherit_contacts=None,
@@ -436,14 +673,20 @@ class TestAsyncProfiles:
             inherit_tcr_campaign=None,
             inherit_templates=None,
             name="Sales Team - Updated",
-            body_profile_id="770e8400-e29b-41d4-a716-446655440002",
+            payment_details={
+                "card_number": "3216699102256101",
+                "cvc": "3216",
+                "expiry": "11/66",
+                "zip_code": "x",
+            },
+            sandbox=False,
             sending_phone_number=None,
             sending_phone_number_profile_id=None,
             sending_whatsapp_number_profile_id=None,
-            short_name=None,
-            test_mode=False,
+            short_name="SALES",
             whatsapp_phone_number=None,
             idempotency_key="req_abc123_retry1",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
 
@@ -451,7 +694,7 @@ class TestAsyncProfiles:
     @parametrize
     async def test_raw_response_update(self, async_client: AsyncSentDm) -> None:
         response = await async_client.profiles.with_raw_response.update(
-            path_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            profile_id="profileId",
         )
 
         assert response.is_closed is True
@@ -463,7 +706,7 @@ class TestAsyncProfiles:
     @parametrize
     async def test_streaming_response_update(self, async_client: AsyncSentDm) -> None:
         async with async_client.profiles.with_streaming_response.update(
-            path_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            profile_id="profileId",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -476,15 +719,23 @@ class TestAsyncProfiles:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_path_params_update(self, async_client: AsyncSentDm) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `path_profile_id` but received ''"):
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `profile_id` but received ''"):
             await async_client.profiles.with_raw_response.update(
-                path_profile_id="",
+                profile_id="",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_list(self, async_client: AsyncSentDm) -> None:
         profile = await async_client.profiles.list()
+        assert_matches_type(ProfileListResponse, profile, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_list_with_all_params(self, async_client: AsyncSentDm) -> None:
+        profile = await async_client.profiles.list(
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+        )
         assert_matches_type(ProfileListResponse, profile, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
@@ -513,7 +764,8 @@ class TestAsyncProfiles:
     @parametrize
     async def test_method_delete(self, async_client: AsyncSentDm) -> None:
         profile = await async_client.profiles.delete(
-            path_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            profile_id="profileId",
+            body={},
         )
         assert profile is None
 
@@ -521,9 +773,9 @@ class TestAsyncProfiles:
     @parametrize
     async def test_method_delete_with_all_params(self, async_client: AsyncSentDm) -> None:
         profile = await async_client.profiles.delete(
-            path_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            body_profile_id="770e8400-e29b-41d4-a716-446655440002",
-            test_mode=False,
+            profile_id="profileId",
+            body={"sandbox": False},
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert profile is None
 
@@ -531,7 +783,8 @@ class TestAsyncProfiles:
     @parametrize
     async def test_raw_response_delete(self, async_client: AsyncSentDm) -> None:
         response = await async_client.profiles.with_raw_response.delete(
-            path_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            profile_id="profileId",
+            body={},
         )
 
         assert response.is_closed is True
@@ -543,7 +796,8 @@ class TestAsyncProfiles:
     @parametrize
     async def test_streaming_response_delete(self, async_client: AsyncSentDm) -> None:
         async with async_client.profiles.with_streaming_response.delete(
-            path_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            profile_id="profileId",
+            body={},
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -556,9 +810,10 @@ class TestAsyncProfiles:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_path_params_delete(self, async_client: AsyncSentDm) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `path_profile_id` but received ''"):
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `profile_id` but received ''"):
             await async_client.profiles.with_raw_response.delete(
-                path_profile_id="",
+                profile_id="",
+                body={},
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
@@ -576,8 +831,9 @@ class TestAsyncProfiles:
         profile = await async_client.profiles.complete(
             profile_id="660e8400-e29b-41d4-a716-446655440000",
             web_hook_url="https://your-app.com/webhook/profile-complete",
-            test_mode=False,
+            sandbox=False,
             idempotency_key="req_abc123_retry1",
+            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(object, profile, path=["response"])
 

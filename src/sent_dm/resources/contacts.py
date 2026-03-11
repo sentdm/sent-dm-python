@@ -50,8 +50,9 @@ class ContactsResource(SyncAPIResource):
         self,
         *,
         phone_number: str | Omit = omit,
-        test_mode: bool | Omit = omit,
+        sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -66,8 +67,8 @@ class ContactsResource(SyncAPIResource):
         Args:
           phone_number: Phone number of the contact to create
 
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
           extra_headers: Send extra headers
 
@@ -77,13 +78,21 @@ class ContactsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
         return self._post(
             "/v3/contacts",
             body=maybe_transform(
                 {
                     "phone_number": phone_number,
-                    "test_mode": test_mode,
+                    "sandbox": sandbox,
                 },
                 contact_create_params.ContactCreateParams,
             ),
@@ -97,6 +106,7 @@ class ContactsResource(SyncAPIResource):
         self,
         id: str,
         *,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -121,6 +131,7 @@ class ContactsResource(SyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._get(
             f"/v3/contacts/{id}",
             options=make_request_options(
@@ -135,8 +146,9 @@ class ContactsResource(SyncAPIResource):
         *,
         default_channel: Optional[str] | Omit = omit,
         opt_out: Optional[bool] | Omit = omit,
-        test_mode: bool | Omit = omit,
+        sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -154,8 +166,8 @@ class ContactsResource(SyncAPIResource):
 
           opt_out: Whether the contact has opted out of messaging
 
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
           extra_headers: Send extra headers
 
@@ -167,14 +179,22 @@ class ContactsResource(SyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
-        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
         return self._patch(
             f"/v3/contacts/{id}",
             body=maybe_transform(
                 {
                     "default_channel": default_channel,
                     "opt_out": opt_out,
-                    "test_mode": test_mode,
+                    "sandbox": sandbox,
                 },
                 contact_update_params.ContactUpdateParams,
             ),
@@ -192,6 +212,7 @@ class ContactsResource(SyncAPIResource):
         channel: Optional[str] | Omit = omit,
         phone: Optional[str] | Omit = omit,
         search: Optional[str] | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -207,6 +228,8 @@ class ContactsResource(SyncAPIResource):
         Args:
           page: Page number (1-indexed)
 
+          page_size: Number of items per page
+
           channel: Optional channel filter (sms, whatsapp)
 
           phone: Optional phone number filter (alternative to list view)
@@ -221,6 +244,7 @@ class ContactsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._get(
             "/v3/contacts",
             options=make_request_options(
@@ -247,6 +271,7 @@ class ContactsResource(SyncAPIResource):
         id: str,
         *,
         body: contact_delete_params.Body,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -273,6 +298,7 @@ class ContactsResource(SyncAPIResource):
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._delete(
             f"/v3/contacts/{id}",
             body=maybe_transform(body, contact_delete_params.ContactDeleteParams),
@@ -309,8 +335,9 @@ class AsyncContactsResource(AsyncAPIResource):
         self,
         *,
         phone_number: str | Omit = omit,
-        test_mode: bool | Omit = omit,
+        sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -325,8 +352,8 @@ class AsyncContactsResource(AsyncAPIResource):
         Args:
           phone_number: Phone number of the contact to create
 
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
           extra_headers: Send extra headers
 
@@ -336,13 +363,21 @@ class AsyncContactsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
         return await self._post(
             "/v3/contacts",
             body=await async_maybe_transform(
                 {
                     "phone_number": phone_number,
-                    "test_mode": test_mode,
+                    "sandbox": sandbox,
                 },
                 contact_create_params.ContactCreateParams,
             ),
@@ -356,6 +391,7 @@ class AsyncContactsResource(AsyncAPIResource):
         self,
         id: str,
         *,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -380,6 +416,7 @@ class AsyncContactsResource(AsyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._get(
             f"/v3/contacts/{id}",
             options=make_request_options(
@@ -394,8 +431,9 @@ class AsyncContactsResource(AsyncAPIResource):
         *,
         default_channel: Optional[str] | Omit = omit,
         opt_out: Optional[bool] | Omit = omit,
-        test_mode: bool | Omit = omit,
+        sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -413,8 +451,8 @@ class AsyncContactsResource(AsyncAPIResource):
 
           opt_out: Whether the contact has opted out of messaging
 
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
           extra_headers: Send extra headers
 
@@ -426,14 +464,22 @@ class AsyncContactsResource(AsyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
-        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
         return await self._patch(
             f"/v3/contacts/{id}",
             body=await async_maybe_transform(
                 {
                     "default_channel": default_channel,
                     "opt_out": opt_out,
-                    "test_mode": test_mode,
+                    "sandbox": sandbox,
                 },
                 contact_update_params.ContactUpdateParams,
             ),
@@ -451,6 +497,7 @@ class AsyncContactsResource(AsyncAPIResource):
         channel: Optional[str] | Omit = omit,
         phone: Optional[str] | Omit = omit,
         search: Optional[str] | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -466,6 +513,8 @@ class AsyncContactsResource(AsyncAPIResource):
         Args:
           page: Page number (1-indexed)
 
+          page_size: Number of items per page
+
           channel: Optional channel filter (sms, whatsapp)
 
           phone: Optional phone number filter (alternative to list view)
@@ -480,6 +529,7 @@ class AsyncContactsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._get(
             "/v3/contacts",
             options=make_request_options(
@@ -506,6 +556,7 @@ class AsyncContactsResource(AsyncAPIResource):
         id: str,
         *,
         body: contact_delete_params.Body,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -532,6 +583,7 @@ class AsyncContactsResource(AsyncAPIResource):
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._delete(
             f"/v3/contacts/{id}",
             body=await async_maybe_transform(body, contact_delete_params.ContactDeleteParams),

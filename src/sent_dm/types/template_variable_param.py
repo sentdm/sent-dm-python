@@ -15,6 +15,8 @@ class Props(TypedDict, total=False):
 
     media_type: Annotated[Optional[str], PropertyInfo(alias="mediaType")]
 
+    regex: Optional[str]
+
     sample: Optional[str]
 
     short_url: Annotated[Optional[str], PropertyInfo(alias="shortUrl")]

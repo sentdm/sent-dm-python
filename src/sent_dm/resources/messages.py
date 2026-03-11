@@ -51,6 +51,7 @@ class MessagesResource(SyncAPIResource):
         self,
         id: str,
         *,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -74,6 +75,7 @@ class MessagesResource(SyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._get(
             f"/v3/messages/{id}/activities",
             options=make_request_options(
@@ -86,6 +88,7 @@ class MessagesResource(SyncAPIResource):
         self,
         id: str,
         *,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -109,6 +112,7 @@ class MessagesResource(SyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._get(
             f"/v3/messages/{id}",
             options=make_request_options(
@@ -121,10 +125,11 @@ class MessagesResource(SyncAPIResource):
         self,
         *,
         channel: Optional[SequenceNotStr[str]] | Omit = omit,
+        sandbox: bool | Omit = omit,
         template: message_send_params.Template | Omit = omit,
-        test_mode: bool | Omit = omit,
         to: SequenceNotStr[str] | Omit = omit,
         idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -145,10 +150,10 @@ class MessagesResource(SyncAPIResource):
               separate message per recipient. "sent" = auto-detect, "rcs" = reserved
               (skipped). Defaults to ["sent"] (auto-detect) if omitted.
 
-          template: Template reference (by id or name, with optional parameters)
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
+          template: Template reference (by id or name, with optional parameters)
 
           to: List of recipient phone numbers in E.164 format (multi-recipient fan-out)
 
@@ -160,14 +165,22 @@ class MessagesResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
         return self._post(
             "/v3/messages",
             body=maybe_transform(
                 {
                     "channel": channel,
+                    "sandbox": sandbox,
                     "template": template,
-                    "test_mode": test_mode,
                     "to": to,
                 },
                 message_send_params.MessageSendParams,
@@ -205,6 +218,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         self,
         id: str,
         *,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -228,6 +242,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._get(
             f"/v3/messages/{id}/activities",
             options=make_request_options(
@@ -240,6 +255,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         self,
         id: str,
         *,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -263,6 +279,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._get(
             f"/v3/messages/{id}",
             options=make_request_options(
@@ -275,10 +292,11 @@ class AsyncMessagesResource(AsyncAPIResource):
         self,
         *,
         channel: Optional[SequenceNotStr[str]] | Omit = omit,
+        sandbox: bool | Omit = omit,
         template: message_send_params.Template | Omit = omit,
-        test_mode: bool | Omit = omit,
         to: SequenceNotStr[str] | Omit = omit,
         idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -299,10 +317,10 @@ class AsyncMessagesResource(AsyncAPIResource):
               separate message per recipient. "sent" = auto-detect, "rcs" = reserved
               (skipped). Defaults to ["sent"] (auto-detect) if omitted.
 
-          template: Template reference (by id or name, with optional parameters)
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
-          test_mode: Test mode flag - when true, the operation is simulated without side effects
-              Useful for testing integrations without actual execution
+          template: Template reference (by id or name, with optional parameters)
 
           to: List of recipient phone numbers in E.164 format (multi-recipient fan-out)
 
@@ -314,14 +332,22 @@ class AsyncMessagesResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        extra_headers = {**strip_not_given({"Idempotency-Key": idempotency_key}), **(extra_headers or {})}
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
         return await self._post(
             "/v3/messages",
             body=await async_maybe_transform(
                 {
                     "channel": channel,
+                    "sandbox": sandbox,
                     "template": template,
-                    "test_mode": test_mode,
                     "to": to,
                 },
                 message_send_params.MessageSendParams,

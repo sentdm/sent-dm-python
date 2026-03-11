@@ -44,8 +44,8 @@ Methods:
 - <code title="get /v3/users/{userId}">client.users.<a href="./src/sent_dm/resources/users.py">retrieve</a>(user_id) -> <a href="./src/sent_dm/types/api_response_of_user.py">APIResponseOfUser</a></code>
 - <code title="get /v3/users">client.users.<a href="./src/sent_dm/resources/users.py">list</a>() -> <a href="./src/sent_dm/types/user_list_response.py">UserListResponse</a></code>
 - <code title="post /v3/users">client.users.<a href="./src/sent_dm/resources/users.py">invite</a>(\*\*<a href="src/sent_dm/types/user_invite_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_of_user.py">APIResponseOfUser</a></code>
-- <code title="delete /v3/users/{userId}">client.users.<a href="./src/sent_dm/resources/users.py">remove</a>(path_user_id, \*\*<a href="src/sent_dm/types/user_remove_params.py">params</a>) -> None</code>
-- <code title="patch /v3/users/{userId}">client.users.<a href="./src/sent_dm/resources/users.py">update_role</a>(path_user_id, \*\*<a href="src/sent_dm/types/user_update_role_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_of_user.py">APIResponseOfUser</a></code>
+- <code title="delete /v3/users/{userId}">client.users.<a href="./src/sent_dm/resources/users.py">remove</a>(user_id, \*\*<a href="src/sent_dm/types/user_remove_params.py">params</a>) -> None</code>
+- <code title="patch /v3/users/{userId}">client.users.<a href="./src/sent_dm/resources/users.py">update_role</a>(user_id, \*\*<a href="src/sent_dm/types/user_update_role_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_of_user.py">APIResponseOfUser</a></code>
 
 # Templates
 
@@ -88,9 +88,9 @@ Methods:
 
 - <code title="post /v3/profiles">client.profiles.<a href="./src/sent_dm/resources/profiles.py">create</a>(\*\*<a href="src/sent_dm/types/profile_create_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_of_profile_detail.py">APIResponseOfProfileDetail</a></code>
 - <code title="get /v3/profiles/{profileId}">client.profiles.<a href="./src/sent_dm/resources/profiles.py">retrieve</a>(profile_id) -> <a href="./src/sent_dm/types/api_response_of_profile_detail.py">APIResponseOfProfileDetail</a></code>
-- <code title="patch /v3/profiles/{profileId}">client.profiles.<a href="./src/sent_dm/resources/profiles.py">update</a>(path_profile_id, \*\*<a href="src/sent_dm/types/profile_update_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_of_profile_detail.py">APIResponseOfProfileDetail</a></code>
+- <code title="patch /v3/profiles/{profileId}">client.profiles.<a href="./src/sent_dm/resources/profiles.py">update</a>(profile_id, \*\*<a href="src/sent_dm/types/profile_update_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_of_profile_detail.py">APIResponseOfProfileDetail</a></code>
 - <code title="get /v3/profiles">client.profiles.<a href="./src/sent_dm/resources/profiles.py">list</a>() -> <a href="./src/sent_dm/types/profile_list_response.py">ProfileListResponse</a></code>
-- <code title="delete /v3/profiles/{profileId}">client.profiles.<a href="./src/sent_dm/resources/profiles.py">delete</a>(path_profile_id, \*\*<a href="src/sent_dm/types/profile_delete_params.py">params</a>) -> None</code>
+- <code title="delete /v3/profiles/{profileId}">client.profiles.<a href="./src/sent_dm/resources/profiles.py">delete</a>(profile_id, \*\*<a href="src/sent_dm/types/profile_delete_params.py">params</a>) -> None</code>
 - <code title="post /v3/profiles/{profileId}/complete">client.profiles.<a href="./src/sent_dm/resources/profiles.py">complete</a>(profile_id, \*\*<a href="src/sent_dm/types/profile_complete_params.py">params</a>) -> object</code>
 
 # Messages
@@ -110,18 +110,6 @@ Methods:
 - <code title="get /v3/messages/{id}/activities">client.messages.<a href="./src/sent_dm/resources/messages.py">retrieve_activities</a>(id) -> <a href="./src/sent_dm/types/message_retrieve_activities_response.py">MessageRetrieveActivitiesResponse</a></code>
 - <code title="get /v3/messages/{id}">client.messages.<a href="./src/sent_dm/resources/messages.py">retrieve_status</a>(id) -> <a href="./src/sent_dm/types/message_retrieve_status_response.py">MessageRetrieveStatusResponse</a></code>
 - <code title="post /v3/messages">client.messages.<a href="./src/sent_dm/resources/messages.py">send</a>(\*\*<a href="src/sent_dm/types/message_send_params.py">params</a>) -> <a href="./src/sent_dm/types/message_send_response.py">MessageSendResponse</a></code>
-
-# Lookup
-
-Types:
-
-```python
-from sent_dm.types import LookupRetrievePhoneInfoResponse
-```
-
-Methods:
-
-- <code title="get /v3/lookup/number/{phoneNumber}">client.lookup.<a href="./src/sent_dm/resources/lookup.py">retrieve_phone_info</a>(phone_number) -> <a href="./src/sent_dm/types/lookup_retrieve_phone_info_response.py">LookupRetrievePhoneInfoResponse</a></code>
 
 # Contacts
 
@@ -145,22 +133,13 @@ Types:
 
 ```python
 from sent_dm.types import (
-    APIResponseBrandWithKYC,
     BrandData,
     BrandWithKYC,
     DestinationCountry,
     TcrBrandRelationship,
     TcrVertical,
-    BrandListResponse,
 )
 ```
-
-Methods:
-
-- <code title="post /v3/brands">client.brands.<a href="./src/sent_dm/resources/brands/brands.py">create</a>(\*\*<a href="src/sent_dm/types/brand_create_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_brand_with_kyc.py">APIResponseBrandWithKYC</a></code>
-- <code title="put /v3/brands/{brandId}">client.brands.<a href="./src/sent_dm/resources/brands/brands.py">update</a>(brand_id, \*\*<a href="src/sent_dm/types/brand_update_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_brand_with_kyc.py">APIResponseBrandWithKYC</a></code>
-- <code title="get /v3/brands">client.brands.<a href="./src/sent_dm/resources/brands/brands.py">list</a>() -> <a href="./src/sent_dm/types/brand_list_response.py">BrandListResponse</a></code>
-- <code title="delete /v3/brands/{brandId}">client.brands.<a href="./src/sent_dm/resources/brands/brands.py">delete</a>(brand_id, \*\*<a href="src/sent_dm/types/brand_delete_params.py">params</a>) -> None</code>
 
 ## Campaigns
 
@@ -174,16 +153,8 @@ from sent_dm.types.brands import (
     MessagingUseCaseUs,
     SentDmServicesEndpointsCustomerApIv3ContractsRequestsCampaignsCampaignUseCaseData,
     TcrCampaignWithUseCases,
-    CampaignListResponse,
 )
 ```
-
-Methods:
-
-- <code title="post /v3/brands/{brandId}/campaigns">client.brands.campaigns.<a href="./src/sent_dm/resources/brands/campaigns.py">create</a>(brand_id, \*\*<a href="src/sent_dm/types/brands/campaign_create_params.py">params</a>) -> <a href="./src/sent_dm/types/brands/api_response_tcr_campaign_with_use_cases.py">APIResponseTcrCampaignWithUseCases</a></code>
-- <code title="put /v3/brands/{brandId}/campaigns/{campaignId}">client.brands.campaigns.<a href="./src/sent_dm/resources/brands/campaigns.py">update</a>(campaign_id, \*, brand_id, \*\*<a href="src/sent_dm/types/brands/campaign_update_params.py">params</a>) -> <a href="./src/sent_dm/types/brands/api_response_tcr_campaign_with_use_cases.py">APIResponseTcrCampaignWithUseCases</a></code>
-- <code title="get /v3/brands/{brandId}/campaigns">client.brands.campaigns.<a href="./src/sent_dm/resources/brands/campaigns.py">list</a>(brand_id) -> <a href="./src/sent_dm/types/brands/campaign_list_response.py">CampaignListResponse</a></code>
-- <code title="delete /v3/brands/{brandId}/campaigns/{campaignId}">client.brands.campaigns.<a href="./src/sent_dm/resources/brands/campaigns.py">delete</a>(campaign_id, \*, brand_id, \*\*<a href="src/sent_dm/types/brands/campaign_delete_params.py">params</a>) -> None</code>
 
 # Me
 

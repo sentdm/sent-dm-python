@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
-from typing_extensions import Required, TypedDict
+from typing_extensions import Required, Annotated, TypedDict
 
+from .._utils import PropertyInfo
 from .mutation_request_param import MutationRequestParam
 
 __all__ = ["ContactDeleteParams", "Body"]
@@ -12,6 +13,8 @@ __all__ = ["ContactDeleteParams", "Body"]
 class ContactDeleteParams(TypedDict, total=False):
     body: Required[Body]
     """Request to delete/dissociate a contact"""
+
+    x_profile_id: Annotated[str, PropertyInfo(alias="x-profile-id")]
 
 
 class Body(MutationRequestParam, total=False):
