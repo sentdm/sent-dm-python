@@ -32,14 +32,15 @@ from ._base_client import (
 )
 
 if TYPE_CHECKING:
-    from .resources import me, users, contacts, messages, profiles, webhooks, templates
+    from .resources import me, users, numbers, contacts, messages, profiles, webhooks, templates
     from .resources.me import MeResource, AsyncMeResource
     from .resources.users import UsersResource, AsyncUsersResource
+    from .resources.numbers import NumbersResource, AsyncNumbersResource
     from .resources.contacts import ContactsResource, AsyncContactsResource
     from .resources.messages import MessagesResource, AsyncMessagesResource
-    from .resources.profiles import ProfilesResource, AsyncProfilesResource
     from .resources.webhooks import WebhooksResource, AsyncWebhooksResource
     from .resources.templates import TemplatesResource, AsyncTemplatesResource
+    from .resources.profiles.profiles import ProfilesResource, AsyncProfilesResource
 
 __all__ = ["Timeout", "Transport", "ProxiesTypes", "RequestOptions", "SentDm", "AsyncSentDm", "Client", "AsyncClient"]
 
@@ -126,6 +127,13 @@ class SentDm(SyncAPIClient):
         from .resources.profiles import ProfilesResource
 
         return ProfilesResource(self)
+
+    @cached_property
+    def numbers(self) -> NumbersResource:
+        """Manage and lookup phone numbers"""
+        from .resources.numbers import NumbersResource
+
+        return NumbersResource(self)
 
     @cached_property
     def messages(self) -> MessagesResource:
@@ -350,6 +358,13 @@ class AsyncSentDm(AsyncAPIClient):
         return AsyncProfilesResource(self)
 
     @cached_property
+    def numbers(self) -> AsyncNumbersResource:
+        """Manage and lookup phone numbers"""
+        from .resources.numbers import AsyncNumbersResource
+
+        return AsyncNumbersResource(self)
+
+    @cached_property
     def messages(self) -> AsyncMessagesResource:
         """Send and track SMS and WhatsApp messages"""
         from .resources.messages import AsyncMessagesResource
@@ -523,6 +538,13 @@ class SentDmWithRawResponse:
         return ProfilesResourceWithRawResponse(self._client.profiles)
 
     @cached_property
+    def numbers(self) -> numbers.NumbersResourceWithRawResponse:
+        """Manage and lookup phone numbers"""
+        from .resources.numbers import NumbersResourceWithRawResponse
+
+        return NumbersResourceWithRawResponse(self._client.numbers)
+
+    @cached_property
     def messages(self) -> messages.MessagesResourceWithRawResponse:
         """Send and track SMS and WhatsApp messages"""
         from .resources.messages import MessagesResourceWithRawResponse
@@ -577,6 +599,13 @@ class AsyncSentDmWithRawResponse:
         from .resources.profiles import AsyncProfilesResourceWithRawResponse
 
         return AsyncProfilesResourceWithRawResponse(self._client.profiles)
+
+    @cached_property
+    def numbers(self) -> numbers.AsyncNumbersResourceWithRawResponse:
+        """Manage and lookup phone numbers"""
+        from .resources.numbers import AsyncNumbersResourceWithRawResponse
+
+        return AsyncNumbersResourceWithRawResponse(self._client.numbers)
 
     @cached_property
     def messages(self) -> messages.AsyncMessagesResourceWithRawResponse:
@@ -635,6 +664,13 @@ class SentDmWithStreamedResponse:
         return ProfilesResourceWithStreamingResponse(self._client.profiles)
 
     @cached_property
+    def numbers(self) -> numbers.NumbersResourceWithStreamingResponse:
+        """Manage and lookup phone numbers"""
+        from .resources.numbers import NumbersResourceWithStreamingResponse
+
+        return NumbersResourceWithStreamingResponse(self._client.numbers)
+
+    @cached_property
     def messages(self) -> messages.MessagesResourceWithStreamingResponse:
         """Send and track SMS and WhatsApp messages"""
         from .resources.messages import MessagesResourceWithStreamingResponse
@@ -689,6 +725,13 @@ class AsyncSentDmWithStreamedResponse:
         from .resources.profiles import AsyncProfilesResourceWithStreamingResponse
 
         return AsyncProfilesResourceWithStreamingResponse(self._client.profiles)
+
+    @cached_property
+    def numbers(self) -> numbers.AsyncNumbersResourceWithStreamingResponse:
+        """Manage and lookup phone numbers"""
+        from .resources.numbers import AsyncNumbersResourceWithStreamingResponse
+
+        return AsyncNumbersResourceWithStreamingResponse(self._client.numbers)
 
     @cached_property
     def messages(self) -> messages.AsyncMessagesResourceWithStreamingResponse:

@@ -6,32 +6,47 @@ from typing import Optional
 
 import httpx
 
-from ..types import (
+from ...types import (
     profile_create_params,
     profile_delete_params,
     profile_update_params,
-    profile_complete_params,
+    profile_complete_setup_params,
 )
-from .._types import Body, Omit, Query, Headers, NoneType, NotGiven, omit, not_given
-from .._utils import maybe_transform, strip_not_given, async_maybe_transform
-from .._compat import cached_property
-from .._resource import SyncAPIResource, AsyncAPIResource
-from .._response import (
+from ..._types import Body, Omit, Query, Headers, NoneType, NotGiven, omit, not_given
+from ..._utils import maybe_transform, strip_not_given, async_maybe_transform
+from ..._compat import cached_property
+from .campaigns import (
+    CampaignsResource,
+    AsyncCampaignsResource,
+    CampaignsResourceWithRawResponse,
+    AsyncCampaignsResourceWithRawResponse,
+    CampaignsResourceWithStreamingResponse,
+    AsyncCampaignsResourceWithStreamingResponse,
+)
+from ..._resource import SyncAPIResource, AsyncAPIResource
+from ..._response import (
     to_raw_response_wrapper,
     to_streamed_response_wrapper,
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from .._base_client import make_request_options
-from ..types.brand_data_param import BrandDataParam
-from ..types.profile_list_response import ProfileListResponse
-from ..types.api_response_of_profile_detail import APIResponseOfProfileDetail
+from ..._base_client import make_request_options
+from ...types.payment_details_param import PaymentDetailsParam
+from ...types.profile_list_response import ProfileListResponse
+from ...types.brands_brand_data_param import BrandsBrandDataParam
+from ...types.billing_contact_info_param import BillingContactInfoParam
+from ...types.api_response_of_profile_detail import APIResponseOfProfileDetail
 
 __all__ = ["ProfilesResource", "AsyncProfilesResource"]
 
 
 class ProfilesResource(SyncAPIResource):
     """Manage organization profiles"""
+
+    @cached_property
+    def campaigns(self) -> CampaignsResource:
+        """Manage organization profiles"""
+        return CampaignsResource(self._client)
 
     @cached_property
     def with_raw_response(self) -> ProfilesResourceWithRawResponse:
@@ -57,9 +72,9 @@ class ProfilesResource(SyncAPIResource):
         *,
         allow_contact_sharing: bool | Omit = omit,
         allow_template_sharing: bool | Omit = omit,
-        billing_contact: Optional[profile_create_params.BillingContact] | Omit = omit,
+        billing_contact: Optional[BillingContactInfoParam] | Omit = omit,
         billing_model: Optional[str] | Omit = omit,
-        brand: Optional[BrandDataParam] | Omit = omit,
+        brand: Optional[BrandsBrandDataParam] | Omit = omit,
         description: Optional[str] | Omit = omit,
         icon: Optional[str] | Omit = omit,
         inherit_contacts: Optional[bool] | Omit = omit,
@@ -67,7 +82,7 @@ class ProfilesResource(SyncAPIResource):
         inherit_tcr_campaign: Optional[bool] | Omit = omit,
         inherit_templates: Optional[bool] | Omit = omit,
         name: str | Omit = omit,
-        payment_details: Optional[profile_create_params.PaymentDetails] | Omit = omit,
+        payment_details: Optional[PaymentDetailsParam] | Omit = omit,
         sandbox: bool | Omit = omit,
         short_name: Optional[str] | Omit = omit,
         whatsapp_business_account: Optional[profile_create_params.WhatsappBusinessAccount] | Omit = omit,
@@ -263,9 +278,9 @@ class ProfilesResource(SyncAPIResource):
         allow_contact_sharing: Optional[bool] | Omit = omit,
         allow_number_change_during_onboarding: Optional[bool] | Omit = omit,
         allow_template_sharing: Optional[bool] | Omit = omit,
-        billing_contact: Optional[profile_update_params.BillingContact] | Omit = omit,
+        billing_contact: Optional[BillingContactInfoParam] | Omit = omit,
         billing_model: Optional[str] | Omit = omit,
-        brand: Optional[BrandDataParam] | Omit = omit,
+        brand: Optional[BrandsBrandDataParam] | Omit = omit,
         description: Optional[str] | Omit = omit,
         icon: Optional[str] | Omit = omit,
         inherit_contacts: Optional[bool] | Omit = omit,
@@ -273,7 +288,7 @@ class ProfilesResource(SyncAPIResource):
         inherit_tcr_campaign: Optional[bool] | Omit = omit,
         inherit_templates: Optional[bool] | Omit = omit,
         name: Optional[str] | Omit = omit,
-        payment_details: Optional[profile_update_params.PaymentDetails] | Omit = omit,
+        payment_details: Optional[PaymentDetailsParam] | Omit = omit,
         sandbox: bool | Omit = omit,
         sending_phone_number: Optional[str] | Omit = omit,
         sending_phone_number_profile_id: Optional[str] | Omit = omit,
@@ -496,7 +511,7 @@ class ProfilesResource(SyncAPIResource):
             cast_to=NoneType,
         )
 
-    def complete(
+    def complete_setup(
         self,
         profile_id: str,
         *,
@@ -564,7 +579,7 @@ class ProfilesResource(SyncAPIResource):
                     "web_hook_url": web_hook_url,
                     "sandbox": sandbox,
                 },
-                profile_complete_params.ProfileCompleteParams,
+                profile_complete_setup_params.ProfileCompleteSetupParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -575,6 +590,11 @@ class ProfilesResource(SyncAPIResource):
 
 class AsyncProfilesResource(AsyncAPIResource):
     """Manage organization profiles"""
+
+    @cached_property
+    def campaigns(self) -> AsyncCampaignsResource:
+        """Manage organization profiles"""
+        return AsyncCampaignsResource(self._client)
 
     @cached_property
     def with_raw_response(self) -> AsyncProfilesResourceWithRawResponse:
@@ -600,9 +620,9 @@ class AsyncProfilesResource(AsyncAPIResource):
         *,
         allow_contact_sharing: bool | Omit = omit,
         allow_template_sharing: bool | Omit = omit,
-        billing_contact: Optional[profile_create_params.BillingContact] | Omit = omit,
+        billing_contact: Optional[BillingContactInfoParam] | Omit = omit,
         billing_model: Optional[str] | Omit = omit,
-        brand: Optional[BrandDataParam] | Omit = omit,
+        brand: Optional[BrandsBrandDataParam] | Omit = omit,
         description: Optional[str] | Omit = omit,
         icon: Optional[str] | Omit = omit,
         inherit_contacts: Optional[bool] | Omit = omit,
@@ -610,7 +630,7 @@ class AsyncProfilesResource(AsyncAPIResource):
         inherit_tcr_campaign: Optional[bool] | Omit = omit,
         inherit_templates: Optional[bool] | Omit = omit,
         name: str | Omit = omit,
-        payment_details: Optional[profile_create_params.PaymentDetails] | Omit = omit,
+        payment_details: Optional[PaymentDetailsParam] | Omit = omit,
         sandbox: bool | Omit = omit,
         short_name: Optional[str] | Omit = omit,
         whatsapp_business_account: Optional[profile_create_params.WhatsappBusinessAccount] | Omit = omit,
@@ -806,9 +826,9 @@ class AsyncProfilesResource(AsyncAPIResource):
         allow_contact_sharing: Optional[bool] | Omit = omit,
         allow_number_change_during_onboarding: Optional[bool] | Omit = omit,
         allow_template_sharing: Optional[bool] | Omit = omit,
-        billing_contact: Optional[profile_update_params.BillingContact] | Omit = omit,
+        billing_contact: Optional[BillingContactInfoParam] | Omit = omit,
         billing_model: Optional[str] | Omit = omit,
-        brand: Optional[BrandDataParam] | Omit = omit,
+        brand: Optional[BrandsBrandDataParam] | Omit = omit,
         description: Optional[str] | Omit = omit,
         icon: Optional[str] | Omit = omit,
         inherit_contacts: Optional[bool] | Omit = omit,
@@ -816,7 +836,7 @@ class AsyncProfilesResource(AsyncAPIResource):
         inherit_tcr_campaign: Optional[bool] | Omit = omit,
         inherit_templates: Optional[bool] | Omit = omit,
         name: Optional[str] | Omit = omit,
-        payment_details: Optional[profile_update_params.PaymentDetails] | Omit = omit,
+        payment_details: Optional[PaymentDetailsParam] | Omit = omit,
         sandbox: bool | Omit = omit,
         sending_phone_number: Optional[str] | Omit = omit,
         sending_phone_number_profile_id: Optional[str] | Omit = omit,
@@ -1039,7 +1059,7 @@ class AsyncProfilesResource(AsyncAPIResource):
             cast_to=NoneType,
         )
 
-    async def complete(
+    async def complete_setup(
         self,
         profile_id: str,
         *,
@@ -1107,7 +1127,7 @@ class AsyncProfilesResource(AsyncAPIResource):
                     "web_hook_url": web_hook_url,
                     "sandbox": sandbox,
                 },
-                profile_complete_params.ProfileCompleteParams,
+                profile_complete_setup_params.ProfileCompleteSetupParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -1135,9 +1155,14 @@ class ProfilesResourceWithRawResponse:
         self.delete = to_raw_response_wrapper(
             profiles.delete,
         )
-        self.complete = to_raw_response_wrapper(
-            profiles.complete,
+        self.complete_setup = to_raw_response_wrapper(
+            profiles.complete_setup,
         )
+
+    @cached_property
+    def campaigns(self) -> CampaignsResourceWithRawResponse:
+        """Manage organization profiles"""
+        return CampaignsResourceWithRawResponse(self._profiles.campaigns)
 
 
 class AsyncProfilesResourceWithRawResponse:
@@ -1159,9 +1184,14 @@ class AsyncProfilesResourceWithRawResponse:
         self.delete = async_to_raw_response_wrapper(
             profiles.delete,
         )
-        self.complete = async_to_raw_response_wrapper(
-            profiles.complete,
+        self.complete_setup = async_to_raw_response_wrapper(
+            profiles.complete_setup,
         )
+
+    @cached_property
+    def campaigns(self) -> AsyncCampaignsResourceWithRawResponse:
+        """Manage organization profiles"""
+        return AsyncCampaignsResourceWithRawResponse(self._profiles.campaigns)
 
 
 class ProfilesResourceWithStreamingResponse:
@@ -1183,9 +1213,14 @@ class ProfilesResourceWithStreamingResponse:
         self.delete = to_streamed_response_wrapper(
             profiles.delete,
         )
-        self.complete = to_streamed_response_wrapper(
-            profiles.complete,
+        self.complete_setup = to_streamed_response_wrapper(
+            profiles.complete_setup,
         )
+
+    @cached_property
+    def campaigns(self) -> CampaignsResourceWithStreamingResponse:
+        """Manage organization profiles"""
+        return CampaignsResourceWithStreamingResponse(self._profiles.campaigns)
 
 
 class AsyncProfilesResourceWithStreamingResponse:
@@ -1207,6 +1242,11 @@ class AsyncProfilesResourceWithStreamingResponse:
         self.delete = async_to_streamed_response_wrapper(
             profiles.delete,
         )
-        self.complete = async_to_streamed_response_wrapper(
-            profiles.complete,
+        self.complete_setup = async_to_streamed_response_wrapper(
+            profiles.complete_setup,
         )
+
+    @cached_property
+    def campaigns(self) -> AsyncCampaignsResourceWithStreamingResponse:
+        """Manage organization profiles"""
+        return AsyncCampaignsResourceWithStreamingResponse(self._profiles.campaigns)

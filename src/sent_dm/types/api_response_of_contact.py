@@ -1,30 +1,19 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import List, Optional
+from typing import Optional
 
 from .._models import BaseModel
 from .api_meta import APIMeta
 from .api_error import APIError
-from .pagination_meta import PaginationMeta
 from .contact_response import ContactResponse
 
-__all__ = ["ContactListResponse", "Data"]
+__all__ = ["APIResponseOfContact"]
 
 
-class Data(BaseModel):
-    """The response data (null if error)"""
-
-    contacts: Optional[List[ContactResponse]] = None
-    """List of contacts"""
-
-    pagination: Optional[PaginationMeta] = None
-    """Pagination metadata"""
-
-
-class ContactListResponse(BaseModel):
+class APIResponseOfContact(BaseModel):
     """Standard API response envelope for all v3 endpoints"""
 
-    data: Optional[Data] = None
+    data: Optional[ContactResponse] = None
     """The response data (null if error)"""
 
     error: Optional[APIError] = None

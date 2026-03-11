@@ -10,7 +10,7 @@ from .tcr_vertical import TcrVertical
 from .tcr_brand_relationship import TcrBrandRelationship
 from .destination_country_param import DestinationCountryParam
 
-__all__ = ["BrandDataParam", "Compliance", "Contact", "Business"]
+__all__ = ["BrandsBrandDataParam", "Compliance", "Contact", "Business"]
 
 
 class Compliance(TypedDict, total=False):
@@ -105,7 +105,7 @@ class Business(TypedDict, total=False):
     """Business website URL"""
 
 
-class BrandDataParam(TypedDict, total=False):
+class BrandsBrandDataParam(TypedDict, total=False):
     """Brand and KYC data grouped into contact, business, and compliance sections"""
 
     compliance: Required[Compliance]

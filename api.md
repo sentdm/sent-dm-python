@@ -1,3 +1,9 @@
+# Shared Types
+
+```python
+from sent_dm.types import BaseDto
+```
+
 # Webhooks
 
 Types:
@@ -7,7 +13,7 @@ from sent_dm.types import (
     APIError,
     APIMeta,
     APIResponseWebhook,
-    MutationRequest,
+    MutationRequestBase,
     PaginationMeta,
     WebhookResponse,
     WebhookListResponse,
@@ -54,12 +60,6 @@ Types:
 ```python
 from sent_dm.types import (
     APIResponseTemplate,
-    SentDmServicesCommonContractsPocOsAuthenticationConfig,
-    SentDmServicesCommonContractsPocOsTemplateBody,
-    SentDmServicesCommonContractsPocOsTemplateButton,
-    SentDmServicesCommonContractsPocOsTemplateButtonProps,
-    SentDmServicesCommonContractsPocOsTemplateFooter,
-    SentDmServicesCommonContractsPocOsTemplateHeader,
     Template,
     TemplateBodyContent,
     TemplateDefinition,
@@ -81,17 +81,60 @@ Methods:
 Types:
 
 ```python
-from sent_dm.types import APIResponseOfProfileDetail, ProfileDetail, ProfileListResponse
+from sent_dm.types import (
+    APIResponseOfProfileDetail,
+    BillingContactInfo,
+    BrandsBrandData,
+    DestinationCountry,
+    PaymentDetails,
+    ProfileDetail,
+    TcrBrandRelationship,
+    TcrVertical,
+    ProfileListResponse,
+)
 ```
 
 Methods:
 
-- <code title="post /v3/profiles">client.profiles.<a href="./src/sent_dm/resources/profiles.py">create</a>(\*\*<a href="src/sent_dm/types/profile_create_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_of_profile_detail.py">APIResponseOfProfileDetail</a></code>
-- <code title="get /v3/profiles/{profileId}">client.profiles.<a href="./src/sent_dm/resources/profiles.py">retrieve</a>(profile_id) -> <a href="./src/sent_dm/types/api_response_of_profile_detail.py">APIResponseOfProfileDetail</a></code>
-- <code title="patch /v3/profiles/{profileId}">client.profiles.<a href="./src/sent_dm/resources/profiles.py">update</a>(profile_id, \*\*<a href="src/sent_dm/types/profile_update_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_of_profile_detail.py">APIResponseOfProfileDetail</a></code>
-- <code title="get /v3/profiles">client.profiles.<a href="./src/sent_dm/resources/profiles.py">list</a>() -> <a href="./src/sent_dm/types/profile_list_response.py">ProfileListResponse</a></code>
-- <code title="delete /v3/profiles/{profileId}">client.profiles.<a href="./src/sent_dm/resources/profiles.py">delete</a>(profile_id, \*\*<a href="src/sent_dm/types/profile_delete_params.py">params</a>) -> None</code>
-- <code title="post /v3/profiles/{profileId}/complete">client.profiles.<a href="./src/sent_dm/resources/profiles.py">complete</a>(profile_id, \*\*<a href="src/sent_dm/types/profile_complete_params.py">params</a>) -> object</code>
+- <code title="post /v3/profiles">client.profiles.<a href="./src/sent_dm/resources/profiles/profiles.py">create</a>(\*\*<a href="src/sent_dm/types/profile_create_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_of_profile_detail.py">APIResponseOfProfileDetail</a></code>
+- <code title="get /v3/profiles/{profileId}">client.profiles.<a href="./src/sent_dm/resources/profiles/profiles.py">retrieve</a>(profile_id) -> <a href="./src/sent_dm/types/api_response_of_profile_detail.py">APIResponseOfProfileDetail</a></code>
+- <code title="patch /v3/profiles/{profileId}">client.profiles.<a href="./src/sent_dm/resources/profiles/profiles.py">update</a>(profile_id, \*\*<a href="src/sent_dm/types/profile_update_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_of_profile_detail.py">APIResponseOfProfileDetail</a></code>
+- <code title="get /v3/profiles">client.profiles.<a href="./src/sent_dm/resources/profiles/profiles.py">list</a>() -> <a href="./src/sent_dm/types/profile_list_response.py">ProfileListResponse</a></code>
+- <code title="delete /v3/profiles/{profileId}">client.profiles.<a href="./src/sent_dm/resources/profiles/profiles.py">delete</a>(profile_id, \*\*<a href="src/sent_dm/types/profile_delete_params.py">params</a>) -> None</code>
+- <code title="post /v3/profiles/{profileId}/complete">client.profiles.<a href="./src/sent_dm/resources/profiles/profiles.py">complete_setup</a>(profile_id, \*\*<a href="src/sent_dm/types/profile_complete_setup_params.py">params</a>) -> object</code>
+
+## Campaigns
+
+Types:
+
+```python
+from sent_dm.types.profiles import (
+    APIResponseOfTcrCampaignWithUseCases,
+    CampaignData,
+    MessagingUseCaseUs,
+    TcrCampaignWithUseCases,
+    CampaignListResponse,
+)
+```
+
+Methods:
+
+- <code title="post /v3/profiles/{profileId}/campaigns">client.profiles.campaigns.<a href="./src/sent_dm/resources/profiles/campaigns.py">create</a>(profile_id, \*\*<a href="src/sent_dm/types/profiles/campaign_create_params.py">params</a>) -> <a href="./src/sent_dm/types/profiles/api_response_of_tcr_campaign_with_use_cases.py">APIResponseOfTcrCampaignWithUseCases</a></code>
+- <code title="put /v3/profiles/{profileId}/campaigns/{campaignId}">client.profiles.campaigns.<a href="./src/sent_dm/resources/profiles/campaigns.py">update</a>(campaign_id, \*, profile_id, \*\*<a href="src/sent_dm/types/profiles/campaign_update_params.py">params</a>) -> <a href="./src/sent_dm/types/profiles/api_response_of_tcr_campaign_with_use_cases.py">APIResponseOfTcrCampaignWithUseCases</a></code>
+- <code title="get /v3/profiles/{profileId}/campaigns">client.profiles.campaigns.<a href="./src/sent_dm/resources/profiles/campaigns.py">list</a>(profile_id) -> <a href="./src/sent_dm/types/profiles/campaign_list_response.py">CampaignListResponse</a></code>
+- <code title="delete /v3/profiles/{profileId}/campaigns/{campaignId}">client.profiles.campaigns.<a href="./src/sent_dm/resources/profiles/campaigns.py">delete</a>(campaign_id, \*, profile_id, \*\*<a href="src/sent_dm/types/profiles/campaign_delete_params.py">params</a>) -> None</code>
+
+# Numbers
+
+Types:
+
+```python
+from sent_dm.types import NumberLookupResponse
+```
+
+Methods:
+
+- <code title="get /v3/numbers/lookup/{phoneNumber}">client.numbers.<a href="./src/sent_dm/resources/numbers.py">lookup</a>(phone_number) -> <a href="./src/sent_dm/types/number_lookup_response.py">NumberLookupResponse</a></code>
 
 # Messages
 
@@ -116,45 +159,16 @@ Methods:
 Types:
 
 ```python
-from sent_dm.types import APIResponseContact, Contact, ContactListResponse
+from sent_dm.types import APIResponseOfContact, ContactResponse, ContactListResponse
 ```
 
 Methods:
 
-- <code title="post /v3/contacts">client.contacts.<a href="./src/sent_dm/resources/contacts.py">create</a>(\*\*<a href="src/sent_dm/types/contact_create_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_contact.py">APIResponseContact</a></code>
-- <code title="get /v3/contacts/{id}">client.contacts.<a href="./src/sent_dm/resources/contacts.py">retrieve</a>(id) -> <a href="./src/sent_dm/types/api_response_contact.py">APIResponseContact</a></code>
-- <code title="patch /v3/contacts/{id}">client.contacts.<a href="./src/sent_dm/resources/contacts.py">update</a>(id, \*\*<a href="src/sent_dm/types/contact_update_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_contact.py">APIResponseContact</a></code>
+- <code title="post /v3/contacts">client.contacts.<a href="./src/sent_dm/resources/contacts.py">create</a>(\*\*<a href="src/sent_dm/types/contact_create_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_of_contact.py">APIResponseOfContact</a></code>
+- <code title="get /v3/contacts/{id}">client.contacts.<a href="./src/sent_dm/resources/contacts.py">retrieve</a>(id) -> <a href="./src/sent_dm/types/api_response_of_contact.py">APIResponseOfContact</a></code>
+- <code title="patch /v3/contacts/{id}">client.contacts.<a href="./src/sent_dm/resources/contacts.py">update</a>(id, \*\*<a href="src/sent_dm/types/contact_update_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_of_contact.py">APIResponseOfContact</a></code>
 - <code title="get /v3/contacts">client.contacts.<a href="./src/sent_dm/resources/contacts.py">list</a>(\*\*<a href="src/sent_dm/types/contact_list_params.py">params</a>) -> <a href="./src/sent_dm/types/contact_list_response.py">ContactListResponse</a></code>
 - <code title="delete /v3/contacts/{id}">client.contacts.<a href="./src/sent_dm/resources/contacts.py">delete</a>(id, \*\*<a href="src/sent_dm/types/contact_delete_params.py">params</a>) -> None</code>
-
-# Brands
-
-Types:
-
-```python
-from sent_dm.types import (
-    BrandData,
-    BrandWithKYC,
-    DestinationCountry,
-    TcrBrandRelationship,
-    TcrVertical,
-)
-```
-
-## Campaigns
-
-Types:
-
-```python
-from sent_dm.types.brands import (
-    APIResponseTcrCampaignWithUseCases,
-    BaseDto,
-    CampaignData,
-    MessagingUseCaseUs,
-    SentDmServicesEndpointsCustomerApIv3ContractsRequestsCampaignsCampaignUseCaseData,
-    TcrCampaignWithUseCases,
-)
-```
 
 # Me
 
