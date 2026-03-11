@@ -60,6 +60,12 @@ Types:
 ```python
 from sent_dm.types import (
     APIResponseTemplate,
+    SentDmServicesCommonContractsPocOsAuthenticationConfig,
+    SentDmServicesCommonContractsPocOsTemplateBody,
+    SentDmServicesCommonContractsPocOsTemplateButton,
+    SentDmServicesCommonContractsPocOsTemplateButtonProps,
+    SentDmServicesCommonContractsPocOsTemplateFooter,
+    SentDmServicesCommonContractsPocOsTemplateHeader,
     Template,
     TemplateBodyContent,
     TemplateDefinition,
@@ -88,6 +94,9 @@ from sent_dm.types import (
     DestinationCountry,
     PaymentDetails,
     ProfileDetail,
+    SentDmServicesEndpointsCustomerApIv3ContractsRequestsBrandsBrandBusinessInfo,
+    SentDmServicesEndpointsCustomerApIv3ContractsRequestsBrandsBrandComplianceInfo,
+    SentDmServicesEndpointsCustomerApIv3ContractsRequestsBrandsBrandContactInfo,
     TcrBrandRelationship,
     TcrVertical,
     ProfileListResponse,
@@ -112,6 +121,7 @@ from sent_dm.types.profiles import (
     APIResponseOfTcrCampaignWithUseCases,
     CampaignData,
     MessagingUseCaseUs,
+    SentDmServicesEndpointsCustomerApIv3ContractsRequestsCampaignsCampaignUseCaseData,
     TcrCampaignWithUseCases,
     CampaignListResponse,
 )
