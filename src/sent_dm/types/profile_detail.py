@@ -13,10 +13,7 @@ __all__ = ["ProfileDetail", "BillingContact", "Brand", "BrandBusiness", "BrandCo
 
 
 class BillingContact(BaseModel):
-    """Billing contact for this profile.
-
-    Present when billing_model is "profile" or "profile_and_organization".
-    """
+    """Billing contact info returned in profile responses"""
 
     address: Optional[str] = None
 
@@ -68,7 +65,6 @@ class BrandCompliance(BaseModel):
     """Compliance and TCR-related information"""
 
     brand_relationship: Optional[TcrBrandRelationship] = None
-    """Brand relationship level with TCR"""
 
     destination_countries: Optional[List[DestinationCountry]] = None
     """List of destination countries for messaging"""
@@ -89,7 +85,6 @@ class BrandCompliance(BaseModel):
     """Primary messaging use case description"""
 
     vertical: Optional[TcrVertical] = None
-    """Business vertical/industry category"""
 
 
 class BrandContact(BaseModel):
@@ -115,10 +110,8 @@ class BrandContact(BaseModel):
 
 
 class Brand(BaseModel):
-    """Brand associated with this profile.
-
-    Null if no brand has been configured yet.
-    Includes KYC information and TCR registration status.
+    """
+    Brand response with nested contact, business, and compliance sections — mirrors the request structure.
     """
 
     id: Optional[str] = None
@@ -140,13 +133,11 @@ class Brand(BaseModel):
     """CSP (Campaign Service Provider) ID"""
 
     identity_status: Optional[Literal["SELF_DECLARED", "UNVERIFIED", "VERIFIED", "VETTED_VERIFIED"]] = None
-    """TCR brand identity verification status"""
 
     is_inherited: Optional[bool] = None
     """Whether this brand is inherited from the parent organization"""
 
     status: Optional[Literal["ACTIVE", "INACTIVE", "SUSPENDED"]] = None
-    """TCR brand status"""
 
     submitted_at: Optional[datetime] = None
     """When the brand was submitted to TCR"""
@@ -180,19 +171,15 @@ class ProfileDetail(BaseModel):
     """Whether templates are shared across profiles in the organization"""
 
     billing_contact: Optional[BillingContact] = None
-    """Billing contact for this profile.
-
-    Present when billing_model is "profile" or "profile_and_organization".
-    """
+    """Billing contact info returned in profile responses"""
 
     billing_model: Optional[str] = None
     """Billing model: profile, organization, or profile_and_organization"""
 
     brand: Optional[Brand] = None
-    """Brand associated with this profile.
-
-    Null if no brand has been configured yet. Includes KYC information and TCR
-    registration status.
+    """
+    Brand response with nested contact, business, and compliance sections — mirrors
+    the request structure.
     """
 
     created_at: Optional[datetime] = None

@@ -12,7 +12,7 @@ __all__ = ["CampaignCreateParams"]
 
 class CampaignCreateParams(TypedDict, total=False):
     campaign: Required[CampaignDataParam]
-    """Campaign data"""
+    """Campaign data for create or update operation"""
 
     sandbox: bool
     """

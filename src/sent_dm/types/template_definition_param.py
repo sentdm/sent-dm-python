@@ -31,16 +31,13 @@ class TemplateDefinitionParam(TypedDict, total=False):
     """
 
     body: Required[SentDmServicesCommonContractsPocOsTemplateBodyParam]
-    """
-    Required template body with content for different channels (multi-channel,
-    SMS-specific, or WhatsApp-specific)
-    """
+    """Body section of a message template with channel-specific content"""
 
     authentication_config: Annotated[
         Optional[SentDmServicesCommonContractsPocOsAuthenticationConfigParam],
         PropertyInfo(alias="authenticationConfig"),
     ]
-    """Configuration specific to AUTHENTICATION category templates (optional)"""
+    """Configuration for AUTHENTICATION category templates"""
 
     buttons: Optional[Iterable[SentDmServicesCommonContractsPocOsTemplateButtonParam]]
     """Optional list of interactive buttons (e.g., quick replies, URLs, phone numbers)"""
@@ -49,7 +46,7 @@ class TemplateDefinitionParam(TypedDict, total=False):
     """The version of the template definition format"""
 
     footer: Optional[SentDmServicesCommonContractsPocOsTemplateFooterParam]
-    """Optional template footer with optional variables"""
+    """Footer section of a message template"""
 
     header: Optional[SentDmServicesCommonContractsPocOsTemplateHeaderParam]
-    """Optional template header with optional variables"""
+    """Header section of a message template"""

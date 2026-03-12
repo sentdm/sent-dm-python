@@ -8,7 +8,7 @@ __all__ = ["PaginationMeta", "Cursors"]
 
 
 class Cursors(BaseModel):
-    """Cursor-based pagination (optional)"""
+    """Cursor-based pagination pointers"""
 
     after: Optional[str] = None
     """Cursor to fetch the next page"""
@@ -21,7 +21,7 @@ class PaginationMeta(BaseModel):
     """Pagination metadata for list responses"""
 
     cursors: Optional[Cursors] = None
-    """Cursor-based pagination (optional)"""
+    """Cursor-based pagination pointers"""
 
     has_more: Optional[bool] = None
     """Whether there are more pages after this one"""

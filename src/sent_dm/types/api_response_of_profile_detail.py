@@ -14,13 +14,13 @@ class APIResponseOfProfileDetail(BaseModel):
     """Standard API response envelope for all v3 endpoints"""
 
     data: Optional[ProfileDetail] = None
-    """The response data (null if error)"""
+    """Detailed profile response for v3 API"""
 
     error: Optional[APIError] = None
-    """Error details (null if successful)"""
+    """Error information"""
 
     meta: Optional[APIMeta] = None
-    """Metadata about the request and response"""
+    """Request and response metadata"""
 
     success: Optional[bool] = None
     """Indicates whether the request was successful"""

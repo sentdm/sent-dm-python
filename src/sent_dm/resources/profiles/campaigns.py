@@ -66,7 +66,7 @@ class CampaignsResource(SyncAPIResource):
         campaign must include at least one use case with sample messages.
 
         Args:
-          campaign: Campaign data
+          campaign: Campaign data for create or update operation
 
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
@@ -127,7 +127,7 @@ class CampaignsResource(SyncAPIResource):
         update campaigns that have already been submitted to TCR.
 
         Args:
-          campaign: Campaign data
+          campaign: Campaign data for create or update operation
 
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
@@ -293,7 +293,7 @@ class AsyncCampaignsResource(AsyncAPIResource):
         campaign must include at least one use case with sample messages.
 
         Args:
-          campaign: Campaign data
+          campaign: Campaign data for create or update operation
 
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
@@ -354,7 +354,7 @@ class AsyncCampaignsResource(AsyncAPIResource):
         update campaigns that have already been submitted to TCR.
 
         Args:
-          campaign: Campaign data
+          campaign: Campaign data for create or update operation
 
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution

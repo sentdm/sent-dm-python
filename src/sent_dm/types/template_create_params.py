@@ -22,7 +22,10 @@ class TemplateCreateParams(TypedDict, total=False):
     """Source of template creation (default: from-api)"""
 
     definition: TemplateDefinitionParam
-    """Template definition including header, body, footer, and buttons"""
+    """
+    Complete definition of a message template including header, body, footer, and
+    buttons
+    """
 
     language: Optional[str]
     """Template language code (e.g., en_US) (optional, auto-detected if not provided)"""
