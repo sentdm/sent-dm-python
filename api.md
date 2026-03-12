@@ -1,9 +1,3 @@
-# Shared Types
-
-```python
-from sent_dm.types import BaseDto
-```
-
 # Webhooks
 
 Types:
@@ -13,7 +7,7 @@ from sent_dm.types import (
     APIError,
     APIMeta,
     APIResponseWebhook,
-    MutationRequestBase,
+    MutationRequest,
     PaginationMeta,
     WebhookResponse,
     WebhookListResponse,
@@ -60,12 +54,6 @@ Types:
 ```python
 from sent_dm.types import (
     APIResponseTemplate,
-    SentDmServicesCommonContractsPocOsAuthenticationConfig,
-    SentDmServicesCommonContractsPocOsTemplateBody,
-    SentDmServicesCommonContractsPocOsTemplateButton,
-    SentDmServicesCommonContractsPocOsTemplateButtonProps,
-    SentDmServicesCommonContractsPocOsTemplateFooter,
-    SentDmServicesCommonContractsPocOsTemplateHeader,
     Template,
     TemplateBodyContent,
     TemplateDefinition,
@@ -94,9 +82,6 @@ from sent_dm.types import (
     DestinationCountry,
     PaymentDetails,
     ProfileDetail,
-    SentDmServicesEndpointsCustomerApIv3ContractsRequestsBrandsBrandBusinessInfo,
-    SentDmServicesEndpointsCustomerApIv3ContractsRequestsBrandsBrandComplianceInfo,
-    SentDmServicesEndpointsCustomerApIv3ContractsRequestsBrandsBrandContactInfo,
     TcrBrandRelationship,
     TcrVertical,
     ProfileListResponse,
@@ -110,7 +95,7 @@ Methods:
 - <code title="patch /v3/profiles/{profileId}">client.profiles.<a href="./src/sent_dm/resources/profiles/profiles.py">update</a>(profile_id, \*\*<a href="src/sent_dm/types/profile_update_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_of_profile_detail.py">APIResponseOfProfileDetail</a></code>
 - <code title="get /v3/profiles">client.profiles.<a href="./src/sent_dm/resources/profiles/profiles.py">list</a>() -> <a href="./src/sent_dm/types/profile_list_response.py">ProfileListResponse</a></code>
 - <code title="delete /v3/profiles/{profileId}">client.profiles.<a href="./src/sent_dm/resources/profiles/profiles.py">delete</a>(profile_id, \*\*<a href="src/sent_dm/types/profile_delete_params.py">params</a>) -> None</code>
-- <code title="post /v3/profiles/{profileId}/complete">client.profiles.<a href="./src/sent_dm/resources/profiles/profiles.py">complete_setup</a>(profile_id, \*\*<a href="src/sent_dm/types/profile_complete_setup_params.py">params</a>) -> object</code>
+- <code title="post /v3/profiles/{profileId}/complete">client.profiles.<a href="./src/sent_dm/resources/profiles/profiles.py">complete</a>(profile_id, \*\*<a href="src/sent_dm/types/profile_complete_params.py">params</a>) -> object</code>
 
 ## Campaigns
 
@@ -119,9 +104,9 @@ Types:
 ```python
 from sent_dm.types.profiles import (
     APIResponseOfTcrCampaignWithUseCases,
+    BaseDto,
     CampaignData,
     MessagingUseCaseUs,
-    SentDmServicesEndpointsCustomerApIv3ContractsRequestsCampaignsCampaignUseCaseData,
     TcrCampaignWithUseCases,
     CampaignListResponse,
 )
