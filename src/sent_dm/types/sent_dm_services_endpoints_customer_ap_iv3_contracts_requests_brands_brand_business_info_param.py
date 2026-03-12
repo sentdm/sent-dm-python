@@ -26,7 +26,6 @@ class SentDmServicesEndpointsCustomerApIv3ContractsRequestsBrandsBrandBusinessIn
         Optional[Literal["PRIVATE_PROFIT", "PUBLIC_PROFIT", "NON_PROFIT", "SOLE_PROPRIETOR", "GOVERNMENT"]],
         PropertyInfo(alias="entityType"),
     ]
-    """Business entity type"""
 
     legal_name: Annotated[Optional[str], PropertyInfo(alias="legalName")]
     """Legal business name"""

@@ -15,7 +15,6 @@ class SentDmServicesEndpointsCustomerApIv3ContractsRequestsCampaignsCampaignUseC
     """Campaign use case with sample messages"""
 
     messaging_use_case_us: Required[Annotated[MessagingUseCaseUs, PropertyInfo(alias="messagingUseCaseUs")]]
-    """US messaging use case category"""
 
     sample_messages: Required[Annotated[SequenceNotStr[str], PropertyInfo(alias="sampleMessages")]]
     """Sample messages for this use case (1-5 messages, max 1024 characters each)"""
