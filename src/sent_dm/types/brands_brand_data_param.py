@@ -22,10 +22,10 @@ class BrandsBrandDataParam(TypedDict, total=False):
     """Brand and KYC data grouped into contact, business, and compliance sections"""
 
     compliance: Required[SentDmServicesEndpointsCustomerApIv3ContractsRequestsBrandsBrandComplianceInfoParam]
-    """Compliance and TCR-related information"""
+    """Compliance and TCR information for brand registration"""
 
     contact: Required[SentDmServicesEndpointsCustomerApIv3ContractsRequestsBrandsBrandContactInfoParam]
-    """Contact information for the brand"""
+    """Contact information for brand KYC"""
 
     business: Optional[SentDmServicesEndpointsCustomerApIv3ContractsRequestsBrandsBrandBusinessInfoParam]
-    """Business details and address information"""
+    """Business details and address for brand KYC"""

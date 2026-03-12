@@ -82,7 +82,8 @@ class TemplatesResource(SyncAPIResource):
 
           creation_source: Source of template creation (default: from-api)
 
-          definition: Template definition including header, body, footer, and buttons
+          definition: Complete definition of a message template including header, body, footer, and
+              buttons
 
           language: Template language code (e.g., en_US) (optional, auto-detected if not provided)
 
@@ -190,7 +191,8 @@ class TemplatesResource(SyncAPIResource):
         Args:
           category: Template category: MARKETING, UTILITY, AUTHENTICATION
 
-          definition: Template definition including header, body, footer, and buttons
+          definition: Complete definition of a message template including header, body, footer, and
+              buttons
 
           language: Template language code (e.g., en_US)
 
@@ -410,7 +412,8 @@ class AsyncTemplatesResource(AsyncAPIResource):
 
           creation_source: Source of template creation (default: from-api)
 
-          definition: Template definition including header, body, footer, and buttons
+          definition: Complete definition of a message template including header, body, footer, and
+              buttons
 
           language: Template language code (e.g., en_US) (optional, auto-detected if not provided)
 
@@ -518,7 +521,8 @@ class AsyncTemplatesResource(AsyncAPIResource):
         Args:
           category: Template category: MARKETING, UTILITY, AUTHENTICATION
 
-          definition: Template definition including header, body, footer, and buttons
+          definition: Complete definition of a message template including header, body, footer, and
+              buttons
 
           language: Template language code (e.g., en_US)
 

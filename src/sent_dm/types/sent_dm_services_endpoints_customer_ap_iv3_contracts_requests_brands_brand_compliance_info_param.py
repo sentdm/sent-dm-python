@@ -17,10 +17,8 @@ class SentDmServicesEndpointsCustomerApIv3ContractsRequestsBrandsBrandCompliance
     """Compliance and TCR information for brand registration"""
 
     brand_relationship: Required[Annotated[TcrBrandRelationship, PropertyInfo(alias="brandRelationship")]]
-    """Brand relationship level with TCR (required for TCR)"""
 
     vertical: Required[TcrVertical]
-    """Business vertical/industry category (required for TCR)"""
 
     destination_countries: Annotated[
         Optional[Iterable[DestinationCountryParam]], PropertyInfo(alias="destinationCountries")

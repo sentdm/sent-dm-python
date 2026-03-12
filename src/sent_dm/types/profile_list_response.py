@@ -11,7 +11,7 @@ __all__ = ["ProfileListResponse", "Data"]
 
 
 class Data(BaseModel):
-    """The response data (null if error)"""
+    """List of profiles response"""
 
     profiles: Optional[List[ProfileDetail]] = None
     """List of profiles in the organization"""
@@ -21,13 +21,13 @@ class ProfileListResponse(BaseModel):
     """Standard API response envelope for all v3 endpoints"""
 
     data: Optional[Data] = None
-    """The response data (null if error)"""
+    """List of profiles response"""
 
     error: Optional[APIError] = None
-    """Error details (null if successful)"""
+    """Error information"""
 
     meta: Optional[APIMeta] = None
-    """Metadata about the request and response"""
+    """Request and response metadata"""
 
     success: Optional[bool] = None
     """Indicates whether the request was successful"""

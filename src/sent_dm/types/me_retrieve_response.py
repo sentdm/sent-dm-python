@@ -20,7 +20,7 @@ __all__ = [
 
 
 class DataChannelsRcs(BaseModel):
-    """RCS channel (provider: vibes)"""
+    """RCS channel configuration. When configured, includes the RCS phone number."""
 
     configured: Optional[bool] = None
     """Whether RCS is configured for this account"""
@@ -30,7 +30,7 @@ class DataChannelsRcs(BaseModel):
 
 
 class DataChannelsSMS(BaseModel):
-    """SMS channel (providers: telnyx, sinch)"""
+    """SMS channel configuration. When configured, includes the sending phone number."""
 
     configured: Optional[bool] = None
     """Whether SMS is configured for this account"""
@@ -40,7 +40,11 @@ class DataChannelsSMS(BaseModel):
 
 
 class DataChannelsWhatsapp(BaseModel):
-    """WhatsApp Business channel (provider: meta)"""
+    """WhatsApp Business channel configuration.
+
+    When configured, includes the WhatsApp phone number
+    and business name.
+    """
 
     business_name: Optional[str] = None
     """WhatsApp Business display name"""
@@ -53,16 +57,23 @@ class DataChannelsWhatsapp(BaseModel):
 
 
 class DataChannels(BaseModel):
-    """Messaging channel configuration"""
+    """Messaging channel configuration.
+
+    All three channels are always present.
+    Each channel has a "configured" flag; configured channels expose additional details.
+    """
 
     rcs: Optional[DataChannelsRcs] = None
-    """RCS channel (provider: vibes)"""
+    """RCS channel configuration. When configured, includes the RCS phone number."""
 
     sms: Optional[DataChannelsSMS] = None
-    """SMS channel (providers: telnyx, sinch)"""
+    """SMS channel configuration. When configured, includes the sending phone number."""
 
     whatsapp: Optional[DataChannelsWhatsapp] = None
-    """WhatsApp Business channel (provider: meta)"""
+    """WhatsApp Business channel configuration.
+
+    When configured, includes the WhatsApp phone number and business name.
+    """
 
 
 class DataProfile(BaseModel):
@@ -100,13 +111,21 @@ class DataProfile(BaseModel):
 
 
 class Data(BaseModel):
-    """The response data (null if error)"""
+    """
+    Account response for GET /v3/me endpoint.
+    Returns organization (with profiles), user (standalone), or profile (child of an organization)
+    data depending on the API key type. Always includes messaging channel configuration.
+    """
 
     id: Optional[str] = None
     """Customer ID (organization, account, or profile)"""
 
     channels: Optional[DataChannels] = None
-    """Messaging channel configuration"""
+    """Messaging channel configuration.
+
+    All three channels are always present. Each channel has a "configured" flag;
+    configured channels expose additional details.
+    """
 
     created_at: Optional[datetime] = None
     """When the account was created"""
@@ -133,7 +152,7 @@ class Data(BaseModel):
     """
 
     settings: Optional[ProfileSettings] = None
-    """Profile settings (only for profile type)"""
+    """Profile configuration settings"""
 
     short_name: Optional[str] = None
     """Short name / abbreviation (only for profile type)"""
@@ -155,13 +174,17 @@ class MeRetrieveResponse(BaseModel):
     """Standard API response envelope for all v3 endpoints"""
 
     data: Optional[Data] = None
-    """The response data (null if error)"""
+    """
+    Account response for GET /v3/me endpoint. Returns organization (with profiles),
+    user (standalone), or profile (child of an organization) data depending on the
+    API key type. Always includes messaging channel configuration.
+    """
 
     error: Optional[APIError] = None
-    """Error details (null if successful)"""
+    """Error information"""
 
     meta: Optional[APIMeta] = None
-    """Metadata about the request and response"""
+    """Request and response metadata"""
 
     success: Optional[bool] = None
     """Indicates whether the request was successful"""

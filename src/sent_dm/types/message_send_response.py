@@ -26,7 +26,7 @@ class DataRecipient(BaseModel):
 
 
 class Data(BaseModel):
-    """The response data (null if error)"""
+    """Response for the multi-recipient send message endpoint"""
 
     body: Optional[str] = None
     """Resolved template body text"""
@@ -48,13 +48,13 @@ class MessageSendResponse(BaseModel):
     """Standard API response envelope for all v3 endpoints"""
 
     data: Optional[Data] = None
-    """The response data (null if error)"""
+    """Response for the multi-recipient send message endpoint"""
 
     error: Optional[APIError] = None
-    """Error details (null if successful)"""
+    """Error information"""
 
     meta: Optional[APIMeta] = None
-    """Metadata about the request and response"""
+    """Request and response metadata"""
 
     success: Optional[bool] = None
     """Indicates whether the request was successful"""

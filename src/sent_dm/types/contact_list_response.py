@@ -12,26 +12,26 @@ __all__ = ["ContactListResponse", "Data"]
 
 
 class Data(BaseModel):
-    """The response data (null if error)"""
+    """Paginated list of contacts response"""
 
     contacts: Optional[List[ContactResponse]] = None
     """List of contacts"""
 
     pagination: Optional[PaginationMeta] = None
-    """Pagination metadata"""
+    """Pagination metadata for list responses"""
 
 
 class ContactListResponse(BaseModel):
     """Standard API response envelope for all v3 endpoints"""
 
     data: Optional[Data] = None
-    """The response data (null if error)"""
+    """Paginated list of contacts response"""
 
     error: Optional[APIError] = None
-    """Error details (null if successful)"""
+    """Error information"""
 
     meta: Optional[APIMeta] = None
-    """Metadata about the request and response"""
+    """Request and response metadata"""
 
     success: Optional[bool] = None
     """Indicates whether the request was successful"""

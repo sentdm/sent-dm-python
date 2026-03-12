@@ -27,7 +27,10 @@ class MessageSendParams(TypedDict, total=False):
     """
 
     template: Template
-    """Template reference (by id or name, with optional parameters)"""
+    """
+    SDK-style template reference: resolve by ID or by name, with optional
+    parameters.
+    """
 
     to: SequenceNotStr[str]
     """List of recipient phone numbers in E.164 format (multi-recipient fan-out)"""
@@ -38,7 +41,9 @@ class MessageSendParams(TypedDict, total=False):
 
 
 class Template(TypedDict, total=False):
-    """Template reference (by id or name, with optional parameters)"""
+    """
+    SDK-style template reference: resolve by ID or by name, with optional parameters.
+    """
 
     id: Optional[str]
     """Template ID (mutually exclusive with name)"""

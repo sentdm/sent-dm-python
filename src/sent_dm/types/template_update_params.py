@@ -16,7 +16,10 @@ class TemplateUpdateParams(TypedDict, total=False):
     """Template category: MARKETING, UTILITY, AUTHENTICATION"""
 
     definition: Optional[TemplateDefinitionParam]
-    """Template definition including header, body, footer, and buttons"""
+    """
+    Complete definition of a message template including header, body, footer, and
+    buttons
+    """
 
     language: Optional[str]
     """Template language code (e.g., en_US)"""

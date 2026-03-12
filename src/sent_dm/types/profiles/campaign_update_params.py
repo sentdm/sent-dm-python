@@ -14,7 +14,7 @@ class CampaignUpdateParams(TypedDict, total=False):
     profile_id: Required[Annotated[str, PropertyInfo(alias="profileId")]]
 
     campaign: Required[CampaignDataParam]
-    """Campaign data"""
+    """Campaign data for create or update operation"""
 
     sandbox: bool
     """
