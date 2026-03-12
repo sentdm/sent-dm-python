@@ -4,7 +4,7 @@ from typing import Optional
 
 from .._models import BaseModel
 from .api_meta import APIMeta
-from .api_error import APIError
+from .error_detail import ErrorDetail
 from .contact_response import ContactResponse
 
 __all__ = ["APIResponseOfContact"]
@@ -16,7 +16,7 @@ class APIResponseOfContact(BaseModel):
     data: Optional[ContactResponse] = None
     """Contact response for v3 API Uses snake_case for JSON property names"""
 
-    error: Optional[APIError] = None
+    error: Optional[ErrorDetail] = None
     """Error information"""
 
     meta: Optional[APIMeta] = None

@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from .._models import BaseModel
 from .api_meta import APIMeta
-from .api_error import APIError
+from .error_detail import ErrorDetail
 from .pagination_meta import PaginationMeta
 from .contact_response import ContactResponse
 
@@ -27,7 +27,7 @@ class ContactListResponse(BaseModel):
     data: Optional[Data] = None
     """Paginated list of contacts response"""
 
-    error: Optional[APIError] = None
+    error: Optional[ErrorDetail] = None
     """Error information"""
 
     meta: Optional[APIMeta] = None

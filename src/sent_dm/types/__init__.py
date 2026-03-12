@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from .api_meta import APIMeta as APIMeta
 from .template import Template as Template
-from .api_error import APIError as APIError
+from .error_detail import ErrorDetail as ErrorDetail
 from .tcr_vertical import TcrVertical as TcrVertical
 from .user_response import UserResponse as UserResponse
 from .profile_detail import ProfileDetail as ProfileDetail

@@ -5,7 +5,7 @@ from typing import Optional
 from .._models import BaseModel
 from .api_meta import APIMeta
 from .template import Template
-from .api_error import APIError
+from .error_detail import ErrorDetail
 
 __all__ = ["APIResponseTemplate"]
 
@@ -16,7 +16,7 @@ class APIResponseTemplate(BaseModel):
     data: Optional[Template] = None
     """Template response for v3 API"""
 
-    error: Optional[APIError] = None
+    error: Optional[ErrorDetail] = None
     """Error information"""
 
     meta: Optional[APIMeta] = None
