@@ -6,10 +6,10 @@ from typing_extensions import Required, Annotated, TypedDict
 
 from .._utils import PropertyInfo
 
-__all__ = ["ProfileCompleteSetupParams"]
+__all__ = ["ProfileCompleteParams"]
 
 
-class ProfileCompleteSetupParams(TypedDict, total=False):
+class ProfileCompleteParams(TypedDict, total=False):
     web_hook_url: Required[Annotated[str, PropertyInfo(alias="webHookUrl")]]
     """Webhook URL to call when profile completion finishes (success or failure)"""
 
