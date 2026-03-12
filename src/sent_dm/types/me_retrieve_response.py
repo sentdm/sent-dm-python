@@ -5,7 +5,7 @@ from datetime import datetime
 
 from .._models import BaseModel
 from .api_meta import APIMeta
-from .api_error import APIError
+from .error_detail import ErrorDetail
 from .profile_settings import ProfileSettings
 
 __all__ = [
@@ -180,7 +180,7 @@ class MeRetrieveResponse(BaseModel):
     API key type. Always includes messaging channel configuration.
     """
 
-    error: Optional[APIError] = None
+    error: Optional[ErrorDetail] = None
     """Error information"""
 
     meta: Optional[APIMeta] = None

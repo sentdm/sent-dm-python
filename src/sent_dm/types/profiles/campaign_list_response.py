@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from ..._models import BaseModel
 from ..api_meta import APIMeta
-from ..api_error import APIError
+from ..error_detail import ErrorDetail
 from .tcr_campaign_with_use_cases import TcrCampaignWithUseCases
 
 __all__ = ["CampaignListResponse"]
@@ -16,7 +16,7 @@ class CampaignListResponse(BaseModel):
     data: Optional[List[TcrCampaignWithUseCases]] = None
     """The response data (null if error)"""
 
-    error: Optional[APIError] = None
+    error: Optional[ErrorDetail] = None
     """Error information"""
 
     meta: Optional[APIMeta] = None

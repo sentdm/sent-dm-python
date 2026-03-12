@@ -5,7 +5,7 @@ from datetime import datetime
 
 from .._models import BaseModel
 from .api_meta import APIMeta
-from .api_error import APIError
+from .error_detail import ErrorDetail
 
 __all__ = ["MessageRetrieveStatusResponse", "Data", "DataEvent", "DataMessageBody", "DataMessageBodyButton"]
 
@@ -87,7 +87,7 @@ class MessageRetrieveStatusResponse(BaseModel):
     data: Optional[Data] = None
     """Message response for v3 API — same shape as v2 with snake_case JSON conventions"""
 
-    error: Optional[APIError] = None
+    error: Optional[ErrorDetail] = None
     """Error information"""
 
     meta: Optional[APIMeta] = None

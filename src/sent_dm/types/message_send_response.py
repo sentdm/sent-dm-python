@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from .._models import BaseModel
 from .api_meta import APIMeta
-from .api_error import APIError
+from .error_detail import ErrorDetail
 
 __all__ = ["MessageSendResponse", "Data", "DataRecipient"]
 
@@ -50,7 +50,7 @@ class MessageSendResponse(BaseModel):
     data: Optional[Data] = None
     """Response for the multi-recipient send message endpoint"""
 
-    error: Optional[APIError] = None
+    error: Optional[ErrorDetail] = None
     """Error information"""
 
     meta: Optional[APIMeta] = None

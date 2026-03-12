@@ -5,7 +5,7 @@ from typing import List, Optional
 from .._models import BaseModel
 from .api_meta import APIMeta
 from .template import Template
-from .api_error import APIError
+from .error_detail import ErrorDetail
 from .pagination_meta import PaginationMeta
 
 __all__ = ["TemplateListResponse", "Data"]
@@ -27,7 +27,7 @@ class TemplateListResponse(BaseModel):
     data: Optional[Data] = None
     """Paginated list of templates"""
 
-    error: Optional[APIError] = None
+    error: Optional[ErrorDetail] = None
     """Error information"""
 
     meta: Optional[APIMeta] = None

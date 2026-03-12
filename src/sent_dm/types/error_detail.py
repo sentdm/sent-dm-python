@@ -4,10 +4,10 @@ from typing import Dict, List, Optional
 
 from .._models import BaseModel
 
-__all__ = ["APIError"]
+__all__ = ["ErrorDetail"]
 
 
-class APIError(BaseModel):
+class ErrorDetail(BaseModel):
     """Error information"""
 
     code: Optional[str] = None
