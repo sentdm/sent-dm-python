@@ -6,7 +6,7 @@ from typing_extensions import Literal
 
 from pydantic import Field as FieldInfo
 
-from ..shared.base_dto import BaseDto
+from .base_dto import BaseDto
 from .messaging_use_case_us import MessagingUseCaseUs
 
 __all__ = ["TcrCampaignWithUseCases", "TcrCampaignWithUseCasesUseCase"]

@@ -5,12 +5,20 @@ from __future__ import annotations
 from typing import Iterable, Optional
 from typing_extensions import Required, Annotated, TypedDict
 
+from ..._types import SequenceNotStr
 from ..._utils import PropertyInfo
-from .sent_dm_services_endpoints_customer_ap_iv3_contracts_requests_campaigns_campaign_use_case_data_param import (
-    SentDmServicesEndpointsCustomerApIv3ContractsRequestsCampaignsCampaignUseCaseDataParam,
-)
+from .messaging_use_case_us import MessagingUseCaseUs
 
-__all__ = ["CampaignDataParam"]
+__all__ = ["CampaignDataParam", "UseCase"]
+
+
+class UseCase(TypedDict, total=False):
+    """Campaign use case with sample messages"""
+
+    messaging_use_case_us: Required[Annotated[MessagingUseCaseUs, PropertyInfo(alias="messagingUseCaseUs")]]
+
+    sample_messages: Required[Annotated[SequenceNotStr[str], PropertyInfo(alias="sampleMessages")]]
+    """Sample messages for this use case (1-5 messages, max 1024 characters each)"""
 
 
 class CampaignDataParam(TypedDict, total=False):
@@ -25,12 +33,7 @@ class CampaignDataParam(TypedDict, total=False):
     type: Required[str]
     """Campaign type (e.g., "KYC", "App")"""
 
-    use_cases: Required[
-        Annotated[
-            Iterable[SentDmServicesEndpointsCustomerApIv3ContractsRequestsCampaignsCampaignUseCaseDataParam],
-            PropertyInfo(alias="useCases"),
-        ]
-    ]
+    use_cases: Required[Annotated[Iterable[UseCase], PropertyInfo(alias="useCases")]]
     """List of use cases with sample messages"""
 
     help_keywords: Annotated[Optional[str], PropertyInfo(alias="helpKeywords")]

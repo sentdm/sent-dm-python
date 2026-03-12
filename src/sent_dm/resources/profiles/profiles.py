@@ -10,7 +10,7 @@ from ...types import (
     profile_create_params,
     profile_delete_params,
     profile_update_params,
-    profile_complete_setup_params,
+    profile_complete_params,
 )
 from ..._types import Body, Omit, Query, Headers, NoneType, NotGiven, omit, not_given
 from ..._utils import maybe_transform, strip_not_given, async_maybe_transform
@@ -504,7 +504,7 @@ class ProfilesResource(SyncAPIResource):
             cast_to=NoneType,
         )
 
-    def complete_setup(
+    def complete(
         self,
         profile_id: str,
         *,
@@ -572,7 +572,7 @@ class ProfilesResource(SyncAPIResource):
                     "web_hook_url": web_hook_url,
                     "sandbox": sandbox,
                 },
-                profile_complete_setup_params.ProfileCompleteSetupParams,
+                profile_complete_params.ProfileCompleteParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -1045,7 +1045,7 @@ class AsyncProfilesResource(AsyncAPIResource):
             cast_to=NoneType,
         )
 
-    async def complete_setup(
+    async def complete(
         self,
         profile_id: str,
         *,
@@ -1113,7 +1113,7 @@ class AsyncProfilesResource(AsyncAPIResource):
                     "web_hook_url": web_hook_url,
                     "sandbox": sandbox,
                 },
-                profile_complete_setup_params.ProfileCompleteSetupParams,
+                profile_complete_params.ProfileCompleteParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -1141,8 +1141,8 @@ class ProfilesResourceWithRawResponse:
         self.delete = to_raw_response_wrapper(
             profiles.delete,
         )
-        self.complete_setup = to_raw_response_wrapper(
-            profiles.complete_setup,
+        self.complete = to_raw_response_wrapper(
+            profiles.complete,
         )
 
     @cached_property
@@ -1170,8 +1170,8 @@ class AsyncProfilesResourceWithRawResponse:
         self.delete = async_to_raw_response_wrapper(
             profiles.delete,
         )
-        self.complete_setup = async_to_raw_response_wrapper(
-            profiles.complete_setup,
+        self.complete = async_to_raw_response_wrapper(
+            profiles.complete,
         )
 
     @cached_property
@@ -1199,8 +1199,8 @@ class ProfilesResourceWithStreamingResponse:
         self.delete = to_streamed_response_wrapper(
             profiles.delete,
         )
-        self.complete_setup = to_streamed_response_wrapper(
-            profiles.complete_setup,
+        self.complete = to_streamed_response_wrapper(
+            profiles.complete,
         )
 
     @cached_property
@@ -1228,8 +1228,8 @@ class AsyncProfilesResourceWithStreamingResponse:
         self.delete = async_to_streamed_response_wrapper(
             profiles.delete,
         )
-        self.complete_setup = async_to_streamed_response_wrapper(
-            profiles.complete_setup,
+        self.complete = async_to_streamed_response_wrapper(
+            profiles.complete,
         )
 
     @cached_property
