@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from .._models import BaseModel
 from .api_meta import APIMeta
-from .api_error import APIError
+from .error_detail import ErrorDetail
 from .profile_detail import ProfileDetail
 
 __all__ = ["ProfileListResponse", "Data"]
@@ -23,7 +23,7 @@ class ProfileListResponse(BaseModel):
     data: Optional[Data] = None
     """List of profiles response"""
 
-    error: Optional[APIError] = None
+    error: Optional[ErrorDetail] = None
     """Error information"""
 
     meta: Optional[APIMeta] = None

@@ -5,7 +5,7 @@ from datetime import datetime
 
 from .._models import BaseModel
 from .api_meta import APIMeta
-from .api_error import APIError
+from .error_detail import ErrorDetail
 
 __all__ = ["MessageRetrieveActivitiesResponse", "Data", "DataActivity"]
 
@@ -51,7 +51,7 @@ class MessageRetrieveActivitiesResponse(BaseModel):
     data: Optional[Data] = None
     """Response for GET /messages/{id}/activities"""
 
-    error: Optional[APIError] = None
+    error: Optional[ErrorDetail] = None
     """Error information"""
 
     meta: Optional[APIMeta] = None

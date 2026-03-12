@@ -4,9 +4,9 @@ Types:
 
 ```python
 from sent_dm.types import (
-    APIError,
     APIMeta,
     APIResponseWebhook,
+    ErrorDetail,
     MutationRequest,
     PaginationMeta,
     WebhookResponse,

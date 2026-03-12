@@ -4,7 +4,7 @@ from typing import Optional
 
 from .._models import BaseModel
 from .api_meta import APIMeta
-from .api_error import APIError
+from .error_detail import ErrorDetail
 from .user_response import UserResponse
 
 __all__ = ["APIResponseOfUser"]
@@ -16,7 +16,7 @@ class APIResponseOfUser(BaseModel):
     data: Optional[UserResponse] = None
     """User response for v3 API"""
 
-    error: Optional[APIError] = None
+    error: Optional[ErrorDetail] = None
     """Error information"""
 
     meta: Optional[APIMeta] = None
