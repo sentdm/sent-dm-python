@@ -13,3 +13,6 @@ from .tcr_campaign_with_use_cases import TcrCampaignWithUseCases as TcrCampaignW
 from .api_response_of_tcr_campaign_with_use_cases import (
     APIResponseOfTcrCampaignWithUseCases as APIResponseOfTcrCampaignWithUseCases,
 )
+from .sent_dm_services_endpoints_customer_ap_iv3_contracts_requests_campaigns_campaign_use_case_data_param import (
+    SentDmServicesEndpointsCustomerApIv3ContractsRequestsCampaignsCampaignUseCaseDataParam as SentDmServicesEndpointsCustomerApIv3ContractsRequestsCampaignsCampaignUseCaseDataParam,
+)
