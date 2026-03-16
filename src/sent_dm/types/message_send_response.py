@@ -12,6 +12,12 @@ __all__ = ["MessageSendResponse", "Data", "DataRecipient"]
 class DataRecipient(BaseModel):
     """Per-recipient result in the send message response"""
 
+    body: Optional[str] = None
+    """
+    Resolved template body text for this recipient's channel, or null for
+    auto-detect
+    """
+
     channel: Optional[str] = None
     """Channel this message will be sent on (e.g.
 
@@ -27,9 +33,6 @@ class DataRecipient(BaseModel):
 
 class Data(BaseModel):
     """Response for the multi-recipient send message endpoint"""
-
-    body: Optional[str] = None
-    """Resolved template body text"""
 
     recipients: Optional[List[DataRecipient]] = None
     """Per-recipient message results"""
