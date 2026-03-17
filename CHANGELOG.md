@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.14.1 (2026-03-17)
+
+Full Changelog: [v0.14.0...v0.14.1](https://github.com/sentdm/sent-dm-python/compare/v0.14.0...v0.14.1)
+
+### Bug Fixes
+
+* **deps:** bump minimum typing-extensions version ([d4c211d](https://github.com/sentdm/sent-dm-python/commit/d4c211d8cbb950971660d7da75c0671918711254))
+* **pydantic:** do not pass `by_alias` unless set ([5fbb22c](https://github.com/sentdm/sent-dm-python/commit/5fbb22cab266685972e131cfd3d06a09179c6432))
+
+
+### Chores
+
+* **internal:** tweak CI branches ([1adc552](https://github.com/sentdm/sent-dm-python/commit/1adc5524f7832b703388c5ad2cd5979c833c057d))
+
 ## 0.14.0 (2026-03-16)
 
 Full Changelog: [v0.13.0...v0.14.0](https://github.com/sentdm/sent-dm-python/compare/v0.13.0...v0.14.0)
