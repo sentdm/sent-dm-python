@@ -29,7 +29,7 @@ class DataActivity(BaseModel):
     """
 
     status: Optional[str] = None
-    """Activity status (e.g., ACCEPTED, PROCESSED, SENT, DELIVERED, FAILED)"""
+    """Activity status (e.g., QUEUED, PROCESSED, SENT, DELIVERED, FAILED)"""
 
     timestamp: Optional[datetime] = None
     """When this activity occurred"""
