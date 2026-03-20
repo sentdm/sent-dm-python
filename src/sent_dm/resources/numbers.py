@@ -5,7 +5,7 @@ from __future__ import annotations
 import httpx
 
 from .._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
-from .._utils import strip_not_given
+from .._utils import path_template, strip_not_given
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
 from .._response import (
@@ -72,7 +72,7 @@ class NumbersResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `phone_number` but received {phone_number!r}")
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._get(
-            f"/v3/numbers/lookup/{phone_number}",
+            path_template("/v3/numbers/lookup/{phone_number}", phone_number=phone_number),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -132,7 +132,7 @@ class AsyncNumbersResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `phone_number` but received {phone_number!r}")
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._get(
-            f"/v3/numbers/lookup/{phone_number}",
+            path_template("/v3/numbers/lookup/{phone_number}", phone_number=phone_number),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),

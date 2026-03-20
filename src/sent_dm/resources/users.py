@@ -6,7 +6,7 @@ import httpx
 
 from ..types import user_invite_params, user_remove_params, user_update_role_params
 from .._types import Body, Omit, Query, Headers, NoneType, NotGiven, omit, not_given
-from .._utils import maybe_transform, strip_not_given, async_maybe_transform
+from .._utils import path_template, maybe_transform, strip_not_given, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
 from .._response import (
@@ -73,7 +73,7 @@ class UsersResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `user_id` but received {user_id!r}")
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._get(
-            f"/v3/users/{user_id}",
+            path_template("/v3/users/{user_id}", user_id=user_id),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -213,7 +213,7 @@ class UsersResource(SyncAPIResource):
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._delete(
-            f"/v3/users/{user_id}",
+            path_template("/v3/users/{user_id}", user_id=user_id),
             body=maybe_transform(body, user_remove_params.UserRemoveParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -267,7 +267,7 @@ class UsersResource(SyncAPIResource):
             **(extra_headers or {}),
         }
         return self._patch(
-            f"/v3/users/{user_id}",
+            path_template("/v3/users/{user_id}", user_id=user_id),
             body=maybe_transform(
                 {
                     "role": role,
@@ -333,7 +333,7 @@ class AsyncUsersResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `user_id` but received {user_id!r}")
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._get(
-            f"/v3/users/{user_id}",
+            path_template("/v3/users/{user_id}", user_id=user_id),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -473,7 +473,7 @@ class AsyncUsersResource(AsyncAPIResource):
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._delete(
-            f"/v3/users/{user_id}",
+            path_template("/v3/users/{user_id}", user_id=user_id),
             body=await async_maybe_transform(body, user_remove_params.UserRemoveParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -527,7 +527,7 @@ class AsyncUsersResource(AsyncAPIResource):
             **(extra_headers or {}),
         }
         return await self._patch(
-            f"/v3/users/{user_id}",
+            path_template("/v3/users/{user_id}", user_id=user_id),
             body=await async_maybe_transform(
                 {
                     "role": role,

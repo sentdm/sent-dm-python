@@ -13,7 +13,7 @@ from ...types import (
     profile_complete_params,
 )
 from ..._types import Body, Omit, Query, Headers, NoneType, NotGiven, omit, not_given
-from ..._utils import maybe_transform, strip_not_given, async_maybe_transform
+from ..._utils import path_template, maybe_transform, strip_not_given, async_maybe_transform
 from ..._compat import cached_property
 from .campaigns import (
     CampaignsResource,
@@ -261,7 +261,7 @@ class ProfilesResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `profile_id` but received {profile_id!r}")
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._get(
-            f"/v3/profiles/{profile_id}",
+            path_template("/v3/profiles/{profile_id}", profile_id=profile_id),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -395,7 +395,7 @@ class ProfilesResource(SyncAPIResource):
             **(extra_headers or {}),
         }
         return self._patch(
-            f"/v3/profiles/{profile_id}",
+            path_template("/v3/profiles/{profile_id}", profile_id=profile_id),
             body=maybe_transform(
                 {
                     "allow_contact_sharing": allow_contact_sharing,
@@ -496,7 +496,7 @@ class ProfilesResource(SyncAPIResource):
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._delete(
-            f"/v3/profiles/{profile_id}",
+            path_template("/v3/profiles/{profile_id}", profile_id=profile_id),
             body=maybe_transform(body, profile_delete_params.ProfileDeleteParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -566,7 +566,7 @@ class ProfilesResource(SyncAPIResource):
             **(extra_headers or {}),
         }
         return self._post(
-            f"/v3/profiles/{profile_id}/complete",
+            path_template("/v3/profiles/{profile_id}/complete", profile_id=profile_id),
             body=maybe_transform(
                 {
                     "web_hook_url": web_hook_url,
@@ -802,7 +802,7 @@ class AsyncProfilesResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `profile_id` but received {profile_id!r}")
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._get(
-            f"/v3/profiles/{profile_id}",
+            path_template("/v3/profiles/{profile_id}", profile_id=profile_id),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -936,7 +936,7 @@ class AsyncProfilesResource(AsyncAPIResource):
             **(extra_headers or {}),
         }
         return await self._patch(
-            f"/v3/profiles/{profile_id}",
+            path_template("/v3/profiles/{profile_id}", profile_id=profile_id),
             body=await async_maybe_transform(
                 {
                     "allow_contact_sharing": allow_contact_sharing,
@@ -1037,7 +1037,7 @@ class AsyncProfilesResource(AsyncAPIResource):
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._delete(
-            f"/v3/profiles/{profile_id}",
+            path_template("/v3/profiles/{profile_id}", profile_id=profile_id),
             body=await async_maybe_transform(body, profile_delete_params.ProfileDeleteParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -1107,7 +1107,7 @@ class AsyncProfilesResource(AsyncAPIResource):
             **(extra_headers or {}),
         }
         return await self._post(
-            f"/v3/profiles/{profile_id}/complete",
+            path_template("/v3/profiles/{profile_id}/complete", profile_id=profile_id),
             body=await async_maybe_transform(
                 {
                     "web_hook_url": web_hook_url,
