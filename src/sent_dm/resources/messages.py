@@ -8,7 +8,7 @@ import httpx
 
 from ..types import message_send_params
 from .._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
-from .._utils import maybe_transform, strip_not_given, async_maybe_transform
+from .._utils import path_template, maybe_transform, strip_not_given, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
 from .._response import (
@@ -77,7 +77,7 @@ class MessagesResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._get(
-            f"/v3/messages/{id}/activities",
+            path_template("/v3/messages/{id}/activities", id=id),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -114,7 +114,7 @@ class MessagesResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._get(
-            f"/v3/messages/{id}",
+            path_template("/v3/messages/{id}", id=id),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -245,7 +245,7 @@ class AsyncMessagesResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._get(
-            f"/v3/messages/{id}/activities",
+            path_template("/v3/messages/{id}/activities", id=id),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -282,7 +282,7 @@ class AsyncMessagesResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._get(
-            f"/v3/messages/{id}",
+            path_template("/v3/messages/{id}", id=id),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),

@@ -5,7 +5,7 @@ from __future__ import annotations
 import httpx
 
 from ..._types import Body, Omit, Query, Headers, NoneType, NotGiven, omit, not_given
-from ..._utils import maybe_transform, strip_not_given, async_maybe_transform
+from ..._utils import path_template, maybe_transform, strip_not_given, async_maybe_transform
 from ..._compat import cached_property
 from ..._resource import SyncAPIResource, AsyncAPIResource
 from ..._response import (
@@ -91,7 +91,7 @@ class CampaignsResource(SyncAPIResource):
             **(extra_headers or {}),
         }
         return self._post(
-            f"/v3/profiles/{profile_id}/campaigns",
+            path_template("/v3/profiles/{profile_id}/campaigns", profile_id=profile_id),
             body=maybe_transform(
                 {
                     "campaign": campaign,
@@ -154,7 +154,9 @@ class CampaignsResource(SyncAPIResource):
             **(extra_headers or {}),
         }
         return self._put(
-            f"/v3/profiles/{profile_id}/campaigns/{campaign_id}",
+            path_template(
+                "/v3/profiles/{profile_id}/campaigns/{campaign_id}", profile_id=profile_id, campaign_id=campaign_id
+            ),
             body=maybe_transform(
                 {
                     "campaign": campaign,
@@ -197,7 +199,7 @@ class CampaignsResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `profile_id` but received {profile_id!r}")
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._get(
-            f"/v3/profiles/{profile_id}/campaigns",
+            path_template("/v3/profiles/{profile_id}/campaigns", profile_id=profile_id),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -241,7 +243,9 @@ class CampaignsResource(SyncAPIResource):
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._delete(
-            f"/v3/profiles/{profile_id}/campaigns/{campaign_id}",
+            path_template(
+                "/v3/profiles/{profile_id}/campaigns/{campaign_id}", profile_id=profile_id, campaign_id=campaign_id
+            ),
             body=maybe_transform(body, campaign_delete_params.CampaignDeleteParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -318,7 +322,7 @@ class AsyncCampaignsResource(AsyncAPIResource):
             **(extra_headers or {}),
         }
         return await self._post(
-            f"/v3/profiles/{profile_id}/campaigns",
+            path_template("/v3/profiles/{profile_id}/campaigns", profile_id=profile_id),
             body=await async_maybe_transform(
                 {
                     "campaign": campaign,
@@ -381,7 +385,9 @@ class AsyncCampaignsResource(AsyncAPIResource):
             **(extra_headers or {}),
         }
         return await self._put(
-            f"/v3/profiles/{profile_id}/campaigns/{campaign_id}",
+            path_template(
+                "/v3/profiles/{profile_id}/campaigns/{campaign_id}", profile_id=profile_id, campaign_id=campaign_id
+            ),
             body=await async_maybe_transform(
                 {
                     "campaign": campaign,
@@ -424,7 +430,7 @@ class AsyncCampaignsResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `profile_id` but received {profile_id!r}")
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._get(
-            f"/v3/profiles/{profile_id}/campaigns",
+            path_template("/v3/profiles/{profile_id}/campaigns", profile_id=profile_id),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -468,7 +474,9 @@ class AsyncCampaignsResource(AsyncAPIResource):
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._delete(
-            f"/v3/profiles/{profile_id}/campaigns/{campaign_id}",
+            path_template(
+                "/v3/profiles/{profile_id}/campaigns/{campaign_id}", profile_id=profile_id, campaign_id=campaign_id
+            ),
             body=await async_maybe_transform(body, campaign_delete_params.CampaignDeleteParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout

@@ -16,7 +16,7 @@ from ..types import (
     webhook_toggle_status_params,
 )
 from .._types import Body, Omit, Query, Headers, NoneType, NotGiven, SequenceNotStr, omit, not_given
-from .._utils import maybe_transform, strip_not_given, async_maybe_transform
+from .._utils import path_template, maybe_transform, strip_not_given, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
 from .._response import (
@@ -147,7 +147,7 @@ class WebhooksResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._get(
-            f"/v3/webhooks/{id}",
+            path_template("/v3/webhooks/{id}", id=id),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -200,7 +200,7 @@ class WebhooksResource(SyncAPIResource):
             **(extra_headers or {}),
         }
         return self._put(
-            f"/v3/webhooks/{id}",
+            path_template("/v3/webhooks/{id}", id=id),
             body=maybe_transform(
                 {
                     "display_name": display_name,
@@ -295,7 +295,7 @@ class WebhooksResource(SyncAPIResource):
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._delete(
-            f"/v3/webhooks/{id}",
+            path_template("/v3/webhooks/{id}", id=id),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -365,7 +365,7 @@ class WebhooksResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._get(
-            f"/v3/webhooks/{id}/events",
+            path_template("/v3/webhooks/{id}/events", id=id),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -423,7 +423,7 @@ class WebhooksResource(SyncAPIResource):
             **(extra_headers or {}),
         }
         return self._post(
-            f"/v3/webhooks/{id}/rotate-secret",
+            path_template("/v3/webhooks/{id}/rotate-secret", id=id),
             body=maybe_transform(body, webhook_rotate_secret_params.WebhookRotateSecretParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -473,7 +473,7 @@ class WebhooksResource(SyncAPIResource):
             **(extra_headers or {}),
         }
         return self._post(
-            f"/v3/webhooks/{id}/test",
+            path_template("/v3/webhooks/{id}/test", id=id),
             body=maybe_transform(
                 {
                     "event_type": event_type,
@@ -529,7 +529,7 @@ class WebhooksResource(SyncAPIResource):
             **(extra_headers or {}),
         }
         return self._patch(
-            f"/v3/webhooks/{id}/toggle-status",
+            path_template("/v3/webhooks/{id}/toggle-status", id=id),
             body=maybe_transform(
                 {
                     "is_active": is_active,
@@ -655,7 +655,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._get(
-            f"/v3/webhooks/{id}",
+            path_template("/v3/webhooks/{id}", id=id),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -708,7 +708,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
             **(extra_headers or {}),
         }
         return await self._put(
-            f"/v3/webhooks/{id}",
+            path_template("/v3/webhooks/{id}", id=id),
             body=await async_maybe_transform(
                 {
                     "display_name": display_name,
@@ -803,7 +803,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._delete(
-            f"/v3/webhooks/{id}",
+            path_template("/v3/webhooks/{id}", id=id),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -873,7 +873,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._get(
-            f"/v3/webhooks/{id}/events",
+            path_template("/v3/webhooks/{id}/events", id=id),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -931,7 +931,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
             **(extra_headers or {}),
         }
         return await self._post(
-            f"/v3/webhooks/{id}/rotate-secret",
+            path_template("/v3/webhooks/{id}/rotate-secret", id=id),
             body=await async_maybe_transform(body, webhook_rotate_secret_params.WebhookRotateSecretParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -981,7 +981,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
             **(extra_headers or {}),
         }
         return await self._post(
-            f"/v3/webhooks/{id}/test",
+            path_template("/v3/webhooks/{id}/test", id=id),
             body=await async_maybe_transform(
                 {
                     "event_type": event_type,
@@ -1037,7 +1037,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
             **(extra_headers or {}),
         }
         return await self._patch(
-            f"/v3/webhooks/{id}/toggle-status",
+            path_template("/v3/webhooks/{id}/toggle-status", id=id),
             body=await async_maybe_transform(
                 {
                     "is_active": is_active,
