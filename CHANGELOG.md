@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.15.0 (2026-03-25)
+
+Full Changelog: [v0.14.1...v0.15.0](https://github.com/sentdm/sent-dm-python/compare/v0.14.1...v0.15.0)
+
+### Features
+
+* **api:** api update ([1b808cf](https://github.com/sentdm/sent-dm-python/commit/1b808cf0f33936836ad7588857056d95fc18bd79))
+* **api:** api update ([93500f0](https://github.com/sentdm/sent-dm-python/commit/93500f067df17cbb5ca0384b4d5a2600f699dfda))
+
+
+### Bug Fixes
+
+* sanitize endpoint path params ([7931fda](https://github.com/sentdm/sent-dm-python/commit/7931fda88ab2bfb29cf3fd9f0622e2304bccf662))
+
+
+### Chores
+
+* **ci:** skip lint on metadata-only changes ([e6f221b](https://github.com/sentdm/sent-dm-python/commit/e6f221bd0fbe0a23d661db21eb54356bbb5b2a9e))
+* **internal:** update gitignore ([0697f78](https://github.com/sentdm/sent-dm-python/commit/0697f7822f07efe9479e262a4c8e5281f07ff374))
+
 ## 0.14.1 (2026-03-17)
 
 Full Changelog: [v0.14.0...v0.14.1](https://github.com/sentdm/sent-dm-python/compare/v0.14.0...v0.14.1)
