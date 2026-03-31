@@ -1,11 +1,11 @@
 [project]
 name = "sentdm"
 version = "0.16.0"
-description = "The official Python library for the sent-dm API"
+description = "The official Python library for the Sent API"
 dynamic = ["readme"]
 license = "Apache-2.0"
 authors = [
-{ name = "Sent Dm", email = "support@sent.dm" },
+{ name = "Sent", email = "support@sent.dm" },
 ]
 
 dependencies = [

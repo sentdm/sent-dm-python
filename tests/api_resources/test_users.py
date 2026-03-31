@@ -7,7 +7,7 @@ from typing import Any, cast
 
 import pytest
 
-from sent_dm import SentDm, AsyncSentDm
+from sent_dm import Sent, AsyncSent
 from tests.utils import assert_matches_type
 from sent_dm.types import (
     UserListResponse,
@@ -22,7 +22,7 @@ class TestUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_retrieve(self, client: SentDm) -> None:
+    def test_method_retrieve(self, client: Sent) -> None:
         user = client.users.retrieve(
             user_id="userId",
         )
@@ -30,7 +30,7 @@ class TestUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_retrieve_with_all_params(self, client: SentDm) -> None:
+    def test_method_retrieve_with_all_params(self, client: Sent) -> None:
         user = client.users.retrieve(
             user_id="userId",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -39,7 +39,7 @@ class TestUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_raw_response_retrieve(self, client: SentDm) -> None:
+    def test_raw_response_retrieve(self, client: Sent) -> None:
         response = client.users.with_raw_response.retrieve(
             user_id="userId",
         )
@@ -51,7 +51,7 @@ class TestUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_streaming_response_retrieve(self, client: SentDm) -> None:
+    def test_streaming_response_retrieve(self, client: Sent) -> None:
         with client.users.with_streaming_response.retrieve(
             user_id="userId",
         ) as response:
@@ -65,7 +65,7 @@ class TestUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_path_params_retrieve(self, client: SentDm) -> None:
+    def test_path_params_retrieve(self, client: Sent) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `user_id` but received ''"):
             client.users.with_raw_response.retrieve(
                 user_id="",
@@ -73,13 +73,13 @@ class TestUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_list(self, client: SentDm) -> None:
+    def test_method_list(self, client: Sent) -> None:
         user = client.users.list()
         assert_matches_type(UserListResponse, user, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_list_with_all_params(self, client: SentDm) -> None:
+    def test_method_list_with_all_params(self, client: Sent) -> None:
         user = client.users.list(
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
@@ -87,7 +87,7 @@ class TestUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_raw_response_list(self, client: SentDm) -> None:
+    def test_raw_response_list(self, client: Sent) -> None:
         response = client.users.with_raw_response.list()
 
         assert response.is_closed is True
@@ -97,7 +97,7 @@ class TestUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_streaming_response_list(self, client: SentDm) -> None:
+    def test_streaming_response_list(self, client: Sent) -> None:
         with client.users.with_streaming_response.list() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -109,13 +109,13 @@ class TestUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_invite(self, client: SentDm) -> None:
+    def test_method_invite(self, client: Sent) -> None:
         user = client.users.invite()
         assert_matches_type(APIResponseOfUser, user, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_invite_with_all_params(self, client: SentDm) -> None:
+    def test_method_invite_with_all_params(self, client: Sent) -> None:
         user = client.users.invite(
             email="newuser@example.com",
             name="New User",
@@ -128,7 +128,7 @@ class TestUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_raw_response_invite(self, client: SentDm) -> None:
+    def test_raw_response_invite(self, client: Sent) -> None:
         response = client.users.with_raw_response.invite()
 
         assert response.is_closed is True
@@ -138,7 +138,7 @@ class TestUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_streaming_response_invite(self, client: SentDm) -> None:
+    def test_streaming_response_invite(self, client: Sent) -> None:
         with client.users.with_streaming_response.invite() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -150,7 +150,7 @@ class TestUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_remove(self, client: SentDm) -> None:
+    def test_method_remove(self, client: Sent) -> None:
         user = client.users.remove(
             user_id="userId",
             body={},
@@ -159,7 +159,7 @@ class TestUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_remove_with_all_params(self, client: SentDm) -> None:
+    def test_method_remove_with_all_params(self, client: Sent) -> None:
         user = client.users.remove(
             user_id="userId",
             body={"sandbox": False},
@@ -169,7 +169,7 @@ class TestUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_raw_response_remove(self, client: SentDm) -> None:
+    def test_raw_response_remove(self, client: Sent) -> None:
         response = client.users.with_raw_response.remove(
             user_id="userId",
             body={},
@@ -182,7 +182,7 @@ class TestUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_streaming_response_remove(self, client: SentDm) -> None:
+    def test_streaming_response_remove(self, client: Sent) -> None:
         with client.users.with_streaming_response.remove(
             user_id="userId",
             body={},
@@ -197,7 +197,7 @@ class TestUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_path_params_remove(self, client: SentDm) -> None:
+    def test_path_params_remove(self, client: Sent) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `user_id` but received ''"):
             client.users.with_raw_response.remove(
                 user_id="",
@@ -206,7 +206,7 @@ class TestUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_update_role(self, client: SentDm) -> None:
+    def test_method_update_role(self, client: Sent) -> None:
         user = client.users.update_role(
             user_id="userId",
         )
@@ -214,7 +214,7 @@ class TestUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_update_role_with_all_params(self, client: SentDm) -> None:
+    def test_method_update_role_with_all_params(self, client: Sent) -> None:
         user = client.users.update_role(
             user_id="userId",
             role="billing",
@@ -226,7 +226,7 @@ class TestUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_raw_response_update_role(self, client: SentDm) -> None:
+    def test_raw_response_update_role(self, client: Sent) -> None:
         response = client.users.with_raw_response.update_role(
             user_id="userId",
         )
@@ -238,7 +238,7 @@ class TestUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_streaming_response_update_role(self, client: SentDm) -> None:
+    def test_streaming_response_update_role(self, client: Sent) -> None:
         with client.users.with_streaming_response.update_role(
             user_id="userId",
         ) as response:
@@ -252,7 +252,7 @@ class TestUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_path_params_update_role(self, client: SentDm) -> None:
+    def test_path_params_update_role(self, client: Sent) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `user_id` but received ''"):
             client.users.with_raw_response.update_role(
                 user_id="",
@@ -266,7 +266,7 @@ class TestAsyncUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_retrieve(self, async_client: AsyncSentDm) -> None:
+    async def test_method_retrieve(self, async_client: AsyncSent) -> None:
         user = await async_client.users.retrieve(
             user_id="userId",
         )
@@ -274,7 +274,7 @@ class TestAsyncUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_retrieve_with_all_params(self, async_client: AsyncSentDm) -> None:
+    async def test_method_retrieve_with_all_params(self, async_client: AsyncSent) -> None:
         user = await async_client.users.retrieve(
             user_id="userId",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -283,7 +283,7 @@ class TestAsyncUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_raw_response_retrieve(self, async_client: AsyncSentDm) -> None:
+    async def test_raw_response_retrieve(self, async_client: AsyncSent) -> None:
         response = await async_client.users.with_raw_response.retrieve(
             user_id="userId",
         )
@@ -295,7 +295,7 @@ class TestAsyncUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_streaming_response_retrieve(self, async_client: AsyncSentDm) -> None:
+    async def test_streaming_response_retrieve(self, async_client: AsyncSent) -> None:
         async with async_client.users.with_streaming_response.retrieve(
             user_id="userId",
         ) as response:
@@ -309,7 +309,7 @@ class TestAsyncUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_path_params_retrieve(self, async_client: AsyncSentDm) -> None:
+    async def test_path_params_retrieve(self, async_client: AsyncSent) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `user_id` but received ''"):
             await async_client.users.with_raw_response.retrieve(
                 user_id="",
@@ -317,13 +317,13 @@ class TestAsyncUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_list(self, async_client: AsyncSentDm) -> None:
+    async def test_method_list(self, async_client: AsyncSent) -> None:
         user = await async_client.users.list()
         assert_matches_type(UserListResponse, user, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_list_with_all_params(self, async_client: AsyncSentDm) -> None:
+    async def test_method_list_with_all_params(self, async_client: AsyncSent) -> None:
         user = await async_client.users.list(
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
@@ -331,7 +331,7 @@ class TestAsyncUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_raw_response_list(self, async_client: AsyncSentDm) -> None:
+    async def test_raw_response_list(self, async_client: AsyncSent) -> None:
         response = await async_client.users.with_raw_response.list()
 
         assert response.is_closed is True
@@ -341,7 +341,7 @@ class TestAsyncUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_streaming_response_list(self, async_client: AsyncSentDm) -> None:
+    async def test_streaming_response_list(self, async_client: AsyncSent) -> None:
         async with async_client.users.with_streaming_response.list() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -353,13 +353,13 @@ class TestAsyncUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_invite(self, async_client: AsyncSentDm) -> None:
+    async def test_method_invite(self, async_client: AsyncSent) -> None:
         user = await async_client.users.invite()
         assert_matches_type(APIResponseOfUser, user, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_invite_with_all_params(self, async_client: AsyncSentDm) -> None:
+    async def test_method_invite_with_all_params(self, async_client: AsyncSent) -> None:
         user = await async_client.users.invite(
             email="newuser@example.com",
             name="New User",
@@ -372,7 +372,7 @@ class TestAsyncUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_raw_response_invite(self, async_client: AsyncSentDm) -> None:
+    async def test_raw_response_invite(self, async_client: AsyncSent) -> None:
         response = await async_client.users.with_raw_response.invite()
 
         assert response.is_closed is True
@@ -382,7 +382,7 @@ class TestAsyncUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_streaming_response_invite(self, async_client: AsyncSentDm) -> None:
+    async def test_streaming_response_invite(self, async_client: AsyncSent) -> None:
         async with async_client.users.with_streaming_response.invite() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -394,7 +394,7 @@ class TestAsyncUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_remove(self, async_client: AsyncSentDm) -> None:
+    async def test_method_remove(self, async_client: AsyncSent) -> None:
         user = await async_client.users.remove(
             user_id="userId",
             body={},
@@ -403,7 +403,7 @@ class TestAsyncUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_remove_with_all_params(self, async_client: AsyncSentDm) -> None:
+    async def test_method_remove_with_all_params(self, async_client: AsyncSent) -> None:
         user = await async_client.users.remove(
             user_id="userId",
             body={"sandbox": False},
@@ -413,7 +413,7 @@ class TestAsyncUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_raw_response_remove(self, async_client: AsyncSentDm) -> None:
+    async def test_raw_response_remove(self, async_client: AsyncSent) -> None:
         response = await async_client.users.with_raw_response.remove(
             user_id="userId",
             body={},
@@ -426,7 +426,7 @@ class TestAsyncUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_streaming_response_remove(self, async_client: AsyncSentDm) -> None:
+    async def test_streaming_response_remove(self, async_client: AsyncSent) -> None:
         async with async_client.users.with_streaming_response.remove(
             user_id="userId",
             body={},
@@ -441,7 +441,7 @@ class TestAsyncUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_path_params_remove(self, async_client: AsyncSentDm) -> None:
+    async def test_path_params_remove(self, async_client: AsyncSent) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `user_id` but received ''"):
             await async_client.users.with_raw_response.remove(
                 user_id="",
@@ -450,7 +450,7 @@ class TestAsyncUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_update_role(self, async_client: AsyncSentDm) -> None:
+    async def test_method_update_role(self, async_client: AsyncSent) -> None:
         user = await async_client.users.update_role(
             user_id="userId",
         )
@@ -458,7 +458,7 @@ class TestAsyncUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_update_role_with_all_params(self, async_client: AsyncSentDm) -> None:
+    async def test_method_update_role_with_all_params(self, async_client: AsyncSent) -> None:
         user = await async_client.users.update_role(
             user_id="userId",
             role="billing",
@@ -470,7 +470,7 @@ class TestAsyncUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_raw_response_update_role(self, async_client: AsyncSentDm) -> None:
+    async def test_raw_response_update_role(self, async_client: AsyncSent) -> None:
         response = await async_client.users.with_raw_response.update_role(
             user_id="userId",
         )
@@ -482,7 +482,7 @@ class TestAsyncUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_streaming_response_update_role(self, async_client: AsyncSentDm) -> None:
+    async def test_streaming_response_update_role(self, async_client: AsyncSent) -> None:
         async with async_client.users.with_streaming_response.update_role(
             user_id="userId",
         ) as response:
@@ -496,7 +496,7 @@ class TestAsyncUsers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_path_params_update_role(self, async_client: AsyncSentDm) -> None:
+    async def test_path_params_update_role(self, async_client: AsyncSent) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `user_id` but received ''"):
             await async_client.users.with_raw_response.update_role(
                 user_id="",

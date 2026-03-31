@@ -5,14 +5,14 @@ import typing as _t
 from . import types
 from ._types import NOT_GIVEN, Omit, NoneType, NotGiven, Transport, ProxiesTypes, omit, not_given
 from ._utils import file_from_path
-from ._client import Client, SentDm, Stream, Timeout, Transport, AsyncClient, AsyncSentDm, AsyncStream, RequestOptions
+from ._client import Sent, Client, Stream, Timeout, AsyncSent, Transport, AsyncClient, AsyncStream, RequestOptions
 from ._models import BaseModel
 from ._version import __title__, __version__
 from ._response import APIResponse as APIResponse, AsyncAPIResponse as AsyncAPIResponse
 from ._constants import DEFAULT_TIMEOUT, DEFAULT_MAX_RETRIES, DEFAULT_CONNECTION_LIMITS
 from ._exceptions import (
     APIError,
-    SentDmError,
+    SentError,
     ConflictError,
     NotFoundError,
     APIStatusError,
@@ -41,7 +41,7 @@ __all__ = [
     "not_given",
     "Omit",
     "omit",
-    "SentDmError",
+    "SentError",
     "APIError",
     "APIStatusError",
     "APITimeoutError",
@@ -61,8 +61,8 @@ __all__ = [
     "AsyncClient",
     "Stream",
     "AsyncStream",
-    "SentDm",
-    "AsyncSentDm",
+    "Sent",
+    "AsyncSent",
     "file_from_path",
     "BaseModel",
     "DEFAULT_TIMEOUT",

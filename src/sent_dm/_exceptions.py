@@ -18,11 +18,11 @@ __all__ = [
 ]
 
 
-class SentDmError(Exception):
+class SentError(Exception):
     pass
 
 
-class APIError(SentDmError):
+class APIError(SentError):
     message: str
     request: httpx.Request
 
