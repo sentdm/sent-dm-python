@@ -7,7 +7,7 @@ from typing import Any, cast
 
 import pytest
 
-from sent_dm import SentDm, AsyncSentDm
+from sent_dm import Sent, AsyncSent
 from tests.utils import assert_matches_type
 from sent_dm.types import NumberLookupResponse
 
@@ -19,7 +19,7 @@ class TestNumbers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_lookup(self, client: SentDm) -> None:
+    def test_method_lookup(self, client: Sent) -> None:
         number = client.numbers.lookup(
             phone_number="+12025551234",
         )
@@ -27,7 +27,7 @@ class TestNumbers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_lookup_with_all_params(self, client: SentDm) -> None:
+    def test_method_lookup_with_all_params(self, client: Sent) -> None:
         number = client.numbers.lookup(
             phone_number="+12025551234",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -36,7 +36,7 @@ class TestNumbers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_raw_response_lookup(self, client: SentDm) -> None:
+    def test_raw_response_lookup(self, client: Sent) -> None:
         response = client.numbers.with_raw_response.lookup(
             phone_number="+12025551234",
         )
@@ -48,7 +48,7 @@ class TestNumbers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_streaming_response_lookup(self, client: SentDm) -> None:
+    def test_streaming_response_lookup(self, client: Sent) -> None:
         with client.numbers.with_streaming_response.lookup(
             phone_number="+12025551234",
         ) as response:
@@ -62,7 +62,7 @@ class TestNumbers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_path_params_lookup(self, client: SentDm) -> None:
+    def test_path_params_lookup(self, client: Sent) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `phone_number` but received ''"):
             client.numbers.with_raw_response.lookup(
                 phone_number="",
@@ -76,7 +76,7 @@ class TestAsyncNumbers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_lookup(self, async_client: AsyncSentDm) -> None:
+    async def test_method_lookup(self, async_client: AsyncSent) -> None:
         number = await async_client.numbers.lookup(
             phone_number="+12025551234",
         )
@@ -84,7 +84,7 @@ class TestAsyncNumbers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_lookup_with_all_params(self, async_client: AsyncSentDm) -> None:
+    async def test_method_lookup_with_all_params(self, async_client: AsyncSent) -> None:
         number = await async_client.numbers.lookup(
             phone_number="+12025551234",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -93,7 +93,7 @@ class TestAsyncNumbers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_raw_response_lookup(self, async_client: AsyncSentDm) -> None:
+    async def test_raw_response_lookup(self, async_client: AsyncSent) -> None:
         response = await async_client.numbers.with_raw_response.lookup(
             phone_number="+12025551234",
         )
@@ -105,7 +105,7 @@ class TestAsyncNumbers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_streaming_response_lookup(self, async_client: AsyncSentDm) -> None:
+    async def test_streaming_response_lookup(self, async_client: AsyncSent) -> None:
         async with async_client.numbers.with_streaming_response.lookup(
             phone_number="+12025551234",
         ) as response:
@@ -119,7 +119,7 @@ class TestAsyncNumbers:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_path_params_lookup(self, async_client: AsyncSentDm) -> None:
+    async def test_path_params_lookup(self, async_client: AsyncSent) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `phone_number` but received ''"):
             await async_client.numbers.with_raw_response.lookup(
                 phone_number="",

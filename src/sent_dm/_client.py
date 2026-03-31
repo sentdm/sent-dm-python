@@ -24,7 +24,7 @@ from ._compat import cached_property
 from ._models import SecurityOptions
 from ._version import __version__
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
-from ._exceptions import SentDmError, APIStatusError
+from ._exceptions import SentError, APIStatusError
 from ._base_client import (
     DEFAULT_MAX_RETRIES,
     SyncAPIClient,
@@ -42,10 +42,10 @@ if TYPE_CHECKING:
     from .resources.templates import TemplatesResource, AsyncTemplatesResource
     from .resources.profiles.profiles import ProfilesResource, AsyncProfilesResource
 
-__all__ = ["Timeout", "Transport", "ProxiesTypes", "RequestOptions", "SentDm", "AsyncSentDm", "Client", "AsyncClient"]
+__all__ = ["Timeout", "Transport", "ProxiesTypes", "RequestOptions", "Sent", "AsyncSent", "Client", "AsyncClient"]
 
 
-class SentDm(SyncAPIClient):
+class Sent(SyncAPIClient):
     # client options
     api_key: str
 
@@ -72,20 +72,20 @@ class SentDm(SyncAPIClient):
         # part of our public interface in the future.
         _strict_response_validation: bool = False,
     ) -> None:
-        """Construct a new synchronous SentDm client instance.
+        """Construct a new synchronous Sent client instance.
 
         This automatically infers the `api_key` argument from the `SENT_DM_API_KEY` environment variable if it is not provided.
         """
         if api_key is None:
             api_key = os.environ.get("SENT_DM_API_KEY")
         if api_key is None:
-            raise SentDmError(
+            raise SentError(
                 "The api_key client option must be set either by passing api_key to the client or by setting the SENT_DM_API_KEY environment variable"
             )
         self.api_key = api_key
 
         if base_url is None:
-            base_url = os.environ.get("SENT_DM_BASE_URL")
+            base_url = os.environ.get("SENT_BASE_URL")
         if base_url is None:
             base_url = f"https://api.sent.dm"
 
@@ -157,12 +157,12 @@ class SentDm(SyncAPIClient):
         return MeResource(self)
 
     @cached_property
-    def with_raw_response(self) -> SentDmWithRawResponse:
-        return SentDmWithRawResponse(self)
+    def with_raw_response(self) -> SentWithRawResponse:
+        return SentWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> SentDmWithStreamedResponse:
-        return SentDmWithStreamedResponse(self)
+    def with_streaming_response(self) -> SentWithStreamedResponse:
+        return SentWithStreamedResponse(self)
 
     @property
     @override
@@ -274,7 +274,7 @@ class SentDm(SyncAPIClient):
         return APIStatusError(err_msg, response=response, body=body)
 
 
-class AsyncSentDm(AsyncAPIClient):
+class AsyncSent(AsyncAPIClient):
     # client options
     api_key: str
 
@@ -301,20 +301,20 @@ class AsyncSentDm(AsyncAPIClient):
         # part of our public interface in the future.
         _strict_response_validation: bool = False,
     ) -> None:
-        """Construct a new async AsyncSentDm client instance.
+        """Construct a new async AsyncSent client instance.
 
         This automatically infers the `api_key` argument from the `SENT_DM_API_KEY` environment variable if it is not provided.
         """
         if api_key is None:
             api_key = os.environ.get("SENT_DM_API_KEY")
         if api_key is None:
-            raise SentDmError(
+            raise SentError(
                 "The api_key client option must be set either by passing api_key to the client or by setting the SENT_DM_API_KEY environment variable"
             )
         self.api_key = api_key
 
         if base_url is None:
-            base_url = os.environ.get("SENT_DM_BASE_URL")
+            base_url = os.environ.get("SENT_BASE_URL")
         if base_url is None:
             base_url = f"https://api.sent.dm"
 
@@ -386,12 +386,12 @@ class AsyncSentDm(AsyncAPIClient):
         return AsyncMeResource(self)
 
     @cached_property
-    def with_raw_response(self) -> AsyncSentDmWithRawResponse:
-        return AsyncSentDmWithRawResponse(self)
+    def with_raw_response(self) -> AsyncSentWithRawResponse:
+        return AsyncSentWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> AsyncSentDmWithStreamedResponse:
-        return AsyncSentDmWithStreamedResponse(self)
+    def with_streaming_response(self) -> AsyncSentWithStreamedResponse:
+        return AsyncSentWithStreamedResponse(self)
 
     @property
     @override
@@ -503,10 +503,10 @@ class AsyncSentDm(AsyncAPIClient):
         return APIStatusError(err_msg, response=response, body=body)
 
 
-class SentDmWithRawResponse:
-    _client: SentDm
+class SentWithRawResponse:
+    _client: Sent
 
-    def __init__(self, client: SentDm) -> None:
+    def __init__(self, client: Sent) -> None:
         self._client = client
 
     @cached_property
@@ -566,10 +566,10 @@ class SentDmWithRawResponse:
         return MeResourceWithRawResponse(self._client.me)
 
 
-class AsyncSentDmWithRawResponse:
-    _client: AsyncSentDm
+class AsyncSentWithRawResponse:
+    _client: AsyncSent
 
-    def __init__(self, client: AsyncSentDm) -> None:
+    def __init__(self, client: AsyncSent) -> None:
         self._client = client
 
     @cached_property
@@ -629,10 +629,10 @@ class AsyncSentDmWithRawResponse:
         return AsyncMeResourceWithRawResponse(self._client.me)
 
 
-class SentDmWithStreamedResponse:
-    _client: SentDm
+class SentWithStreamedResponse:
+    _client: Sent
 
-    def __init__(self, client: SentDm) -> None:
+    def __init__(self, client: Sent) -> None:
         self._client = client
 
     @cached_property
@@ -692,10 +692,10 @@ class SentDmWithStreamedResponse:
         return MeResourceWithStreamingResponse(self._client.me)
 
 
-class AsyncSentDmWithStreamedResponse:
-    _client: AsyncSentDm
+class AsyncSentWithStreamedResponse:
+    _client: AsyncSent
 
-    def __init__(self, client: AsyncSentDm) -> None:
+    def __init__(self, client: AsyncSent) -> None:
         self._client = client
 
     @cached_property
@@ -755,6 +755,6 @@ class AsyncSentDmWithStreamedResponse:
         return AsyncMeResourceWithStreamingResponse(self._client.me)
 
 
-Client = SentDm
+Client = Sent
 
-AsyncClient = AsyncSentDm
+AsyncClient = AsyncSent
