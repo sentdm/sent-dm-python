@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.16.0 (2026-03-31)
+
+Full Changelog: [v0.15.0...v0.16.0](https://github.com/sentdm/sent-dm-python/compare/v0.15.0...v0.16.0)
+
+### Features
+
+* **internal:** implement indices array format for query and form serialization ([6d6fb31](https://github.com/sentdm/sent-dm-python/commit/6d6fb31a333ad899c03d4638725454747cd06ed5))
+
 ## 0.15.0 (2026-03-25)
 
 Full Changelog: [v0.14.1...v0.15.0](https://github.com/sentdm/sent-dm-python/compare/v0.14.1...v0.15.0)
