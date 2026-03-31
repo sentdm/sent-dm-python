@@ -19,11 +19,11 @@ import pytest
 from respx import MockRouter
 from pydantic import ValidationError
 
-from sent_dm import SentDm, AsyncSentDm, APIResponseValidationError
+from sent_dm import Sent, AsyncSent, APIResponseValidationError
 from sent_dm._types import Omit
 from sent_dm._utils import asyncify
 from sent_dm._models import BaseModel, FinalRequestOptions
-from sent_dm._exceptions import SentDmError, APIStatusError, APITimeoutError, APIResponseValidationError
+from sent_dm._exceptions import SentError, APIStatusError, APITimeoutError, APIResponseValidationError
 from sent_dm._base_client import (
     DEFAULT_TIMEOUT,
     HTTPX_DEFAULT_TIMEOUT,
@@ -103,7 +103,7 @@ async def _make_async_iterator(iterable: Iterable[T], counter: Optional[Counter]
         yield item
 
 
-def _get_open_connections(client: SentDm | AsyncSentDm) -> int:
+def _get_open_connections(client: Sent | AsyncSent) -> int:
     transport = client._client._transport
     assert isinstance(transport, httpx.HTTPTransport) or isinstance(transport, httpx.AsyncHTTPTransport)
 
@@ -111,9 +111,9 @@ def _get_open_connections(client: SentDm | AsyncSentDm) -> int:
     return len(pool._requests)
 
 
-class TestSentDm:
+class TestSent:
     @pytest.mark.respx(base_url=base_url)
-    def test_raw_response(self, respx_mock: MockRouter, client: SentDm) -> None:
+    def test_raw_response(self, respx_mock: MockRouter, client: Sent) -> None:
         respx_mock.post("/foo").mock(return_value=httpx.Response(200, json={"foo": "bar"}))
 
         response = client.post("/foo", cast_to=httpx.Response)
@@ -122,7 +122,7 @@ class TestSentDm:
         assert response.json() == {"foo": "bar"}
 
     @pytest.mark.respx(base_url=base_url)
-    def test_raw_response_for_binary(self, respx_mock: MockRouter, client: SentDm) -> None:
+    def test_raw_response_for_binary(self, respx_mock: MockRouter, client: Sent) -> None:
         respx_mock.post("/foo").mock(
             return_value=httpx.Response(200, headers={"Content-Type": "application/binary"}, content='{"foo": "bar"}')
         )
@@ -132,7 +132,7 @@ class TestSentDm:
         assert isinstance(response, httpx.Response)
         assert response.json() == {"foo": "bar"}
 
-    def test_copy(self, client: SentDm) -> None:
+    def test_copy(self, client: Sent) -> None:
         copied = client.copy()
         assert id(copied) != id(client)
 
@@ -140,7 +140,7 @@ class TestSentDm:
         assert copied.api_key == "another My API Key"
         assert client.api_key == "My API Key"
 
-    def test_copy_default_options(self, client: SentDm) -> None:
+    def test_copy_default_options(self, client: Sent) -> None:
         # options that have a default are overridden correctly
         copied = client.copy(max_retries=7)
         assert copied.max_retries == 7
@@ -157,7 +157,7 @@ class TestSentDm:
         assert isinstance(client.timeout, httpx.Timeout)
 
     def test_copy_default_headers(self) -> None:
-        client = SentDm(
+        client = Sent(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
         assert client.default_headers["X-Foo"] == "bar"
@@ -192,7 +192,7 @@ class TestSentDm:
         client.close()
 
     def test_copy_default_query(self) -> None:
-        client = SentDm(
+        client = Sent(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"foo": "bar"}
         )
         assert _get_params(client)["foo"] == "bar"
@@ -229,7 +229,7 @@ class TestSentDm:
 
         client.close()
 
-    def test_copy_signature(self, client: SentDm) -> None:
+    def test_copy_signature(self, client: Sent) -> None:
         # ensure the same parameters that can be passed to the client are defined in the `.copy()` method
         init_signature = inspect.signature(
             # mypy doesn't like that we access the `__init__` property.
@@ -246,7 +246,7 @@ class TestSentDm:
             assert copy_param is not None, f"copy() signature is missing the {name} param"
 
     @pytest.mark.skipif(sys.version_info >= (3, 10), reason="fails because of a memory leak that started from 3.12")
-    def test_copy_build_request(self, client: SentDm) -> None:
+    def test_copy_build_request(self, client: Sent) -> None:
         options = FinalRequestOptions(method="get", url="/foo")
 
         def build_request(options: FinalRequestOptions) -> None:
@@ -308,7 +308,7 @@ class TestSentDm:
                     print(frame)
             raise AssertionError()
 
-    def test_request_timeout(self, client: SentDm) -> None:
+    def test_request_timeout(self, client: Sent) -> None:
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
         assert timeout == DEFAULT_TIMEOUT
@@ -318,7 +318,7 @@ class TestSentDm:
         assert timeout == httpx.Timeout(100.0)
 
     def test_client_timeout_option(self) -> None:
-        client = SentDm(base_url=base_url, api_key=api_key, _strict_response_validation=True, timeout=httpx.Timeout(0))
+        client = Sent(base_url=base_url, api_key=api_key, _strict_response_validation=True, timeout=httpx.Timeout(0))
 
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
@@ -329,9 +329,7 @@ class TestSentDm:
     def test_http_client_timeout_option(self) -> None:
         # custom timeout given to the httpx client should be used
         with httpx.Client(timeout=None) as http_client:
-            client = SentDm(
-                base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
-            )
+            client = Sent(base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client)
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
             timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
@@ -341,9 +339,7 @@ class TestSentDm:
 
         # no timeout given to the httpx client should not use the httpx default
         with httpx.Client() as http_client:
-            client = SentDm(
-                base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
-            )
+            client = Sent(base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client)
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
             timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
@@ -353,9 +349,7 @@ class TestSentDm:
 
         # explicitly passing the default timeout currently results in it being ignored
         with httpx.Client(timeout=HTTPX_DEFAULT_TIMEOUT) as http_client:
-            client = SentDm(
-                base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
-            )
+            client = Sent(base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client)
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
             timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
@@ -366,7 +360,7 @@ class TestSentDm:
     async def test_invalid_http_client(self) -> None:
         with pytest.raises(TypeError, match="Invalid `http_client` arg"):
             async with httpx.AsyncClient() as http_client:
-                SentDm(
+                Sent(
                     base_url=base_url,
                     api_key=api_key,
                     _strict_response_validation=True,
@@ -374,14 +368,14 @@ class TestSentDm:
                 )
 
     def test_default_headers_option(self) -> None:
-        test_client = SentDm(
+        test_client = Sent(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
         request = test_client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("x-foo") == "bar"
         assert request.headers.get("x-stainless-lang") == "python"
 
-        test_client2 = SentDm(
+        test_client2 = Sent(
             base_url=base_url,
             api_key=api_key,
             _strict_response_validation=True,
@@ -398,17 +392,17 @@ class TestSentDm:
         test_client2.close()
 
     def test_validate_headers(self) -> None:
-        client = SentDm(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        client = Sent(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("x-api-key") == api_key
 
-        with pytest.raises(SentDmError):
+        with pytest.raises(SentError):
             with update_env(**{"SENT_DM_API_KEY": Omit()}):
-                client2 = SentDm(base_url=base_url, api_key=None, _strict_response_validation=True)
+                client2 = Sent(base_url=base_url, api_key=None, _strict_response_validation=True)
             _ = client2
 
     def test_default_query_option(self) -> None:
-        client = SentDm(
+        client = Sent(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"query_param": "bar"}
         )
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -427,7 +421,7 @@ class TestSentDm:
 
         client.close()
 
-    def test_request_extra_json(self, client: SentDm) -> None:
+    def test_request_extra_json(self, client: Sent) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -461,7 +455,7 @@ class TestSentDm:
         data = json.loads(request.content.decode("utf-8"))
         assert data == {"foo": "bar", "baz": None}
 
-    def test_request_extra_headers(self, client: SentDm) -> None:
+    def test_request_extra_headers(self, client: Sent) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -483,7 +477,7 @@ class TestSentDm:
         )
         assert request.headers.get("X-Bar") == "false"
 
-    def test_request_extra_query(self, client: SentDm) -> None:
+    def test_request_extra_query(self, client: Sent) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -524,7 +518,7 @@ class TestSentDm:
         params = dict(request.url.params)
         assert params == {"foo": "2"}
 
-    def test_multipart_repeating_array(self, client: SentDm) -> None:
+    def test_multipart_repeating_array(self, client: Sent) -> None:
         request = client._build_request(
             FinalRequestOptions.construct(
                 method="post",
@@ -554,7 +548,7 @@ class TestSentDm:
         ]
 
     @pytest.mark.respx(base_url=base_url)
-    def test_binary_content_upload(self, respx_mock: MockRouter, client: SentDm) -> None:
+    def test_binary_content_upload(self, respx_mock: MockRouter, client: Sent) -> None:
         respx_mock.post("/upload").mock(side_effect=mirror_request_content)
 
         file_content = b"Hello, this is a test file."
@@ -579,7 +573,7 @@ class TestSentDm:
             assert counter.value == 0, "the request body should not have been read"
             return httpx.Response(200, content=request.read())
 
-        with SentDm(
+        with Sent(
             base_url=base_url,
             api_key=api_key,
             _strict_response_validation=True,
@@ -598,7 +592,7 @@ class TestSentDm:
             assert counter.value == 1
 
     @pytest.mark.respx(base_url=base_url)
-    def test_binary_content_upload_with_body_is_deprecated(self, respx_mock: MockRouter, client: SentDm) -> None:
+    def test_binary_content_upload_with_body_is_deprecated(self, respx_mock: MockRouter, client: Sent) -> None:
         respx_mock.post("/upload").mock(side_effect=mirror_request_content)
 
         file_content = b"Hello, this is a test file."
@@ -618,7 +612,7 @@ class TestSentDm:
         assert response.content == file_content
 
     @pytest.mark.respx(base_url=base_url)
-    def test_basic_union_response(self, respx_mock: MockRouter, client: SentDm) -> None:
+    def test_basic_union_response(self, respx_mock: MockRouter, client: Sent) -> None:
         class Model1(BaseModel):
             name: str
 
@@ -632,7 +626,7 @@ class TestSentDm:
         assert response.foo == "bar"
 
     @pytest.mark.respx(base_url=base_url)
-    def test_union_response_different_types(self, respx_mock: MockRouter, client: SentDm) -> None:
+    def test_union_response_different_types(self, respx_mock: MockRouter, client: Sent) -> None:
         """Union of objects with the same field name using a different type"""
 
         class Model1(BaseModel):
@@ -654,7 +648,7 @@ class TestSentDm:
         assert response.foo == 1
 
     @pytest.mark.respx(base_url=base_url)
-    def test_non_application_json_content_type_for_json_data(self, respx_mock: MockRouter, client: SentDm) -> None:
+    def test_non_application_json_content_type_for_json_data(self, respx_mock: MockRouter, client: Sent) -> None:
         """
         Response that sets Content-Type to something other than application/json but returns json data
         """
@@ -675,7 +669,7 @@ class TestSentDm:
         assert response.foo == 2
 
     def test_base_url_setter(self) -> None:
-        client = SentDm(base_url="https://example.com/from_init", api_key=api_key, _strict_response_validation=True)
+        client = Sent(base_url="https://example.com/from_init", api_key=api_key, _strict_response_validation=True)
         assert client.base_url == "https://example.com/from_init/"
 
         client.base_url = "https://example.com/from_setter"  # type: ignore[assignment]
@@ -685,15 +679,15 @@ class TestSentDm:
         client.close()
 
     def test_base_url_env(self) -> None:
-        with update_env(SENT_DM_BASE_URL="http://localhost:5000/from/env"):
-            client = SentDm(api_key=api_key, _strict_response_validation=True)
+        with update_env(SENT_BASE_URL="http://localhost:5000/from/env"):
+            client = Sent(api_key=api_key, _strict_response_validation=True)
             assert client.base_url == "http://localhost:5000/from/env/"
 
     @pytest.mark.parametrize(
         "client",
         [
-            SentDm(base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True),
-            SentDm(
+            Sent(base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True),
+            Sent(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
                 _strict_response_validation=True,
@@ -702,7 +696,7 @@ class TestSentDm:
         ],
         ids=["standard", "custom http client"],
     )
-    def test_base_url_trailing_slash(self, client: SentDm) -> None:
+    def test_base_url_trailing_slash(self, client: Sent) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -716,8 +710,8 @@ class TestSentDm:
     @pytest.mark.parametrize(
         "client",
         [
-            SentDm(base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True),
-            SentDm(
+            Sent(base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True),
+            Sent(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
                 _strict_response_validation=True,
@@ -726,7 +720,7 @@ class TestSentDm:
         ],
         ids=["standard", "custom http client"],
     )
-    def test_base_url_no_trailing_slash(self, client: SentDm) -> None:
+    def test_base_url_no_trailing_slash(self, client: Sent) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -740,8 +734,8 @@ class TestSentDm:
     @pytest.mark.parametrize(
         "client",
         [
-            SentDm(base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True),
-            SentDm(
+            Sent(base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True),
+            Sent(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
                 _strict_response_validation=True,
@@ -750,7 +744,7 @@ class TestSentDm:
         ],
         ids=["standard", "custom http client"],
     )
-    def test_absolute_request_url(self, client: SentDm) -> None:
+    def test_absolute_request_url(self, client: Sent) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -762,7 +756,7 @@ class TestSentDm:
         client.close()
 
     def test_copied_client_does_not_close_http(self) -> None:
-        test_client = SentDm(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        test_client = Sent(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         assert not test_client.is_closed()
 
         copied = test_client.copy()
@@ -773,7 +767,7 @@ class TestSentDm:
         assert not test_client.is_closed()
 
     def test_client_context_manager(self) -> None:
-        test_client = SentDm(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        test_client = Sent(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         with test_client as c2:
             assert c2 is test_client
             assert not c2.is_closed()
@@ -781,7 +775,7 @@ class TestSentDm:
         assert test_client.is_closed()
 
     @pytest.mark.respx(base_url=base_url)
-    def test_client_response_validation_error(self, respx_mock: MockRouter, client: SentDm) -> None:
+    def test_client_response_validation_error(self, respx_mock: MockRouter, client: Sent) -> None:
         class Model(BaseModel):
             foo: str
 
@@ -794,7 +788,7 @@ class TestSentDm:
 
     def test_client_max_retries_validation(self) -> None:
         with pytest.raises(TypeError, match=r"max_retries cannot be None"):
-            SentDm(base_url=base_url, api_key=api_key, _strict_response_validation=True, max_retries=cast(Any, None))
+            Sent(base_url=base_url, api_key=api_key, _strict_response_validation=True, max_retries=cast(Any, None))
 
     @pytest.mark.respx(base_url=base_url)
     def test_received_text_for_expected_json(self, respx_mock: MockRouter) -> None:
@@ -803,12 +797,12 @@ class TestSentDm:
 
         respx_mock.get("/foo").mock(return_value=httpx.Response(200, text="my-custom-format"))
 
-        strict_client = SentDm(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        strict_client = Sent(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
         with pytest.raises(APIResponseValidationError):
             strict_client.get("/foo", cast_to=Model)
 
-        non_strict_client = SentDm(base_url=base_url, api_key=api_key, _strict_response_validation=False)
+        non_strict_client = Sent(base_url=base_url, api_key=api_key, _strict_response_validation=False)
 
         response = non_strict_client.get("/foo", cast_to=Model)
         assert isinstance(response, str)  # type: ignore[unreachable]
@@ -839,7 +833,7 @@ class TestSentDm:
     )
     @mock.patch("time.time", mock.MagicMock(return_value=1696004797))
     def test_parse_retry_after_header(
-        self, remaining_retries: int, retry_after: str, timeout: float, client: SentDm
+        self, remaining_retries: int, retry_after: str, timeout: float, client: Sent
     ) -> None:
         headers = httpx.Headers({"retry-after": retry_after})
         options = FinalRequestOptions(method="get", url="/foo", max_retries=3)
@@ -848,7 +842,7 @@ class TestSentDm:
 
     @mock.patch("sent_dm._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
-    def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter, client: SentDm) -> None:
+    def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter, client: Sent) -> None:
         respx_mock.post("/v3/messages").mock(side_effect=httpx.TimeoutException("Test timeout error"))
 
         with pytest.raises(APITimeoutError):
@@ -858,7 +852,7 @@ class TestSentDm:
 
     @mock.patch("sent_dm._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
-    def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter, client: SentDm) -> None:
+    def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter, client: Sent) -> None:
         respx_mock.post("/v3/messages").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
@@ -871,7 +865,7 @@ class TestSentDm:
     @pytest.mark.parametrize("failure_mode", ["status", "exception"])
     def test_retries_taken(
         self,
-        client: SentDm,
+        client: Sent,
         failures_before_success: int,
         failure_mode: Literal["status", "exception"],
         respx_mock: MockRouter,
@@ -899,9 +893,7 @@ class TestSentDm:
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
     @mock.patch("sent_dm._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
-    def test_omit_retry_count_header(
-        self, client: SentDm, failures_before_success: int, respx_mock: MockRouter
-    ) -> None:
+    def test_omit_retry_count_header(self, client: Sent, failures_before_success: int, respx_mock: MockRouter) -> None:
         client = client.with_options(max_retries=4)
 
         nb_retries = 0
@@ -923,7 +915,7 @@ class TestSentDm:
     @mock.patch("sent_dm._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_overwrite_retry_count_header(
-        self, client: SentDm, failures_before_success: int, respx_mock: MockRouter
+        self, client: Sent, failures_before_success: int, respx_mock: MockRouter
     ) -> None:
         client = client.with_options(max_retries=4)
 
@@ -973,7 +965,7 @@ class TestSentDm:
         )
 
     @pytest.mark.respx(base_url=base_url)
-    def test_follow_redirects(self, respx_mock: MockRouter, client: SentDm) -> None:
+    def test_follow_redirects(self, respx_mock: MockRouter, client: Sent) -> None:
         # Test that the default follow_redirects=True allows following redirects
         respx_mock.post("/redirect").mock(
             return_value=httpx.Response(302, headers={"Location": f"{base_url}/redirected"})
@@ -985,7 +977,7 @@ class TestSentDm:
         assert response.json() == {"status": "ok"}
 
     @pytest.mark.respx(base_url=base_url)
-    def test_follow_redirects_disabled(self, respx_mock: MockRouter, client: SentDm) -> None:
+    def test_follow_redirects_disabled(self, respx_mock: MockRouter, client: Sent) -> None:
         # Test that follow_redirects=False prevents following redirects
         respx_mock.post("/redirect").mock(
             return_value=httpx.Response(302, headers={"Location": f"{base_url}/redirected"})
@@ -998,9 +990,9 @@ class TestSentDm:
         assert exc_info.value.response.headers["Location"] == f"{base_url}/redirected"
 
 
-class TestAsyncSentDm:
+class TestAsyncSent:
     @pytest.mark.respx(base_url=base_url)
-    async def test_raw_response(self, respx_mock: MockRouter, async_client: AsyncSentDm) -> None:
+    async def test_raw_response(self, respx_mock: MockRouter, async_client: AsyncSent) -> None:
         respx_mock.post("/foo").mock(return_value=httpx.Response(200, json={"foo": "bar"}))
 
         response = await async_client.post("/foo", cast_to=httpx.Response)
@@ -1009,7 +1001,7 @@ class TestAsyncSentDm:
         assert response.json() == {"foo": "bar"}
 
     @pytest.mark.respx(base_url=base_url)
-    async def test_raw_response_for_binary(self, respx_mock: MockRouter, async_client: AsyncSentDm) -> None:
+    async def test_raw_response_for_binary(self, respx_mock: MockRouter, async_client: AsyncSent) -> None:
         respx_mock.post("/foo").mock(
             return_value=httpx.Response(200, headers={"Content-Type": "application/binary"}, content='{"foo": "bar"}')
         )
@@ -1019,7 +1011,7 @@ class TestAsyncSentDm:
         assert isinstance(response, httpx.Response)
         assert response.json() == {"foo": "bar"}
 
-    def test_copy(self, async_client: AsyncSentDm) -> None:
+    def test_copy(self, async_client: AsyncSent) -> None:
         copied = async_client.copy()
         assert id(copied) != id(async_client)
 
@@ -1027,7 +1019,7 @@ class TestAsyncSentDm:
         assert copied.api_key == "another My API Key"
         assert async_client.api_key == "My API Key"
 
-    def test_copy_default_options(self, async_client: AsyncSentDm) -> None:
+    def test_copy_default_options(self, async_client: AsyncSent) -> None:
         # options that have a default are overridden correctly
         copied = async_client.copy(max_retries=7)
         assert copied.max_retries == 7
@@ -1044,7 +1036,7 @@ class TestAsyncSentDm:
         assert isinstance(async_client.timeout, httpx.Timeout)
 
     async def test_copy_default_headers(self) -> None:
-        client = AsyncSentDm(
+        client = AsyncSent(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
         assert client.default_headers["X-Foo"] == "bar"
@@ -1079,7 +1071,7 @@ class TestAsyncSentDm:
         await client.close()
 
     async def test_copy_default_query(self) -> None:
-        client = AsyncSentDm(
+        client = AsyncSent(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"foo": "bar"}
         )
         assert _get_params(client)["foo"] == "bar"
@@ -1116,7 +1108,7 @@ class TestAsyncSentDm:
 
         await client.close()
 
-    def test_copy_signature(self, async_client: AsyncSentDm) -> None:
+    def test_copy_signature(self, async_client: AsyncSent) -> None:
         # ensure the same parameters that can be passed to the client are defined in the `.copy()` method
         init_signature = inspect.signature(
             # mypy doesn't like that we access the `__init__` property.
@@ -1133,7 +1125,7 @@ class TestAsyncSentDm:
             assert copy_param is not None, f"copy() signature is missing the {name} param"
 
     @pytest.mark.skipif(sys.version_info >= (3, 10), reason="fails because of a memory leak that started from 3.12")
-    def test_copy_build_request(self, async_client: AsyncSentDm) -> None:
+    def test_copy_build_request(self, async_client: AsyncSent) -> None:
         options = FinalRequestOptions(method="get", url="/foo")
 
         def build_request(options: FinalRequestOptions) -> None:
@@ -1195,7 +1187,7 @@ class TestAsyncSentDm:
                     print(frame)
             raise AssertionError()
 
-    async def test_request_timeout(self, async_client: AsyncSentDm) -> None:
+    async def test_request_timeout(self, async_client: AsyncSent) -> None:
         request = async_client._build_request(FinalRequestOptions(method="get", url="/foo"))
         timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
         assert timeout == DEFAULT_TIMEOUT
@@ -1207,7 +1199,7 @@ class TestAsyncSentDm:
         assert timeout == httpx.Timeout(100.0)
 
     async def test_client_timeout_option(self) -> None:
-        client = AsyncSentDm(
+        client = AsyncSent(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, timeout=httpx.Timeout(0)
         )
 
@@ -1220,7 +1212,7 @@ class TestAsyncSentDm:
     async def test_http_client_timeout_option(self) -> None:
         # custom timeout given to the httpx client should be used
         async with httpx.AsyncClient(timeout=None) as http_client:
-            client = AsyncSentDm(
+            client = AsyncSent(
                 base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
@@ -1232,7 +1224,7 @@ class TestAsyncSentDm:
 
         # no timeout given to the httpx client should not use the httpx default
         async with httpx.AsyncClient() as http_client:
-            client = AsyncSentDm(
+            client = AsyncSent(
                 base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
@@ -1244,7 +1236,7 @@ class TestAsyncSentDm:
 
         # explicitly passing the default timeout currently results in it being ignored
         async with httpx.AsyncClient(timeout=HTTPX_DEFAULT_TIMEOUT) as http_client:
-            client = AsyncSentDm(
+            client = AsyncSent(
                 base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
@@ -1257,7 +1249,7 @@ class TestAsyncSentDm:
     def test_invalid_http_client(self) -> None:
         with pytest.raises(TypeError, match="Invalid `http_client` arg"):
             with httpx.Client() as http_client:
-                AsyncSentDm(
+                AsyncSent(
                     base_url=base_url,
                     api_key=api_key,
                     _strict_response_validation=True,
@@ -1265,14 +1257,14 @@ class TestAsyncSentDm:
                 )
 
     async def test_default_headers_option(self) -> None:
-        test_client = AsyncSentDm(
+        test_client = AsyncSent(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
         request = test_client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("x-foo") == "bar"
         assert request.headers.get("x-stainless-lang") == "python"
 
-        test_client2 = AsyncSentDm(
+        test_client2 = AsyncSent(
             base_url=base_url,
             api_key=api_key,
             _strict_response_validation=True,
@@ -1289,17 +1281,17 @@ class TestAsyncSentDm:
         await test_client2.close()
 
     def test_validate_headers(self) -> None:
-        client = AsyncSentDm(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        client = AsyncSent(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("x-api-key") == api_key
 
-        with pytest.raises(SentDmError):
+        with pytest.raises(SentError):
             with update_env(**{"SENT_DM_API_KEY": Omit()}):
-                client2 = AsyncSentDm(base_url=base_url, api_key=None, _strict_response_validation=True)
+                client2 = AsyncSent(base_url=base_url, api_key=None, _strict_response_validation=True)
             _ = client2
 
     async def test_default_query_option(self) -> None:
-        client = AsyncSentDm(
+        client = AsyncSent(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"query_param": "bar"}
         )
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -1318,7 +1310,7 @@ class TestAsyncSentDm:
 
         await client.close()
 
-    def test_request_extra_json(self, client: SentDm) -> None:
+    def test_request_extra_json(self, client: Sent) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -1352,7 +1344,7 @@ class TestAsyncSentDm:
         data = json.loads(request.content.decode("utf-8"))
         assert data == {"foo": "bar", "baz": None}
 
-    def test_request_extra_headers(self, client: SentDm) -> None:
+    def test_request_extra_headers(self, client: Sent) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -1374,7 +1366,7 @@ class TestAsyncSentDm:
         )
         assert request.headers.get("X-Bar") == "false"
 
-    def test_request_extra_query(self, client: SentDm) -> None:
+    def test_request_extra_query(self, client: Sent) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -1415,7 +1407,7 @@ class TestAsyncSentDm:
         params = dict(request.url.params)
         assert params == {"foo": "2"}
 
-    def test_multipart_repeating_array(self, async_client: AsyncSentDm) -> None:
+    def test_multipart_repeating_array(self, async_client: AsyncSent) -> None:
         request = async_client._build_request(
             FinalRequestOptions.construct(
                 method="post",
@@ -1445,7 +1437,7 @@ class TestAsyncSentDm:
         ]
 
     @pytest.mark.respx(base_url=base_url)
-    async def test_binary_content_upload(self, respx_mock: MockRouter, async_client: AsyncSentDm) -> None:
+    async def test_binary_content_upload(self, respx_mock: MockRouter, async_client: AsyncSent) -> None:
         respx_mock.post("/upload").mock(side_effect=mirror_request_content)
 
         file_content = b"Hello, this is a test file."
@@ -1470,7 +1462,7 @@ class TestAsyncSentDm:
             assert counter.value == 0, "the request body should not have been read"
             return httpx.Response(200, content=await request.aread())
 
-        async with AsyncSentDm(
+        async with AsyncSent(
             base_url=base_url,
             api_key=api_key,
             _strict_response_validation=True,
@@ -1490,7 +1482,7 @@ class TestAsyncSentDm:
 
     @pytest.mark.respx(base_url=base_url)
     async def test_binary_content_upload_with_body_is_deprecated(
-        self, respx_mock: MockRouter, async_client: AsyncSentDm
+        self, respx_mock: MockRouter, async_client: AsyncSent
     ) -> None:
         respx_mock.post("/upload").mock(side_effect=mirror_request_content)
 
@@ -1511,7 +1503,7 @@ class TestAsyncSentDm:
         assert response.content == file_content
 
     @pytest.mark.respx(base_url=base_url)
-    async def test_basic_union_response(self, respx_mock: MockRouter, async_client: AsyncSentDm) -> None:
+    async def test_basic_union_response(self, respx_mock: MockRouter, async_client: AsyncSent) -> None:
         class Model1(BaseModel):
             name: str
 
@@ -1525,7 +1517,7 @@ class TestAsyncSentDm:
         assert response.foo == "bar"
 
     @pytest.mark.respx(base_url=base_url)
-    async def test_union_response_different_types(self, respx_mock: MockRouter, async_client: AsyncSentDm) -> None:
+    async def test_union_response_different_types(self, respx_mock: MockRouter, async_client: AsyncSent) -> None:
         """Union of objects with the same field name using a different type"""
 
         class Model1(BaseModel):
@@ -1548,7 +1540,7 @@ class TestAsyncSentDm:
 
     @pytest.mark.respx(base_url=base_url)
     async def test_non_application_json_content_type_for_json_data(
-        self, respx_mock: MockRouter, async_client: AsyncSentDm
+        self, respx_mock: MockRouter, async_client: AsyncSent
     ) -> None:
         """
         Response that sets Content-Type to something other than application/json but returns json data
@@ -1570,9 +1562,7 @@ class TestAsyncSentDm:
         assert response.foo == 2
 
     async def test_base_url_setter(self) -> None:
-        client = AsyncSentDm(
-            base_url="https://example.com/from_init", api_key=api_key, _strict_response_validation=True
-        )
+        client = AsyncSent(base_url="https://example.com/from_init", api_key=api_key, _strict_response_validation=True)
         assert client.base_url == "https://example.com/from_init/"
 
         client.base_url = "https://example.com/from_setter"  # type: ignore[assignment]
@@ -1582,17 +1572,15 @@ class TestAsyncSentDm:
         await client.close()
 
     async def test_base_url_env(self) -> None:
-        with update_env(SENT_DM_BASE_URL="http://localhost:5000/from/env"):
-            client = AsyncSentDm(api_key=api_key, _strict_response_validation=True)
+        with update_env(SENT_BASE_URL="http://localhost:5000/from/env"):
+            client = AsyncSent(api_key=api_key, _strict_response_validation=True)
             assert client.base_url == "http://localhost:5000/from/env/"
 
     @pytest.mark.parametrize(
         "client",
         [
-            AsyncSentDm(
-                base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
-            ),
-            AsyncSentDm(
+            AsyncSent(base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True),
+            AsyncSent(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
                 _strict_response_validation=True,
@@ -1601,7 +1589,7 @@ class TestAsyncSentDm:
         ],
         ids=["standard", "custom http client"],
     )
-    async def test_base_url_trailing_slash(self, client: AsyncSentDm) -> None:
+    async def test_base_url_trailing_slash(self, client: AsyncSent) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -1615,10 +1603,8 @@ class TestAsyncSentDm:
     @pytest.mark.parametrize(
         "client",
         [
-            AsyncSentDm(
-                base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
-            ),
-            AsyncSentDm(
+            AsyncSent(base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True),
+            AsyncSent(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
                 _strict_response_validation=True,
@@ -1627,7 +1613,7 @@ class TestAsyncSentDm:
         ],
         ids=["standard", "custom http client"],
     )
-    async def test_base_url_no_trailing_slash(self, client: AsyncSentDm) -> None:
+    async def test_base_url_no_trailing_slash(self, client: AsyncSent) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -1641,10 +1627,8 @@ class TestAsyncSentDm:
     @pytest.mark.parametrize(
         "client",
         [
-            AsyncSentDm(
-                base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
-            ),
-            AsyncSentDm(
+            AsyncSent(base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True),
+            AsyncSent(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
                 _strict_response_validation=True,
@@ -1653,7 +1637,7 @@ class TestAsyncSentDm:
         ],
         ids=["standard", "custom http client"],
     )
-    async def test_absolute_request_url(self, client: AsyncSentDm) -> None:
+    async def test_absolute_request_url(self, client: AsyncSent) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -1665,7 +1649,7 @@ class TestAsyncSentDm:
         await client.close()
 
     async def test_copied_client_does_not_close_http(self) -> None:
-        test_client = AsyncSentDm(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        test_client = AsyncSent(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         assert not test_client.is_closed()
 
         copied = test_client.copy()
@@ -1677,7 +1661,7 @@ class TestAsyncSentDm:
         assert not test_client.is_closed()
 
     async def test_client_context_manager(self) -> None:
-        test_client = AsyncSentDm(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        test_client = AsyncSent(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         async with test_client as c2:
             assert c2 is test_client
             assert not c2.is_closed()
@@ -1685,7 +1669,7 @@ class TestAsyncSentDm:
         assert test_client.is_closed()
 
     @pytest.mark.respx(base_url=base_url)
-    async def test_client_response_validation_error(self, respx_mock: MockRouter, async_client: AsyncSentDm) -> None:
+    async def test_client_response_validation_error(self, respx_mock: MockRouter, async_client: AsyncSent) -> None:
         class Model(BaseModel):
             foo: str
 
@@ -1698,9 +1682,7 @@ class TestAsyncSentDm:
 
     async def test_client_max_retries_validation(self) -> None:
         with pytest.raises(TypeError, match=r"max_retries cannot be None"):
-            AsyncSentDm(
-                base_url=base_url, api_key=api_key, _strict_response_validation=True, max_retries=cast(Any, None)
-            )
+            AsyncSent(base_url=base_url, api_key=api_key, _strict_response_validation=True, max_retries=cast(Any, None))
 
     @pytest.mark.respx(base_url=base_url)
     async def test_received_text_for_expected_json(self, respx_mock: MockRouter) -> None:
@@ -1709,12 +1691,12 @@ class TestAsyncSentDm:
 
         respx_mock.get("/foo").mock(return_value=httpx.Response(200, text="my-custom-format"))
 
-        strict_client = AsyncSentDm(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        strict_client = AsyncSent(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
         with pytest.raises(APIResponseValidationError):
             await strict_client.get("/foo", cast_to=Model)
 
-        non_strict_client = AsyncSentDm(base_url=base_url, api_key=api_key, _strict_response_validation=False)
+        non_strict_client = AsyncSent(base_url=base_url, api_key=api_key, _strict_response_validation=False)
 
         response = await non_strict_client.get("/foo", cast_to=Model)
         assert isinstance(response, str)  # type: ignore[unreachable]
@@ -1745,7 +1727,7 @@ class TestAsyncSentDm:
     )
     @mock.patch("time.time", mock.MagicMock(return_value=1696004797))
     async def test_parse_retry_after_header(
-        self, remaining_retries: int, retry_after: str, timeout: float, async_client: AsyncSentDm
+        self, remaining_retries: int, retry_after: str, timeout: float, async_client: AsyncSent
     ) -> None:
         headers = httpx.Headers({"retry-after": retry_after})
         options = FinalRequestOptions(method="get", url="/foo", max_retries=3)
@@ -1754,7 +1736,7 @@ class TestAsyncSentDm:
 
     @mock.patch("sent_dm._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
-    async def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter, async_client: AsyncSentDm) -> None:
+    async def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter, async_client: AsyncSent) -> None:
         respx_mock.post("/v3/messages").mock(side_effect=httpx.TimeoutException("Test timeout error"))
 
         with pytest.raises(APITimeoutError):
@@ -1764,7 +1746,7 @@ class TestAsyncSentDm:
 
     @mock.patch("sent_dm._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
-    async def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter, async_client: AsyncSentDm) -> None:
+    async def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter, async_client: AsyncSent) -> None:
         respx_mock.post("/v3/messages").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
@@ -1777,7 +1759,7 @@ class TestAsyncSentDm:
     @pytest.mark.parametrize("failure_mode", ["status", "exception"])
     async def test_retries_taken(
         self,
-        async_client: AsyncSentDm,
+        async_client: AsyncSent,
         failures_before_success: int,
         failure_mode: Literal["status", "exception"],
         respx_mock: MockRouter,
@@ -1806,7 +1788,7 @@ class TestAsyncSentDm:
     @mock.patch("sent_dm._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_omit_retry_count_header(
-        self, async_client: AsyncSentDm, failures_before_success: int, respx_mock: MockRouter
+        self, async_client: AsyncSent, failures_before_success: int, respx_mock: MockRouter
     ) -> None:
         client = async_client.with_options(max_retries=4)
 
@@ -1829,7 +1811,7 @@ class TestAsyncSentDm:
     @mock.patch("sent_dm._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_overwrite_retry_count_header(
-        self, async_client: AsyncSentDm, failures_before_success: int, respx_mock: MockRouter
+        self, async_client: AsyncSent, failures_before_success: int, respx_mock: MockRouter
     ) -> None:
         client = async_client.with_options(max_retries=4)
 
@@ -1883,7 +1865,7 @@ class TestAsyncSentDm:
         )
 
     @pytest.mark.respx(base_url=base_url)
-    async def test_follow_redirects(self, respx_mock: MockRouter, async_client: AsyncSentDm) -> None:
+    async def test_follow_redirects(self, respx_mock: MockRouter, async_client: AsyncSent) -> None:
         # Test that the default follow_redirects=True allows following redirects
         respx_mock.post("/redirect").mock(
             return_value=httpx.Response(302, headers={"Location": f"{base_url}/redirected"})
@@ -1895,7 +1877,7 @@ class TestAsyncSentDm:
         assert response.json() == {"status": "ok"}
 
     @pytest.mark.respx(base_url=base_url)
-    async def test_follow_redirects_disabled(self, respx_mock: MockRouter, async_client: AsyncSentDm) -> None:
+    async def test_follow_redirects_disabled(self, respx_mock: MockRouter, async_client: AsyncSent) -> None:
         # Test that follow_redirects=False prevents following redirects
         respx_mock.post("/redirect").mock(
             return_value=httpx.Response(302, headers={"Location": f"{base_url}/redirected"})

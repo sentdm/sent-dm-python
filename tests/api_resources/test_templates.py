@@ -7,7 +7,7 @@ from typing import Any, cast
 
 import pytest
 
-from sent_dm import SentDm, AsyncSentDm
+from sent_dm import Sent, AsyncSent
 from tests.utils import assert_matches_type
 from sent_dm.types import (
     APIResponseTemplate,
@@ -22,13 +22,13 @@ class TestTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_create(self, client: SentDm) -> None:
+    def test_method_create(self, client: Sent) -> None:
         template = client.templates.create()
         assert_matches_type(APIResponseTemplate, template, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_create_with_all_params(self, client: SentDm) -> None:
+    def test_method_create_with_all_params(self, client: Sent) -> None:
         template = client.templates.create(
             category="MARKETING",
             creation_source=None,
@@ -185,7 +185,7 @@ class TestTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_raw_response_create(self, client: SentDm) -> None:
+    def test_raw_response_create(self, client: Sent) -> None:
         response = client.templates.with_raw_response.create()
 
         assert response.is_closed is True
@@ -195,7 +195,7 @@ class TestTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_streaming_response_create(self, client: SentDm) -> None:
+    def test_streaming_response_create(self, client: Sent) -> None:
         with client.templates.with_streaming_response.create() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -207,7 +207,7 @@ class TestTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_retrieve(self, client: SentDm) -> None:
+    def test_method_retrieve(self, client: Sent) -> None:
         template = client.templates.retrieve(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         )
@@ -215,7 +215,7 @@ class TestTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_retrieve_with_all_params(self, client: SentDm) -> None:
+    def test_method_retrieve_with_all_params(self, client: Sent) -> None:
         template = client.templates.retrieve(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -224,7 +224,7 @@ class TestTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_raw_response_retrieve(self, client: SentDm) -> None:
+    def test_raw_response_retrieve(self, client: Sent) -> None:
         response = client.templates.with_raw_response.retrieve(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         )
@@ -236,7 +236,7 @@ class TestTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_streaming_response_retrieve(self, client: SentDm) -> None:
+    def test_streaming_response_retrieve(self, client: Sent) -> None:
         with client.templates.with_streaming_response.retrieve(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         ) as response:
@@ -250,7 +250,7 @@ class TestTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_path_params_retrieve(self, client: SentDm) -> None:
+    def test_path_params_retrieve(self, client: Sent) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             client.templates.with_raw_response.retrieve(
                 id="",
@@ -258,7 +258,7 @@ class TestTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_update(self, client: SentDm) -> None:
+    def test_method_update(self, client: Sent) -> None:
         template = client.templates.update(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         )
@@ -266,7 +266,7 @@ class TestTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_update_with_all_params(self, client: SentDm) -> None:
+    def test_method_update_with_all_params(self, client: Sent) -> None:
         template = client.templates.update(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
             category="MARKETING",
@@ -410,7 +410,7 @@ class TestTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_raw_response_update(self, client: SentDm) -> None:
+    def test_raw_response_update(self, client: Sent) -> None:
         response = client.templates.with_raw_response.update(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         )
@@ -422,7 +422,7 @@ class TestTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_streaming_response_update(self, client: SentDm) -> None:
+    def test_streaming_response_update(self, client: Sent) -> None:
         with client.templates.with_streaming_response.update(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         ) as response:
@@ -436,7 +436,7 @@ class TestTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_path_params_update(self, client: SentDm) -> None:
+    def test_path_params_update(self, client: Sent) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             client.templates.with_raw_response.update(
                 id="",
@@ -444,7 +444,7 @@ class TestTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_list(self, client: SentDm) -> None:
+    def test_method_list(self, client: Sent) -> None:
         template = client.templates.list(
             page=0,
             page_size=0,
@@ -453,7 +453,7 @@ class TestTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_list_with_all_params(self, client: SentDm) -> None:
+    def test_method_list_with_all_params(self, client: Sent) -> None:
         template = client.templates.list(
             page=0,
             page_size=0,
@@ -467,7 +467,7 @@ class TestTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_raw_response_list(self, client: SentDm) -> None:
+    def test_raw_response_list(self, client: Sent) -> None:
         response = client.templates.with_raw_response.list(
             page=0,
             page_size=0,
@@ -480,7 +480,7 @@ class TestTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_streaming_response_list(self, client: SentDm) -> None:
+    def test_streaming_response_list(self, client: Sent) -> None:
         with client.templates.with_streaming_response.list(
             page=0,
             page_size=0,
@@ -495,7 +495,7 @@ class TestTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_delete(self, client: SentDm) -> None:
+    def test_method_delete(self, client: Sent) -> None:
         template = client.templates.delete(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         )
@@ -503,7 +503,7 @@ class TestTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_delete_with_all_params(self, client: SentDm) -> None:
+    def test_method_delete_with_all_params(self, client: Sent) -> None:
         template = client.templates.delete(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
             delete_from_meta=False,
@@ -514,7 +514,7 @@ class TestTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_raw_response_delete(self, client: SentDm) -> None:
+    def test_raw_response_delete(self, client: Sent) -> None:
         response = client.templates.with_raw_response.delete(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         )
@@ -526,7 +526,7 @@ class TestTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_streaming_response_delete(self, client: SentDm) -> None:
+    def test_streaming_response_delete(self, client: Sent) -> None:
         with client.templates.with_streaming_response.delete(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         ) as response:
@@ -540,7 +540,7 @@ class TestTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_path_params_delete(self, client: SentDm) -> None:
+    def test_path_params_delete(self, client: Sent) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             client.templates.with_raw_response.delete(
                 id="",
@@ -554,13 +554,13 @@ class TestAsyncTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_create(self, async_client: AsyncSentDm) -> None:
+    async def test_method_create(self, async_client: AsyncSent) -> None:
         template = await async_client.templates.create()
         assert_matches_type(APIResponseTemplate, template, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_create_with_all_params(self, async_client: AsyncSentDm) -> None:
+    async def test_method_create_with_all_params(self, async_client: AsyncSent) -> None:
         template = await async_client.templates.create(
             category="MARKETING",
             creation_source=None,
@@ -717,7 +717,7 @@ class TestAsyncTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_raw_response_create(self, async_client: AsyncSentDm) -> None:
+    async def test_raw_response_create(self, async_client: AsyncSent) -> None:
         response = await async_client.templates.with_raw_response.create()
 
         assert response.is_closed is True
@@ -727,7 +727,7 @@ class TestAsyncTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_streaming_response_create(self, async_client: AsyncSentDm) -> None:
+    async def test_streaming_response_create(self, async_client: AsyncSent) -> None:
         async with async_client.templates.with_streaming_response.create() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -739,7 +739,7 @@ class TestAsyncTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_retrieve(self, async_client: AsyncSentDm) -> None:
+    async def test_method_retrieve(self, async_client: AsyncSent) -> None:
         template = await async_client.templates.retrieve(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         )
@@ -747,7 +747,7 @@ class TestAsyncTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_retrieve_with_all_params(self, async_client: AsyncSentDm) -> None:
+    async def test_method_retrieve_with_all_params(self, async_client: AsyncSent) -> None:
         template = await async_client.templates.retrieve(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -756,7 +756,7 @@ class TestAsyncTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_raw_response_retrieve(self, async_client: AsyncSentDm) -> None:
+    async def test_raw_response_retrieve(self, async_client: AsyncSent) -> None:
         response = await async_client.templates.with_raw_response.retrieve(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         )
@@ -768,7 +768,7 @@ class TestAsyncTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_streaming_response_retrieve(self, async_client: AsyncSentDm) -> None:
+    async def test_streaming_response_retrieve(self, async_client: AsyncSent) -> None:
         async with async_client.templates.with_streaming_response.retrieve(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         ) as response:
@@ -782,7 +782,7 @@ class TestAsyncTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_path_params_retrieve(self, async_client: AsyncSentDm) -> None:
+    async def test_path_params_retrieve(self, async_client: AsyncSent) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             await async_client.templates.with_raw_response.retrieve(
                 id="",
@@ -790,7 +790,7 @@ class TestAsyncTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_update(self, async_client: AsyncSentDm) -> None:
+    async def test_method_update(self, async_client: AsyncSent) -> None:
         template = await async_client.templates.update(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         )
@@ -798,7 +798,7 @@ class TestAsyncTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_update_with_all_params(self, async_client: AsyncSentDm) -> None:
+    async def test_method_update_with_all_params(self, async_client: AsyncSent) -> None:
         template = await async_client.templates.update(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
             category="MARKETING",
@@ -942,7 +942,7 @@ class TestAsyncTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_raw_response_update(self, async_client: AsyncSentDm) -> None:
+    async def test_raw_response_update(self, async_client: AsyncSent) -> None:
         response = await async_client.templates.with_raw_response.update(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         )
@@ -954,7 +954,7 @@ class TestAsyncTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_streaming_response_update(self, async_client: AsyncSentDm) -> None:
+    async def test_streaming_response_update(self, async_client: AsyncSent) -> None:
         async with async_client.templates.with_streaming_response.update(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         ) as response:
@@ -968,7 +968,7 @@ class TestAsyncTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_path_params_update(self, async_client: AsyncSentDm) -> None:
+    async def test_path_params_update(self, async_client: AsyncSent) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             await async_client.templates.with_raw_response.update(
                 id="",
@@ -976,7 +976,7 @@ class TestAsyncTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_list(self, async_client: AsyncSentDm) -> None:
+    async def test_method_list(self, async_client: AsyncSent) -> None:
         template = await async_client.templates.list(
             page=0,
             page_size=0,
@@ -985,7 +985,7 @@ class TestAsyncTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_list_with_all_params(self, async_client: AsyncSentDm) -> None:
+    async def test_method_list_with_all_params(self, async_client: AsyncSent) -> None:
         template = await async_client.templates.list(
             page=0,
             page_size=0,
@@ -999,7 +999,7 @@ class TestAsyncTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_raw_response_list(self, async_client: AsyncSentDm) -> None:
+    async def test_raw_response_list(self, async_client: AsyncSent) -> None:
         response = await async_client.templates.with_raw_response.list(
             page=0,
             page_size=0,
@@ -1012,7 +1012,7 @@ class TestAsyncTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_streaming_response_list(self, async_client: AsyncSentDm) -> None:
+    async def test_streaming_response_list(self, async_client: AsyncSent) -> None:
         async with async_client.templates.with_streaming_response.list(
             page=0,
             page_size=0,
@@ -1027,7 +1027,7 @@ class TestAsyncTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_delete(self, async_client: AsyncSentDm) -> None:
+    async def test_method_delete(self, async_client: AsyncSent) -> None:
         template = await async_client.templates.delete(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         )
@@ -1035,7 +1035,7 @@ class TestAsyncTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_delete_with_all_params(self, async_client: AsyncSentDm) -> None:
+    async def test_method_delete_with_all_params(self, async_client: AsyncSent) -> None:
         template = await async_client.templates.delete(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
             delete_from_meta=False,
@@ -1046,7 +1046,7 @@ class TestAsyncTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_raw_response_delete(self, async_client: AsyncSentDm) -> None:
+    async def test_raw_response_delete(self, async_client: AsyncSent) -> None:
         response = await async_client.templates.with_raw_response.delete(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         )
@@ -1058,7 +1058,7 @@ class TestAsyncTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_streaming_response_delete(self, async_client: AsyncSentDm) -> None:
+    async def test_streaming_response_delete(self, async_client: AsyncSent) -> None:
         async with async_client.templates.with_streaming_response.delete(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         ) as response:
@@ -1072,7 +1072,7 @@ class TestAsyncTemplates:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_path_params_delete(self, async_client: AsyncSentDm) -> None:
+    async def test_path_params_delete(self, async_client: AsyncSent) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             await async_client.templates.with_raw_response.delete(
                 id="",

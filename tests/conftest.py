@@ -10,7 +10,7 @@ import httpx
 import pytest
 from pytest_asyncio import is_async_test
 
-from sent_dm import SentDm, AsyncSentDm, DefaultAioHttpClient
+from sent_dm import Sent, AsyncSent, DefaultAioHttpClient
 from sent_dm._utils import is_dict
 
 if TYPE_CHECKING:
@@ -49,17 +49,17 @@ api_key = "My API Key"
 
 
 @pytest.fixture(scope="session")
-def client(request: FixtureRequest) -> Iterator[SentDm]:
+def client(request: FixtureRequest) -> Iterator[Sent]:
     strict = getattr(request, "param", True)
     if not isinstance(strict, bool):
         raise TypeError(f"Unexpected fixture parameter type {type(strict)}, expected {bool}")
 
-    with SentDm(base_url=base_url, api_key=api_key, _strict_response_validation=strict) as client:
+    with Sent(base_url=base_url, api_key=api_key, _strict_response_validation=strict) as client:
         yield client
 
 
 @pytest.fixture(scope="session")
-async def async_client(request: FixtureRequest) -> AsyncIterator[AsyncSentDm]:
+async def async_client(request: FixtureRequest) -> AsyncIterator[AsyncSent]:
     param = getattr(request, "param", True)
 
     # defaults
@@ -78,7 +78,7 @@ async def async_client(request: FixtureRequest) -> AsyncIterator[AsyncSentDm]:
     else:
         raise TypeError(f"Unexpected fixture parameter type {type(param)}, expected bool or dict")
 
-    async with AsyncSentDm(
+    async with AsyncSent(
         base_url=base_url, api_key=api_key, _strict_response_validation=strict, http_client=http_client
     ) as client:
         yield client

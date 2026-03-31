@@ -7,7 +7,7 @@ from typing import Any, cast
 
 import pytest
 
-from sent_dm import SentDm, AsyncSentDm
+from sent_dm import Sent, AsyncSent
 from tests.utils import assert_matches_type
 from sent_dm.types import MeRetrieveResponse
 
@@ -19,13 +19,13 @@ class TestMe:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_retrieve(self, client: SentDm) -> None:
+    def test_method_retrieve(self, client: Sent) -> None:
         me = client.me.retrieve()
         assert_matches_type(MeRetrieveResponse, me, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_retrieve_with_all_params(self, client: SentDm) -> None:
+    def test_method_retrieve_with_all_params(self, client: Sent) -> None:
         me = client.me.retrieve(
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
@@ -33,7 +33,7 @@ class TestMe:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_raw_response_retrieve(self, client: SentDm) -> None:
+    def test_raw_response_retrieve(self, client: Sent) -> None:
         response = client.me.with_raw_response.retrieve()
 
         assert response.is_closed is True
@@ -43,7 +43,7 @@ class TestMe:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_streaming_response_retrieve(self, client: SentDm) -> None:
+    def test_streaming_response_retrieve(self, client: Sent) -> None:
         with client.me.with_streaming_response.retrieve() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -61,13 +61,13 @@ class TestAsyncMe:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_retrieve(self, async_client: AsyncSentDm) -> None:
+    async def test_method_retrieve(self, async_client: AsyncSent) -> None:
         me = await async_client.me.retrieve()
         assert_matches_type(MeRetrieveResponse, me, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_retrieve_with_all_params(self, async_client: AsyncSentDm) -> None:
+    async def test_method_retrieve_with_all_params(self, async_client: AsyncSent) -> None:
         me = await async_client.me.retrieve(
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
@@ -75,7 +75,7 @@ class TestAsyncMe:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_raw_response_retrieve(self, async_client: AsyncSentDm) -> None:
+    async def test_raw_response_retrieve(self, async_client: AsyncSent) -> None:
         response = await async_client.me.with_raw_response.retrieve()
 
         assert response.is_closed is True
@@ -85,7 +85,7 @@ class TestAsyncMe:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_streaming_response_retrieve(self, async_client: AsyncSentDm) -> None:
+    async def test_streaming_response_retrieve(self, async_client: AsyncSent) -> None:
         async with async_client.me.with_streaming_response.retrieve() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"

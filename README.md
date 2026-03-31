@@ -1,9 +1,9 @@
-# Sent Dm Python API library
+# Sent Python API library
 
 <!-- prettier-ignore -->
 [![PyPI version](https://img.shields.io/pypi/v/sentdm.svg?label=pypi%20(stable))](https://pypi.org/project/sentdm/)
 
-The Sent Dm Python library provides convenient access to the Sent Dm REST API from any Python 3.9+
+The Sent Python library provides convenient access to the Sent REST API from any Python 3.9+
 application. The library includes type definitions for all request params and response fields,
 and offers both synchronous and asynchronous clients powered by [httpx](https://github.com/encode/httpx).
 
@@ -11,7 +11,7 @@ It is generated with [Stainless](https://www.stainless.com/).
 
 ## MCP Server
 
-Use the Sent Dm MCP Server to enable AI assistants to interact with this API, allowing them to explore endpoints, make test requests, and use documentation to help integrate this SDK into your application.
+Use the Sent MCP Server to enable AI assistants to interact with this API, allowing them to explore endpoints, make test requests, and use documentation to help integrate this SDK into your application.
 
 [![Add to Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/en-US/install-mcp?name=%40sentdm%2Fsentdm-mcp&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBzZW50ZG0vc2VudGRtLW1jcCJdLCJlbnYiOnsiU0VOVF9ETV9BUElfS0VZIjoiTXkgQVBJIEtleSJ9fQ)
 [![Install in VS Code](https://img.shields.io/badge/_-Add_to_VS_Code-blue?style=for-the-badge&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCA0MCA0MCI+PHBhdGggZmlsbD0iI0VFRSIgZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNMzAuMjM1IDM5Ljg4NGEyLjQ5MSAyLjQ5MSAwIDAgMS0xLjc4MS0uNzNMMTIuNyAyNC43OGwtMy40NiAyLjYyNC0zLjQwNiAyLjU4MmExLjY2NSAxLjY2NSAwIDAgMS0xLjA4Mi4zMzggMS42NjQgMS42NjQgMCAwIDEtMS4wNDYtLjQzMWwtMi4yLTJhMS42NjYgMS42NjYgMCAwIDEgMC0yLjQ2M0w3LjQ1OCAyMCA0LjY3IDE3LjQ1MyAxLjUwNyAxNC41N2ExLjY2NSAxLjY2NSAwIDAgMSAwLTIuNDYzbDIuMi0yYTEuNjY1IDEuNjY1IDAgMCAxIDIuMTMtLjA5N2w2Ljg2MyA1LjIwOUwyOC40NTIuODQ0YTIuNDg4IDIuNDg4IDAgMCAxIDEuODQxLS43MjljLjM1MS4wMDkuNjk5LjA5MSAxLjAxOS4yNDVsOC4yMzYgMy45NjFhMi41IDIuNSAwIDAgMSAxLjQxNSAyLjI1M3YuMDk5LS4wNDVWMzMuMzd2LS4wNDUuMDk1YTIuNTAxIDIuNTAxIDAgMCAxLTEuNDE2IDIuMjU3bC04LjIzNSAzLjk2MWEyLjQ5MiAyLjQ5MiAwIDAgMS0xLjA3Ny4yNDZabS43MTYtMjguOTQ3LTExLjk0OCA5LjA2MiAxMS45NTIgOS4wNjUtLjAwNC0xOC4xMjdaIi8+PC9zdmc+)](https://vscode.stainless.com/mcp/%7B%22name%22%3A%22%40sentdm%2Fsentdm-mcp%22%2C%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40sentdm%2Fsentdm-mcp%22%5D%2C%22env%22%3A%7B%22SENT_DM_API_KEY%22%3A%22My%20API%20Key%22%7D%7D)
@@ -35,9 +35,9 @@ The full API of this library can be found in [api.md](api.md).
 
 ```python
 import os
-from sent_dm import SentDm
+from sent_dm import Sent
 
-client = SentDm(
+client = Sent(
     api_key=os.environ.get("SENT_DM_API_KEY"),  # This is the default and can be omitted
 )
 
@@ -63,14 +63,14 @@ so that your API Key is not stored in source control.
 
 ## Async usage
 
-Simply import `AsyncSentDm` instead of `SentDm` and use `await` with each API call:
+Simply import `AsyncSent` instead of `Sent` and use `await` with each API call:
 
 ```python
 import os
 import asyncio
-from sent_dm import AsyncSentDm
+from sent_dm import AsyncSent
 
-client = AsyncSentDm(
+client = AsyncSent(
     api_key=os.environ.get("SENT_DM_API_KEY"),  # This is the default and can be omitted
 )
 
@@ -113,11 +113,11 @@ Then you can enable it by instantiating the client with `http_client=DefaultAioH
 import os
 import asyncio
 from sent_dm import DefaultAioHttpClient
-from sent_dm import AsyncSentDm
+from sent_dm import AsyncSent
 
 
 async def main() -> None:
-    async with AsyncSentDm(
+    async with AsyncSent(
         api_key=os.environ.get("SENT_DM_API_KEY"),  # This is the default and can be omitted
         http_client=DefaultAioHttpClient(),
     ) as client:
@@ -153,9 +153,9 @@ Typed requests and responses provide autocomplete and documentation within your 
 Nested parameters are dictionaries, typed using `TypedDict`, for example:
 
 ```python
-from sent_dm import SentDm
+from sent_dm import Sent
 
-client = SentDm()
+client = Sent()
 
 response = client.messages.send(
     template={
@@ -181,9 +181,9 @@ All errors inherit from `sent_dm.APIError`.
 
 ```python
 import sent_dm
-from sent_dm import SentDm
+from sent_dm import Sent
 
-client = SentDm()
+client = Sent()
 
 try:
     client.messages.send(
@@ -231,10 +231,10 @@ Connection errors (for example, due to a network connectivity problem), 408 Requ
 You can use the `max_retries` option to configure or disable retry settings:
 
 ```python
-from sent_dm import SentDm
+from sent_dm import Sent
 
 # Configure the default for all requests:
-client = SentDm(
+client = Sent(
     # default is 2
     max_retries=0,
 )
@@ -260,16 +260,16 @@ By default requests time out after 1 minute. You can configure this with a `time
 which accepts a float or an [`httpx.Timeout`](https://www.python-httpx.org/advanced/timeouts/#fine-tuning-the-configuration) object:
 
 ```python
-from sent_dm import SentDm
+from sent_dm import Sent
 
 # Configure the default for all requests:
-client = SentDm(
+client = Sent(
     # 20 seconds (default is 1 minute)
     timeout=20.0,
 )
 
 # More granular control:
-client = SentDm(
+client = Sent(
     timeout=httpx.Timeout(60.0, read=5.0, write=10.0, connect=2.0),
 )
 
@@ -298,10 +298,10 @@ Note that requests that time out are [retried twice by default](#retries).
 
 We use the standard library [`logging`](https://docs.python.org/3/library/logging.html) module.
 
-You can enable logging by setting the environment variable `SENT_DM_LOG` to `info`.
+You can enable logging by setting the environment variable `SENT_LOG` to `info`.
 
 ```shell
-$ export SENT_DM_LOG=info
+$ export SENT_LOG=info
 ```
 
 Or to `debug` for more verbose logging.
@@ -323,9 +323,9 @@ if response.my_field is None:
 The "raw" Response object can be accessed by prefixing `.with_raw_response.` to any HTTP method call, e.g.,
 
 ```py
-from sent_dm import SentDm
+from sent_dm import Sent
 
-client = SentDm()
+client = Sent()
 response = client.messages.with_raw_response.send(
     channel=["sms"],
     template={
@@ -419,10 +419,10 @@ You can directly override the [httpx client](https://www.python-httpx.org/api/#c
 
 ```python
 import httpx
-from sent_dm import SentDm, DefaultHttpxClient
+from sent_dm import Sent, DefaultHttpxClient
 
-client = SentDm(
-    # Or use the `SENT_DM_BASE_URL` env var
+client = Sent(
+    # Or use the `SENT_BASE_URL` env var
     base_url="http://my.test.server.example.com:8083",
     http_client=DefaultHttpxClient(
         proxy="http://my.test.proxy.example.com",
@@ -442,9 +442,9 @@ client.with_options(http_client=DefaultHttpxClient(...))
 By default the library closes underlying HTTP connections whenever the client is [garbage collected](https://docs.python.org/3/reference/datamodel.html#object.__del__). You can manually close the client using the `.close()` method if desired, or with a context manager that closes when exiting.
 
 ```py
-from sent_dm import SentDm
+from sent_dm import Sent
 
-with SentDm() as client:
+with Sent() as client:
   # make requests here
   ...
 
