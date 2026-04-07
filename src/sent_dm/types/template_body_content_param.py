@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from typing import Iterable, Optional
-from typing_extensions import TypedDict
+from typing_extensions import Required, TypedDict
 
 from .template_variable_param import TemplateVariableParam
 
@@ -11,7 +11,7 @@ __all__ = ["TemplateBodyContentParam"]
 
 
 class TemplateBodyContentParam(TypedDict, total=False):
-    template: str
+    template: Required[str]
 
     type: Optional[str]
 

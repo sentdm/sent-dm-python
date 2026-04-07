@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from typing import Iterable, Optional
-from typing_extensions import TypedDict
+from typing_extensions import Required, TypedDict
 
 from .template_variable_param import TemplateVariableParam
 
@@ -13,7 +13,7 @@ __all__ = ["SentDmServicesCommonContractsPocOsTemplateHeaderParam"]
 class SentDmServicesCommonContractsPocOsTemplateHeaderParam(TypedDict, total=False):
     """Header section of a message template"""
 
-    template: str
+    template: Required[str]
     """
     The header template text with optional variable placeholders (e.g., "Welcome to
     {{0:variable}}")
