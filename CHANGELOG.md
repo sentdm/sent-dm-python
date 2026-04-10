@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.18.1 (2026-04-10)
+
+Full Changelog: [v0.18.0...v0.18.1](https://github.com/sentdm/sent-dm-python/compare/v0.18.0...v0.18.1)
+
+### Bug Fixes
+
+* **client:** preserve hardcoded query params when merging with user params ([07fbaff](https://github.com/sentdm/sent-dm-python/commit/07fbaffb0e43549b2f6b754cf91051e96f63f575))
+
 ## 0.18.0 (2026-04-07)
 
 Full Changelog: [v0.17.0...v0.18.0](https://github.com/sentdm/sent-dm-python/compare/v0.17.0...v0.18.0)
