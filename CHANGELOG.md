@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.18.2 (2026-04-14)
+
+Full Changelog: [v0.18.1...v0.18.2](https://github.com/sentdm/sent-dm-python/compare/v0.18.1...v0.18.2)
+
+### Bug Fixes
+
+* ensure file data are only sent as 1 parameter ([c3cc931](https://github.com/sentdm/sent-dm-python/commit/c3cc93144f58651efa4a00c8f71a2e213846e3ee))
+
 ## 0.18.1 (2026-04-10)
 
 Full Changelog: [v0.18.0...v0.18.1](https://github.com/sentdm/sent-dm-python/compare/v0.18.0...v0.18.1)
