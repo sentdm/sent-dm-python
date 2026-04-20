@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Optional
+from typing import Dict, Optional
 
 import httpx
 
@@ -63,6 +63,7 @@ class WebhooksResource(SyncAPIResource):
         *,
         display_name: str | Omit = omit,
         endpoint_url: str | Omit = omit,
+        event_filters: Optional[Dict[str, SequenceNotStr[str]]] | Omit = omit,
         event_types: SequenceNotStr[str] | Omit = omit,
         retry_count: int | Omit = omit,
         sandbox: bool | Omit = omit,
@@ -106,6 +107,7 @@ class WebhooksResource(SyncAPIResource):
                 {
                     "display_name": display_name,
                     "endpoint_url": endpoint_url,
+                    "event_filters": event_filters,
                     "event_types": event_types,
                     "retry_count": retry_count,
                     "sandbox": sandbox,
@@ -160,6 +162,7 @@ class WebhooksResource(SyncAPIResource):
         *,
         display_name: str | Omit = omit,
         endpoint_url: str | Omit = omit,
+        event_filters: Optional[Dict[str, SequenceNotStr[str]]] | Omit = omit,
         event_types: SequenceNotStr[str] | Omit = omit,
         retry_count: int | Omit = omit,
         sandbox: bool | Omit = omit,
@@ -205,6 +208,7 @@ class WebhooksResource(SyncAPIResource):
                 {
                     "display_name": display_name,
                     "endpoint_url": endpoint_url,
+                    "event_filters": event_filters,
                     "event_types": event_types,
                     "retry_count": retry_count,
                     "sandbox": sandbox,
@@ -571,6 +575,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
         *,
         display_name: str | Omit = omit,
         endpoint_url: str | Omit = omit,
+        event_filters: Optional[Dict[str, SequenceNotStr[str]]] | Omit = omit,
         event_types: SequenceNotStr[str] | Omit = omit,
         retry_count: int | Omit = omit,
         sandbox: bool | Omit = omit,
@@ -614,6 +619,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
                 {
                     "display_name": display_name,
                     "endpoint_url": endpoint_url,
+                    "event_filters": event_filters,
                     "event_types": event_types,
                     "retry_count": retry_count,
                     "sandbox": sandbox,
@@ -668,6 +674,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
         *,
         display_name: str | Omit = omit,
         endpoint_url: str | Omit = omit,
+        event_filters: Optional[Dict[str, SequenceNotStr[str]]] | Omit = omit,
         event_types: SequenceNotStr[str] | Omit = omit,
         retry_count: int | Omit = omit,
         sandbox: bool | Omit = omit,
@@ -713,6 +720,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
                 {
                     "display_name": display_name,
                     "endpoint_url": endpoint_url,
+                    "event_filters": event_filters,
                     "event_types": event_types,
                     "retry_count": retry_count,
                     "sandbox": sandbox,
