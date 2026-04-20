@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.18.3 (2026-04-20)
+
+Full Changelog: [v0.18.2...v0.18.3](https://github.com/sentdm/sent-dm-python/compare/v0.18.2...v0.18.3)
+
+### Performance Improvements
+
+* **client:** optimize file structure copying in multipart requests ([4ad427a](https://github.com/sentdm/sent-dm-python/commit/4ad427aee061931e2a77ffd9c10daf23e12bc00a))
+
 ## 0.18.2 (2026-04-14)
 
 Full Changelog: [v0.18.1...v0.18.2](https://github.com/sentdm/sent-dm-python/compare/v0.18.1...v0.18.2)
