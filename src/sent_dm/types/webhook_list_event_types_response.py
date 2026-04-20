@@ -14,9 +14,13 @@ class DataEventType(BaseModel):
 
     display_name: Optional[str] = None
 
+    event_type: Optional[str] = None
+
     is_active: Optional[bool] = None
 
     name: Optional[str] = None
+
+    sub_types: Optional[List[object]] = None
 
 
 class Data(BaseModel):

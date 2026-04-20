@@ -3,6 +3,8 @@
 from typing import List, Optional
 from datetime import datetime
 
+from pydantic import Field as FieldInfo
+
 from .._models import BaseModel
 from .api_meta import APIMeta
 from .error_detail import ErrorDetail
@@ -21,6 +23,13 @@ class DataActivity(BaseModel):
 
     description: Optional[str] = None
     """Human-readable description of the activity"""
+
+    from_: Optional[str] = FieldInfo(alias="from", default=None)
+    """
+    Sender phone number for this activity (the customer's sending number for
+    outbound, the external sender for inbound). Null when not reported by the
+    provider.
+    """
 
     price: Optional[str] = None
     """

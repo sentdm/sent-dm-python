@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from typing import Dict, Optional
 from typing_extensions import Annotated, TypedDict
 
 from .._types import SequenceNotStr
@@ -14,6 +15,8 @@ class WebhookCreateParams(TypedDict, total=False):
     display_name: str
 
     endpoint_url: str
+
+    event_filters: Optional[Dict[str, SequenceNotStr[str]]]
 
     event_types: SequenceNotStr[str]
 
