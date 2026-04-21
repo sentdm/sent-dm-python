@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Optional
+from typing import Dict, Optional
 
 import httpx
 
@@ -144,6 +144,7 @@ class ContactsResource(SyncAPIResource):
         self,
         id: str,
         *,
+        channel_consent: Optional[Dict[str, str]] | Omit = omit,
         default_channel: Optional[str] | Omit = omit,
         opt_out: Optional[bool] | Omit = omit,
         sandbox: bool | Omit = omit,
@@ -162,6 +163,13 @@ class ContactsResource(SyncAPIResource):
         cannot be updated.
 
         Args:
+          channel_consent: Consent status by channel. Keys: "sms", "whatsapp". Values: "opted_in",
+              "opted_out". All entries must have the same status — mixed values (e.g., sms:
+              opted_out + whatsapp: opted_in) are rejected with 400. The provided status is
+              applied to ALL channels regardless of which keys are specified, because consent
+              is global across channels. When provided, takes precedence over the opt_out
+              field.
+
           default_channel: Default messaging channel: "sms" or "whatsapp"
 
           opt_out: Whether the contact has opted out of messaging
@@ -192,6 +200,7 @@ class ContactsResource(SyncAPIResource):
             path_template("/v3/contacts/{id}", id=id),
             body=maybe_transform(
                 {
+                    "channel_consent": channel_consent,
                     "default_channel": default_channel,
                     "opt_out": opt_out,
                     "sandbox": sandbox,
@@ -429,6 +438,7 @@ class AsyncContactsResource(AsyncAPIResource):
         self,
         id: str,
         *,
+        channel_consent: Optional[Dict[str, str]] | Omit = omit,
         default_channel: Optional[str] | Omit = omit,
         opt_out: Optional[bool] | Omit = omit,
         sandbox: bool | Omit = omit,
@@ -447,6 +457,13 @@ class AsyncContactsResource(AsyncAPIResource):
         cannot be updated.
 
         Args:
+          channel_consent: Consent status by channel. Keys: "sms", "whatsapp". Values: "opted_in",
+              "opted_out". All entries must have the same status — mixed values (e.g., sms:
+              opted_out + whatsapp: opted_in) are rejected with 400. The provided status is
+              applied to ALL channels regardless of which keys are specified, because consent
+              is global across channels. When provided, takes precedence over the opt_out
+              field.
+
           default_channel: Default messaging channel: "sms" or "whatsapp"
 
           opt_out: Whether the contact has opted out of messaging
@@ -477,6 +494,7 @@ class AsyncContactsResource(AsyncAPIResource):
             path_template("/v3/contacts/{id}", id=id),
             body=await async_maybe_transform(
                 {
+                    "channel_consent": channel_consent,
                     "default_channel": default_channel,
                     "opt_out": opt_out,
                     "sandbox": sandbox,

@@ -123,6 +123,7 @@ class TestContacts:
     def test_method_update_with_all_params(self, client: Sent) -> None:
         contact = client.contacts.update(
             id="6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+            channel_consent={"foo": "string"},
             default_channel="whatsapp",
             opt_out=False,
             sandbox=False,
@@ -380,6 +381,7 @@ class TestAsyncContacts:
     async def test_method_update_with_all_params(self, async_client: AsyncSent) -> None:
         contact = await async_client.contacts.update(
             id="6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+            channel_consent={"foo": "string"},
             default_channel="whatsapp",
             opt_out=False,
             sandbox=False,

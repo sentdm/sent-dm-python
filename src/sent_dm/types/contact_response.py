@@ -1,6 +1,6 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import Optional
+from typing import Dict, Optional
 from datetime import datetime
 
 from .._models import BaseModel
@@ -19,6 +19,14 @@ class ContactResponse(BaseModel):
 
     available_channels: Optional[str] = None
     """Comma-separated list of available messaging channels (e.g., "sms,whatsapp")"""
+
+    channel_consent: Optional[Dict[str, str]] = None
+    """Consent status by channel.
+
+    Keys: "sms", "whatsapp". Values: "opted_in", "opted_out". All channels will have
+    the same status because consent is global across channels. A STOP on any channel
+    opts out of all channels; a START opts in to all.
+    """
 
     country_code: Optional[str] = None
     """Country calling code (e.g., 1 for US/Canada)"""
