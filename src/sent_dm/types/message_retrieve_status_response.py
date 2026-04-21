@@ -56,6 +56,8 @@ class Data(BaseModel):
 
     customer_id: Optional[str] = None
 
+    direction: Optional[str] = None
+
     events: Optional[List[DataEvent]] = None
 
     message_body: Optional[DataMessageBody] = None

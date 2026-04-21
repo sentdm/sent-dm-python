@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Optional
+from typing import Dict, Optional
 from typing_extensions import Annotated, TypedDict
 
 from .._utils import PropertyInfo
@@ -11,6 +11,16 @@ __all__ = ["ContactUpdateParams"]
 
 
 class ContactUpdateParams(TypedDict, total=False):
+    channel_consent: Optional[Dict[str, str]]
+    """Consent status by channel.
+
+    Keys: "sms", "whatsapp". Values: "opted_in", "opted_out". All entries must have
+    the same status — mixed values (e.g., sms: opted_out + whatsapp: opted_in) are
+    rejected with 400. The provided status is applied to ALL channels regardless of
+    which keys are specified, because consent is global across channels. When
+    provided, takes precedence over the opt_out field.
+    """
+
     default_channel: Optional[str]
     """Default messaging channel: "sms" or "whatsapp" """
 
