@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.20.1 (2026-04-24)
+
+Full Changelog: [v0.20.0...v0.20.1](https://github.com/sentdm/sent-dm-python/compare/v0.20.0...v0.20.1)
+
+### Chores
+
+* **internal:** more robust bootstrap script ([883c7c3](https://github.com/sentdm/sent-dm-python/commit/883c7c348d20fc0aefa3343de397af1c4e1feb38))
+
 ## 0.20.0 (2026-04-21)
 
 Full Changelog: [v0.19.0...v0.20.0](https://github.com/sentdm/sent-dm-python/compare/v0.19.0...v0.20.0)
