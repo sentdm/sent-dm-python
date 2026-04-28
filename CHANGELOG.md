@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.21.0 (2026-04-28)
+
+Full Changelog: [v0.20.1...v0.21.0](https://github.com/sentdm/sent-dm-python/compare/v0.20.1...v0.21.0)
+
+### Features
+
+* support setting headers via env ([bc85855](https://github.com/sentdm/sent-dm-python/commit/bc85855151986fffb1e910e0af7eeea3cd3d9c45))
+
+
+### Bug Fixes
+
+* use correct field name format for multipart file arrays ([9f24b1c](https://github.com/sentdm/sent-dm-python/commit/9f24b1ce4d230be179264a18dddeef3d1ec1d5db))
+
 ## 0.20.1 (2026-04-24)
 
 Full Changelog: [v0.20.0...v0.20.1](https://github.com/sentdm/sent-dm-python/compare/v0.20.0...v0.20.1)
