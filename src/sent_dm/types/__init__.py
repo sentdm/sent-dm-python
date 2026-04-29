@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from . import webhook_event_type, webhook_list_event_types_response
+from .. import _compat
 from .api_meta import APIMeta as APIMeta
 from .template import Template as Template
 from .error_detail import ErrorDetail as ErrorDetail
@@ -15,6 +17,7 @@ from .webhook_response import WebhookResponse as WebhookResponse
 from .user_invite_params import UserInviteParams as UserInviteParams
 from .user_list_response import UserListResponse as UserListResponse
 from .user_remove_params import UserRemoveParams as UserRemoveParams
+from .webhook_event_type import WebhookEventType as WebhookEventType
 from .contact_list_params import ContactListParams as ContactListParams
 from .destination_country import DestinationCountry as DestinationCountry
 from .message_send_params import MessageSendParams as MessageSendParams
@@ -91,3 +94,14 @@ from .sent_dm_services_endpoints_customer_ap_iv3_contracts_requests_brands_brand
 from .sent_dm_services_endpoints_customer_ap_iv3_contracts_requests_brands_brand_compliance_info_param import (
     SentDmServicesEndpointsCustomerApIv3ContractsRequestsBrandsBrandComplianceInfoParam as SentDmServicesEndpointsCustomerApIv3ContractsRequestsBrandsBrandComplianceInfoParam,
 )
+
+# Rebuild cyclical models only after all modules are imported.
+# This ensures that, when building the deferred (due to cyclical references) model schema,
+# Pydantic can resolve the necessary references.
+# See: https://github.com/pydantic/pydantic/issues/11250 for more context.
+if _compat.PYDANTIC_V1:
+    webhook_event_type.WebhookEventType.update_forward_refs()  # type: ignore
+    webhook_list_event_types_response.WebhookListEventTypesResponse.update_forward_refs()  # type: ignore
+else:
+    webhook_event_type.WebhookEventType.model_rebuild(_parent_namespace_depth=0)
+    webhook_list_event_types_response.WebhookListEventTypesResponse.model_rebuild(_parent_namespace_depth=0)
