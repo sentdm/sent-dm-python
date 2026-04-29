@@ -183,7 +183,7 @@ class UsersResource(SyncAPIResource):
         self,
         user_id: str,
         *,
-        body: user_remove_params.Body,
+        sandbox: bool | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -198,7 +198,8 @@ class UsersResource(SyncAPIResource):
         cannot remove yourself or remove the last admin.
 
         Args:
-          body: Request to remove a user from an organization
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
           extra_headers: Send extra headers
 
@@ -214,7 +215,7 @@ class UsersResource(SyncAPIResource):
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._delete(
             path_template("/v3/users/{user_id}", user_id=user_id),
-            body=maybe_transform(body, user_remove_params.UserRemoveParams),
+            body=maybe_transform({"sandbox": sandbox}, user_remove_params.UserRemoveParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -443,7 +444,7 @@ class AsyncUsersResource(AsyncAPIResource):
         self,
         user_id: str,
         *,
-        body: user_remove_params.Body,
+        sandbox: bool | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -458,7 +459,8 @@ class AsyncUsersResource(AsyncAPIResource):
         cannot remove yourself or remove the last admin.
 
         Args:
-          body: Request to remove a user from an organization
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
           extra_headers: Send extra headers
 
@@ -474,7 +476,7 @@ class AsyncUsersResource(AsyncAPIResource):
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._delete(
             path_template("/v3/users/{user_id}", user_id=user_id),
-            body=await async_maybe_transform(body, user_remove_params.UserRemoveParams),
+            body=await async_maybe_transform({"sandbox": sandbox}, user_remove_params.UserRemoveParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),

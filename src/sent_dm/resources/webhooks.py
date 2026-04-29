@@ -391,7 +391,7 @@ class WebhooksResource(SyncAPIResource):
         self,
         id: str,
         *,
-        body: webhook_rotate_secret_params.Body,
+        sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -407,6 +407,9 @@ class WebhooksResource(SyncAPIResource):
         immediately invalidated.
 
         Args:
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -428,7 +431,7 @@ class WebhooksResource(SyncAPIResource):
         }
         return self._post(
             path_template("/v3/webhooks/{id}/rotate-secret", id=id),
-            body=maybe_transform(body, webhook_rotate_secret_params.WebhookRotateSecretParams),
+            body=maybe_transform({"sandbox": sandbox}, webhook_rotate_secret_params.WebhookRotateSecretParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -903,7 +906,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
         self,
         id: str,
         *,
-        body: webhook_rotate_secret_params.Body,
+        sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -919,6 +922,9 @@ class AsyncWebhooksResource(AsyncAPIResource):
         immediately invalidated.
 
         Args:
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -940,7 +946,9 @@ class AsyncWebhooksResource(AsyncAPIResource):
         }
         return await self._post(
             path_template("/v3/webhooks/{id}/rotate-secret", id=id),
-            body=await async_maybe_transform(body, webhook_rotate_secret_params.WebhookRotateSecretParams),
+            body=await async_maybe_transform(
+                {"sandbox": sandbox}, webhook_rotate_secret_params.WebhookRotateSecretParams
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),

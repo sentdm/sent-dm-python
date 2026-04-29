@@ -211,7 +211,7 @@ class CampaignsResource(SyncAPIResource):
         campaign_id: str,
         *,
         profile_id: str,
-        body: campaign_delete_params.Body,
+        sandbox: bool | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -226,7 +226,8 @@ class CampaignsResource(SyncAPIResource):
         must belong to the authenticated organization.
 
         Args:
-          body: Request to delete a campaign from a brand
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
           extra_headers: Send extra headers
 
@@ -246,7 +247,7 @@ class CampaignsResource(SyncAPIResource):
             path_template(
                 "/v3/profiles/{profile_id}/campaigns/{campaign_id}", profile_id=profile_id, campaign_id=campaign_id
             ),
-            body=maybe_transform(body, campaign_delete_params.CampaignDeleteParams),
+            body=maybe_transform({"sandbox": sandbox}, campaign_delete_params.CampaignDeleteParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -442,7 +443,7 @@ class AsyncCampaignsResource(AsyncAPIResource):
         campaign_id: str,
         *,
         profile_id: str,
-        body: campaign_delete_params.Body,
+        sandbox: bool | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -457,7 +458,8 @@ class AsyncCampaignsResource(AsyncAPIResource):
         must belong to the authenticated organization.
 
         Args:
-          body: Request to delete a campaign from a brand
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
           extra_headers: Send extra headers
 
@@ -477,7 +479,7 @@ class AsyncCampaignsResource(AsyncAPIResource):
             path_template(
                 "/v3/profiles/{profile_id}/campaigns/{campaign_id}", profile_id=profile_id, campaign_id=campaign_id
             ),
-            body=await async_maybe_transform(body, campaign_delete_params.CampaignDeleteParams),
+            body=await async_maybe_transform({"sandbox": sandbox}, campaign_delete_params.CampaignDeleteParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),

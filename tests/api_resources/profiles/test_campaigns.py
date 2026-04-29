@@ -366,7 +366,6 @@ class TestCampaigns:
         campaign = client.profiles.campaigns.delete(
             campaign_id="b2c3d4e5-f6a7-8901-bcde-f12345678901",
             profile_id="770e8400-e29b-41d4-a716-446655440002",
-            body={},
         )
         assert campaign is None
 
@@ -376,7 +375,7 @@ class TestCampaigns:
         campaign = client.profiles.campaigns.delete(
             campaign_id="b2c3d4e5-f6a7-8901-bcde-f12345678901",
             profile_id="770e8400-e29b-41d4-a716-446655440002",
-            body={"sandbox": False},
+            sandbox=False,
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert campaign is None
@@ -387,7 +386,6 @@ class TestCampaigns:
         response = client.profiles.campaigns.with_raw_response.delete(
             campaign_id="b2c3d4e5-f6a7-8901-bcde-f12345678901",
             profile_id="770e8400-e29b-41d4-a716-446655440002",
-            body={},
         )
 
         assert response.is_closed is True
@@ -401,7 +399,6 @@ class TestCampaigns:
         with client.profiles.campaigns.with_streaming_response.delete(
             campaign_id="b2c3d4e5-f6a7-8901-bcde-f12345678901",
             profile_id="770e8400-e29b-41d4-a716-446655440002",
-            body={},
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -418,14 +415,12 @@ class TestCampaigns:
             client.profiles.campaigns.with_raw_response.delete(
                 campaign_id="b2c3d4e5-f6a7-8901-bcde-f12345678901",
                 profile_id="",
-                body={},
             )
 
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `campaign_id` but received ''"):
             client.profiles.campaigns.with_raw_response.delete(
                 campaign_id="",
                 profile_id="770e8400-e29b-41d4-a716-446655440002",
-                body={},
             )
 
 
@@ -780,7 +775,6 @@ class TestAsyncCampaigns:
         campaign = await async_client.profiles.campaigns.delete(
             campaign_id="b2c3d4e5-f6a7-8901-bcde-f12345678901",
             profile_id="770e8400-e29b-41d4-a716-446655440002",
-            body={},
         )
         assert campaign is None
 
@@ -790,7 +784,7 @@ class TestAsyncCampaigns:
         campaign = await async_client.profiles.campaigns.delete(
             campaign_id="b2c3d4e5-f6a7-8901-bcde-f12345678901",
             profile_id="770e8400-e29b-41d4-a716-446655440002",
-            body={"sandbox": False},
+            sandbox=False,
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert campaign is None
@@ -801,7 +795,6 @@ class TestAsyncCampaigns:
         response = await async_client.profiles.campaigns.with_raw_response.delete(
             campaign_id="b2c3d4e5-f6a7-8901-bcde-f12345678901",
             profile_id="770e8400-e29b-41d4-a716-446655440002",
-            body={},
         )
 
         assert response.is_closed is True
@@ -815,7 +808,6 @@ class TestAsyncCampaigns:
         async with async_client.profiles.campaigns.with_streaming_response.delete(
             campaign_id="b2c3d4e5-f6a7-8901-bcde-f12345678901",
             profile_id="770e8400-e29b-41d4-a716-446655440002",
-            body={},
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -832,12 +824,10 @@ class TestAsyncCampaigns:
             await async_client.profiles.campaigns.with_raw_response.delete(
                 campaign_id="b2c3d4e5-f6a7-8901-bcde-f12345678901",
                 profile_id="",
-                body={},
             )
 
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `campaign_id` but received ''"):
             await async_client.profiles.campaigns.with_raw_response.delete(
                 campaign_id="",
                 profile_id="770e8400-e29b-41d4-a716-446655440002",
-                body={},
             )

@@ -279,7 +279,7 @@ class ContactsResource(SyncAPIResource):
         self,
         id: str,
         *,
-        body: contact_delete_params.Body,
+        sandbox: bool | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -294,7 +294,8 @@ class ContactsResource(SyncAPIResource):
         be deleted.
 
         Args:
-          body: Request to delete/dissociate a contact
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
           extra_headers: Send extra headers
 
@@ -310,7 +311,7 @@ class ContactsResource(SyncAPIResource):
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._delete(
             path_template("/v3/contacts/{id}", id=id),
-            body=maybe_transform(body, contact_delete_params.ContactDeleteParams),
+            body=maybe_transform({"sandbox": sandbox}, contact_delete_params.ContactDeleteParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -573,7 +574,7 @@ class AsyncContactsResource(AsyncAPIResource):
         self,
         id: str,
         *,
-        body: contact_delete_params.Body,
+        sandbox: bool | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -588,7 +589,8 @@ class AsyncContactsResource(AsyncAPIResource):
         be deleted.
 
         Args:
-          body: Request to delete/dissociate a contact
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
 
           extra_headers: Send extra headers
 
@@ -604,7 +606,7 @@ class AsyncContactsResource(AsyncAPIResource):
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._delete(
             path_template("/v3/contacts/{id}", id=id),
-            body=await async_maybe_transform(body, contact_delete_params.ContactDeleteParams),
+            body=await async_maybe_transform({"sandbox": sandbox}, contact_delete_params.ContactDeleteParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
