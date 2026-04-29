@@ -221,7 +221,6 @@ class TestContacts:
     def test_method_delete(self, client: Sent) -> None:
         contact = client.contacts.delete(
             id="6ba7b810-9dad-11d1-80b4-00c04fd430c8",
-            body={},
         )
         assert contact is None
 
@@ -230,7 +229,7 @@ class TestContacts:
     def test_method_delete_with_all_params(self, client: Sent) -> None:
         contact = client.contacts.delete(
             id="6ba7b810-9dad-11d1-80b4-00c04fd430c8",
-            body={"sandbox": False},
+            sandbox=False,
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert contact is None
@@ -240,7 +239,6 @@ class TestContacts:
     def test_raw_response_delete(self, client: Sent) -> None:
         response = client.contacts.with_raw_response.delete(
             id="6ba7b810-9dad-11d1-80b4-00c04fd430c8",
-            body={},
         )
 
         assert response.is_closed is True
@@ -253,7 +251,6 @@ class TestContacts:
     def test_streaming_response_delete(self, client: Sent) -> None:
         with client.contacts.with_streaming_response.delete(
             id="6ba7b810-9dad-11d1-80b4-00c04fd430c8",
-            body={},
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -269,7 +266,6 @@ class TestContacts:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             client.contacts.with_raw_response.delete(
                 id="",
-                body={},
             )
 
 
@@ -479,7 +475,6 @@ class TestAsyncContacts:
     async def test_method_delete(self, async_client: AsyncSent) -> None:
         contact = await async_client.contacts.delete(
             id="6ba7b810-9dad-11d1-80b4-00c04fd430c8",
-            body={},
         )
         assert contact is None
 
@@ -488,7 +483,7 @@ class TestAsyncContacts:
     async def test_method_delete_with_all_params(self, async_client: AsyncSent) -> None:
         contact = await async_client.contacts.delete(
             id="6ba7b810-9dad-11d1-80b4-00c04fd430c8",
-            body={"sandbox": False},
+            sandbox=False,
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert contact is None
@@ -498,7 +493,6 @@ class TestAsyncContacts:
     async def test_raw_response_delete(self, async_client: AsyncSent) -> None:
         response = await async_client.contacts.with_raw_response.delete(
             id="6ba7b810-9dad-11d1-80b4-00c04fd430c8",
-            body={},
         )
 
         assert response.is_closed is True
@@ -511,7 +505,6 @@ class TestAsyncContacts:
     async def test_streaming_response_delete(self, async_client: AsyncSent) -> None:
         async with async_client.contacts.with_streaming_response.delete(
             id="6ba7b810-9dad-11d1-80b4-00c04fd430c8",
-            body={},
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -527,5 +520,4 @@ class TestAsyncContacts:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             await async_client.contacts.with_raw_response.delete(
                 id="",
-                body={},
             )

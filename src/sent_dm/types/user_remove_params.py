@@ -2,22 +2,18 @@
 
 from __future__ import annotations
 
-from typing_extensions import Required, Annotated, TypedDict
+from typing_extensions import Annotated, TypedDict
 
 from .._utils import PropertyInfo
-from .mutation_request_param import MutationRequestParam
 
-__all__ = ["UserRemoveParams", "Body"]
+__all__ = ["UserRemoveParams"]
 
 
 class UserRemoveParams(TypedDict, total=False):
-    body: Required[Body]
-    """Request to remove a user from an organization"""
+    sandbox: bool
+    """
+    Sandbox flag - when true, the operation is simulated without side effects Useful
+    for testing integrations without actual execution
+    """
 
     x_profile_id: Annotated[str, PropertyInfo(alias="x-profile-id")]
-
-
-class Body(MutationRequestParam, total=False):
-    """Request to remove a user from an organization"""
-
-    pass

@@ -11,6 +11,7 @@ from sent_dm import Sent, AsyncSent
 from tests.utils import assert_matches_type
 from sent_dm.types import (
     ProfileListResponse,
+    ProfileCompleteResponse,
     APIResponseOfProfileDetail,
 )
 
@@ -335,7 +336,6 @@ class TestProfiles:
     def test_method_delete(self, client: Sent) -> None:
         profile = client.profiles.delete(
             profile_id="profileId",
-            body={},
         )
         assert profile is None
 
@@ -344,7 +344,7 @@ class TestProfiles:
     def test_method_delete_with_all_params(self, client: Sent) -> None:
         profile = client.profiles.delete(
             profile_id="profileId",
-            body={"sandbox": False},
+            sandbox=False,
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert profile is None
@@ -354,7 +354,6 @@ class TestProfiles:
     def test_raw_response_delete(self, client: Sent) -> None:
         response = client.profiles.with_raw_response.delete(
             profile_id="profileId",
-            body={},
         )
 
         assert response.is_closed is True
@@ -367,7 +366,6 @@ class TestProfiles:
     def test_streaming_response_delete(self, client: Sent) -> None:
         with client.profiles.with_streaming_response.delete(
             profile_id="profileId",
-            body={},
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -383,7 +381,6 @@ class TestProfiles:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `profile_id` but received ''"):
             client.profiles.with_raw_response.delete(
                 profile_id="",
-                body={},
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
@@ -393,7 +390,7 @@ class TestProfiles:
             profile_id="660e8400-e29b-41d4-a716-446655440000",
             web_hook_url="https://your-app.com/webhook/profile-complete",
         )
-        assert_matches_type(object, profile, path=["response"])
+        assert_matches_type(ProfileCompleteResponse, profile, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -405,7 +402,7 @@ class TestProfiles:
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(object, profile, path=["response"])
+        assert_matches_type(ProfileCompleteResponse, profile, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -418,7 +415,7 @@ class TestProfiles:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         profile = response.parse()
-        assert_matches_type(object, profile, path=["response"])
+        assert_matches_type(ProfileCompleteResponse, profile, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -431,7 +428,7 @@ class TestProfiles:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             profile = response.parse()
-            assert_matches_type(object, profile, path=["response"])
+            assert_matches_type(ProfileCompleteResponse, profile, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -765,7 +762,6 @@ class TestAsyncProfiles:
     async def test_method_delete(self, async_client: AsyncSent) -> None:
         profile = await async_client.profiles.delete(
             profile_id="profileId",
-            body={},
         )
         assert profile is None
 
@@ -774,7 +770,7 @@ class TestAsyncProfiles:
     async def test_method_delete_with_all_params(self, async_client: AsyncSent) -> None:
         profile = await async_client.profiles.delete(
             profile_id="profileId",
-            body={"sandbox": False},
+            sandbox=False,
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert profile is None
@@ -784,7 +780,6 @@ class TestAsyncProfiles:
     async def test_raw_response_delete(self, async_client: AsyncSent) -> None:
         response = await async_client.profiles.with_raw_response.delete(
             profile_id="profileId",
-            body={},
         )
 
         assert response.is_closed is True
@@ -797,7 +792,6 @@ class TestAsyncProfiles:
     async def test_streaming_response_delete(self, async_client: AsyncSent) -> None:
         async with async_client.profiles.with_streaming_response.delete(
             profile_id="profileId",
-            body={},
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -813,7 +807,6 @@ class TestAsyncProfiles:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `profile_id` but received ''"):
             await async_client.profiles.with_raw_response.delete(
                 profile_id="",
-                body={},
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
@@ -823,7 +816,7 @@ class TestAsyncProfiles:
             profile_id="660e8400-e29b-41d4-a716-446655440000",
             web_hook_url="https://your-app.com/webhook/profile-complete",
         )
-        assert_matches_type(object, profile, path=["response"])
+        assert_matches_type(ProfileCompleteResponse, profile, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -835,7 +828,7 @@ class TestAsyncProfiles:
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(object, profile, path=["response"])
+        assert_matches_type(ProfileCompleteResponse, profile, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -848,7 +841,7 @@ class TestAsyncProfiles:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         profile = await response.parse()
-        assert_matches_type(object, profile, path=["response"])
+        assert_matches_type(ProfileCompleteResponse, profile, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -861,7 +854,7 @@ class TestAsyncProfiles:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             profile = await response.parse()
-            assert_matches_type(object, profile, path=["response"])
+            assert_matches_type(ProfileCompleteResponse, profile, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
