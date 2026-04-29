@@ -1,32 +1,20 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
+from __future__ import annotations
+
 from typing import List, Optional
 
 from .._models import BaseModel
 from .api_meta import APIMeta
 from .error_detail import ErrorDetail
 
-__all__ = ["WebhookListEventTypesResponse", "Data", "DataEventType"]
-
-
-class DataEventType(BaseModel):
-    description: Optional[str] = None
-
-    display_name: Optional[str] = None
-
-    event_type: Optional[str] = None
-
-    is_active: Optional[bool] = None
-
-    name: Optional[str] = None
-
-    sub_types: Optional[List[object]] = None
+__all__ = ["WebhookListEventTypesResponse", "Data"]
 
 
 class Data(BaseModel):
     """The response data (null if error)"""
 
-    event_types: Optional[List[DataEventType]] = None
+    event_types: Optional[List["WebhookEventType"]] = None
 
 
 class WebhookListEventTypesResponse(BaseModel):
@@ -43,3 +31,6 @@ class WebhookListEventTypesResponse(BaseModel):
 
     success: Optional[bool] = None
     """Indicates whether the request was successful"""
+
+
+from .webhook_event_type import WebhookEventType

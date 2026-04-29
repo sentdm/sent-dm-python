@@ -9,6 +9,7 @@ from sent_dm.types import (
     ErrorDetail,
     MutationRequest,
     PaginationMeta,
+    WebhookEventType,
     WebhookResponse,
     WebhookListResponse,
     WebhookListEventTypesResponse,
