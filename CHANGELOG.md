@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.24.1 (2026-05-01)
+
+Full Changelog: [v0.24.0...v0.24.1](https://github.com/sentdm/sent-dm-python/compare/v0.24.0...v0.24.1)
+
+### Chores
+
+* **internal:** reformat pyproject.toml ([c05dfd8](https://github.com/sentdm/sent-dm-python/commit/c05dfd81ffcd0a51a3a7029fe9b649766145a690))
+
 ## 0.24.0 (2026-04-29)
 
 Full Changelog: [v0.23.0...v0.24.0](https://github.com/sentdm/sent-dm-python/compare/v0.23.0...v0.24.0)
