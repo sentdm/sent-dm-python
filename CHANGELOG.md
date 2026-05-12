@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.25.0 (2026-05-12)
+
+Full Changelog: [v0.24.1...v0.25.0](https://github.com/sentdm/sent-dm-python/compare/v0.24.1...v0.25.0)
+
+### Features
+
+* **internal/types:** support eagerly validating pydantic iterators ([fc30982](https://github.com/sentdm/sent-dm-python/commit/fc3098204ea1e0dd896f6934ca989bbd3788c5a7))
+
+
+### Bug Fixes
+
+* **client:** add missing f-string prefix in file type error message ([7028b0f](https://github.com/sentdm/sent-dm-python/commit/7028b0f391ab1cfdba4e4fef7218461a89c063f3))
+
 ## 0.24.1 (2026-05-01)
 
 Full Changelog: [v0.24.0...v0.24.1](https://github.com/sentdm/sent-dm-python/compare/v0.24.0...v0.24.1)
