@@ -10,8 +10,10 @@ import pytest
 from sent_dm import Sent, AsyncSent
 from tests.utils import assert_matches_type
 from sent_dm.types import (
-    APIResponseTemplate,
     TemplateListResponse,
+    TemplateCreateResponse,
+    TemplateUpdateResponse,
+    TemplateRetrieveResponse,
 )
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
@@ -24,7 +26,7 @@ class TestTemplates:
     @parametrize
     def test_method_create(self, client: Sent) -> None:
         template = client.templates.create()
-        assert_matches_type(APIResponseTemplate, template, path=["response"])
+        assert_matches_type(TemplateCreateResponse, template, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -66,6 +68,26 @@ class TestTemplates:
                                 "type": "variable",
                                 "id": 1,
                             },
+                        ],
+                    },
+                    "rcs": {
+                        "template": "template",
+                        "type": "type",
+                        "variables": [
+                            {
+                                "name": "x",
+                                "props": {
+                                    "media_type": "x",
+                                    "sample": "x",
+                                    "url": "x",
+                                    "variable_type": "x",
+                                    "alt": "alt",
+                                    "regex": "regex",
+                                    "short_url": "shortUrl",
+                                },
+                                "type": "x",
+                                "id": 0,
+                            }
                         ],
                     },
                     "sms": {
@@ -181,7 +203,7 @@ class TestTemplates:
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(APIResponseTemplate, template, path=["response"])
+        assert_matches_type(TemplateCreateResponse, template, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -191,7 +213,7 @@ class TestTemplates:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         template = response.parse()
-        assert_matches_type(APIResponseTemplate, template, path=["response"])
+        assert_matches_type(TemplateCreateResponse, template, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -201,7 +223,7 @@ class TestTemplates:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             template = response.parse()
-            assert_matches_type(APIResponseTemplate, template, path=["response"])
+            assert_matches_type(TemplateCreateResponse, template, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -211,7 +233,7 @@ class TestTemplates:
         template = client.templates.retrieve(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         )
-        assert_matches_type(APIResponseTemplate, template, path=["response"])
+        assert_matches_type(TemplateRetrieveResponse, template, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -220,7 +242,7 @@ class TestTemplates:
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(APIResponseTemplate, template, path=["response"])
+        assert_matches_type(TemplateRetrieveResponse, template, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -232,7 +254,7 @@ class TestTemplates:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         template = response.parse()
-        assert_matches_type(APIResponseTemplate, template, path=["response"])
+        assert_matches_type(TemplateRetrieveResponse, template, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -244,7 +266,7 @@ class TestTemplates:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             template = response.parse()
-            assert_matches_type(APIResponseTemplate, template, path=["response"])
+            assert_matches_type(TemplateRetrieveResponse, template, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -262,7 +284,7 @@ class TestTemplates:
         template = client.templates.update(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         )
-        assert_matches_type(APIResponseTemplate, template, path=["response"])
+        assert_matches_type(TemplateUpdateResponse, template, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -273,6 +295,26 @@ class TestTemplates:
             definition={
                 "body": {
                     "multi_channel": {
+                        "template": "template",
+                        "type": "type",
+                        "variables": [
+                            {
+                                "name": "x",
+                                "props": {
+                                    "media_type": "x",
+                                    "sample": "x",
+                                    "url": "x",
+                                    "variable_type": "x",
+                                    "alt": "alt",
+                                    "regex": "regex",
+                                    "short_url": "shortUrl",
+                                },
+                                "type": "x",
+                                "id": 0,
+                            }
+                        ],
+                    },
+                    "rcs": {
                         "template": "template",
                         "type": "type",
                         "variables": [
@@ -406,7 +448,7 @@ class TestTemplates:
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(APIResponseTemplate, template, path=["response"])
+        assert_matches_type(TemplateUpdateResponse, template, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -418,7 +460,7 @@ class TestTemplates:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         template = response.parse()
-        assert_matches_type(APIResponseTemplate, template, path=["response"])
+        assert_matches_type(TemplateUpdateResponse, template, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -430,7 +472,7 @@ class TestTemplates:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             template = response.parse()
-            assert_matches_type(APIResponseTemplate, template, path=["response"])
+            assert_matches_type(TemplateUpdateResponse, template, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -556,7 +598,7 @@ class TestAsyncTemplates:
     @parametrize
     async def test_method_create(self, async_client: AsyncSent) -> None:
         template = await async_client.templates.create()
-        assert_matches_type(APIResponseTemplate, template, path=["response"])
+        assert_matches_type(TemplateCreateResponse, template, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -598,6 +640,26 @@ class TestAsyncTemplates:
                                 "type": "variable",
                                 "id": 1,
                             },
+                        ],
+                    },
+                    "rcs": {
+                        "template": "template",
+                        "type": "type",
+                        "variables": [
+                            {
+                                "name": "x",
+                                "props": {
+                                    "media_type": "x",
+                                    "sample": "x",
+                                    "url": "x",
+                                    "variable_type": "x",
+                                    "alt": "alt",
+                                    "regex": "regex",
+                                    "short_url": "shortUrl",
+                                },
+                                "type": "x",
+                                "id": 0,
+                            }
                         ],
                     },
                     "sms": {
@@ -713,7 +775,7 @@ class TestAsyncTemplates:
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(APIResponseTemplate, template, path=["response"])
+        assert_matches_type(TemplateCreateResponse, template, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -723,7 +785,7 @@ class TestAsyncTemplates:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         template = await response.parse()
-        assert_matches_type(APIResponseTemplate, template, path=["response"])
+        assert_matches_type(TemplateCreateResponse, template, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -733,7 +795,7 @@ class TestAsyncTemplates:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             template = await response.parse()
-            assert_matches_type(APIResponseTemplate, template, path=["response"])
+            assert_matches_type(TemplateCreateResponse, template, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -743,7 +805,7 @@ class TestAsyncTemplates:
         template = await async_client.templates.retrieve(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         )
-        assert_matches_type(APIResponseTemplate, template, path=["response"])
+        assert_matches_type(TemplateRetrieveResponse, template, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -752,7 +814,7 @@ class TestAsyncTemplates:
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(APIResponseTemplate, template, path=["response"])
+        assert_matches_type(TemplateRetrieveResponse, template, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -764,7 +826,7 @@ class TestAsyncTemplates:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         template = await response.parse()
-        assert_matches_type(APIResponseTemplate, template, path=["response"])
+        assert_matches_type(TemplateRetrieveResponse, template, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -776,7 +838,7 @@ class TestAsyncTemplates:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             template = await response.parse()
-            assert_matches_type(APIResponseTemplate, template, path=["response"])
+            assert_matches_type(TemplateRetrieveResponse, template, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -794,7 +856,7 @@ class TestAsyncTemplates:
         template = await async_client.templates.update(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         )
-        assert_matches_type(APIResponseTemplate, template, path=["response"])
+        assert_matches_type(TemplateUpdateResponse, template, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -805,6 +867,26 @@ class TestAsyncTemplates:
             definition={
                 "body": {
                     "multi_channel": {
+                        "template": "template",
+                        "type": "type",
+                        "variables": [
+                            {
+                                "name": "x",
+                                "props": {
+                                    "media_type": "x",
+                                    "sample": "x",
+                                    "url": "x",
+                                    "variable_type": "x",
+                                    "alt": "alt",
+                                    "regex": "regex",
+                                    "short_url": "shortUrl",
+                                },
+                                "type": "x",
+                                "id": 0,
+                            }
+                        ],
+                    },
+                    "rcs": {
                         "template": "template",
                         "type": "type",
                         "variables": [
@@ -938,7 +1020,7 @@ class TestAsyncTemplates:
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(APIResponseTemplate, template, path=["response"])
+        assert_matches_type(TemplateUpdateResponse, template, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -950,7 +1032,7 @@ class TestAsyncTemplates:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         template = await response.parse()
-        assert_matches_type(APIResponseTemplate, template, path=["response"])
+        assert_matches_type(TemplateUpdateResponse, template, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -962,7 +1044,7 @@ class TestAsyncTemplates:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             template = await response.parse()
-            assert_matches_type(APIResponseTemplate, template, path=["response"])
+            assert_matches_type(TemplateUpdateResponse, template, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

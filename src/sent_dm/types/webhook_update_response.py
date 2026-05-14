@@ -5,29 +5,39 @@ from datetime import datetime
 
 from .._models import BaseModel
 
-__all__ = ["NumberLookupResponse", "Data", "Error", "Meta"]
+__all__ = ["WebhookUpdateResponse", "Data", "Error", "Meta"]
 
 
 class Data(BaseModel):
     """The response data (null if error)"""
 
-    carrier_name: Optional[str] = None
+    id: Optional[str] = None
 
-    country_code: Optional[str] = None
+    consecutive_failures: Optional[int] = None
 
-    is_ported: Optional[bool] = None
+    created_at: Optional[datetime] = None
 
-    is_valid: Optional[bool] = None
+    display_name: Optional[str] = None
 
-    is_voip: Optional[bool] = None
+    endpoint_url: Optional[str] = None
 
-    line_type: Optional[str] = None
+    event_filters: Optional[Dict[str, List[str]]] = None
 
-    mobile_country_code: Optional[str] = None
+    event_types: Optional[List[str]] = None
 
-    mobile_network_code: Optional[str] = None
+    is_active: Optional[bool] = None
 
-    phone_number: Optional[str] = None
+    last_delivery_attempt_at: Optional[datetime] = None
+
+    last_successful_delivery_at: Optional[datetime] = None
+
+    retry_count: Optional[int] = None
+
+    signing_secret: Optional[str] = None
+
+    timeout_seconds: Optional[int] = None
+
+    updated_at: Optional[datetime] = None
 
 
 class Error(BaseModel):
@@ -59,7 +69,7 @@ class Meta(BaseModel):
     """API version used for this request"""
 
 
-class NumberLookupResponse(BaseModel):
+class WebhookUpdateResponse(BaseModel):
     """Standard API response envelope for all v3 endpoints"""
 
     data: Optional[Data] = None

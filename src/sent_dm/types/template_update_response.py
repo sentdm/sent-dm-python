@@ -5,29 +5,41 @@ from datetime import datetime
 
 from .._models import BaseModel
 
-__all__ = ["NumberLookupResponse", "Data", "Error", "Meta"]
+__all__ = ["TemplateUpdateResponse", "Data", "Error", "Meta"]
 
 
 class Data(BaseModel):
-    """The response data (null if error)"""
+    """Template response for v3 API"""
 
-    carrier_name: Optional[str] = None
+    id: Optional[str] = None
+    """Unique template identifier"""
 
-    country_code: Optional[str] = None
+    category: Optional[str] = None
+    """Template category: MARKETING, UTILITY, AUTHENTICATION"""
 
-    is_ported: Optional[bool] = None
+    channels: Optional[List[str]] = None
+    """Supported channels: sms, whatsapp"""
 
-    is_valid: Optional[bool] = None
+    created_at: Optional[datetime] = None
+    """When the template was created"""
 
-    is_voip: Optional[bool] = None
+    is_published: Optional[bool] = None
+    """Whether the template is published and active"""
 
-    line_type: Optional[str] = None
+    language: Optional[str] = None
+    """Template language code (e.g., en_US)"""
 
-    mobile_country_code: Optional[str] = None
+    name: Optional[str] = None
+    """Template display name"""
 
-    mobile_network_code: Optional[str] = None
+    status: Optional[str] = None
+    """Template status: APPROVED, PENDING, REJECTED"""
 
-    phone_number: Optional[str] = None
+    updated_at: Optional[datetime] = None
+    """When the template was last updated"""
+
+    variables: Optional[List[str]] = None
+    """Template variables for personalization"""
 
 
 class Error(BaseModel):
@@ -59,11 +71,11 @@ class Meta(BaseModel):
     """API version used for this request"""
 
 
-class NumberLookupResponse(BaseModel):
+class TemplateUpdateResponse(BaseModel):
     """Standard API response envelope for all v3 endpoints"""
 
     data: Optional[Data] = None
-    """The response data (null if error)"""
+    """Template response for v3 API"""
 
     error: Optional[Error] = None
     """Error information"""

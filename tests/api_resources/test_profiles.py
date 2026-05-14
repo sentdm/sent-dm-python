@@ -11,8 +11,10 @@ from sent_dm import Sent, AsyncSent
 from tests.utils import assert_matches_type
 from sent_dm.types import (
     ProfileListResponse,
+    ProfileCreateResponse,
+    ProfileUpdateResponse,
     ProfileCompleteResponse,
-    APIResponseOfProfileDetail,
+    ProfileRetrieveResponse,
 )
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
@@ -25,7 +27,7 @@ class TestProfiles:
     @parametrize
     def test_method_create(self, client: Sent) -> None:
         profile = client.profiles.create()
-        assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
+        assert_matches_type(ProfileCreateResponse, profile, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -101,7 +103,7 @@ class TestProfiles:
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
+        assert_matches_type(ProfileCreateResponse, profile, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -111,7 +113,7 @@ class TestProfiles:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         profile = response.parse()
-        assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
+        assert_matches_type(ProfileCreateResponse, profile, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -121,7 +123,7 @@ class TestProfiles:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             profile = response.parse()
-            assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
+            assert_matches_type(ProfileCreateResponse, profile, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -131,7 +133,7 @@ class TestProfiles:
         profile = client.profiles.retrieve(
             profile_id="profileId",
         )
-        assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
+        assert_matches_type(ProfileRetrieveResponse, profile, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -140,7 +142,7 @@ class TestProfiles:
             profile_id="profileId",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
+        assert_matches_type(ProfileRetrieveResponse, profile, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -152,7 +154,7 @@ class TestProfiles:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         profile = response.parse()
-        assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
+        assert_matches_type(ProfileRetrieveResponse, profile, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -164,7 +166,7 @@ class TestProfiles:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             profile = response.parse()
-            assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
+            assert_matches_type(ProfileRetrieveResponse, profile, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -182,7 +184,7 @@ class TestProfiles:
         profile = client.profiles.update(
             profile_id="profileId",
         )
-        assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
+        assert_matches_type(ProfileUpdateResponse, profile, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -259,7 +261,7 @@ class TestProfiles:
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
+        assert_matches_type(ProfileUpdateResponse, profile, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -271,7 +273,7 @@ class TestProfiles:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         profile = response.parse()
-        assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
+        assert_matches_type(ProfileUpdateResponse, profile, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -283,7 +285,7 @@ class TestProfiles:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             profile = response.parse()
-            assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
+            assert_matches_type(ProfileUpdateResponse, profile, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -451,7 +453,7 @@ class TestAsyncProfiles:
     @parametrize
     async def test_method_create(self, async_client: AsyncSent) -> None:
         profile = await async_client.profiles.create()
-        assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
+        assert_matches_type(ProfileCreateResponse, profile, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -527,7 +529,7 @@ class TestAsyncProfiles:
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
+        assert_matches_type(ProfileCreateResponse, profile, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -537,7 +539,7 @@ class TestAsyncProfiles:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         profile = await response.parse()
-        assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
+        assert_matches_type(ProfileCreateResponse, profile, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -547,7 +549,7 @@ class TestAsyncProfiles:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             profile = await response.parse()
-            assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
+            assert_matches_type(ProfileCreateResponse, profile, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -557,7 +559,7 @@ class TestAsyncProfiles:
         profile = await async_client.profiles.retrieve(
             profile_id="profileId",
         )
-        assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
+        assert_matches_type(ProfileRetrieveResponse, profile, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -566,7 +568,7 @@ class TestAsyncProfiles:
             profile_id="profileId",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
+        assert_matches_type(ProfileRetrieveResponse, profile, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -578,7 +580,7 @@ class TestAsyncProfiles:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         profile = await response.parse()
-        assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
+        assert_matches_type(ProfileRetrieveResponse, profile, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -590,7 +592,7 @@ class TestAsyncProfiles:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             profile = await response.parse()
-            assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
+            assert_matches_type(ProfileRetrieveResponse, profile, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -608,7 +610,7 @@ class TestAsyncProfiles:
         profile = await async_client.profiles.update(
             profile_id="profileId",
         )
-        assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
+        assert_matches_type(ProfileUpdateResponse, profile, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -685,7 +687,7 @@ class TestAsyncProfiles:
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
+        assert_matches_type(ProfileUpdateResponse, profile, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -697,7 +699,7 @@ class TestAsyncProfiles:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         profile = await response.parse()
-        assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
+        assert_matches_type(ProfileUpdateResponse, profile, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -709,7 +711,7 @@ class TestAsyncProfiles:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             profile = await response.parse()
-            assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
+            assert_matches_type(ProfileUpdateResponse, profile, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

@@ -8,7 +8,7 @@ from pydantic import Field as FieldInfo
 
 from ..._models import BaseModel
 
-__all__ = ["CampaignListResponse", "Data", "DataUseCase", "Error", "Meta"]
+__all__ = ["CampaignCreateResponse", "Data", "DataUseCase", "Error", "Meta"]
 
 
 class DataUseCase(BaseModel):
@@ -45,6 +45,8 @@ class DataUseCase(BaseModel):
 
 
 class Data(BaseModel):
+    """The response data (null if error)"""
+
     id: Optional[str] = None
     """Unique identifier"""
 
@@ -144,10 +146,10 @@ class Meta(BaseModel):
     """API version used for this request"""
 
 
-class CampaignListResponse(BaseModel):
+class CampaignCreateResponse(BaseModel):
     """Standard API response envelope for all v3 endpoints"""
 
-    data: Optional[List[Data]] = None
+    data: Optional[Data] = None
     """The response data (null if error)"""
 
     error: Optional[Error] = None
