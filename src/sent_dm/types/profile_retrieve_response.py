@@ -9,21 +9,20 @@ from pydantic import Field as FieldInfo
 from .._models import BaseModel
 
 __all__ = [
-    "ProfileListResponse",
+    "ProfileRetrieveResponse",
     "Data",
-    "DataProfile",
-    "DataProfileBillingContact",
-    "DataProfileBrand",
-    "DataProfileBrandBusiness",
-    "DataProfileBrandCompliance",
-    "DataProfileBrandComplianceDestinationCountry",
-    "DataProfileBrandContact",
+    "DataBillingContact",
+    "DataBrand",
+    "DataBrandBusiness",
+    "DataBrandCompliance",
+    "DataBrandComplianceDestinationCountry",
+    "DataBrandContact",
     "Error",
     "Meta",
 ]
 
 
-class DataProfileBillingContact(BaseModel):
+class DataBillingContact(BaseModel):
     """Billing contact info returned in profile responses"""
 
     address: Optional[str] = None
@@ -35,7 +34,7 @@ class DataProfileBillingContact(BaseModel):
     phone: Optional[str] = None
 
 
-class DataProfileBrandBusiness(BaseModel):
+class DataBrandBusiness(BaseModel):
     """Business details and address information"""
 
     city: Optional[str] = None
@@ -72,20 +71,20 @@ class DataProfileBrandBusiness(BaseModel):
     """Business website URL"""
 
 
-class DataProfileBrandComplianceDestinationCountry(BaseModel):
+class DataBrandComplianceDestinationCountry(BaseModel):
     id: Optional[str] = None
 
     is_main: Optional[bool] = FieldInfo(alias="isMain", default=None)
 
 
-class DataProfileBrandCompliance(BaseModel):
+class DataBrandCompliance(BaseModel):
     """Compliance and TCR-related information"""
 
     brand_relationship: Optional[
         Literal["BASIC_ACCOUNT", "MEDIUM_ACCOUNT", "LARGE_ACCOUNT", "SMALL_ACCOUNT", "KEY_ACCOUNT"]
     ] = None
 
-    destination_countries: Optional[List[DataProfileBrandComplianceDestinationCountry]] = None
+    destination_countries: Optional[List[DataBrandComplianceDestinationCountry]] = None
     """List of destination countries for messaging"""
 
     expected_messaging_volume: Optional[str] = None
@@ -132,7 +131,7 @@ class DataProfileBrandCompliance(BaseModel):
     ] = None
 
 
-class DataProfileBrandContact(BaseModel):
+class DataBrandContact(BaseModel):
     """Contact information for the brand"""
 
     business_name: Optional[str] = None
@@ -154,7 +153,7 @@ class DataProfileBrandContact(BaseModel):
     """Contact's role in the business"""
 
 
-class DataProfileBrand(BaseModel):
+class DataBrand(BaseModel):
     """
     Brand response with nested contact, business, and compliance sections — mirrors the request structure.
     """
@@ -162,13 +161,13 @@ class DataProfileBrand(BaseModel):
     id: Optional[str] = None
     """Unique identifier for the brand"""
 
-    business: Optional[DataProfileBrandBusiness] = None
+    business: Optional[DataBrandBusiness] = None
     """Business details and address information"""
 
-    compliance: Optional[DataProfileBrandCompliance] = None
+    compliance: Optional[DataBrandCompliance] = None
     """Compliance and TCR-related information"""
 
-    contact: Optional[DataProfileBrandContact] = None
+    contact: Optional[DataBrandContact] = None
     """Contact information for the brand"""
 
     created_at: Optional[datetime] = None
@@ -200,7 +199,7 @@ class DataProfileBrand(BaseModel):
     """When the brand was last updated"""
 
 
-class DataProfile(BaseModel):
+class Data(BaseModel):
     """Detailed profile response for v3 API"""
 
     id: Optional[str] = None
@@ -215,13 +214,13 @@ class DataProfile(BaseModel):
     allow_template_sharing: Optional[bool] = None
     """Whether templates are shared across profiles in the organization"""
 
-    billing_contact: Optional[DataProfileBillingContact] = None
+    billing_contact: Optional[DataBillingContact] = None
     """Billing contact info returned in profile responses"""
 
     billing_model: Optional[str] = None
     """Billing model: profile, organization, or profile_and_organization"""
 
-    brand: Optional[DataProfileBrand] = None
+    brand: Optional[DataBrand] = None
     """
     Brand response with nested contact, business, and compliance sections — mirrors
     the request structure.
@@ -288,13 +287,6 @@ class DataProfile(BaseModel):
     """Direct WhatsApp phone number"""
 
 
-class Data(BaseModel):
-    """List of profiles response"""
-
-    profiles: Optional[List[DataProfile]] = None
-    """List of profiles in the organization"""
-
-
 class Error(BaseModel):
     """Error information"""
 
@@ -324,11 +316,11 @@ class Meta(BaseModel):
     """API version used for this request"""
 
 
-class ProfileListResponse(BaseModel):
+class ProfileRetrieveResponse(BaseModel):
     """Standard API response envelope for all v3 endpoints"""
 
     data: Optional[Data] = None
-    """List of profiles response"""
+    """Detailed profile response for v3 API"""
 
     error: Optional[Error] = None
     """Error information"""

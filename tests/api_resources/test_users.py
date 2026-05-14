@@ -11,7 +11,9 @@ from sent_dm import Sent, AsyncSent
 from tests.utils import assert_matches_type
 from sent_dm.types import (
     UserListResponse,
-    APIResponseOfUser,
+    UserInviteResponse,
+    UserRetrieveResponse,
+    UserUpdateRoleResponse,
 )
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
@@ -26,7 +28,7 @@ class TestUsers:
         user = client.users.retrieve(
             user_id="userId",
         )
-        assert_matches_type(APIResponseOfUser, user, path=["response"])
+        assert_matches_type(UserRetrieveResponse, user, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -35,7 +37,7 @@ class TestUsers:
             user_id="userId",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(APIResponseOfUser, user, path=["response"])
+        assert_matches_type(UserRetrieveResponse, user, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -47,7 +49,7 @@ class TestUsers:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         user = response.parse()
-        assert_matches_type(APIResponseOfUser, user, path=["response"])
+        assert_matches_type(UserRetrieveResponse, user, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -59,7 +61,7 @@ class TestUsers:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             user = response.parse()
-            assert_matches_type(APIResponseOfUser, user, path=["response"])
+            assert_matches_type(UserRetrieveResponse, user, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -111,7 +113,7 @@ class TestUsers:
     @parametrize
     def test_method_invite(self, client: Sent) -> None:
         user = client.users.invite()
-        assert_matches_type(APIResponseOfUser, user, path=["response"])
+        assert_matches_type(UserInviteResponse, user, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -124,7 +126,7 @@ class TestUsers:
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(APIResponseOfUser, user, path=["response"])
+        assert_matches_type(UserInviteResponse, user, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -134,7 +136,7 @@ class TestUsers:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         user = response.parse()
-        assert_matches_type(APIResponseOfUser, user, path=["response"])
+        assert_matches_type(UserInviteResponse, user, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -144,7 +146,7 @@ class TestUsers:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             user = response.parse()
-            assert_matches_type(APIResponseOfUser, user, path=["response"])
+            assert_matches_type(UserInviteResponse, user, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -206,7 +208,7 @@ class TestUsers:
         user = client.users.update_role(
             user_id="userId",
         )
-        assert_matches_type(APIResponseOfUser, user, path=["response"])
+        assert_matches_type(UserUpdateRoleResponse, user, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -218,7 +220,7 @@ class TestUsers:
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(APIResponseOfUser, user, path=["response"])
+        assert_matches_type(UserUpdateRoleResponse, user, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -230,7 +232,7 @@ class TestUsers:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         user = response.parse()
-        assert_matches_type(APIResponseOfUser, user, path=["response"])
+        assert_matches_type(UserUpdateRoleResponse, user, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -242,7 +244,7 @@ class TestUsers:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             user = response.parse()
-            assert_matches_type(APIResponseOfUser, user, path=["response"])
+            assert_matches_type(UserUpdateRoleResponse, user, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -266,7 +268,7 @@ class TestAsyncUsers:
         user = await async_client.users.retrieve(
             user_id="userId",
         )
-        assert_matches_type(APIResponseOfUser, user, path=["response"])
+        assert_matches_type(UserRetrieveResponse, user, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -275,7 +277,7 @@ class TestAsyncUsers:
             user_id="userId",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(APIResponseOfUser, user, path=["response"])
+        assert_matches_type(UserRetrieveResponse, user, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -287,7 +289,7 @@ class TestAsyncUsers:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         user = await response.parse()
-        assert_matches_type(APIResponseOfUser, user, path=["response"])
+        assert_matches_type(UserRetrieveResponse, user, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -299,7 +301,7 @@ class TestAsyncUsers:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             user = await response.parse()
-            assert_matches_type(APIResponseOfUser, user, path=["response"])
+            assert_matches_type(UserRetrieveResponse, user, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -351,7 +353,7 @@ class TestAsyncUsers:
     @parametrize
     async def test_method_invite(self, async_client: AsyncSent) -> None:
         user = await async_client.users.invite()
-        assert_matches_type(APIResponseOfUser, user, path=["response"])
+        assert_matches_type(UserInviteResponse, user, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -364,7 +366,7 @@ class TestAsyncUsers:
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(APIResponseOfUser, user, path=["response"])
+        assert_matches_type(UserInviteResponse, user, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -374,7 +376,7 @@ class TestAsyncUsers:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         user = await response.parse()
-        assert_matches_type(APIResponseOfUser, user, path=["response"])
+        assert_matches_type(UserInviteResponse, user, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -384,7 +386,7 @@ class TestAsyncUsers:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             user = await response.parse()
-            assert_matches_type(APIResponseOfUser, user, path=["response"])
+            assert_matches_type(UserInviteResponse, user, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -446,7 +448,7 @@ class TestAsyncUsers:
         user = await async_client.users.update_role(
             user_id="userId",
         )
-        assert_matches_type(APIResponseOfUser, user, path=["response"])
+        assert_matches_type(UserUpdateRoleResponse, user, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -458,7 +460,7 @@ class TestAsyncUsers:
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(APIResponseOfUser, user, path=["response"])
+        assert_matches_type(UserUpdateRoleResponse, user, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -470,7 +472,7 @@ class TestAsyncUsers:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         user = await response.parse()
-        assert_matches_type(APIResponseOfUser, user, path=["response"])
+        assert_matches_type(UserUpdateRoleResponse, user, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -482,7 +484,7 @@ class TestAsyncUsers:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             user = await response.parse()
-            assert_matches_type(APIResponseOfUser, user, path=["response"])
+            assert_matches_type(UserUpdateRoleResponse, user, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

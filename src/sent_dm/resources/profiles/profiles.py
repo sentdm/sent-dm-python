@@ -6,12 +6,7 @@ from typing import Optional
 
 import httpx
 
-from ...types import (
-    profile_create_params,
-    profile_delete_params,
-    profile_update_params,
-    profile_complete_params,
-)
+from ...types import profile_create_params, profile_delete_params, profile_update_params, profile_complete_params
 from ..._types import Body, Omit, Query, Headers, NoneType, NotGiven, omit, not_given
 from ..._utils import path_template, maybe_transform, strip_not_given, async_maybe_transform
 from ..._compat import cached_property
@@ -31,12 +26,11 @@ from ..._response import (
     async_to_streamed_response_wrapper,
 )
 from ..._base_client import make_request_options
-from ...types.payment_details_param import PaymentDetailsParam
 from ...types.profile_list_response import ProfileListResponse
-from ...types.brands_brand_data_param import BrandsBrandDataParam
+from ...types.profile_create_response import ProfileCreateResponse
+from ...types.profile_update_response import ProfileUpdateResponse
 from ...types.profile_complete_response import ProfileCompleteResponse
-from ...types.billing_contact_info_param import BillingContactInfoParam
-from ...types.api_response_of_profile_detail import APIResponseOfProfileDetail
+from ...types.profile_retrieve_response import ProfileRetrieveResponse
 
 __all__ = ["ProfilesResource", "AsyncProfilesResource"]
 
@@ -73,9 +67,9 @@ class ProfilesResource(SyncAPIResource):
         *,
         allow_contact_sharing: bool | Omit = omit,
         allow_template_sharing: bool | Omit = omit,
-        billing_contact: Optional[BillingContactInfoParam] | Omit = omit,
+        billing_contact: Optional[profile_create_params.BillingContact] | Omit = omit,
         billing_model: Optional[str] | Omit = omit,
-        brand: Optional[BrandsBrandDataParam] | Omit = omit,
+        brand: Optional[profile_create_params.Brand] | Omit = omit,
         description: Optional[str] | Omit = omit,
         icon: Optional[str] | Omit = omit,
         inherit_contacts: Optional[bool] | Omit = omit,
@@ -83,7 +77,7 @@ class ProfilesResource(SyncAPIResource):
         inherit_tcr_campaign: Optional[bool] | Omit = omit,
         inherit_templates: Optional[bool] | Omit = omit,
         name: str | Omit = omit,
-        payment_details: Optional[PaymentDetailsParam] | Omit = omit,
+        payment_details: Optional[profile_create_params.PaymentDetails] | Omit = omit,
         sandbox: bool | Omit = omit,
         short_name: Optional[str] | Omit = omit,
         whatsapp_business_account: Optional[profile_create_params.WhatsappBusinessAccount] | Omit = omit,
@@ -95,7 +89,7 @@ class ProfilesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfProfileDetail:
+    ) -> ProfileCreateResponse:
         """Creates a new sender profile within an organization.
 
         Profiles represent
@@ -229,7 +223,7 @@ class ProfilesResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfProfileDetail,
+            cast_to=ProfileCreateResponse,
         )
 
     def retrieve(
@@ -243,7 +237,7 @@ class ProfilesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfProfileDetail:
+    ) -> ProfileRetrieveResponse:
         """
         Retrieves detailed information about a specific sender profile within an
         organization, including brand and KYC information if a brand has been
@@ -266,7 +260,7 @@ class ProfilesResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfProfileDetail,
+            cast_to=ProfileRetrieveResponse,
         )
 
     def update(
@@ -276,9 +270,9 @@ class ProfilesResource(SyncAPIResource):
         allow_contact_sharing: Optional[bool] | Omit = omit,
         allow_number_change_during_onboarding: Optional[bool] | Omit = omit,
         allow_template_sharing: Optional[bool] | Omit = omit,
-        billing_contact: Optional[BillingContactInfoParam] | Omit = omit,
+        billing_contact: Optional[profile_update_params.BillingContact] | Omit = omit,
         billing_model: Optional[str] | Omit = omit,
-        brand: Optional[BrandsBrandDataParam] | Omit = omit,
+        brand: Optional[profile_update_params.Brand] | Omit = omit,
         description: Optional[str] | Omit = omit,
         icon: Optional[str] | Omit = omit,
         inherit_contacts: Optional[bool] | Omit = omit,
@@ -286,7 +280,7 @@ class ProfilesResource(SyncAPIResource):
         inherit_tcr_campaign: Optional[bool] | Omit = omit,
         inherit_templates: Optional[bool] | Omit = omit,
         name: Optional[str] | Omit = omit,
-        payment_details: Optional[PaymentDetailsParam] | Omit = omit,
+        payment_details: Optional[profile_update_params.PaymentDetails] | Omit = omit,
         sandbox: bool | Omit = omit,
         sending_phone_number: Optional[str] | Omit = omit,
         sending_phone_number_profile_id: Optional[str] | Omit = omit,
@@ -301,7 +295,7 @@ class ProfilesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfProfileDetail:
+    ) -> ProfileUpdateResponse:
         """Updates a profile's configuration and settings.
 
         Requires admin role in the
@@ -425,7 +419,7 @@ class ProfilesResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfProfileDetail,
+            cast_to=ProfileUpdateResponse,
         )
 
     def list(
@@ -615,9 +609,9 @@ class AsyncProfilesResource(AsyncAPIResource):
         *,
         allow_contact_sharing: bool | Omit = omit,
         allow_template_sharing: bool | Omit = omit,
-        billing_contact: Optional[BillingContactInfoParam] | Omit = omit,
+        billing_contact: Optional[profile_create_params.BillingContact] | Omit = omit,
         billing_model: Optional[str] | Omit = omit,
-        brand: Optional[BrandsBrandDataParam] | Omit = omit,
+        brand: Optional[profile_create_params.Brand] | Omit = omit,
         description: Optional[str] | Omit = omit,
         icon: Optional[str] | Omit = omit,
         inherit_contacts: Optional[bool] | Omit = omit,
@@ -625,7 +619,7 @@ class AsyncProfilesResource(AsyncAPIResource):
         inherit_tcr_campaign: Optional[bool] | Omit = omit,
         inherit_templates: Optional[bool] | Omit = omit,
         name: str | Omit = omit,
-        payment_details: Optional[PaymentDetailsParam] | Omit = omit,
+        payment_details: Optional[profile_create_params.PaymentDetails] | Omit = omit,
         sandbox: bool | Omit = omit,
         short_name: Optional[str] | Omit = omit,
         whatsapp_business_account: Optional[profile_create_params.WhatsappBusinessAccount] | Omit = omit,
@@ -637,7 +631,7 @@ class AsyncProfilesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfProfileDetail:
+    ) -> ProfileCreateResponse:
         """Creates a new sender profile within an organization.
 
         Profiles represent
@@ -771,7 +765,7 @@ class AsyncProfilesResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfProfileDetail,
+            cast_to=ProfileCreateResponse,
         )
 
     async def retrieve(
@@ -785,7 +779,7 @@ class AsyncProfilesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfProfileDetail:
+    ) -> ProfileRetrieveResponse:
         """
         Retrieves detailed information about a specific sender profile within an
         organization, including brand and KYC information if a brand has been
@@ -808,7 +802,7 @@ class AsyncProfilesResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfProfileDetail,
+            cast_to=ProfileRetrieveResponse,
         )
 
     async def update(
@@ -818,9 +812,9 @@ class AsyncProfilesResource(AsyncAPIResource):
         allow_contact_sharing: Optional[bool] | Omit = omit,
         allow_number_change_during_onboarding: Optional[bool] | Omit = omit,
         allow_template_sharing: Optional[bool] | Omit = omit,
-        billing_contact: Optional[BillingContactInfoParam] | Omit = omit,
+        billing_contact: Optional[profile_update_params.BillingContact] | Omit = omit,
         billing_model: Optional[str] | Omit = omit,
-        brand: Optional[BrandsBrandDataParam] | Omit = omit,
+        brand: Optional[profile_update_params.Brand] | Omit = omit,
         description: Optional[str] | Omit = omit,
         icon: Optional[str] | Omit = omit,
         inherit_contacts: Optional[bool] | Omit = omit,
@@ -828,7 +822,7 @@ class AsyncProfilesResource(AsyncAPIResource):
         inherit_tcr_campaign: Optional[bool] | Omit = omit,
         inherit_templates: Optional[bool] | Omit = omit,
         name: Optional[str] | Omit = omit,
-        payment_details: Optional[PaymentDetailsParam] | Omit = omit,
+        payment_details: Optional[profile_update_params.PaymentDetails] | Omit = omit,
         sandbox: bool | Omit = omit,
         sending_phone_number: Optional[str] | Omit = omit,
         sending_phone_number_profile_id: Optional[str] | Omit = omit,
@@ -843,7 +837,7 @@ class AsyncProfilesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfProfileDetail:
+    ) -> ProfileUpdateResponse:
         """Updates a profile's configuration and settings.
 
         Requires admin role in the
@@ -967,7 +961,7 @@ class AsyncProfilesResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfProfileDetail,
+            cast_to=ProfileUpdateResponse,
         )
 
     async def list(

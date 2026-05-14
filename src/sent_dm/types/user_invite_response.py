@@ -5,29 +5,38 @@ from datetime import datetime
 
 from .._models import BaseModel
 
-__all__ = ["NumberLookupResponse", "Data", "Error", "Meta"]
+__all__ = ["UserInviteResponse", "Data", "Error", "Meta"]
 
 
 class Data(BaseModel):
-    """The response data (null if error)"""
+    """User response for v3 API"""
 
-    carrier_name: Optional[str] = None
+    id: Optional[str] = None
+    """User unique identifier"""
 
-    country_code: Optional[str] = None
+    created_at: Optional[datetime] = None
+    """When the user was added to the organization"""
 
-    is_ported: Optional[bool] = None
+    email: Optional[str] = None
+    """User email address"""
 
-    is_valid: Optional[bool] = None
+    invited_at: Optional[datetime] = None
+    """When the user was invited"""
 
-    is_voip: Optional[bool] = None
+    last_login_at: Optional[datetime] = None
+    """When the user last logged in"""
 
-    line_type: Optional[str] = None
+    name: Optional[str] = None
+    """User full name"""
 
-    mobile_country_code: Optional[str] = None
+    role: Optional[str] = None
+    """User role in the organization: admin, billing, developer"""
 
-    mobile_network_code: Optional[str] = None
+    status: Optional[str] = None
+    """User status: active, invited, suspended, rejected"""
 
-    phone_number: Optional[str] = None
+    updated_at: Optional[datetime] = None
+    """When the user record was last updated"""
 
 
 class Error(BaseModel):
@@ -59,11 +68,11 @@ class Meta(BaseModel):
     """API version used for this request"""
 
 
-class NumberLookupResponse(BaseModel):
+class UserInviteResponse(BaseModel):
     """Standard API response envelope for all v3 endpoints"""
 
     data: Optional[Data] = None
-    """The response data (null if error)"""
+    """User response for v3 API"""
 
     error: Optional[Error] = None
     """Error information"""

@@ -5,10 +5,10 @@ from datetime import datetime
 
 from .._models import BaseModel
 
-__all__ = ["ContactListResponse", "Data", "DataContact", "DataPagination", "DataPaginationCursors", "Error", "Meta"]
+__all__ = ["ContactUpdateResponse", "Data", "Error", "Meta"]
 
 
-class DataContact(BaseModel):
+class Data(BaseModel):
     """
     Contact response for v3 API
     Uses snake_case for JSON property names
@@ -60,48 +60,6 @@ class DataContact(BaseModel):
     """When the contact was last updated"""
 
 
-class DataPaginationCursors(BaseModel):
-    """Cursor-based pagination pointers"""
-
-    after: Optional[str] = None
-    """Cursor to fetch the next page"""
-
-    before: Optional[str] = None
-    """Cursor to fetch the previous page"""
-
-
-class DataPagination(BaseModel):
-    """Pagination metadata for list responses"""
-
-    cursors: Optional[DataPaginationCursors] = None
-    """Cursor-based pagination pointers"""
-
-    has_more: Optional[bool] = None
-    """Whether there are more pages after this one"""
-
-    page: Optional[int] = None
-    """Current page number (1-indexed)"""
-
-    page_size: Optional[int] = None
-    """Number of items per page"""
-
-    total_count: Optional[int] = None
-    """Total number of items across all pages"""
-
-    total_pages: Optional[int] = None
-    """Total number of pages"""
-
-
-class Data(BaseModel):
-    """Paginated list of contacts response"""
-
-    contacts: Optional[List[DataContact]] = None
-    """List of contacts"""
-
-    pagination: Optional[DataPagination] = None
-    """Pagination metadata for list responses"""
-
-
 class Error(BaseModel):
     """Error information"""
 
@@ -131,11 +89,11 @@ class Meta(BaseModel):
     """API version used for this request"""
 
 
-class ContactListResponse(BaseModel):
+class ContactUpdateResponse(BaseModel):
     """Standard API response envelope for all v3 endpoints"""
 
     data: Optional[Data] = None
-    """Paginated list of contacts response"""
+    """Contact response for v3 API Uses snake_case for JSON property names"""
 
     error: Optional[Error] = None
     """Error information"""
