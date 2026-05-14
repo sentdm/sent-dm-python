@@ -16,8 +16,7 @@ class MessageSendParams(TypedDict, total=False):
     """Channels to broadcast on, e.g.
 
     ["whatsapp", "sms"]. Each channel produces a separate message per recipient.
-    "sent" = auto-detect, "rcs" = reserved (skipped). Defaults to ["sent"]
-    (auto-detect) if omitted.
+    "sent" = auto-detect. Defaults to ["sent"] (auto-detect) if omitted.
     """
 
     sandbox: bool

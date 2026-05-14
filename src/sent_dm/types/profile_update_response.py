@@ -1,18 +1,28 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import List, Optional
+from typing import Dict, List, Optional
 from datetime import datetime
 from typing_extensions import Literal
 
+from pydantic import Field as FieldInfo
+
 from .._models import BaseModel
-from .tcr_vertical import TcrVertical
-from .destination_country import DestinationCountry
-from .tcr_brand_relationship import TcrBrandRelationship
 
-__all__ = ["ProfileDetail", "BillingContact", "Brand", "BrandBusiness", "BrandCompliance", "BrandContact"]
+__all__ = [
+    "ProfileUpdateResponse",
+    "Data",
+    "DataBillingContact",
+    "DataBrand",
+    "DataBrandBusiness",
+    "DataBrandCompliance",
+    "DataBrandComplianceDestinationCountry",
+    "DataBrandContact",
+    "Error",
+    "Meta",
+]
 
 
-class BillingContact(BaseModel):
+class DataBillingContact(BaseModel):
     """Billing contact info returned in profile responses"""
 
     address: Optional[str] = None
@@ -24,7 +34,7 @@ class BillingContact(BaseModel):
     phone: Optional[str] = None
 
 
-class BrandBusiness(BaseModel):
+class DataBrandBusiness(BaseModel):
     """Business details and address information"""
 
     city: Optional[str] = None
@@ -61,12 +71,20 @@ class BrandBusiness(BaseModel):
     """Business website URL"""
 
 
-class BrandCompliance(BaseModel):
+class DataBrandComplianceDestinationCountry(BaseModel):
+    id: Optional[str] = None
+
+    is_main: Optional[bool] = FieldInfo(alias="isMain", default=None)
+
+
+class DataBrandCompliance(BaseModel):
     """Compliance and TCR-related information"""
 
-    brand_relationship: Optional[TcrBrandRelationship] = None
+    brand_relationship: Optional[
+        Literal["BASIC_ACCOUNT", "MEDIUM_ACCOUNT", "LARGE_ACCOUNT", "SMALL_ACCOUNT", "KEY_ACCOUNT"]
+    ] = None
 
-    destination_countries: Optional[List[DestinationCountry]] = None
+    destination_countries: Optional[List[DataBrandComplianceDestinationCountry]] = None
     """List of destination countries for messaging"""
 
     expected_messaging_volume: Optional[str] = None
@@ -84,10 +102,36 @@ class BrandCompliance(BaseModel):
     primary_use_case: Optional[str] = None
     """Primary messaging use case description"""
 
-    vertical: Optional[TcrVertical] = None
+    vertical: Optional[
+        Literal[
+            "PROFESSIONAL",
+            "REAL_ESTATE",
+            "HEALTHCARE",
+            "HUMAN_RESOURCES",
+            "ENERGY",
+            "ENTERTAINMENT",
+            "RETAIL",
+            "TRANSPORTATION",
+            "AGRICULTURE",
+            "INSURANCE",
+            "POSTAL",
+            "EDUCATION",
+            "HOSPITALITY",
+            "FINANCIAL",
+            "POLITICAL",
+            "GAMBLING",
+            "LEGAL",
+            "CONSTRUCTION",
+            "NGO",
+            "MANUFACTURING",
+            "GOVERNMENT",
+            "TECHNOLOGY",
+            "COMMUNICATION",
+        ]
+    ] = None
 
 
-class BrandContact(BaseModel):
+class DataBrandContact(BaseModel):
     """Contact information for the brand"""
 
     business_name: Optional[str] = None
@@ -109,7 +153,7 @@ class BrandContact(BaseModel):
     """Contact's role in the business"""
 
 
-class Brand(BaseModel):
+class DataBrand(BaseModel):
     """
     Brand response with nested contact, business, and compliance sections — mirrors the request structure.
     """
@@ -117,13 +161,13 @@ class Brand(BaseModel):
     id: Optional[str] = None
     """Unique identifier for the brand"""
 
-    business: Optional[BrandBusiness] = None
+    business: Optional[DataBrandBusiness] = None
     """Business details and address information"""
 
-    compliance: Optional[BrandCompliance] = None
+    compliance: Optional[DataBrandCompliance] = None
     """Compliance and TCR-related information"""
 
-    contact: Optional[BrandContact] = None
+    contact: Optional[DataBrandContact] = None
     """Contact information for the brand"""
 
     created_at: Optional[datetime] = None
@@ -155,7 +199,7 @@ class Brand(BaseModel):
     """When the brand was last updated"""
 
 
-class ProfileDetail(BaseModel):
+class Data(BaseModel):
     """Detailed profile response for v3 API"""
 
     id: Optional[str] = None
@@ -170,13 +214,13 @@ class ProfileDetail(BaseModel):
     allow_template_sharing: Optional[bool] = None
     """Whether templates are shared across profiles in the organization"""
 
-    billing_contact: Optional[BillingContact] = None
+    billing_contact: Optional[DataBillingContact] = None
     """Billing contact info returned in profile responses"""
 
     billing_model: Optional[str] = None
     """Billing model: profile, organization, or profile_and_organization"""
 
-    brand: Optional[Brand] = None
+    brand: Optional[DataBrand] = None
     """
     Brand response with nested contact, business, and compliance sections — mirrors
     the request structure.
@@ -241,3 +285,48 @@ class ProfileDetail(BaseModel):
 
     whatsapp_phone_number: Optional[str] = None
     """Direct WhatsApp phone number"""
+
+
+class Error(BaseModel):
+    """Error information"""
+
+    code: Optional[str] = None
+    """Machine-readable error code (e.g., "RESOURCE_001")"""
+
+    details: Optional[Dict[str, List[str]]] = None
+    """Additional validation error details (field-level errors)"""
+
+    doc_url: Optional[str] = None
+    """URL to documentation about this error"""
+
+    message: Optional[str] = None
+    """Human-readable error message"""
+
+
+class Meta(BaseModel):
+    """Request and response metadata"""
+
+    request_id: Optional[str] = None
+    """Unique identifier for this request (for tracing and support)"""
+
+    timestamp: Optional[datetime] = None
+    """Server timestamp when the response was generated"""
+
+    version: Optional[str] = None
+    """API version used for this request"""
+
+
+class ProfileUpdateResponse(BaseModel):
+    """Standard API response envelope for all v3 endpoints"""
+
+    data: Optional[Data] = None
+    """Detailed profile response for v3 API"""
+
+    error: Optional[Error] = None
+    """Error information"""
+
+    meta: Optional[Meta] = None
+    """Request and response metadata"""
+
+    success: Optional[bool] = None
+    """Indicates whether the request was successful"""

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Dict, Optional
+from typing import Optional
 
 import httpx
 
@@ -19,7 +19,9 @@ from .._response import (
 )
 from .._base_client import make_request_options
 from ..types.contact_list_response import ContactListResponse
-from ..types.api_response_of_contact import APIResponseOfContact
+from ..types.contact_create_response import ContactCreateResponse
+from ..types.contact_update_response import ContactUpdateResponse
+from ..types.contact_retrieve_response import ContactRetrieveResponse
 
 __all__ = ["ContactsResource", "AsyncContactsResource"]
 
@@ -59,7 +61,7 @@ class ContactsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfContact:
+    ) -> ContactCreateResponse:
         """
         Creates a new contact by phone number and associates it with the authenticated
         customer.
@@ -99,7 +101,7 @@ class ContactsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfContact,
+            cast_to=ContactCreateResponse,
         )
 
     def retrieve(
@@ -113,7 +115,7 @@ class ContactsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfContact:
+    ) -> ContactRetrieveResponse:
         """Retrieves a specific contact by their unique identifier.
 
         Returns detailed
@@ -137,14 +139,13 @@ class ContactsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfContact,
+            cast_to=ContactRetrieveResponse,
         )
 
     def update(
         self,
         id: str,
         *,
-        channel_consent: Optional[Dict[str, str]] | Omit = omit,
         default_channel: Optional[str] | Omit = omit,
         opt_out: Optional[bool] | Omit = omit,
         sandbox: bool | Omit = omit,
@@ -156,23 +157,17 @@ class ContactsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfContact:
+    ) -> ContactUpdateResponse:
         """Updates a contact's default channel and/or opt-out status.
 
         Inherited contacts
         cannot be updated.
 
         Args:
-          channel_consent: Consent status by channel. Keys: "sms", "whatsapp". Values: "opted_in",
-              "opted_out". All entries must have the same status — mixed values (e.g., sms:
-              opted_out + whatsapp: opted_in) are rejected with 400. The provided status is
-              applied to ALL channels regardless of which keys are specified, because consent
-              is global across channels. When provided, takes precedence over the opt_out
-              field.
-
           default_channel: Default messaging channel: "sms" or "whatsapp"
 
-          opt_out: Whether the contact has opted out of messaging
+          opt_out: Whether the contact has opted out of messaging. Single source of truth — opt-out
+              is per-contact, not per-channel.
 
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
@@ -200,7 +195,6 @@ class ContactsResource(SyncAPIResource):
             path_template("/v3/contacts/{id}", id=id),
             body=maybe_transform(
                 {
-                    "channel_consent": channel_consent,
                     "default_channel": default_channel,
                     "opt_out": opt_out,
                     "sandbox": sandbox,
@@ -210,7 +204,7 @@ class ContactsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfContact,
+            cast_to=ContactUpdateResponse,
         )
 
     def list(
@@ -354,7 +348,7 @@ class AsyncContactsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfContact:
+    ) -> ContactCreateResponse:
         """
         Creates a new contact by phone number and associates it with the authenticated
         customer.
@@ -394,7 +388,7 @@ class AsyncContactsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfContact,
+            cast_to=ContactCreateResponse,
         )
 
     async def retrieve(
@@ -408,7 +402,7 @@ class AsyncContactsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfContact:
+    ) -> ContactRetrieveResponse:
         """Retrieves a specific contact by their unique identifier.
 
         Returns detailed
@@ -432,14 +426,13 @@ class AsyncContactsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfContact,
+            cast_to=ContactRetrieveResponse,
         )
 
     async def update(
         self,
         id: str,
         *,
-        channel_consent: Optional[Dict[str, str]] | Omit = omit,
         default_channel: Optional[str] | Omit = omit,
         opt_out: Optional[bool] | Omit = omit,
         sandbox: bool | Omit = omit,
@@ -451,23 +444,17 @@ class AsyncContactsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfContact:
+    ) -> ContactUpdateResponse:
         """Updates a contact's default channel and/or opt-out status.
 
         Inherited contacts
         cannot be updated.
 
         Args:
-          channel_consent: Consent status by channel. Keys: "sms", "whatsapp". Values: "opted_in",
-              "opted_out". All entries must have the same status — mixed values (e.g., sms:
-              opted_out + whatsapp: opted_in) are rejected with 400. The provided status is
-              applied to ALL channels regardless of which keys are specified, because consent
-              is global across channels. When provided, takes precedence over the opt_out
-              field.
-
           default_channel: Default messaging channel: "sms" or "whatsapp"
 
-          opt_out: Whether the contact has opted out of messaging
+          opt_out: Whether the contact has opted out of messaging. Single source of truth — opt-out
+              is per-contact, not per-channel.
 
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
@@ -495,7 +482,6 @@ class AsyncContactsResource(AsyncAPIResource):
             path_template("/v3/contacts/{id}", id=id),
             body=await async_maybe_transform(
                 {
-                    "channel_consent": channel_consent,
                     "default_channel": default_channel,
                     "opt_out": opt_out,
                     "sandbox": sandbox,
@@ -505,7 +491,7 @@ class AsyncContactsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfContact,
+            cast_to=ContactUpdateResponse,
         )
 
     async def list(
