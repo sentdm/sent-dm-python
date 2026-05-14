@@ -26,14 +26,11 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
+from ..types.api_response_webhook import APIResponseWebhook
 from ..types.webhook_list_response import WebhookListResponse
 from ..types.webhook_test_response import WebhookTestResponse
-from ..types.webhook_create_response import WebhookCreateResponse
-from ..types.webhook_update_response import WebhookUpdateResponse
-from ..types.webhook_retrieve_response import WebhookRetrieveResponse
 from ..types.webhook_list_events_response import WebhookListEventsResponse
 from ..types.webhook_rotate_secret_response import WebhookRotateSecretResponse
-from ..types.webhook_toggle_status_response import WebhookToggleStatusResponse
 from ..types.webhook_list_event_types_response import WebhookListEventTypesResponse
 
 __all__ = ["WebhooksResource", "AsyncWebhooksResource"]
@@ -79,7 +76,7 @@ class WebhooksResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WebhookCreateResponse:
+    ) -> APIResponseWebhook:
         """
         Creates a new webhook endpoint for the authenticated customer.
 
@@ -121,7 +118,7 @@ class WebhooksResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=WebhookCreateResponse,
+            cast_to=APIResponseWebhook,
         )
 
     def retrieve(
@@ -135,7 +132,7 @@ class WebhooksResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WebhookRetrieveResponse:
+    ) -> APIResponseWebhook:
         """
         Retrieves a single webhook by ID for the authenticated customer.
 
@@ -156,7 +153,7 @@ class WebhooksResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=WebhookRetrieveResponse,
+            cast_to=APIResponseWebhook,
         )
 
     def update(
@@ -178,7 +175,7 @@ class WebhooksResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WebhookUpdateResponse:
+    ) -> APIResponseWebhook:
         """
         Updates an existing webhook for the authenticated customer.
 
@@ -222,7 +219,7 @@ class WebhooksResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=WebhookUpdateResponse,
+            cast_to=APIResponseWebhook,
         )
 
     def list(
@@ -511,7 +508,7 @@ class WebhooksResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WebhookToggleStatusResponse:
+    ) -> APIResponseWebhook:
         """
         Activates or deactivates a webhook for the authenticated customer.
 
@@ -550,7 +547,7 @@ class WebhooksResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=WebhookToggleStatusResponse,
+            cast_to=APIResponseWebhook,
         )
 
 
@@ -594,7 +591,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WebhookCreateResponse:
+    ) -> APIResponseWebhook:
         """
         Creates a new webhook endpoint for the authenticated customer.
 
@@ -636,7 +633,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=WebhookCreateResponse,
+            cast_to=APIResponseWebhook,
         )
 
     async def retrieve(
@@ -650,7 +647,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WebhookRetrieveResponse:
+    ) -> APIResponseWebhook:
         """
         Retrieves a single webhook by ID for the authenticated customer.
 
@@ -671,7 +668,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=WebhookRetrieveResponse,
+            cast_to=APIResponseWebhook,
         )
 
     async def update(
@@ -693,7 +690,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WebhookUpdateResponse:
+    ) -> APIResponseWebhook:
         """
         Updates an existing webhook for the authenticated customer.
 
@@ -737,7 +734,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=WebhookUpdateResponse,
+            cast_to=APIResponseWebhook,
         )
 
     async def list(
@@ -1028,7 +1025,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WebhookToggleStatusResponse:
+    ) -> APIResponseWebhook:
         """
         Activates or deactivates a webhook for the authenticated customer.
 
@@ -1067,7 +1064,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=WebhookToggleStatusResponse,
+            cast_to=APIResponseWebhook,
         )
 
 
