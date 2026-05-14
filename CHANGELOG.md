@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.28.0 (2026-05-14)
+
+Full Changelog: [v0.27.0...v0.28.0](https://github.com/sentdm/sent-dm-python/compare/v0.27.0...v0.28.0)
+
+### Features
+
+* **api:** manual updates ([44dfece](https://github.com/sentdm/sent-dm-python/commit/44dfece7b9d0c6f46330218c6f2726aed0ec14b4))
+
 ## 0.27.0 (2026-05-14)
 
 Full Changelog: [v0.26.0...v0.27.0](https://github.com/sentdm/sent-dm-python/compare/v0.26.0...v0.27.0)
