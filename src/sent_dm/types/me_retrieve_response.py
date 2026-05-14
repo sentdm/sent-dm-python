@@ -1,9 +1,12 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import Dict, List, Optional
+from typing import List, Optional
 from datetime import datetime
 
 from .._models import BaseModel
+from .api_meta import APIMeta
+from .error_detail import ErrorDetail
+from .profile_settings import ProfileSettings
 
 __all__ = [
     "MeRetrieveResponse",
@@ -13,10 +16,6 @@ __all__ = [
     "DataChannelsSMS",
     "DataChannelsWhatsapp",
     "DataProfile",
-    "DataProfileSettings",
-    "DataSettings",
-    "Error",
-    "Meta",
 ]
 
 
@@ -77,31 +76,6 @@ class DataChannels(BaseModel):
     """
 
 
-class DataProfileSettings(BaseModel):
-    """Profile configuration settings"""
-
-    allow_contact_sharing: Optional[bool] = None
-    """Whether contacts are shared across profiles in the organization"""
-
-    allow_template_sharing: Optional[bool] = None
-    """Whether templates are shared across profiles in the organization"""
-
-    billing_model: Optional[str] = None
-    """Billing model: profile, organization, or profile_and_organization"""
-
-    inherit_contacts: Optional[bool] = None
-    """Whether this profile inherits contacts from the organization"""
-
-    inherit_tcr_brand: Optional[bool] = None
-    """Whether this profile inherits TCR brand from the organization"""
-
-    inherit_tcr_campaign: Optional[bool] = None
-    """Whether this profile inherits TCR campaign from the organization"""
-
-    inherit_templates: Optional[bool] = None
-    """Whether this profile inherits templates from the organization"""
-
-
 class DataProfile(BaseModel):
     """Profile (sender profile) response for v3 API"""
 
@@ -126,7 +100,7 @@ class DataProfile(BaseModel):
     organization if not explicitly set)
     """
 
-    settings: Optional[DataProfileSettings] = None
+    settings: Optional[ProfileSettings] = None
     """Profile configuration settings"""
 
     short_name: Optional[str] = None
@@ -134,31 +108,6 @@ class DataProfile(BaseModel):
 
     status: Optional[str] = None
     """Profile setup status: incomplete, pending_review, approved, rejected"""
-
-
-class DataSettings(BaseModel):
-    """Profile configuration settings"""
-
-    allow_contact_sharing: Optional[bool] = None
-    """Whether contacts are shared across profiles in the organization"""
-
-    allow_template_sharing: Optional[bool] = None
-    """Whether templates are shared across profiles in the organization"""
-
-    billing_model: Optional[str] = None
-    """Billing model: profile, organization, or profile_and_organization"""
-
-    inherit_contacts: Optional[bool] = None
-    """Whether this profile inherits contacts from the organization"""
-
-    inherit_tcr_brand: Optional[bool] = None
-    """Whether this profile inherits TCR brand from the organization"""
-
-    inherit_tcr_campaign: Optional[bool] = None
-    """Whether this profile inherits TCR campaign from the organization"""
-
-    inherit_templates: Optional[bool] = None
-    """Whether this profile inherits templates from the organization"""
 
 
 class Data(BaseModel):
@@ -202,7 +151,7 @@ class Data(BaseModel):
     types)
     """
 
-    settings: Optional[DataSettings] = None
+    settings: Optional[ProfileSettings] = None
     """Profile configuration settings"""
 
     short_name: Optional[str] = None
@@ -221,35 +170,6 @@ class Data(BaseModel):
     """
 
 
-class Error(BaseModel):
-    """Error information"""
-
-    code: Optional[str] = None
-    """Machine-readable error code (e.g., "RESOURCE_001")"""
-
-    details: Optional[Dict[str, List[str]]] = None
-    """Additional validation error details (field-level errors)"""
-
-    doc_url: Optional[str] = None
-    """URL to documentation about this error"""
-
-    message: Optional[str] = None
-    """Human-readable error message"""
-
-
-class Meta(BaseModel):
-    """Request and response metadata"""
-
-    request_id: Optional[str] = None
-    """Unique identifier for this request (for tracing and support)"""
-
-    timestamp: Optional[datetime] = None
-    """Server timestamp when the response was generated"""
-
-    version: Optional[str] = None
-    """API version used for this request"""
-
-
 class MeRetrieveResponse(BaseModel):
     """Standard API response envelope for all v3 endpoints"""
 
@@ -260,10 +180,10 @@ class MeRetrieveResponse(BaseModel):
     API key type. Always includes messaging channel configuration.
     """
 
-    error: Optional[Error] = None
+    error: Optional[ErrorDetail] = None
     """Error information"""
 
-    meta: Optional[Meta] = None
+    meta: Optional[APIMeta] = None
     """Request and response metadata"""
 
     success: Optional[bool] = None
