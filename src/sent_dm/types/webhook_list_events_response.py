@@ -1,11 +1,14 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import Dict, List, Optional
+from typing import List, Optional
 from datetime import datetime
 
 from .._models import BaseModel
+from .api_meta import APIMeta
+from .error_detail import ErrorDetail
+from .pagination_meta import PaginationMeta
 
-__all__ = ["WebhookListEventsResponse", "Data", "DataEvent", "DataPagination", "DataPaginationCursors", "Error", "Meta"]
+__all__ = ["WebhookListEventsResponse", "Data", "DataEvent"]
 
 
 class DataEvent(BaseModel):
@@ -32,74 +35,13 @@ class DataEvent(BaseModel):
     response_body: Optional[str] = None
 
 
-class DataPaginationCursors(BaseModel):
-    """Cursor-based pagination pointers"""
-
-    after: Optional[str] = None
-    """Cursor to fetch the next page"""
-
-    before: Optional[str] = None
-    """Cursor to fetch the previous page"""
-
-
-class DataPagination(BaseModel):
-    """Pagination metadata for list responses"""
-
-    cursors: Optional[DataPaginationCursors] = None
-    """Cursor-based pagination pointers"""
-
-    has_more: Optional[bool] = None
-    """Whether there are more pages after this one"""
-
-    page: Optional[int] = None
-    """Current page number (1-indexed)"""
-
-    page_size: Optional[int] = None
-    """Number of items per page"""
-
-    total_count: Optional[int] = None
-    """Total number of items across all pages"""
-
-    total_pages: Optional[int] = None
-    """Total number of pages"""
-
-
 class Data(BaseModel):
     """The response data (null if error)"""
 
     events: Optional[List[DataEvent]] = None
 
-    pagination: Optional[DataPagination] = None
+    pagination: Optional[PaginationMeta] = None
     """Pagination metadata for list responses"""
-
-
-class Error(BaseModel):
-    """Error information"""
-
-    code: Optional[str] = None
-    """Machine-readable error code (e.g., "RESOURCE_001")"""
-
-    details: Optional[Dict[str, List[str]]] = None
-    """Additional validation error details (field-level errors)"""
-
-    doc_url: Optional[str] = None
-    """URL to documentation about this error"""
-
-    message: Optional[str] = None
-    """Human-readable error message"""
-
-
-class Meta(BaseModel):
-    """Request and response metadata"""
-
-    request_id: Optional[str] = None
-    """Unique identifier for this request (for tracing and support)"""
-
-    timestamp: Optional[datetime] = None
-    """Server timestamp when the response was generated"""
-
-    version: Optional[str] = None
-    """API version used for this request"""
 
 
 class WebhookListEventsResponse(BaseModel):
@@ -108,10 +50,10 @@ class WebhookListEventsResponse(BaseModel):
     data: Optional[Data] = None
     """The response data (null if error)"""
 
-    error: Optional[Error] = None
+    error: Optional[ErrorDetail] = None
     """Error information"""
 
-    meta: Optional[Meta] = None
+    meta: Optional[APIMeta] = None
     """Request and response metadata"""
 
     success: Optional[bool] = None

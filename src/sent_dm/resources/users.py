@@ -17,9 +17,7 @@ from .._response import (
 )
 from .._base_client import make_request_options
 from ..types.user_list_response import UserListResponse
-from ..types.user_invite_response import UserInviteResponse
-from ..types.user_retrieve_response import UserRetrieveResponse
-from ..types.user_update_role_response import UserUpdateRoleResponse
+from ..types.api_response_of_user import APIResponseOfUser
 
 __all__ = ["UsersResource", "AsyncUsersResource"]
 
@@ -57,7 +55,7 @@ class UsersResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> UserRetrieveResponse:
+    ) -> APIResponseOfUser:
         """
         Retrieves detailed information about a specific user in an organization or
         profile. Requires developer role or higher.
@@ -79,7 +77,7 @@ class UsersResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=UserRetrieveResponse,
+            cast_to=APIResponseOfUser,
         )
 
     def list(
@@ -131,7 +129,7 @@ class UsersResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> UserInviteResponse:
+    ) -> APIResponseOfUser:
         """
         Sends an invitation to a user to join the organization or profile with a
         specific role. Requires admin role. The user will receive an invitation email
@@ -178,7 +176,7 @@ class UsersResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=UserInviteResponse,
+            cast_to=APIResponseOfUser,
         )
 
     def remove(
@@ -238,7 +236,7 @@ class UsersResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> UserUpdateRoleResponse:
+    ) -> APIResponseOfUser:
         """Updates a user's role in the organization or profile.
 
         Requires admin role. You
@@ -281,7 +279,7 @@ class UsersResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=UserUpdateRoleResponse,
+            cast_to=APIResponseOfUser,
         )
 
 
@@ -318,7 +316,7 @@ class AsyncUsersResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> UserRetrieveResponse:
+    ) -> APIResponseOfUser:
         """
         Retrieves detailed information about a specific user in an organization or
         profile. Requires developer role or higher.
@@ -340,7 +338,7 @@ class AsyncUsersResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=UserRetrieveResponse,
+            cast_to=APIResponseOfUser,
         )
 
     async def list(
@@ -392,7 +390,7 @@ class AsyncUsersResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> UserInviteResponse:
+    ) -> APIResponseOfUser:
         """
         Sends an invitation to a user to join the organization or profile with a
         specific role. Requires admin role. The user will receive an invitation email
@@ -439,7 +437,7 @@ class AsyncUsersResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=UserInviteResponse,
+            cast_to=APIResponseOfUser,
         )
 
     async def remove(
@@ -499,7 +497,7 @@ class AsyncUsersResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> UserUpdateRoleResponse:
+    ) -> APIResponseOfUser:
         """Updates a user's role in the organization or profile.
 
         Requires admin role. You
@@ -542,7 +540,7 @@ class AsyncUsersResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=UserUpdateRoleResponse,
+            cast_to=APIResponseOfUser,
         )
 
 
