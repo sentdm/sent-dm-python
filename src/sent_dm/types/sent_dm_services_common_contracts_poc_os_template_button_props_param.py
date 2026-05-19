@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
-from typing import Optional
+from typing import Iterable, Optional
 from typing_extensions import Required, Annotated, TypedDict
 
 from .._utils import PropertyInfo
+from .template_variable_param import TemplateVariableParam
 
 __all__ = ["SentDmServicesCommonContractsPocOsTemplateButtonPropsParam"]
 
@@ -26,6 +27,13 @@ class SentDmServicesCommonContractsPocOsTemplateButtonPropsParam(TypedDict, tota
     url: Required[str]
 
     url_type: Required[Annotated[str, PropertyInfo(alias="urlType")]]
+
+    variables: Required[Iterable[TemplateVariableParam]]
+    """
+    Variables embedded in a dynamic URL button (only when UrlType = dynamic). Count
+    is capped by TemplateContentLimits.MaxUrlButtonVariables; the placeholder must
+    appear at the end of Url (validated in TemplateDefinitionValidator).
+    """
 
     autofill_text: Annotated[Optional[str], PropertyInfo(alias="autofillText")]
 
