@@ -142,8 +142,24 @@ class TestTemplates:
                             "phone_number": "x",
                             "quick_reply_type": "x",
                             "text": "text",
-                            "url": "x",
+                            "url": "url",
                             "url_type": "x",
+                            "variables": [
+                                {
+                                    "name": "x",
+                                    "props": {
+                                        "media_type": "x",
+                                        "sample": "x",
+                                        "url": "x",
+                                        "variable_type": "x",
+                                        "alt": "alt",
+                                        "regex": "regex",
+                                        "short_url": "shortUrl",
+                                    },
+                                    "type": "x",
+                                    "id": 0,
+                                }
+                            ],
                             "autofill_text": "autofillText",
                             "otp_type": "otpType",
                             "package_name": "packageName",
@@ -386,8 +402,24 @@ class TestTemplates:
                             "phone_number": "x",
                             "quick_reply_type": "x",
                             "text": "text",
-                            "url": "x",
+                            "url": "url",
                             "url_type": "x",
+                            "variables": [
+                                {
+                                    "name": "x",
+                                    "props": {
+                                        "media_type": "x",
+                                        "sample": "x",
+                                        "url": "x",
+                                        "variable_type": "x",
+                                        "alt": "alt",
+                                        "regex": "regex",
+                                        "short_url": "shortUrl",
+                                    },
+                                    "type": "x",
+                                    "id": 0,
+                                }
+                            ],
                             "autofill_text": "autofillText",
                             "otp_type": "otpType",
                             "package_name": "packageName",
@@ -714,8 +746,24 @@ class TestAsyncTemplates:
                             "phone_number": "x",
                             "quick_reply_type": "x",
                             "text": "text",
-                            "url": "x",
+                            "url": "url",
                             "url_type": "x",
+                            "variables": [
+                                {
+                                    "name": "x",
+                                    "props": {
+                                        "media_type": "x",
+                                        "sample": "x",
+                                        "url": "x",
+                                        "variable_type": "x",
+                                        "alt": "alt",
+                                        "regex": "regex",
+                                        "short_url": "shortUrl",
+                                    },
+                                    "type": "x",
+                                    "id": 0,
+                                }
+                            ],
                             "autofill_text": "autofillText",
                             "otp_type": "otpType",
                             "package_name": "packageName",
@@ -958,8 +1006,24 @@ class TestAsyncTemplates:
                             "phone_number": "x",
                             "quick_reply_type": "x",
                             "text": "text",
-                            "url": "x",
+                            "url": "url",
                             "url_type": "x",
+                            "variables": [
+                                {
+                                    "name": "x",
+                                    "props": {
+                                        "media_type": "x",
+                                        "sample": "x",
+                                        "url": "x",
+                                        "variable_type": "x",
+                                        "alt": "alt",
+                                        "regex": "regex",
+                                        "short_url": "shortUrl",
+                                    },
+                                    "type": "x",
+                                    "id": 0,
+                                }
+                            ],
                             "autofill_text": "autofillText",
                             "otp_type": "otpType",
                             "package_name": "packageName",
