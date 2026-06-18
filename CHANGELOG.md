@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.29.1 (2026-06-18)
+
+Full Changelog: [v0.29.0...v0.29.1](https://github.com/sentdm/sent-dm-python/compare/v0.29.0...v0.29.1)
+
+### Bug Fixes
+
+* **auth:** prioritize first auth header ([acd15d0](https://github.com/sentdm/sent-dm-python/commit/acd15d083217d6d3b11321e6eae2ef9816ff9e08))
+
 ## 0.29.0 (2026-05-21)
 
 Full Changelog: [v0.28.0...v0.29.0](https://github.com/sentdm/sent-dm-python/compare/v0.28.0...v0.29.0)
