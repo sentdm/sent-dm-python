@@ -184,9 +184,11 @@ class Sent(SyncAPIClient):
 
     @override
     def _auth_headers(self, security: SecurityOptions) -> dict[str, str]:
-        return {
-            **(self._customer_api_key if security.get("customer_api_key", False) else {}),
-        }
+        headers: dict[str, str] = {}
+        if security.get("customer_api_key", False):
+            for key, value in self._customer_api_key.items():
+                headers.setdefault(key, value)
+        return headers
 
     @property
     def _customer_api_key(self) -> dict[str, str]:
@@ -422,9 +424,11 @@ class AsyncSent(AsyncAPIClient):
 
     @override
     def _auth_headers(self, security: SecurityOptions) -> dict[str, str]:
-        return {
-            **(self._customer_api_key if security.get("customer_api_key", False) else {}),
-        }
+        headers: dict[str, str] = {}
+        if security.get("customer_api_key", False):
+            for key, value in self._customer_api_key.items():
+                headers.setdefault(key, value)
+        return headers
 
     @property
     def _customer_api_key(self) -> dict[str, str]:
