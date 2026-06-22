@@ -39,6 +39,13 @@ class TcrCampaignWithUseCases(BaseDto):
 
     description: Optional[str] = None
 
+    has_submission_transaction: Optional[bool] = FieldInfo(alias="hasSubmissionTransaction", default=None)
+    """
+    True when this campaign already has a billing transaction of reference type
+    TCR_CAMPAIGN_SUBMISSION (the one-time submission fee was charged). Populated
+    only by the campaigns-list path; defaults false on other responses.
+    """
+
     help_keywords: Optional[str] = FieldInfo(alias="helpKeywords", default=None)
 
     help_message: Optional[str] = FieldInfo(alias="helpMessage", default=None)
