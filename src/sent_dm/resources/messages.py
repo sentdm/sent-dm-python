@@ -126,7 +126,8 @@ class MessagesResource(SyncAPIResource):
         *,
         channel: Optional[SequenceNotStr[str]] | Omit = omit,
         sandbox: bool | Omit = omit,
-        template: message_send_params.Template | Omit = omit,
+        template: Optional[message_send_params.Template] | Omit = omit,
+        text: Optional[str] | Omit = omit,
         to: SequenceNotStr[str] | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -156,6 +157,8 @@ class MessagesResource(SyncAPIResource):
           template: SDK-style template reference: resolve by ID or by name, with optional
               parameters.
 
+          text: Plain-text (free-form) message body. Provide either Template or this.
+
           to: List of recipient phone numbers in E.164 format (multi-recipient fan-out)
 
           extra_headers: Send extra headers
@@ -182,6 +185,7 @@ class MessagesResource(SyncAPIResource):
                     "channel": channel,
                     "sandbox": sandbox,
                     "template": template,
+                    "text": text,
                     "to": to,
                 },
                 message_send_params.MessageSendParams,
@@ -294,7 +298,8 @@ class AsyncMessagesResource(AsyncAPIResource):
         *,
         channel: Optional[SequenceNotStr[str]] | Omit = omit,
         sandbox: bool | Omit = omit,
-        template: message_send_params.Template | Omit = omit,
+        template: Optional[message_send_params.Template] | Omit = omit,
+        text: Optional[str] | Omit = omit,
         to: SequenceNotStr[str] | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -324,6 +329,8 @@ class AsyncMessagesResource(AsyncAPIResource):
           template: SDK-style template reference: resolve by ID or by name, with optional
               parameters.
 
+          text: Plain-text (free-form) message body. Provide either Template or this.
+
           to: List of recipient phone numbers in E.164 format (multi-recipient fan-out)
 
           extra_headers: Send extra headers
@@ -350,6 +357,7 @@ class AsyncMessagesResource(AsyncAPIResource):
                     "channel": channel,
                     "sandbox": sandbox,
                     "template": template,
+                    "text": text,
                     "to": to,
                 },
                 message_send_params.MessageSendParams,

@@ -25,11 +25,14 @@ class MessageSendParams(TypedDict, total=False):
     for testing integrations without actual execution
     """
 
-    template: Template
+    template: Optional[Template]
     """
     SDK-style template reference: resolve by ID or by name, with optional
     parameters.
     """
+
+    text: Optional[str]
+    """Plain-text (free-form) message body. Provide either Template or this."""
 
     to: SequenceNotStr[str]
     """List of recipient phone numbers in E.164 format (multi-recipient fan-out)"""
