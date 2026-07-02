@@ -13,16 +13,22 @@ __all__ = ["TcrCampaignWithUseCases", "TcrCampaignWithUseCasesUseCase"]
 
 
 class TcrCampaignWithUseCasesUseCase(BaseDto):
+    sample_messages: List[str] = FieldInfo(alias="sampleMessages")
+
     campaign_id: Optional[str] = FieldInfo(alias="campaignId", default=None)
 
     customer_id: Optional[str] = FieldInfo(alias="customerId", default=None)
 
     messaging_use_case_us: Optional[MessagingUseCaseUs] = FieldInfo(alias="messagingUseCaseUs", default=None)
 
-    sample_messages: Optional[List[str]] = FieldInfo(alias="sampleMessages", default=None)
-
 
 class TcrCampaignWithUseCases(BaseDto):
+    description: str
+
+    name: str
+
+    type: str
+
     billed_date: Optional[datetime] = FieldInfo(alias="billedDate", default=None)
 
     brand_id: Optional[str] = FieldInfo(alias="brandId", default=None)
@@ -36,8 +42,6 @@ class TcrCampaignWithUseCases(BaseDto):
     dca_elections_complete: Optional[bool] = FieldInfo(alias="dcaElectionsComplete", default=None)
 
     dca_elections_completed_at: Optional[datetime] = FieldInfo(alias="dcaElectionsCompletedAt", default=None)
-
-    description: Optional[str] = None
 
     has_submission_transaction: Optional[bool] = FieldInfo(alias="hasSubmissionTransaction", default=None)
     """
@@ -53,8 +57,6 @@ class TcrCampaignWithUseCases(BaseDto):
     kyc_submission_form_id: Optional[str] = FieldInfo(alias="kycSubmissionFormId", default=None)
 
     message_flow: Optional[str] = FieldInfo(alias="messageFlow", default=None)
-
-    name: Optional[str] = None
 
     optin_keywords: Optional[str] = FieldInfo(alias="optinKeywords", default=None)
 
@@ -85,8 +87,6 @@ class TcrCampaignWithUseCases(BaseDto):
     telnyx_campaign_id: Optional[str] = FieldInfo(alias="telnyxCampaignId", default=None)
 
     terms_and_conditions_link: Optional[str] = FieldInfo(alias="termsAndConditionsLink", default=None)
-
-    type: Optional[str] = None
 
     upstream_cnp_id: Optional[str] = FieldInfo(alias="upstreamCnpId", default=None)
 
