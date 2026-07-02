@@ -15,11 +15,11 @@ __all__ = ["MessageRetrieveStatusResponse", "Data", "DataEvent", "DataMessageBod
 class DataEvent(BaseModel):
     """Represents a status change event in a message's lifecycle (v3)"""
 
+    status: str
+
+    timestamp: datetime
+
     description: Optional[str] = None
-
-    status: Optional[str] = None
-
-    timestamp: Optional[datetime] = None
 
 
 class DataMessageBodyButton(BaseModel):

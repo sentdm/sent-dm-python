@@ -49,7 +49,7 @@ class ContactsResource(SyncAPIResource):
     def create(
         self,
         *,
-        phone_number: str | Omit = omit,
+        phone_number: str,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -336,7 +336,7 @@ class AsyncContactsResource(AsyncAPIResource):
     async def create(
         self,
         *,
-        phone_number: str | Omit = omit,
+        phone_number: str,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,

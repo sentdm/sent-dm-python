@@ -23,7 +23,9 @@ class TestContacts:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_create(self, client: Sent) -> None:
-        contact = client.contacts.create()
+        contact = client.contacts.create(
+            phone_number="+1234567890",
+        )
         assert_matches_type(APIResponseOfContact, contact, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
@@ -40,7 +42,9 @@ class TestContacts:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_create(self, client: Sent) -> None:
-        response = client.contacts.with_raw_response.create()
+        response = client.contacts.with_raw_response.create(
+            phone_number="+1234567890",
+        )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -50,7 +54,9 @@ class TestContacts:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_create(self, client: Sent) -> None:
-        with client.contacts.with_streaming_response.create() as response:
+        with client.contacts.with_streaming_response.create(
+            phone_number="+1234567890",
+        ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -276,7 +282,9 @@ class TestAsyncContacts:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_create(self, async_client: AsyncSent) -> None:
-        contact = await async_client.contacts.create()
+        contact = await async_client.contacts.create(
+            phone_number="+1234567890",
+        )
         assert_matches_type(APIResponseOfContact, contact, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
@@ -293,7 +301,9 @@ class TestAsyncContacts:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_create(self, async_client: AsyncSent) -> None:
-        response = await async_client.contacts.with_raw_response.create()
+        response = await async_client.contacts.with_raw_response.create(
+            phone_number="+1234567890",
+        )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -303,7 +313,9 @@ class TestAsyncContacts:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_create(self, async_client: AsyncSent) -> None:
-        async with async_client.contacts.with_streaming_response.create() as response:
+        async with async_client.contacts.with_streaming_response.create(
+            phone_number="+1234567890",
+        ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 

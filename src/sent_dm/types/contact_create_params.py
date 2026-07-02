@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing_extensions import Annotated, TypedDict
+from typing_extensions import Required, Annotated, TypedDict
 
 from .._utils import PropertyInfo
 
@@ -10,7 +10,7 @@ __all__ = ["ContactCreateParams"]
 
 
 class ContactCreateParams(TypedDict, total=False):
-    phone_number: str
+    phone_number: Required[str]
     """Phone number of the contact to create"""
 
     sandbox: bool
