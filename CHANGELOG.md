@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.32.0](https://github.com/sentdm/sent-dm-python/compare/v0.31.0...v0.32.0) (2026-07-07)
+
+
+### Features
+
+* enable release-please releases and back-sync trigger ([bd919ba](https://github.com/sentdm/sent-dm-python/commit/bd919baf5a524a4fae55613331e42f08c8854bc9))
+* initial stlc build ([701f641](https://github.com/sentdm/sent-dm-python/commit/701f641249ccd3e14bfbf2296e851d86d52f64f3))
+
+
+### Chores
+
+* add promote, back-sync, and trunk-lock workflows ([8fbce67](https://github.com/sentdm/sent-dm-python/commit/8fbce677dd2a65001665042371942978c734b3eb))
+* add promote, back-sync, and trunk-lock workflows ([cef0317](https://github.com/sentdm/sent-dm-python/commit/cef0317ea4029f570dc3aecfcf590fbc65863643))
+* add release back-sync trigger workflow ([1b075ef](https://github.com/sentdm/sent-dm-python/commit/1b075effc5a83b648c0eb57782a723c106ac1017))
+
 ## 0.31.0 (2026-07-02)
 
 Full Changelog: [v0.30.0...v0.31.0](https://github.com/sentdm/sent-dm-python/compare/v0.30.0...v0.31.0)
