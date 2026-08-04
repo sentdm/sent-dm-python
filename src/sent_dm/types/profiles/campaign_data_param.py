@@ -61,3 +61,10 @@ class CampaignDataParam(TypedDict, total=False):
 
     terms_and_conditions_link: Annotated[Optional[str], PropertyInfo(alias="termsAndConditionsLink")]
     """URL to terms and conditions"""
+
+    volume: Optional[str]
+    """Expected messaging volume for this campaign.
+
+    Numeric string (e.g. "1999", "5000"); values below 2000 bill at the low-volume
+    tier.
+    """

@@ -69,9 +69,6 @@ class BrandCompliance(BaseModel):
     destination_countries: Optional[List[DestinationCountry]] = None
     """List of destination countries for messaging"""
 
-    expected_messaging_volume: Optional[str] = None
-    """Expected daily messaging volume"""
-
     is_tcr_application: Optional[bool] = None
     """Whether this is a TCR (Campaign Registry) application"""
 
@@ -216,7 +213,7 @@ class ProfileDetail(BaseModel):
     """Direct SMS phone number"""
 
     sending_phone_number_profile_id: Optional[str] = None
-    """Reference to another profile for SMS/Telnyx configuration"""
+    """Reference to another profile whose SMS configuration this profile uses"""
 
     sending_whatsapp_number_profile_id: Optional[str] = None
     """Reference to another profile for WhatsApp configuration"""

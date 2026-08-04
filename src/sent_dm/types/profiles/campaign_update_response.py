@@ -42,17 +42,7 @@ class DataUseCase(BaseModel):
 
 
 class Data(BaseModel):
-    """
-    Customer-facing campaign representation for the public v3 API.
-    Deliberately does not inherit TcrCampaign. The service-layer type
-    TcrCampaignWithUseCasesResponse extends the database entity, so returning it
-    directly from a public endpoint serialized every column, including supplier-specific and
-    internal provisioning identifiers. This DTO is an explicit allowlist: a new column on the
-    entity is invisible to customers until it is added here on purpose.
-    Intentionally omitted: telnyxCampaignId (supplier-specific), plus cspId,
-    resellerId, upstreamCnpId, kycSubmissionFormId and sharingStatus
-    (internal provisioning and CSP-to-DCA plumbing). All six remain available on the admin API.
-    """
+    """A 10DLC campaign registered for a brand."""
 
     id: Optional[str] = None
 
@@ -118,22 +108,20 @@ class Data(BaseModel):
 
     use_cases: Optional[List[DataUseCase]] = FieldInfo(alias="useCases", default=None)
 
+    volume: Optional[str] = None
+    """
+    Expected messaging volume for this campaign — customer-supplied on
+    create/update, and the input to both the TCR usecase classification (LOW_VOLUME
+    vs MIXED/specific) and the campaign fee tier. Surfaced so customers can read
+    back the value they set.
+    """
+
 
 class CampaignUpdateResponse(BaseModel):
     """Standard API response envelope for all v3 endpoints"""
 
     data: Optional[Data] = None
-    """
-    Customer-facing campaign representation for the public v3 API. Deliberately does
-    not inherit TcrCampaign. The service-layer type TcrCampaignWithUseCasesResponse
-    extends the database entity, so returning it directly from a public endpoint
-    serialized every column, including supplier-specific and internal provisioning
-    identifiers. This DTO is an explicit allowlist: a new column on the entity is
-    invisible to customers until it is added here on purpose. Intentionally omitted:
-    telnyxCampaignId (supplier-specific), plus cspId, resellerId, upstreamCnpId,
-    kycSubmissionFormId and sharingStatus (internal provisioning and CSP-to-DCA
-    plumbing). All six remain available on the admin API.
-    """
+    """A 10DLC campaign registered for a brand."""
 
     error: Optional[ErrorDetail] = None
     """Error information"""
