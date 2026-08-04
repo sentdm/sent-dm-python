@@ -38,10 +38,7 @@ class Data(BaseModel):
     """Per-recipient message results"""
 
     status: Optional[str] = None
-    """
-    Overall request status: "QUEUED" when the batch has been accepted and published
-    to Kafka.
-    """
+    """Overall request status: "QUEUED" when the batch has been accepted for delivery."""
 
     template_id: Optional[str] = None
     """Template ID that was used"""
