@@ -50,7 +50,6 @@ class TestProfiles:
                             "is_main": False,
                         }
                     ],
-                    "expected_messaging_volume": "10000",
                     "is_tcr_application": True,
                     "notes": None,
                     "phone_number_prefix": "+1",
@@ -209,7 +208,6 @@ class TestProfiles:
                             "is_main": False,
                         }
                     ],
-                    "expected_messaging_volume": "10000",
                     "is_tcr_application": True,
                     "notes": None,
                     "phone_number_prefix": "+1",
@@ -476,7 +474,6 @@ class TestAsyncProfiles:
                             "is_main": False,
                         }
                     ],
-                    "expected_messaging_volume": "10000",
                     "is_tcr_application": True,
                     "notes": None,
                     "phone_number_prefix": "+1",
@@ -635,7 +632,6 @@ class TestAsyncProfiles:
                             "is_main": False,
                         }
                     ],
-                    "expected_messaging_volume": "10000",
                     "is_tcr_application": True,
                     "notes": None,
                     "phone_number_prefix": "+1",

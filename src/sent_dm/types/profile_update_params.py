@@ -80,7 +80,7 @@ class ProfileUpdateParams(TypedDict, total=False):
     """Direct phone number for SMS sending (optional)"""
 
     sending_phone_number_profile_id: Optional[str]
-    """Reference to another profile to use for SMS/Telnyx configuration (optional)"""
+    """Reference to another profile to use for SMS configuration (optional)"""
 
     sending_whatsapp_number_profile_id: Optional[str]
     """Reference to another profile to use for WhatsApp configuration (optional)"""

@@ -366,7 +366,7 @@ class ProfilesResource(SyncAPIResource):
 
           sending_phone_number: Direct phone number for SMS sending (optional)
 
-          sending_phone_number_profile_id: Reference to another profile to use for SMS/Telnyx configuration (optional)
+          sending_phone_number_profile_id: Reference to another profile to use for SMS configuration (optional)
 
           sending_whatsapp_number_profile_id: Reference to another profile to use for WhatsApp configuration (optional)
 
@@ -521,26 +521,38 @@ class ProfilesResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ProfileCompleteResponse:
-        """Final step in profile compliance workflow.
+        """Final step in the profile compliance workflow.
 
-        Validates all prerequisites (general
-        data, brand, campaigns), connects profile to Telnyx/WhatsApp, and sets status
-        based on configuration. The process runs in the background and calls the
-        provided webhook URL when finished.
+        Validates all prerequisites (KYC,
+        brand, campaigns, required documents), connects the profile to the SMS and
+        WhatsApp channels, and sets its status based on configuration. Prerequisites are
+        always validated first: if any fail the call returns 400. If they pass and the
+        profile is already completed, the call returns 200 and does nothing. Otherwise
+        it returns 202 and calls the provided webhook URL when background processing
+        finishes.
 
-                        Prerequisites:
-                        - Profile must be completed
-                        - If inheritTcrBrand=false: Profile must have existing brand
-                        - If inheritTcrBrand=true: Parent must have existing brand
-                        - If TCR application: Must have at least one campaign (own or inherited)
-                        - If inheritTcrCampaign=false: Profile should have campaigns
-                        - If inheritTcrCampaign=true: Parent must have campaigns
+        Prerequisites:
 
-                        Status Logic:
-                        - If both SMS and WhatsApp channels are missing → SUBMITTED
-                        - If TCR application and not inheriting brand/campaigns → SUBMITTED
-                        - If non-TCR with destination country (IsMain=true) → SUBMITTED
-                        - Otherwise → COMPLETED
+        - Profile must have a name, short name, and description (short name max 50
+          characters, description max 5000)
+        - webHookUrl must be supplied on the request
+        - A KYC form submission is required
+        - A brand is required, either on the profile or inherited from the parent
+          organization
+        - TCR applications must have at least one campaign, own or inherited
+        - Destination countries marked as main must have their required compliance
+          documents uploaded
+
+        Resulting status:
+
+        - If either the SMS or WhatsApp channel is unconfigured, the profile is
+          SUBMITTED
+        - For a TCR application that inherits both its brand and its campaigns, the
+          profile is COMPLETED
+        - For a TCR application that owns either its brand or its campaigns, the profile
+          is COMPLETED once both have been submitted to TCR, and SUBMITTED until then
+        - For a non-TCR application, the profile is SUBMITTED when a main destination
+          country is set, and COMPLETED otherwise
 
         Args:
           web_hook_url: Webhook URL to call when profile completion finishes (success or failure)
@@ -908,7 +920,7 @@ class AsyncProfilesResource(AsyncAPIResource):
 
           sending_phone_number: Direct phone number for SMS sending (optional)
 
-          sending_phone_number_profile_id: Reference to another profile to use for SMS/Telnyx configuration (optional)
+          sending_phone_number_profile_id: Reference to another profile to use for SMS configuration (optional)
 
           sending_whatsapp_number_profile_id: Reference to another profile to use for WhatsApp configuration (optional)
 
@@ -1063,26 +1075,38 @@ class AsyncProfilesResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ProfileCompleteResponse:
-        """Final step in profile compliance workflow.
+        """Final step in the profile compliance workflow.
 
-        Validates all prerequisites (general
-        data, brand, campaigns), connects profile to Telnyx/WhatsApp, and sets status
-        based on configuration. The process runs in the background and calls the
-        provided webhook URL when finished.
+        Validates all prerequisites (KYC,
+        brand, campaigns, required documents), connects the profile to the SMS and
+        WhatsApp channels, and sets its status based on configuration. Prerequisites are
+        always validated first: if any fail the call returns 400. If they pass and the
+        profile is already completed, the call returns 200 and does nothing. Otherwise
+        it returns 202 and calls the provided webhook URL when background processing
+        finishes.
 
-                        Prerequisites:
-                        - Profile must be completed
-                        - If inheritTcrBrand=false: Profile must have existing brand
-                        - If inheritTcrBrand=true: Parent must have existing brand
-                        - If TCR application: Must have at least one campaign (own or inherited)
-                        - If inheritTcrCampaign=false: Profile should have campaigns
-                        - If inheritTcrCampaign=true: Parent must have campaigns
+        Prerequisites:
 
-                        Status Logic:
-                        - If both SMS and WhatsApp channels are missing → SUBMITTED
-                        - If TCR application and not inheriting brand/campaigns → SUBMITTED
-                        - If non-TCR with destination country (IsMain=true) → SUBMITTED
-                        - Otherwise → COMPLETED
+        - Profile must have a name, short name, and description (short name max 50
+          characters, description max 5000)
+        - webHookUrl must be supplied on the request
+        - A KYC form submission is required
+        - A brand is required, either on the profile or inherited from the parent
+          organization
+        - TCR applications must have at least one campaign, own or inherited
+        - Destination countries marked as main must have their required compliance
+          documents uploaded
+
+        Resulting status:
+
+        - If either the SMS or WhatsApp channel is unconfigured, the profile is
+          SUBMITTED
+        - For a TCR application that inherits both its brand and its campaigns, the
+          profile is COMPLETED
+        - For a TCR application that owns either its brand or its campaigns, the profile
+          is COMPLETED once both have been submitted to TCR, and SUBMITTED until then
+        - For a non-TCR application, the profile is SUBMITTED when a main destination
+          country is set, and COMPLETED otherwise
 
         Args:
           web_hook_url: Webhook URL to call when profile completion finishes (success or failure)

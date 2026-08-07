@@ -11,7 +11,7 @@ from ..api_meta import APIMeta
 from ..error_detail import ErrorDetail
 from .messaging_use_case_us import MessagingUseCaseUs
 
-__all__ = ["CampaignListResponse", "Data", "DataUseCase"]
+__all__ = ["CampaignCreateResponse", "Data", "DataUseCase"]
 
 
 class DataUseCase(BaseModel):
@@ -117,11 +117,11 @@ class Data(BaseModel):
     """
 
 
-class CampaignListResponse(BaseModel):
+class CampaignCreateResponse(BaseModel):
     """Standard API response envelope for all v3 endpoints"""
 
-    data: Optional[List[Data]] = None
-    """The response data (null if error)"""
+    data: Optional[Data] = None
+    """A 10DLC campaign registered for a brand."""
 
     error: Optional[ErrorDetail] = None
     """Error information"""
