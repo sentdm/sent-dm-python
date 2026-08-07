@@ -25,9 +25,6 @@ class SentDmServicesEndpointsCustomerApIv3ContractsRequestsBrandsBrandCompliance
     ]
     """List of destination countries for messaging"""
 
-    expected_messaging_volume: Annotated[Optional[str], PropertyInfo(alias="expectedMessagingVolume")]
-    """Expected daily messaging volume"""
-
     is_tcr_application: Annotated[Optional[bool], PropertyInfo(alias="isTcrApplication")]
     """Whether this is a TCR (Campaign Registry) application"""
 
