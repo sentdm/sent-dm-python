@@ -7,10 +7,10 @@ from typing_extensions import Literal, Annotated, TypedDict
 
 from .._utils import PropertyInfo
 
-__all__ = ["SentDmServicesEndpointsCustomerApIv3ContractsRequestsBrandsBrandBusinessInfoParam"]
+__all__ = ["BrandBusinessInfoParam"]
 
 
-class SentDmServicesEndpointsCustomerApIv3ContractsRequestsBrandsBrandBusinessInfoParam(TypedDict, total=False):
+class BrandBusinessInfoParam(TypedDict, total=False):
     """Business details and address for brand KYC"""
 
     city: Optional[str]
