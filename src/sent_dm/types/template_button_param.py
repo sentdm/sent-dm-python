@@ -4,17 +4,15 @@ from __future__ import annotations
 
 from typing_extensions import Required, TypedDict
 
-from .sent_dm_services_common_contracts_poc_os_template_button_props_param import (
-    SentDmServicesCommonContractsPocOsTemplateButtonPropsParam,
-)
+from .template_button_props_param import TemplateButtonPropsParam
 
-__all__ = ["SentDmServicesCommonContractsPocOsTemplateButtonParam"]
+__all__ = ["TemplateButtonParam"]
 
 
-class SentDmServicesCommonContractsPocOsTemplateButtonParam(TypedDict, total=False):
+class TemplateButtonParam(TypedDict, total=False):
     """Interactive button in a message template"""
 
-    props: Required[SentDmServicesCommonContractsPocOsTemplateButtonPropsParam]
+    props: Required[TemplateButtonPropsParam]
     """Properties specific to the button type"""
 
     type: Required[str]

@@ -55,15 +55,15 @@ Types:
 ```python
 from sent_dm.types import (
     APIResponseTemplate,
-    SentDmServicesCommonContractsPocOsAuthenticationConfig,
-    SentDmServicesCommonContractsPocOsTemplateBody,
-    SentDmServicesCommonContractsPocOsTemplateButton,
-    SentDmServicesCommonContractsPocOsTemplateButtonProps,
-    SentDmServicesCommonContractsPocOsTemplateFooter,
-    SentDmServicesCommonContractsPocOsTemplateHeader,
+    AuthenticationConfig,
     Template,
+    TemplateBody,
     TemplateBodyContent,
+    TemplateButton,
+    TemplateButtonProps,
     TemplateDefinition,
+    TemplateFooter,
+    TemplateHeader,
     TemplateVariable,
     TemplateListResponse,
 )
@@ -85,13 +85,13 @@ Types:
 from sent_dm.types import (
     APIResponseOfProfileDetail,
     BillingContactInfo,
+    BrandBusinessInfo,
+    BrandComplianceInfo,
+    BrandContactInfo,
     BrandsBrandData,
     DestinationCountry,
     PaymentDetails,
     ProfileDetail,
-    SentDmServicesEndpointsCustomerApIv3ContractsRequestsBrandsBrandBusinessInfo,
-    SentDmServicesEndpointsCustomerApIv3ContractsRequestsBrandsBrandComplianceInfo,
-    SentDmServicesEndpointsCustomerApIv3ContractsRequestsBrandsBrandContactInfo,
     TcrBrandRelationship,
     TcrVertical,
     ProfileListResponse,
@@ -115,8 +115,8 @@ Types:
 ```python
 from sent_dm.types.profiles import (
     CampaignData,
+    CampaignUseCaseData,
     MessagingUseCaseUs,
-    SentDmServicesEndpointsCustomerApIv3ContractsRequestsCampaignsCampaignUseCaseData,
     CampaignCreateResponse,
     CampaignUpdateResponse,
     CampaignListResponse,

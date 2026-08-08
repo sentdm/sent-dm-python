@@ -7,10 +7,10 @@ from typing_extensions import Annotated, TypedDict
 
 from .._utils import PropertyInfo
 
-__all__ = ["SentDmServicesCommonContractsPocOsAuthenticationConfigParam"]
+__all__ = ["AuthenticationConfigParam"]
 
 
-class SentDmServicesCommonContractsPocOsAuthenticationConfigParam(TypedDict, total=False):
+class AuthenticationConfigParam(TypedDict, total=False):
     """Configuration for AUTHENTICATION category templates"""
 
     add_security_recommendation: Annotated[bool, PropertyInfo(alias="addSecurityRecommendation")]
