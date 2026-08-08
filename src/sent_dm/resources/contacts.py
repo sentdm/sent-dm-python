@@ -20,6 +20,7 @@ from .._response import (
 from .._base_client import make_request_options
 from ..types.contact_list_response import ContactListResponse
 from ..types.api_response_of_contact import APIResponseOfContact
+from ..types.api_response_of_contact_message_summary import APIResponseOfContactMessageSummary
 
 __all__ = ["ContactsResource", "AsyncContactsResource"]
 
@@ -310,6 +311,44 @@ class ContactsResource(SyncAPIResource):
             cast_to=NoneType,
         )
 
+    def retrieve_message_summary(
+        self,
+        contact_id: str,
+        *,
+        x_profile_id: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> APIResponseOfContactMessageSummary:
+        """
+        Returns aggregate message counts, time bounds, channels used, and per-channel
+        success/fail scores (each as a percentage 0-100 of messages on that channel) for
+        one of your contacts. Successful terminal states: SENT/DELIVERED/READ for
+        outbound, RECEIVED for inbound. Fail: FAILED.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not contact_id:
+            raise ValueError(f"Expected a non-empty value for `contact_id` but received {contact_id!r}")
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
+        return self._get(
+            path_template("/v3/contacts/{contact_id}/message-summary", contact_id=contact_id),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=APIResponseOfContactMessageSummary,
+        )
+
 
 class AsyncContactsResource(AsyncAPIResource):
     """Create, update, and manage customer contact lists"""
@@ -597,6 +636,44 @@ class AsyncContactsResource(AsyncAPIResource):
             cast_to=NoneType,
         )
 
+    async def retrieve_message_summary(
+        self,
+        contact_id: str,
+        *,
+        x_profile_id: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> APIResponseOfContactMessageSummary:
+        """
+        Returns aggregate message counts, time bounds, channels used, and per-channel
+        success/fail scores (each as a percentage 0-100 of messages on that channel) for
+        one of your contacts. Successful terminal states: SENT/DELIVERED/READ for
+        outbound, RECEIVED for inbound. Fail: FAILED.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not contact_id:
+            raise ValueError(f"Expected a non-empty value for `contact_id` but received {contact_id!r}")
+        extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
+        return await self._get(
+            path_template("/v3/contacts/{contact_id}/message-summary", contact_id=contact_id),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=APIResponseOfContactMessageSummary,
+        )
+
 
 class ContactsResourceWithRawResponse:
     def __init__(self, contacts: ContactsResource) -> None:
@@ -616,6 +693,9 @@ class ContactsResourceWithRawResponse:
         )
         self.delete = to_raw_response_wrapper(
             contacts.delete,
+        )
+        self.retrieve_message_summary = to_raw_response_wrapper(
+            contacts.retrieve_message_summary,
         )
 
 
@@ -638,6 +718,9 @@ class AsyncContactsResourceWithRawResponse:
         self.delete = async_to_raw_response_wrapper(
             contacts.delete,
         )
+        self.retrieve_message_summary = async_to_raw_response_wrapper(
+            contacts.retrieve_message_summary,
+        )
 
 
 class ContactsResourceWithStreamingResponse:
@@ -659,6 +742,9 @@ class ContactsResourceWithStreamingResponse:
         self.delete = to_streamed_response_wrapper(
             contacts.delete,
         )
+        self.retrieve_message_summary = to_streamed_response_wrapper(
+            contacts.retrieve_message_summary,
+        )
 
 
 class AsyncContactsResourceWithStreamingResponse:
@@ -679,4 +765,7 @@ class AsyncContactsResourceWithStreamingResponse:
         )
         self.delete = async_to_streamed_response_wrapper(
             contacts.delete,
+        )
+        self.retrieve_message_summary = async_to_streamed_response_wrapper(
+            contacts.retrieve_message_summary,
         )

@@ -55,15 +55,15 @@ Types:
 ```python
 from sent_dm.types import (
     APIResponseTemplate,
-    SentDmServicesCommonContractsPocOsAuthenticationConfig,
-    SentDmServicesCommonContractsPocOsTemplateBody,
-    SentDmServicesCommonContractsPocOsTemplateButton,
-    SentDmServicesCommonContractsPocOsTemplateButtonProps,
-    SentDmServicesCommonContractsPocOsTemplateFooter,
-    SentDmServicesCommonContractsPocOsTemplateHeader,
+    AuthenticationConfig,
     Template,
+    TemplateBody,
     TemplateBodyContent,
+    TemplateButton,
+    TemplateButtonProps,
     TemplateDefinition,
+    TemplateFooter,
+    TemplateHeader,
     TemplateVariable,
     TemplateListResponse,
 )
@@ -85,13 +85,13 @@ Types:
 from sent_dm.types import (
     APIResponseOfProfileDetail,
     BillingContactInfo,
+    BrandBusinessInfo,
+    BrandComplianceInfo,
+    BrandContactInfo,
     BrandsBrandData,
     DestinationCountry,
     PaymentDetails,
     ProfileDetail,
-    SentDmServicesEndpointsCustomerApIv3ContractsRequestsBrandsBrandBusinessInfo,
-    SentDmServicesEndpointsCustomerApIv3ContractsRequestsBrandsBrandComplianceInfo,
-    SentDmServicesEndpointsCustomerApIv3ContractsRequestsBrandsBrandContactInfo,
     TcrBrandRelationship,
     TcrVertical,
     ProfileListResponse,
@@ -114,20 +114,21 @@ Types:
 
 ```python
 from sent_dm.types.profiles import (
+    APIResponseOfBrandCampaign,
+    APIResponseOfListOfBrandCampaign,
+    BrandCampaign,
     CampaignData,
+    CampaignUseCase,
+    CampaignUseCaseData,
     MessagingUseCaseUs,
-    SentDmServicesEndpointsCustomerApIv3ContractsRequestsCampaignsCampaignUseCaseData,
-    CampaignCreateResponse,
-    CampaignUpdateResponse,
-    CampaignListResponse,
 )
 ```
 
 Methods:
 
-- <code title="post /v3/profiles/{profileId}/campaigns">client.profiles.campaigns.<a href="./src/sent_dm/resources/profiles/campaigns.py">create</a>(profile_id, \*\*<a href="src/sent_dm/types/profiles/campaign_create_params.py">params</a>) -> <a href="./src/sent_dm/types/profiles/campaign_create_response.py">CampaignCreateResponse</a></code>
-- <code title="put /v3/profiles/{profileId}/campaigns/{campaignId}">client.profiles.campaigns.<a href="./src/sent_dm/resources/profiles/campaigns.py">update</a>(campaign_id, \*, profile_id, \*\*<a href="src/sent_dm/types/profiles/campaign_update_params.py">params</a>) -> <a href="./src/sent_dm/types/profiles/campaign_update_response.py">CampaignUpdateResponse</a></code>
-- <code title="get /v3/profiles/{profileId}/campaigns">client.profiles.campaigns.<a href="./src/sent_dm/resources/profiles/campaigns.py">list</a>(profile_id) -> <a href="./src/sent_dm/types/profiles/campaign_list_response.py">CampaignListResponse</a></code>
+- <code title="post /v3/profiles/{profileId}/campaigns">client.profiles.campaigns.<a href="./src/sent_dm/resources/profiles/campaigns.py">create</a>(profile_id, \*\*<a href="src/sent_dm/types/profiles/campaign_create_params.py">params</a>) -> <a href="./src/sent_dm/types/profiles/api_response_of_brand_campaign.py">APIResponseOfBrandCampaign</a></code>
+- <code title="put /v3/profiles/{profileId}/campaigns/{campaignId}">client.profiles.campaigns.<a href="./src/sent_dm/resources/profiles/campaigns.py">update</a>(campaign_id, \*, profile_id, \*\*<a href="src/sent_dm/types/profiles/campaign_update_params.py">params</a>) -> <a href="./src/sent_dm/types/profiles/api_response_of_brand_campaign.py">APIResponseOfBrandCampaign</a></code>
+- <code title="get /v3/profiles/{profileId}/campaigns">client.profiles.campaigns.<a href="./src/sent_dm/resources/profiles/campaigns.py">list</a>(profile_id) -> <a href="./src/sent_dm/types/profiles/api_response_of_list_of_brand_campaign.py">APIResponseOfListOfBrandCampaign</a></code>
 - <code title="delete /v3/profiles/{profileId}/campaigns/{campaignId}">client.profiles.campaigns.<a href="./src/sent_dm/resources/profiles/campaigns.py">delete</a>(campaign_id, \*, profile_id, \*\*<a href="src/sent_dm/types/profiles/campaign_delete_params.py">params</a>) -> None</code>
 
 # Numbers
@@ -165,7 +166,13 @@ Methods:
 Types:
 
 ```python
-from sent_dm.types import APIResponseOfContact, ContactResponse, ContactListResponse
+from sent_dm.types import (
+    APIResponseOfContact,
+    APIResponseOfContactMessageSummary,
+    ContactMessageSummary,
+    ContactResponse,
+    ContactListResponse,
+)
 ```
 
 Methods:
@@ -175,6 +182,20 @@ Methods:
 - <code title="patch /v3/contacts/{id}">client.contacts.<a href="./src/sent_dm/resources/contacts.py">update</a>(id, \*\*<a href="src/sent_dm/types/contact_update_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_of_contact.py">APIResponseOfContact</a></code>
 - <code title="get /v3/contacts">client.contacts.<a href="./src/sent_dm/resources/contacts.py">list</a>(\*\*<a href="src/sent_dm/types/contact_list_params.py">params</a>) -> <a href="./src/sent_dm/types/contact_list_response.py">ContactListResponse</a></code>
 - <code title="delete /v3/contacts/{id}">client.contacts.<a href="./src/sent_dm/resources/contacts.py">delete</a>(id, \*\*<a href="src/sent_dm/types/contact_delete_params.py">params</a>) -> None</code>
+- <code title="get /v3/contacts/{contactId}/message-summary">client.contacts.<a href="./src/sent_dm/resources/contacts.py">retrieve_message_summary</a>(contact_id) -> <a href="./src/sent_dm/types/api_response_of_contact_message_summary.py">APIResponseOfContactMessageSummary</a></code>
+
+# Conversations
+
+Types:
+
+```python
+from sent_dm.types import APIResponseOfConversationMessagesList, ConversationMessagesList
+```
+
+Methods:
+
+- <code title="get /v3/conversations">client.conversations.<a href="./src/sent_dm/resources/conversations.py">list</a>(\*\*<a href="src/sent_dm/types/conversation_list_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_of_conversation_messages_list.py">APIResponseOfConversationMessagesList</a></code>
+- <code title="get /v3/conversations/{id}">client.conversations.<a href="./src/sent_dm/resources/conversations.py">list_messages</a>(id, \*\*<a href="src/sent_dm/types/conversation_list_messages_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_of_conversation_messages_list.py">APIResponseOfConversationMessagesList</a></code>
 
 # Me
 

@@ -8,10 +8,10 @@ from typing_extensions import Annotated, TypedDict
 from .._utils import PropertyInfo
 from .template_body_content_param import TemplateBodyContentParam
 
-__all__ = ["SentDmServicesCommonContractsPocOsTemplateBodyParam"]
+__all__ = ["TemplateBodyParam"]
 
 
-class SentDmServicesCommonContractsPocOsTemplateBodyParam(TypedDict, total=False):
+class TemplateBodyParam(TypedDict, total=False):
     """Body section of a message template with channel-specific content"""
 
     multi_channel: Annotated[Optional[TemplateBodyContentParam], PropertyInfo(alias="multiChannel")]

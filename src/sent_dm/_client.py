@@ -36,7 +36,7 @@ from ._base_client import (
 )
 
 if TYPE_CHECKING:
-    from .resources import me, users, numbers, contacts, messages, profiles, webhooks, templates
+    from .resources import me, users, numbers, contacts, messages, profiles, webhooks, templates, conversations
     from .resources.me import MeResource, AsyncMeResource
     from .resources.users import UsersResource, AsyncUsersResource
     from .resources.numbers import NumbersResource, AsyncNumbersResource
@@ -44,6 +44,7 @@ if TYPE_CHECKING:
     from .resources.messages import MessagesResource, AsyncMessagesResource
     from .resources.webhooks import WebhooksResource, AsyncWebhooksResource
     from .resources.templates import TemplatesResource, AsyncTemplatesResource
+    from .resources.conversations import ConversationsResource, AsyncConversationsResource
     from .resources.profiles.profiles import ProfilesResource, AsyncProfilesResource
 
 __all__ = ["Timeout", "Transport", "ProxiesTypes", "RequestOptions", "Sent", "AsyncSent", "Client", "AsyncClient"]
@@ -161,6 +162,12 @@ class Sent(SyncAPIClient):
         from .resources.contacts import ContactsResource
 
         return ContactsResource(self)
+
+    @cached_property
+    def conversations(self) -> ConversationsResource:
+        from .resources.conversations import ConversationsResource
+
+        return ConversationsResource(self)
 
     @cached_property
     def me(self) -> MeResource:
@@ -403,6 +410,12 @@ class AsyncSent(AsyncAPIClient):
         return AsyncContactsResource(self)
 
     @cached_property
+    def conversations(self) -> AsyncConversationsResource:
+        from .resources.conversations import AsyncConversationsResource
+
+        return AsyncConversationsResource(self)
+
+    @cached_property
     def me(self) -> AsyncMeResource:
         """Retrieve account details"""
         from .resources.me import AsyncMeResource
@@ -585,6 +598,12 @@ class SentWithRawResponse:
         return ContactsResourceWithRawResponse(self._client.contacts)
 
     @cached_property
+    def conversations(self) -> conversations.ConversationsResourceWithRawResponse:
+        from .resources.conversations import ConversationsResourceWithRawResponse
+
+        return ConversationsResourceWithRawResponse(self._client.conversations)
+
+    @cached_property
     def me(self) -> me.MeResourceWithRawResponse:
         """Retrieve account details"""
         from .resources.me import MeResourceWithRawResponse
@@ -646,6 +665,12 @@ class AsyncSentWithRawResponse:
         from .resources.contacts import AsyncContactsResourceWithRawResponse
 
         return AsyncContactsResourceWithRawResponse(self._client.contacts)
+
+    @cached_property
+    def conversations(self) -> conversations.AsyncConversationsResourceWithRawResponse:
+        from .resources.conversations import AsyncConversationsResourceWithRawResponse
+
+        return AsyncConversationsResourceWithRawResponse(self._client.conversations)
 
     @cached_property
     def me(self) -> me.AsyncMeResourceWithRawResponse:
@@ -711,6 +736,12 @@ class SentWithStreamedResponse:
         return ContactsResourceWithStreamingResponse(self._client.contacts)
 
     @cached_property
+    def conversations(self) -> conversations.ConversationsResourceWithStreamingResponse:
+        from .resources.conversations import ConversationsResourceWithStreamingResponse
+
+        return ConversationsResourceWithStreamingResponse(self._client.conversations)
+
+    @cached_property
     def me(self) -> me.MeResourceWithStreamingResponse:
         """Retrieve account details"""
         from .resources.me import MeResourceWithStreamingResponse
@@ -772,6 +803,12 @@ class AsyncSentWithStreamedResponse:
         from .resources.contacts import AsyncContactsResourceWithStreamingResponse
 
         return AsyncContactsResourceWithStreamingResponse(self._client.contacts)
+
+    @cached_property
+    def conversations(self) -> conversations.AsyncConversationsResourceWithStreamingResponse:
+        from .resources.conversations import AsyncConversationsResourceWithStreamingResponse
+
+        return AsyncConversationsResourceWithStreamingResponse(self._client.conversations)
 
     @cached_property
     def me(self) -> me.AsyncMeResourceWithStreamingResponse:

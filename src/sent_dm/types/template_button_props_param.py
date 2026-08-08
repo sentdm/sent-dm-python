@@ -8,10 +8,10 @@ from typing_extensions import Required, Annotated, TypedDict
 from .._utils import PropertyInfo
 from .template_variable_param import TemplateVariableParam
 
-__all__ = ["SentDmServicesCommonContractsPocOsTemplateButtonPropsParam"]
+__all__ = ["TemplateButtonPropsParam"]
 
 
-class SentDmServicesCommonContractsPocOsTemplateButtonPropsParam(TypedDict, total=False):
+class TemplateButtonPropsParam(TypedDict, total=False):
     active_for: Required[Annotated[int, PropertyInfo(alias="activeFor")]]
 
     country_code: Required[Annotated[str, PropertyInfo(alias="countryCode")]]

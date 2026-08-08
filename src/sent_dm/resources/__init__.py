@@ -64,6 +64,14 @@ from .templates import (
     TemplatesResourceWithStreamingResponse,
     AsyncTemplatesResourceWithStreamingResponse,
 )
+from .conversations import (
+    ConversationsResource,
+    AsyncConversationsResource,
+    ConversationsResourceWithRawResponse,
+    AsyncConversationsResourceWithRawResponse,
+    ConversationsResourceWithStreamingResponse,
+    AsyncConversationsResourceWithStreamingResponse,
+)
 
 __all__ = [
     "WebhooksResource",
@@ -108,6 +116,12 @@ __all__ = [
     "AsyncContactsResourceWithRawResponse",
     "ContactsResourceWithStreamingResponse",
     "AsyncContactsResourceWithStreamingResponse",
+    "ConversationsResource",
+    "AsyncConversationsResource",
+    "ConversationsResourceWithRawResponse",
+    "AsyncConversationsResourceWithRawResponse",
+    "ConversationsResourceWithStreamingResponse",
+    "AsyncConversationsResourceWithStreamingResponse",
     "MeResource",
     "AsyncMeResource",
     "MeResourceWithRawResponse",

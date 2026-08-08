@@ -7,10 +7,10 @@ from typing_extensions import Required, TypedDict
 
 from .template_variable_param import TemplateVariableParam
 
-__all__ = ["SentDmServicesCommonContractsPocOsTemplateHeaderParam"]
+__all__ = ["TemplateHeaderParam"]
 
 
-class SentDmServicesCommonContractsPocOsTemplateHeaderParam(TypedDict, total=False):
+class TemplateHeaderParam(TypedDict, total=False):
     """Header section of a message template"""
 
     template: Required[str]

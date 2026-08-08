@@ -10,10 +10,10 @@ from .tcr_vertical import TcrVertical
 from .tcr_brand_relationship import TcrBrandRelationship
 from .destination_country_param import DestinationCountryParam
 
-__all__ = ["SentDmServicesEndpointsCustomerApIv3ContractsRequestsBrandsBrandComplianceInfoParam"]
+__all__ = ["BrandComplianceInfoParam"]
 
 
-class SentDmServicesEndpointsCustomerApIv3ContractsRequestsBrandsBrandComplianceInfoParam(TypedDict, total=False):
+class BrandComplianceInfoParam(TypedDict, total=False):
     """Compliance and TCR information for brand registration"""
 
     brand_relationship: Required[Annotated[TcrBrandRelationship, PropertyInfo(alias="brandRelationship")]]

@@ -10,9 +10,8 @@ import pytest
 from sent_dm import Sent, AsyncSent
 from tests.utils import assert_matches_type
 from sent_dm.types.profiles import (
-    CampaignListResponse,
-    CampaignCreateResponse,
-    CampaignUpdateResponse,
+    APIResponseOfBrandCampaign,
+    APIResponseOfListOfBrandCampaign,
 )
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
@@ -41,7 +40,7 @@ class TestCampaigns:
                 ],
             },
         )
-        assert_matches_type(CampaignCreateResponse, campaign, path=["response"])
+        assert_matches_type(APIResponseOfBrandCampaign, campaign, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -76,7 +75,7 @@ class TestCampaigns:
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(CampaignCreateResponse, campaign, path=["response"])
+        assert_matches_type(APIResponseOfBrandCampaign, campaign, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -102,7 +101,7 @@ class TestCampaigns:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         campaign = response.parse()
-        assert_matches_type(CampaignCreateResponse, campaign, path=["response"])
+        assert_matches_type(APIResponseOfBrandCampaign, campaign, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -128,7 +127,7 @@ class TestCampaigns:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             campaign = response.parse()
-            assert_matches_type(CampaignCreateResponse, campaign, path=["response"])
+            assert_matches_type(APIResponseOfBrandCampaign, campaign, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -175,7 +174,7 @@ class TestCampaigns:
                 ],
             },
         )
-        assert_matches_type(CampaignUpdateResponse, campaign, path=["response"])
+        assert_matches_type(APIResponseOfBrandCampaign, campaign, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -211,7 +210,7 @@ class TestCampaigns:
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(CampaignUpdateResponse, campaign, path=["response"])
+        assert_matches_type(APIResponseOfBrandCampaign, campaign, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -238,7 +237,7 @@ class TestCampaigns:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         campaign = response.parse()
-        assert_matches_type(CampaignUpdateResponse, campaign, path=["response"])
+        assert_matches_type(APIResponseOfBrandCampaign, campaign, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -265,7 +264,7 @@ class TestCampaigns:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             campaign = response.parse()
-            assert_matches_type(CampaignUpdateResponse, campaign, path=["response"])
+            assert_matches_type(APIResponseOfBrandCampaign, campaign, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -318,7 +317,7 @@ class TestCampaigns:
         campaign = client.profiles.campaigns.list(
             profile_id="770e8400-e29b-41d4-a716-446655440002",
         )
-        assert_matches_type(CampaignListResponse, campaign, path=["response"])
+        assert_matches_type(APIResponseOfListOfBrandCampaign, campaign, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -327,7 +326,7 @@ class TestCampaigns:
             profile_id="770e8400-e29b-41d4-a716-446655440002",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(CampaignListResponse, campaign, path=["response"])
+        assert_matches_type(APIResponseOfListOfBrandCampaign, campaign, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -339,7 +338,7 @@ class TestCampaigns:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         campaign = response.parse()
-        assert_matches_type(CampaignListResponse, campaign, path=["response"])
+        assert_matches_type(APIResponseOfListOfBrandCampaign, campaign, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -351,7 +350,7 @@ class TestCampaigns:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             campaign = response.parse()
-            assert_matches_type(CampaignListResponse, campaign, path=["response"])
+            assert_matches_type(APIResponseOfListOfBrandCampaign, campaign, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -452,7 +451,7 @@ class TestAsyncCampaigns:
                 ],
             },
         )
-        assert_matches_type(CampaignCreateResponse, campaign, path=["response"])
+        assert_matches_type(APIResponseOfBrandCampaign, campaign, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -487,7 +486,7 @@ class TestAsyncCampaigns:
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(CampaignCreateResponse, campaign, path=["response"])
+        assert_matches_type(APIResponseOfBrandCampaign, campaign, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -513,7 +512,7 @@ class TestAsyncCampaigns:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         campaign = await response.parse()
-        assert_matches_type(CampaignCreateResponse, campaign, path=["response"])
+        assert_matches_type(APIResponseOfBrandCampaign, campaign, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -539,7 +538,7 @@ class TestAsyncCampaigns:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             campaign = await response.parse()
-            assert_matches_type(CampaignCreateResponse, campaign, path=["response"])
+            assert_matches_type(APIResponseOfBrandCampaign, campaign, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -586,7 +585,7 @@ class TestAsyncCampaigns:
                 ],
             },
         )
-        assert_matches_type(CampaignUpdateResponse, campaign, path=["response"])
+        assert_matches_type(APIResponseOfBrandCampaign, campaign, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -622,7 +621,7 @@ class TestAsyncCampaigns:
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(CampaignUpdateResponse, campaign, path=["response"])
+        assert_matches_type(APIResponseOfBrandCampaign, campaign, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -649,7 +648,7 @@ class TestAsyncCampaigns:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         campaign = await response.parse()
-        assert_matches_type(CampaignUpdateResponse, campaign, path=["response"])
+        assert_matches_type(APIResponseOfBrandCampaign, campaign, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -676,7 +675,7 @@ class TestAsyncCampaigns:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             campaign = await response.parse()
-            assert_matches_type(CampaignUpdateResponse, campaign, path=["response"])
+            assert_matches_type(APIResponseOfBrandCampaign, campaign, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -729,7 +728,7 @@ class TestAsyncCampaigns:
         campaign = await async_client.profiles.campaigns.list(
             profile_id="770e8400-e29b-41d4-a716-446655440002",
         )
-        assert_matches_type(CampaignListResponse, campaign, path=["response"])
+        assert_matches_type(APIResponseOfListOfBrandCampaign, campaign, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -738,7 +737,7 @@ class TestAsyncCampaigns:
             profile_id="770e8400-e29b-41d4-a716-446655440002",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(CampaignListResponse, campaign, path=["response"])
+        assert_matches_type(APIResponseOfListOfBrandCampaign, campaign, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -750,7 +749,7 @@ class TestAsyncCampaigns:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         campaign = await response.parse()
-        assert_matches_type(CampaignListResponse, campaign, path=["response"])
+        assert_matches_type(APIResponseOfListOfBrandCampaign, campaign, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -762,7 +761,7 @@ class TestAsyncCampaigns:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             campaign = await response.parse()
-            assert_matches_type(CampaignListResponse, campaign, path=["response"])
+            assert_matches_type(APIResponseOfListOfBrandCampaign, campaign, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

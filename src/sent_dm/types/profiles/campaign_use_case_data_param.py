@@ -8,10 +8,10 @@ from ..._types import SequenceNotStr
 from ..._utils import PropertyInfo
 from .messaging_use_case_us import MessagingUseCaseUs
 
-__all__ = ["SentDmServicesEndpointsCustomerApIv3ContractsRequestsCampaignsCampaignUseCaseDataParam"]
+__all__ = ["CampaignUseCaseDataParam"]
 
 
-class SentDmServicesEndpointsCustomerApIv3ContractsRequestsCampaignsCampaignUseCaseDataParam(TypedDict, total=False):
+class CampaignUseCaseDataParam(TypedDict, total=False):
     """Campaign use case with sample messages"""
 
     messaging_use_case_us: Required[Annotated[MessagingUseCaseUs, PropertyInfo(alias="messagingUseCaseUs")]]

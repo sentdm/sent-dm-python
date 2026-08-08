@@ -7,10 +7,10 @@ from typing_extensions import Required, Annotated, TypedDict
 
 from .._utils import PropertyInfo
 
-__all__ = ["SentDmServicesEndpointsCustomerApIv3ContractsRequestsBrandsBrandContactInfoParam"]
+__all__ = ["BrandContactInfoParam"]
 
 
-class SentDmServicesEndpointsCustomerApIv3ContractsRequestsBrandsBrandContactInfoParam(TypedDict, total=False):
+class BrandContactInfoParam(TypedDict, total=False):
     """Contact information for brand KYC"""
 
     name: Required[str]
