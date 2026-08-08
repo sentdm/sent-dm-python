@@ -6,9 +6,7 @@ from typing import Iterable, Optional
 from typing_extensions import Required, Annotated, TypedDict
 
 from ..._utils import PropertyInfo
-from .sent_dm_services_endpoints_customer_ap_iv3_contracts_requests_campaigns_campaign_use_case_data_param import (
-    SentDmServicesEndpointsCustomerApIv3ContractsRequestsCampaignsCampaignUseCaseDataParam,
-)
+from .campaign_use_case_data_param import CampaignUseCaseDataParam
 
 __all__ = ["CampaignDataParam"]
 
@@ -25,12 +23,7 @@ class CampaignDataParam(TypedDict, total=False):
     type: Required[str]
     """Campaign type (e.g., "KYC", "App")"""
 
-    use_cases: Required[
-        Annotated[
-            Iterable[SentDmServicesEndpointsCustomerApIv3ContractsRequestsCampaignsCampaignUseCaseDataParam],
-            PropertyInfo(alias="useCases"),
-        ]
-    ]
+    use_cases: Required[Annotated[Iterable[CampaignUseCaseDataParam], PropertyInfo(alias="useCases")]]
     """List of use cases with sample messages"""
 
     help_keywords: Annotated[Optional[str], PropertyInfo(alias="helpKeywords")]

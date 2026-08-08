@@ -7,10 +7,10 @@ from typing_extensions import Required, TypedDict
 
 from .template_variable_param import TemplateVariableParam
 
-__all__ = ["SentDmServicesCommonContractsPocOsTemplateFooterParam"]
+__all__ = ["TemplateFooterParam"]
 
 
-class SentDmServicesCommonContractsPocOsTemplateFooterParam(TypedDict, total=False):
+class TemplateFooterParam(TypedDict, total=False):
     """Footer section of a message template"""
 
     template: Required[str]
