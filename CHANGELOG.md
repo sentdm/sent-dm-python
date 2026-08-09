@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.33.0](https://github.com/sentdm/sent-dm-python/compare/v0.32.0...v0.33.0) (2026-08-08)
+
+
+### Features
+
+* **api:** sync OpenAPI spec from production ([6c5357e](https://github.com/sentdm/sent-dm-python/commit/6c5357e928e1d49a6e35f128b5e4c0c1e1652f32))
+
+
+### Chores
+
+* mark GitHub Releases as stable releases (prerelease: false) ([0ab99dd](https://github.com/sentdm/sent-dm-python/commit/0ab99dd1740f3795ef2160a31864ca3dc3e6ad73))
+
 ## [0.32.0](https://github.com/sentdm/sent-dm-python/compare/v0.31.0...v0.32.0) (2026-07-07)
 
 

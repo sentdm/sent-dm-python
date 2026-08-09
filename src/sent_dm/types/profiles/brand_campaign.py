@@ -7,41 +7,12 @@ from typing_extensions import Literal
 from pydantic import Field as FieldInfo
 
 from ..._models import BaseModel
-from ..api_meta import APIMeta
-from ..error_detail import ErrorDetail
-from .messaging_use_case_us import MessagingUseCaseUs
+from .campaign_use_case import CampaignUseCase
 
-__all__ = ["CampaignUpdateResponse", "Data", "DataUseCase"]
+__all__ = ["BrandCampaign"]
 
 
-class DataUseCase(BaseModel):
-    """
-    Customer-facing use-case representation for the public v3 campaign contract.
-    Exists for the same reason as BrandCampaignV3Response: nesting the
-    TcrCampaignUseCase database entity in a public response means any column added to
-    that table silently becomes part of the customer-facing contract. This DTO is an explicit
-    allowlist, so a new column stays invisible until it is added here on purpose.
-    This mirrors exactly the fields the entity already serialized, so it removes nothing from the
-    current response shape. It only closes the future-leak path.
-    """
-
-    id: Optional[str] = None
-
-    campaign_id: Optional[str] = FieldInfo(alias="campaignId", default=None)
-
-    created_at: Optional[datetime] = FieldInfo(alias="createdAt", default=None)
-
-    customer_id: Optional[str] = FieldInfo(alias="customerId", default=None)
-
-    messaging_use_case_us: Optional[MessagingUseCaseUs] = FieldInfo(alias="messagingUseCaseUs", default=None)
-
-    sample_messages: Optional[List[str]] = FieldInfo(alias="sampleMessages", default=None)
-    """Sample messages submitted to the registry for this use case."""
-
-    updated_at: Optional[datetime] = FieldInfo(alias="updatedAt", default=None)
-
-
-class Data(BaseModel):
+class BrandCampaign(BaseModel):
     """A 10DLC campaign registered for a brand."""
 
     id: Optional[str] = None
@@ -106,7 +77,7 @@ class Data(BaseModel):
 
     updated_at: Optional[datetime] = FieldInfo(alias="updatedAt", default=None)
 
-    use_cases: Optional[List[DataUseCase]] = FieldInfo(alias="useCases", default=None)
+    use_cases: Optional[List[CampaignUseCase]] = FieldInfo(alias="useCases", default=None)
 
     volume: Optional[str] = None
     """
@@ -115,19 +86,3 @@ class Data(BaseModel):
     vs MIXED/specific) and the campaign fee tier. Surfaced so customers can read
     back the value they set.
     """
-
-
-class CampaignUpdateResponse(BaseModel):
-    """Standard API response envelope for all v3 endpoints"""
-
-    data: Optional[Data] = None
-    """A 10DLC campaign registered for a brand."""
-
-    error: Optional[ErrorDetail] = None
-    """Error information"""
-
-    meta: Optional[APIMeta] = None
-    """Request and response metadata"""
-
-    success: Optional[bool] = None
-    """Indicates whether the request was successful"""
