@@ -128,7 +128,7 @@ class TestProfiles:
     @parametrize
     def test_method_retrieve(self, client: Sent) -> None:
         profile = client.profiles.retrieve(
-            profile_id="profileId",
+            profile_id="770e8400-e29b-41d4-a716-446655440002",
         )
         assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
 
@@ -136,7 +136,7 @@ class TestProfiles:
     @parametrize
     def test_method_retrieve_with_all_params(self, client: Sent) -> None:
         profile = client.profiles.retrieve(
-            profile_id="profileId",
+            profile_id="770e8400-e29b-41d4-a716-446655440002",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
@@ -145,7 +145,7 @@ class TestProfiles:
     @parametrize
     def test_raw_response_retrieve(self, client: Sent) -> None:
         response = client.profiles.with_raw_response.retrieve(
-            profile_id="profileId",
+            profile_id="770e8400-e29b-41d4-a716-446655440002",
         )
 
         assert response.is_closed is True
@@ -157,7 +157,7 @@ class TestProfiles:
     @parametrize
     def test_streaming_response_retrieve(self, client: Sent) -> None:
         with client.profiles.with_streaming_response.retrieve(
-            profile_id="profileId",
+            profile_id="770e8400-e29b-41d4-a716-446655440002",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -179,7 +179,7 @@ class TestProfiles:
     @parametrize
     def test_method_update(self, client: Sent) -> None:
         profile = client.profiles.update(
-            profile_id="profileId",
+            profile_id="770e8400-e29b-41d4-a716-446655440002",
         )
         assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
 
@@ -187,7 +187,7 @@ class TestProfiles:
     @parametrize
     def test_method_update_with_all_params(self, client: Sent) -> None:
         profile = client.profiles.update(
-            profile_id="profileId",
+            profile_id="770e8400-e29b-41d4-a716-446655440002",
             allow_contact_sharing=True,
             allow_number_change_during_onboarding=None,
             allow_template_sharing=None,
@@ -263,7 +263,7 @@ class TestProfiles:
     @parametrize
     def test_raw_response_update(self, client: Sent) -> None:
         response = client.profiles.with_raw_response.update(
-            profile_id="profileId",
+            profile_id="770e8400-e29b-41d4-a716-446655440002",
         )
 
         assert response.is_closed is True
@@ -275,7 +275,7 @@ class TestProfiles:
     @parametrize
     def test_streaming_response_update(self, client: Sent) -> None:
         with client.profiles.with_streaming_response.update(
-            profile_id="profileId",
+            profile_id="770e8400-e29b-41d4-a716-446655440002",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -333,7 +333,7 @@ class TestProfiles:
     @parametrize
     def test_method_delete(self, client: Sent) -> None:
         profile = client.profiles.delete(
-            profile_id="profileId",
+            profile_id="770e8400-e29b-41d4-a716-446655440002",
         )
         assert profile is None
 
@@ -341,7 +341,7 @@ class TestProfiles:
     @parametrize
     def test_method_delete_with_all_params(self, client: Sent) -> None:
         profile = client.profiles.delete(
-            profile_id="profileId",
+            profile_id="770e8400-e29b-41d4-a716-446655440002",
             sandbox=False,
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
@@ -351,7 +351,7 @@ class TestProfiles:
     @parametrize
     def test_raw_response_delete(self, client: Sent) -> None:
         response = client.profiles.with_raw_response.delete(
-            profile_id="profileId",
+            profile_id="770e8400-e29b-41d4-a716-446655440002",
         )
 
         assert response.is_closed is True
@@ -363,7 +363,7 @@ class TestProfiles:
     @parametrize
     def test_streaming_response_delete(self, client: Sent) -> None:
         with client.profiles.with_streaming_response.delete(
-            profile_id="profileId",
+            profile_id="770e8400-e29b-41d4-a716-446655440002",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -552,7 +552,7 @@ class TestAsyncProfiles:
     @parametrize
     async def test_method_retrieve(self, async_client: AsyncSent) -> None:
         profile = await async_client.profiles.retrieve(
-            profile_id="profileId",
+            profile_id="770e8400-e29b-41d4-a716-446655440002",
         )
         assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
 
@@ -560,7 +560,7 @@ class TestAsyncProfiles:
     @parametrize
     async def test_method_retrieve_with_all_params(self, async_client: AsyncSent) -> None:
         profile = await async_client.profiles.retrieve(
-            profile_id="profileId",
+            profile_id="770e8400-e29b-41d4-a716-446655440002",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
@@ -569,7 +569,7 @@ class TestAsyncProfiles:
     @parametrize
     async def test_raw_response_retrieve(self, async_client: AsyncSent) -> None:
         response = await async_client.profiles.with_raw_response.retrieve(
-            profile_id="profileId",
+            profile_id="770e8400-e29b-41d4-a716-446655440002",
         )
 
         assert response.is_closed is True
@@ -581,7 +581,7 @@ class TestAsyncProfiles:
     @parametrize
     async def test_streaming_response_retrieve(self, async_client: AsyncSent) -> None:
         async with async_client.profiles.with_streaming_response.retrieve(
-            profile_id="profileId",
+            profile_id="770e8400-e29b-41d4-a716-446655440002",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -603,7 +603,7 @@ class TestAsyncProfiles:
     @parametrize
     async def test_method_update(self, async_client: AsyncSent) -> None:
         profile = await async_client.profiles.update(
-            profile_id="profileId",
+            profile_id="770e8400-e29b-41d4-a716-446655440002",
         )
         assert_matches_type(APIResponseOfProfileDetail, profile, path=["response"])
 
@@ -611,7 +611,7 @@ class TestAsyncProfiles:
     @parametrize
     async def test_method_update_with_all_params(self, async_client: AsyncSent) -> None:
         profile = await async_client.profiles.update(
-            profile_id="profileId",
+            profile_id="770e8400-e29b-41d4-a716-446655440002",
             allow_contact_sharing=True,
             allow_number_change_during_onboarding=None,
             allow_template_sharing=None,
@@ -687,7 +687,7 @@ class TestAsyncProfiles:
     @parametrize
     async def test_raw_response_update(self, async_client: AsyncSent) -> None:
         response = await async_client.profiles.with_raw_response.update(
-            profile_id="profileId",
+            profile_id="770e8400-e29b-41d4-a716-446655440002",
         )
 
         assert response.is_closed is True
@@ -699,7 +699,7 @@ class TestAsyncProfiles:
     @parametrize
     async def test_streaming_response_update(self, async_client: AsyncSent) -> None:
         async with async_client.profiles.with_streaming_response.update(
-            profile_id="profileId",
+            profile_id="770e8400-e29b-41d4-a716-446655440002",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -757,7 +757,7 @@ class TestAsyncProfiles:
     @parametrize
     async def test_method_delete(self, async_client: AsyncSent) -> None:
         profile = await async_client.profiles.delete(
-            profile_id="profileId",
+            profile_id="770e8400-e29b-41d4-a716-446655440002",
         )
         assert profile is None
 
@@ -765,7 +765,7 @@ class TestAsyncProfiles:
     @parametrize
     async def test_method_delete_with_all_params(self, async_client: AsyncSent) -> None:
         profile = await async_client.profiles.delete(
-            profile_id="profileId",
+            profile_id="770e8400-e29b-41d4-a716-446655440002",
             sandbox=False,
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
@@ -775,7 +775,7 @@ class TestAsyncProfiles:
     @parametrize
     async def test_raw_response_delete(self, async_client: AsyncSent) -> None:
         response = await async_client.profiles.with_raw_response.delete(
-            profile_id="profileId",
+            profile_id="770e8400-e29b-41d4-a716-446655440002",
         )
 
         assert response.is_closed is True
@@ -787,7 +787,7 @@ class TestAsyncProfiles:
     @parametrize
     async def test_streaming_response_delete(self, async_client: AsyncSent) -> None:
         async with async_client.profiles.with_streaming_response.delete(
-            profile_id="profileId",
+            profile_id="770e8400-e29b-41d4-a716-446655440002",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
