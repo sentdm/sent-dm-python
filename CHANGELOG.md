@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.34.0](https://github.com/sentdm/sent-dm-python/compare/v0.33.0...v0.34.0) (2026-08-17)
+
+
+### Features
+
+* **api:** sync OpenAPI spec from production ([6198111](https://github.com/sentdm/sent-dm-python/commit/61981113dc6841ee55ac6ad62454a74604c51a12))
+* **api:** sync OpenAPI spec from production ([42c16a3](https://github.com/sentdm/sent-dm-python/commit/42c16a3d8b549f8bdf05f2e7fe4d6807af663f7f))
+* **api:** sync OpenAPI spec from production ([d0e7ad8](https://github.com/sentdm/sent-dm-python/commit/d0e7ad81bf921b374678b632346f73d290a7dc1f))
+* **sdk:** expose the delivered webhook payloads as models ([d6f5e66](https://github.com/sentdm/sent-dm-python/commit/d6f5e669b5c02cedf5f2bebf5e3852e6f70425e4))
+
+
+### Chores
+
+* add eager seal-dispatch workflow ([4904ff4](https://github.com/sentdm/sent-dm-python/commit/4904ff460c65d456826422bf8c394281bbfd6279))
+
 ## [0.33.0](https://github.com/sentdm/sent-dm-python/compare/v0.32.0...v0.33.0) (2026-08-08)
 
 
