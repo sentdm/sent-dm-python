@@ -1,14 +1,20 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import List, Optional
+from typing import List, Union, Optional
 from datetime import datetime
+from typing_extensions import TypeAlias
 
 from .._models import BaseModel
 from .api_meta import APIMeta
 from .error_detail import ErrorDetail
+from .message_event import MessageEvent
+from .template_event import TemplateEvent
 from .pagination_meta import PaginationMeta
+from .inbound_message_event import InboundMessageEvent
 
-__all__ = ["WebhookListEventsResponse", "Data", "DataEvent"]
+__all__ = ["WebhookListEventsResponse", "Data", "DataEvent", "DataEventEventData"]
+
+DataEventEventData: TypeAlias = Union[MessageEvent, InboundMessageEvent, TemplateEvent]
 
 
 class DataEvent(BaseModel):
@@ -22,7 +28,13 @@ class DataEvent(BaseModel):
 
     error_message: Optional[str] = None
 
-    event_data: Optional[object] = None
+    event_data: Optional[DataEventEventData] = None
+    """The exact event body that was delivered, or attempted, for this record.
+
+    One of the three webhook envelopes: a message status change, an inbound message,
+    or a template status change. Read field and event to tell which, the same way
+    your endpoint does.
+    """
 
     event_type: Optional[str] = None
 
