@@ -8,8 +8,10 @@ from .api_meta import APIMeta as APIMeta
 from .template import Template as Template
 from .error_detail import ErrorDetail as ErrorDetail
 from .tcr_vertical import TcrVertical as TcrVertical
+from .message_event import MessageEvent as MessageEvent
 from .user_response import UserResponse as UserResponse
 from .profile_detail import ProfileDetail as ProfileDetail
+from .template_event import TemplateEvent as TemplateEvent
 from .pagination_meta import PaginationMeta as PaginationMeta
 from .contact_response import ContactResponse as ContactResponse
 from .profile_settings import ProfileSettings as ProfileSettings
@@ -33,6 +35,8 @@ from .contact_create_params import ContactCreateParams as ContactCreateParams
 from .contact_delete_params import ContactDeleteParams as ContactDeleteParams
 from .contact_list_response import ContactListResponse as ContactListResponse
 from .contact_update_params import ContactUpdateParams as ContactUpdateParams
+from .inbound_message_event import InboundMessageEvent as InboundMessageEvent
+from .message_event_payload import MessageEventPayload as MessageEventPayload
 from .message_send_response import MessageSendResponse as MessageSendResponse
 from .payment_details_param import PaymentDetailsParam as PaymentDetailsParam
 from .profile_create_params import ProfileCreateParams as ProfileCreateParams
@@ -50,6 +54,7 @@ from .number_lookup_response import NumberLookupResponse as NumberLookupResponse
 from .tcr_brand_relationship import TcrBrandRelationship as TcrBrandRelationship
 from .template_create_params import TemplateCreateParams as TemplateCreateParams
 from .template_delete_params import TemplateDeleteParams as TemplateDeleteParams
+from .template_event_payload import TemplateEventPayload as TemplateEventPayload
 from .template_list_response import TemplateListResponse as TemplateListResponse
 from .template_update_params import TemplateUpdateParams as TemplateUpdateParams
 from .api_response_of_contact import APIResponseOfContact as APIResponseOfContact
@@ -74,6 +79,7 @@ from .template_button_props_param import TemplateButtonPropsParam as TemplateBut
 from .webhook_list_events_response import WebhookListEventsResponse as WebhookListEventsResponse
 from .webhook_rotate_secret_params import WebhookRotateSecretParams as WebhookRotateSecretParams
 from .webhook_toggle_status_params import WebhookToggleStatusParams as WebhookToggleStatusParams
+from .inbound_message_event_payload import InboundMessageEventPayload as InboundMessageEventPayload
 from .api_response_of_profile_detail import APIResponseOfProfileDetail as APIResponseOfProfileDetail
 from .webhook_rotate_secret_response import WebhookRotateSecretResponse as WebhookRotateSecretResponse
 from .message_retrieve_status_response import MessageRetrieveStatusResponse as MessageRetrieveStatusResponse
