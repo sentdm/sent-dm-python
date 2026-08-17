@@ -58,6 +58,6 @@ class CampaignDataParam(TypedDict, total=False):
     volume: Optional[str]
     """Expected messaging volume for this campaign.
 
-    Numeric string (e.g. "1999", "5000"); values below 2000 bill at the low-volume
+    Numeric string (e.g. "1999", "5000"). Values below 2000 bill at the low-volume
     tier.
     """
