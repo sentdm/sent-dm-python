@@ -1,5 +1,32 @@
 # Changelog
 
+## [0.34.0](https://github.com/sentdm/sent-dm-python/compare/v0.33.0...v0.34.0) (2026-08-17)
+
+
+### Highlights
+
+Webhook payloads are now typed. The events Sent POSTs to your endpoint — `MessageEvent`, `InboundMessageEvent` and `TemplateEvent`, each with its own payload type — are generated types you can deserialize into, instead of a shape you had to hand-write from the docs.
+
+The webhook delivery log is typed too. `event_data` on `GET /v3/webhooks/{id}/events` returns the exact envelope that was delivered, and now describes itself as one of those three rather than an opaque object.
+
+Also in this release:
+
+- `csp_id` on the brand object is deprecated and will be removed in a later release. It identifies the Campaign Service Provider that registered the brand, which is Sent, so the value is the same for every account. There is no replacement. Your own TCR identifiers, `tcr_brand_id` and `universal_ein`, are unaffected.
+- Corrected descriptions for blocked sends, which now name the cases that gate a send before any delivery attempt: insufficient balance, a template not approved for sending, and free-form content with no open conversation.
+- `campaign.volume` documents what an omitted value does. Leave it out and the campaign registers as standard, the higher-fee tier, with no error.
+
+### Features
+
+* **api:** sync OpenAPI spec from production ([6198111](https://github.com/sentdm/sent-dm-python/commit/61981113dc6841ee55ac6ad62454a74604c51a12))
+* **api:** sync OpenAPI spec from production ([42c16a3](https://github.com/sentdm/sent-dm-python/commit/42c16a3d8b549f8bdf05f2e7fe4d6807af663f7f))
+* **api:** sync OpenAPI spec from production ([d0e7ad8](https://github.com/sentdm/sent-dm-python/commit/d0e7ad81bf921b374678b632346f73d290a7dc1f))
+* **sdk:** expose the delivered webhook payloads as models ([d6f5e66](https://github.com/sentdm/sent-dm-python/commit/d6f5e669b5c02cedf5f2bebf5e3852e6f70425e4))
+
+
+### Chores
+
+* add eager seal-dispatch workflow ([4904ff4](https://github.com/sentdm/sent-dm-python/commit/4904ff460c65d456826422bf8c394281bbfd6279))
+
 ## [0.33.0](https://github.com/sentdm/sent-dm-python/compare/v0.32.0...v0.33.0) (2026-08-08)
 
 
