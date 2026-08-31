@@ -16,12 +16,20 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
-from ..types.api_response_of_conversation_messages_list import APIResponseOfConversationMessagesList
+from ..types.conversation_list_response import ConversationListResponse
+from ..types.conversation_list_messages_response import ConversationListMessagesResponse
 
 __all__ = ["ConversationsResource", "AsyncConversationsResource"]
 
 
 class ConversationsResource(SyncAPIResource):
+    """Inbound and outbound messages, grouped by the person they are with.
+
+    A conversation is the thread for one contact across every channel — a reply by SMS and one by WhatsApp belong to the same conversation, because they are the same person talking to you.
+
+    Read-only. Sending is **Messages**; a reply arrives here and through your webhooks.
+    """
+
     @cached_property
     def with_raw_response(self) -> ConversationsResourceWithRawResponse:
         """
@@ -53,7 +61,7 @@ class ConversationsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfConversationMessagesList:
+    ) -> ConversationListResponse:
         """
         Retrieves a paginated list of the authenticated customer's messages across all
         conversations, ordered by created date (most recent first).
@@ -83,7 +91,7 @@ class ConversationsResource(SyncAPIResource):
                     conversation_list_params.ConversationListParams,
                 ),
             ),
-            cast_to=APIResponseOfConversationMessagesList,
+            cast_to=ConversationListResponse,
         )
 
     def list_messages(
@@ -99,7 +107,7 @@ class ConversationsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfConversationMessagesList:
+    ) -> ConversationListMessagesResponse:
         """
         Retrieves a paginated list of the messages in a single conversation (scoped to
         the authenticated customer), ordered by created date (most recent first).
@@ -131,11 +139,18 @@ class ConversationsResource(SyncAPIResource):
                     conversation_list_messages_params.ConversationListMessagesParams,
                 ),
             ),
-            cast_to=APIResponseOfConversationMessagesList,
+            cast_to=ConversationListMessagesResponse,
         )
 
 
 class AsyncConversationsResource(AsyncAPIResource):
+    """Inbound and outbound messages, grouped by the person they are with.
+
+    A conversation is the thread for one contact across every channel — a reply by SMS and one by WhatsApp belong to the same conversation, because they are the same person talking to you.
+
+    Read-only. Sending is **Messages**; a reply arrives here and through your webhooks.
+    """
+
     @cached_property
     def with_raw_response(self) -> AsyncConversationsResourceWithRawResponse:
         """
@@ -167,7 +182,7 @@ class AsyncConversationsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfConversationMessagesList:
+    ) -> ConversationListResponse:
         """
         Retrieves a paginated list of the authenticated customer's messages across all
         conversations, ordered by created date (most recent first).
@@ -197,7 +212,7 @@ class AsyncConversationsResource(AsyncAPIResource):
                     conversation_list_params.ConversationListParams,
                 ),
             ),
-            cast_to=APIResponseOfConversationMessagesList,
+            cast_to=ConversationListResponse,
         )
 
     async def list_messages(
@@ -213,7 +228,7 @@ class AsyncConversationsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfConversationMessagesList:
+    ) -> ConversationListMessagesResponse:
         """
         Retrieves a paginated list of the messages in a single conversation (scoped to
         the authenticated customer), ordered by created date (most recent first).
@@ -245,7 +260,7 @@ class AsyncConversationsResource(AsyncAPIResource):
                     conversation_list_messages_params.ConversationListMessagesParams,
                 ),
             ),
-            cast_to=APIResponseOfConversationMessagesList,
+            cast_to=ConversationListMessagesResponse,
         )
 
 

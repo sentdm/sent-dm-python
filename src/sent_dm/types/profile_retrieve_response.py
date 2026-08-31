@@ -1,6 +1,6 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import List, Optional
+from typing import Dict, List, Optional
 from datetime import datetime
 from typing_extensions import Literal
 
@@ -9,10 +9,20 @@ from .tcr_vertical import TcrVertical
 from .destination_country import DestinationCountry
 from .tcr_brand_relationship import TcrBrandRelationship
 
-__all__ = ["ProfileDetail", "BillingContact", "Brand", "BrandBusiness", "BrandCompliance", "BrandContact"]
+__all__ = [
+    "ProfileRetrieveResponse",
+    "Data",
+    "DataBillingContact",
+    "DataBrand",
+    "DataBrandBusiness",
+    "DataBrandCompliance",
+    "DataBrandContact",
+    "Error",
+    "Meta",
+]
 
 
-class BillingContact(BaseModel):
+class DataBillingContact(BaseModel):
     """Billing contact info returned in profile responses"""
 
     address: Optional[str] = None
@@ -24,7 +34,7 @@ class BillingContact(BaseModel):
     phone: Optional[str] = None
 
 
-class BrandBusiness(BaseModel):
+class DataBrandBusiness(BaseModel):
     """Business details and address information"""
 
     city: Optional[str] = None
@@ -61,7 +71,7 @@ class BrandBusiness(BaseModel):
     """Business website URL"""
 
 
-class BrandCompliance(BaseModel):
+class DataBrandCompliance(BaseModel):
     """Compliance and TCR-related information"""
 
     brand_relationship: Optional[TcrBrandRelationship] = None
@@ -79,12 +89,22 @@ class BrandCompliance(BaseModel):
     """Phone number prefix for messaging (e.g., "+1")"""
 
     primary_use_case: Optional[str] = None
-    """Primary messaging use case description"""
+    """Always null.
+
+    The brand's free-text primary use case is no longer stored: it reached neither
+    TCR nor any decision, and its column is dropped with no backfill, because the
+    values were prose and the typed equivalent is the campaign's MessagingUseCaseUS.
+
+    Retained so existing v3 clients reading primary_use_case keep deserializing.
+    Unlike the profile sharing flags, which can answer false truthfully, there is no
+    value to report here — the field is present and empty rather than present and
+    wrong.
+    """
 
     vertical: Optional[TcrVertical] = None
 
 
-class BrandContact(BaseModel):
+class DataBrandContact(BaseModel):
     """Contact information for the brand"""
 
     business_name: Optional[str] = None
@@ -106,7 +126,7 @@ class BrandContact(BaseModel):
     """Contact's role in the business"""
 
 
-class Brand(BaseModel):
+class DataBrand(BaseModel):
     """
     Brand response with nested contact, business, and compliance sections — mirrors the request structure.
     """
@@ -114,13 +134,13 @@ class Brand(BaseModel):
     id: Optional[str] = None
     """Unique identifier for the brand"""
 
-    business: Optional[BrandBusiness] = None
+    business: Optional[DataBrandBusiness] = None
     """Business details and address information"""
 
-    compliance: Optional[BrandCompliance] = None
+    compliance: Optional[DataBrandCompliance] = None
     """Compliance and TCR-related information"""
 
-    contact: Optional[BrandContact] = None
+    contact: Optional[DataBrandContact] = None
     """Contact information for the brand"""
 
     created_at: Optional[datetime] = None
@@ -157,28 +177,38 @@ class Brand(BaseModel):
     """When the brand was last updated"""
 
 
-class ProfileDetail(BaseModel):
+class Data(BaseModel):
     """Detailed profile response for v3 API"""
 
     id: Optional[str] = None
     """Profile unique identifier"""
 
     allow_contact_sharing: Optional[bool] = None
-    """Whether contacts are shared across profiles in the organization"""
+    """Always false.
+
+    A profile no longer shares contacts with sibling profiles — it sees only what it
+    owns. Retained so existing v3 clients reading allow_contact_sharing keep
+    deserializing; it carries no information.
+    """
 
     allow_number_change_during_onboarding: Optional[bool] = None
     """Whether number changes are allowed during onboarding"""
 
     allow_template_sharing: Optional[bool] = None
-    """Whether templates are shared across profiles in the organization"""
+    """Always false.
 
-    billing_contact: Optional[BillingContact] = None
+    A profile no longer shares templates with sibling profiles. Retained so existing
+    v3 clients reading allow_template_sharing keep deserializing; it carries no
+    information.
+    """
+
+    billing_contact: Optional[DataBillingContact] = None
     """Billing contact info returned in profile responses"""
 
     billing_model: Optional[str] = None
     """Billing model: profile, organization, or profile_and_organization"""
 
-    brand: Optional[Brand] = None
+    brand: Optional[DataBrand] = None
     """
     Brand response with nested contact, business, and compliance sections — mirrors
     the request structure.
@@ -197,7 +227,12 @@ class ProfileDetail(BaseModel):
     """Profile icon URL"""
 
     inherit_contacts: Optional[bool] = None
-    """Whether this profile inherits contacts from the organization"""
+    """Always false.
+
+    A profile no longer inherits its organization's contacts. Retained so existing
+    v3 clients reading inherit_contacts keep deserializing; it carries no
+    information.
+    """
 
     inherit_tcr_brand: Optional[bool] = None
     """Whether this profile inherits TCR brand from the organization"""
@@ -206,7 +241,12 @@ class ProfileDetail(BaseModel):
     """Whether this profile inherits TCR campaign from the organization"""
 
     inherit_templates: Optional[bool] = None
-    """Whether this profile inherits templates from the organization"""
+    """Always false.
+
+    A profile no longer inherits its organization's templates. Retained so existing
+    v3 clients reading inherit_templates keep deserializing; it carries no
+    information.
+    """
 
     name: Optional[str] = None
     """Profile name"""
@@ -218,10 +258,25 @@ class ProfileDetail(BaseModel):
     """Direct SMS phone number"""
 
     sending_phone_number_profile_id: Optional[str] = None
-    """Reference to another profile whose SMS configuration this profile uses"""
+    """Deprecated.
+
+    Always null. Sender borrowing is gone: a profile no longer points at another
+    profile for its SMS sender, and every profile owns the sender it sends from.
+
+    Kept on the wire, and never populated, because those are two different promises.
+    Removing the key changes the response's shape — a generated client loses the
+    property and stops compiling on the next regenerate, for a value that is now
+    null for every profile in existence. Keeping it null costs a key and breaks
+    nobody, and null is the honest answer rather than a placeholder: there is no
+    borrowing left to report.
+
+    Nothing could populate it. Migration 260813161500 dropped the column and copied
+    each borrower its own channel-provider row; its Down() says outright that the
+    borrower-to-lender pairing is not recoverable. The only surviving trace is a
+    notes string on the copied row.
+    """
 
     sending_whatsapp_number_profile_id: Optional[str] = None
-    """Reference to another profile for WhatsApp configuration"""
 
     short_name: Optional[str] = None
     """Profile short name/abbreviation.
@@ -243,3 +298,48 @@ class ProfileDetail(BaseModel):
 
     whatsapp_phone_number: Optional[str] = None
     """Direct WhatsApp phone number"""
+
+
+class Error(BaseModel):
+    """Error information"""
+
+    code: Optional[str] = None
+    """Machine-readable error code (e.g., "RESOURCE_001")"""
+
+    details: Optional[Dict[str, List[str]]] = None
+    """Additional validation error details (field-level errors)"""
+
+    doc_url: Optional[str] = None
+    """URL to documentation about this error"""
+
+    message: Optional[str] = None
+    """Human-readable error message"""
+
+
+class Meta(BaseModel):
+    """Request and response metadata"""
+
+    request_id: Optional[str] = None
+    """Unique identifier for this request (for tracing and support)"""
+
+    timestamp: Optional[datetime] = None
+    """Server timestamp when the response was generated"""
+
+    version: Optional[str] = None
+    """API version used for this request"""
+
+
+class ProfileRetrieveResponse(BaseModel):
+    """Standard API response envelope for all v3 endpoints"""
+
+    data: Optional[Data] = None
+    """Detailed profile response for v3 API"""
+
+    error: Optional[Error] = None
+    """Error information"""
+
+    meta: Optional[Meta] = None
+    """Request and response metadata"""
+
+    success: Optional[bool] = None
+    """Indicates whether the request was successful"""

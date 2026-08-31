@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import typing_extensions
 from typing import Optional
 
 import httpx
@@ -19,14 +20,21 @@ from .._response import (
 )
 from .._base_client import make_request_options
 from ..types.contact_list_response import ContactListResponse
-from ..types.api_response_of_contact import APIResponseOfContact
-from ..types.api_response_of_contact_message_summary import APIResponseOfContactMessageSummary
+from ..types.contact_create_response import ContactCreateResponse
+from ..types.contact_update_response import ContactUpdateResponse
+from ..types.contact_retrieve_response import ContactRetrieveResponse
+from ..types.contact_retrieve_message_summary_response import ContactRetrieveMessageSummaryResponse
 
 __all__ = ["ContactsResource", "AsyncContactsResource"]
 
 
 class ContactsResource(SyncAPIResource):
-    """Create, update, and manage customer contact lists"""
+    """The people you message, and their channel identities.
+
+    A contact holds one identity per channel — a phone number, a WhatsApp number — so routing can choose between them for the same person. Opt-out is recorded against the contact and honoured on every send, whichever channel it came through.
+
+    `GET /v3/contacts/{id}/message-summary` is the per-contact view of what you have sent and what happened to it.
+    """
 
     @cached_property
     def with_raw_response(self) -> ContactsResourceWithRawResponse:
@@ -60,7 +68,7 @@ class ContactsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfContact:
+    ) -> ContactCreateResponse:
         """
         Creates a new contact by phone number and associates it with the authenticated
         customer.
@@ -100,7 +108,7 @@ class ContactsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfContact,
+            cast_to=ContactCreateResponse,
         )
 
     def retrieve(
@@ -114,7 +122,7 @@ class ContactsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfContact:
+    ) -> ContactRetrieveResponse:
         """Retrieves a specific contact by their unique identifier.
 
         Returns detailed
@@ -138,7 +146,7 @@ class ContactsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfContact,
+            cast_to=ContactRetrieveResponse,
         )
 
     def update(
@@ -156,11 +164,9 @@ class ContactsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfContact:
-        """Updates a contact's default channel and/or opt-out status.
-
-        Inherited contacts
-        cannot be updated.
+    ) -> ContactUpdateResponse:
+        """
+        Updates a contact's default channel and/or opt-out status.
 
         Args:
           default_channel: Default messaging channel: "sms" or "whatsapp"
@@ -203,7 +209,7 @@ class ContactsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfContact,
+            cast_to=ContactUpdateResponse,
         )
 
     def list(
@@ -268,6 +274,7 @@ class ContactsResource(SyncAPIResource):
             cast_to=ContactListResponse,
         )
 
+    @typing_extensions.deprecated("deprecated")
     def delete(
         self,
         id: str,
@@ -281,10 +288,17 @@ class ContactsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> None:
-        """Dissociates a contact from the authenticated customer.
+        """
+        **Deprecated.** Use `PATCH /v3/contacts/{id}` with `{"opt_out": true}` instead,
+        and expect this to be removed in a future release. It still behaves exactly as
+        before, so nothing needs to change today.
 
-        Inherited contacts cannot
-        be deleted.
+        Opting a contact out stops every send to them, which is what deleting one was
+        mostly used for — and it keeps the record of who they were and that they asked.
+        A delete discards the consent history along with the contact, which is the part
+        you need if anyone ever asks why you stopped, or why you started again.
+
+        Dissociates a contact from the authenticated customer.
 
         Args:
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
@@ -322,7 +336,7 @@ class ContactsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfContactMessageSummary:
+    ) -> ContactRetrieveMessageSummaryResponse:
         """
         Returns aggregate message counts, time bounds, channels used, and per-channel
         success/fail scores (each as a percentage 0-100 of messages on that channel) for
@@ -346,12 +360,17 @@ class ContactsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfContactMessageSummary,
+            cast_to=ContactRetrieveMessageSummaryResponse,
         )
 
 
 class AsyncContactsResource(AsyncAPIResource):
-    """Create, update, and manage customer contact lists"""
+    """The people you message, and their channel identities.
+
+    A contact holds one identity per channel — a phone number, a WhatsApp number — so routing can choose between them for the same person. Opt-out is recorded against the contact and honoured on every send, whichever channel it came through.
+
+    `GET /v3/contacts/{id}/message-summary` is the per-contact view of what you have sent and what happened to it.
+    """
 
     @cached_property
     def with_raw_response(self) -> AsyncContactsResourceWithRawResponse:
@@ -385,7 +404,7 @@ class AsyncContactsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfContact:
+    ) -> ContactCreateResponse:
         """
         Creates a new contact by phone number and associates it with the authenticated
         customer.
@@ -425,7 +444,7 @@ class AsyncContactsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfContact,
+            cast_to=ContactCreateResponse,
         )
 
     async def retrieve(
@@ -439,7 +458,7 @@ class AsyncContactsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfContact:
+    ) -> ContactRetrieveResponse:
         """Retrieves a specific contact by their unique identifier.
 
         Returns detailed
@@ -463,7 +482,7 @@ class AsyncContactsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfContact,
+            cast_to=ContactRetrieveResponse,
         )
 
     async def update(
@@ -481,11 +500,9 @@ class AsyncContactsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfContact:
-        """Updates a contact's default channel and/or opt-out status.
-
-        Inherited contacts
-        cannot be updated.
+    ) -> ContactUpdateResponse:
+        """
+        Updates a contact's default channel and/or opt-out status.
 
         Args:
           default_channel: Default messaging channel: "sms" or "whatsapp"
@@ -528,7 +545,7 @@ class AsyncContactsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfContact,
+            cast_to=ContactUpdateResponse,
         )
 
     async def list(
@@ -593,6 +610,7 @@ class AsyncContactsResource(AsyncAPIResource):
             cast_to=ContactListResponse,
         )
 
+    @typing_extensions.deprecated("deprecated")
     async def delete(
         self,
         id: str,
@@ -606,10 +624,17 @@ class AsyncContactsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> None:
-        """Dissociates a contact from the authenticated customer.
+        """
+        **Deprecated.** Use `PATCH /v3/contacts/{id}` with `{"opt_out": true}` instead,
+        and expect this to be removed in a future release. It still behaves exactly as
+        before, so nothing needs to change today.
 
-        Inherited contacts cannot
-        be deleted.
+        Opting a contact out stops every send to them, which is what deleting one was
+        mostly used for — and it keeps the record of who they were and that they asked.
+        A delete discards the consent history along with the contact, which is the part
+        you need if anyone ever asks why you stopped, or why you started again.
+
+        Dissociates a contact from the authenticated customer.
 
         Args:
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
@@ -647,7 +672,7 @@ class AsyncContactsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfContactMessageSummary:
+    ) -> ContactRetrieveMessageSummaryResponse:
         """
         Returns aggregate message counts, time bounds, channels used, and per-channel
         success/fail scores (each as a percentage 0-100 of messages on that channel) for
@@ -671,7 +696,7 @@ class AsyncContactsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfContactMessageSummary,
+            cast_to=ContactRetrieveMessageSummaryResponse,
         )
 
 
@@ -691,8 +716,10 @@ class ContactsResourceWithRawResponse:
         self.list = to_raw_response_wrapper(
             contacts.list,
         )
-        self.delete = to_raw_response_wrapper(
-            contacts.delete,
+        self.delete = (  # pyright: ignore[reportDeprecated]
+            to_raw_response_wrapper(
+                contacts.delete,  # pyright: ignore[reportDeprecated],
+            )
         )
         self.retrieve_message_summary = to_raw_response_wrapper(
             contacts.retrieve_message_summary,
@@ -715,8 +742,10 @@ class AsyncContactsResourceWithRawResponse:
         self.list = async_to_raw_response_wrapper(
             contacts.list,
         )
-        self.delete = async_to_raw_response_wrapper(
-            contacts.delete,
+        self.delete = (  # pyright: ignore[reportDeprecated]
+            async_to_raw_response_wrapper(
+                contacts.delete,  # pyright: ignore[reportDeprecated],
+            )
         )
         self.retrieve_message_summary = async_to_raw_response_wrapper(
             contacts.retrieve_message_summary,
@@ -739,8 +768,10 @@ class ContactsResourceWithStreamingResponse:
         self.list = to_streamed_response_wrapper(
             contacts.list,
         )
-        self.delete = to_streamed_response_wrapper(
-            contacts.delete,
+        self.delete = (  # pyright: ignore[reportDeprecated]
+            to_streamed_response_wrapper(
+                contacts.delete,  # pyright: ignore[reportDeprecated],
+            )
         )
         self.retrieve_message_summary = to_streamed_response_wrapper(
             contacts.retrieve_message_summary,
@@ -763,8 +794,10 @@ class AsyncContactsResourceWithStreamingResponse:
         self.list = async_to_streamed_response_wrapper(
             contacts.list,
         )
-        self.delete = async_to_streamed_response_wrapper(
-            contacts.delete,
+        self.delete = (  # pyright: ignore[reportDeprecated]
+            async_to_streamed_response_wrapper(
+                contacts.delete,  # pyright: ignore[reportDeprecated],
+            )
         )
         self.retrieve_message_summary = async_to_streamed_response_wrapper(
             contacts.retrieve_message_summary,
