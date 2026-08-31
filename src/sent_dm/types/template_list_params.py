@@ -21,7 +21,14 @@ class TemplateListParams(TypedDict, total=False):
     """Optional category filter: MARKETING, UTILITY, AUTHENTICATION"""
 
     is_welcome_playground: Optional[bool]
-    """Optional filter by welcome playground flag"""
+    """Accepted and ignored.
+
+    It used to filter on the welcome-playground marker inside a template's LOB
+    details; that filter is gone and nothing reads this value, so sending it neither
+    narrows nor widens the result. Retained only so a client still passing
+    is_welcome_playground keeps binding instead of the request shape changing under
+    it.
+    """
 
     search: Optional[str]
     """Optional search term for filtering templates"""

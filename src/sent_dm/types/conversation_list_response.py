@@ -3,12 +3,17 @@
 from typing import Dict, List, Optional
 from datetime import datetime
 
+from pydantic import Field as FieldInfo
+
 from .._models import BaseModel
 
 __all__ = [
-    "WebhookListEventTypesResponse",
+    "ConversationListResponse",
     "Data",
-    "DataEventType",
+    "DataMessage",
+    "DataMessageEvent",
+    "DataMessageMessageBody",
+    "DataMessageMessageBodyButton",
     "DataPagination",
     "DataPaginationCursors",
     "Error",
@@ -16,18 +21,81 @@ __all__ = [
 ]
 
 
-class DataEventType(BaseModel):
+class DataMessageEvent(BaseModel):
+    """Represents a status change event in a message's lifecycle (v3)"""
+
+    status: str
+
+    timestamp: datetime
+
     description: Optional[str] = None
 
-    display_name: Optional[str] = None
 
-    event_type: Optional[str] = None
+class DataMessageMessageBodyButton(BaseModel):
+    postback_data: Optional[str] = FieldInfo(alias="postbackData", default=None)
 
-    is_active: Optional[bool] = None
+    text: Optional[str] = None
 
-    name: Optional[str] = None
+    type: Optional[str] = None
 
-    sub_types: Optional[List[object]] = None
+    value: Optional[str] = None
+
+
+class DataMessageMessageBody(BaseModel):
+    """
+    Structured message body format for database storage.
+    Preserves channel-specific components (header, body, footer, buttons).
+    """
+
+    buttons: Optional[List[DataMessageMessageBodyButton]] = None
+
+    content: Optional[str] = None
+
+    footer: Optional[str] = None
+
+    header: Optional[str] = None
+
+
+class DataMessage(BaseModel):
+    """Message response for v3 API — same shape as v2 with snake_case JSON conventions"""
+
+    id: Optional[str] = None
+
+    active_contact_price: Optional[float] = None
+
+    channel: Optional[str] = None
+
+    contact_id: Optional[str] = None
+
+    created_at: Optional[datetime] = None
+
+    customer_id: Optional[str] = None
+
+    direction: Optional[str] = None
+
+    events: Optional[List[DataMessageEvent]] = None
+
+    message_body: Optional[DataMessageMessageBody] = None
+    """
+    Structured message body format for database storage. Preserves channel-specific
+    components (header, body, footer, buttons).
+    """
+
+    phone: Optional[str] = None
+
+    phone_international: Optional[str] = None
+
+    price: Optional[float] = None
+
+    region_code: Optional[str] = None
+
+    status: Optional[str] = None
+
+    template_category: Optional[str] = None
+
+    template_id: Optional[str] = None
+
+    template_name: Optional[str] = None
 
 
 class DataPaginationCursors(BaseModel):
@@ -63,10 +131,10 @@ class DataPagination(BaseModel):
 
 
 class Data(BaseModel):
-    """The webhook event types a customer can subscribe to."""
+    """A paginated list of messages — used by both conversation read endpoints."""
 
-    event_types: Optional[List[DataEventType]] = None
-    """The event_types on this page."""
+    messages: Optional[List[DataMessage]] = None
+    """The messages on this page."""
 
     pagination: Optional[DataPagination] = None
     """Pagination metadata for list responses"""
@@ -101,11 +169,11 @@ class Meta(BaseModel):
     """API version used for this request"""
 
 
-class WebhookListEventTypesResponse(BaseModel):
+class ConversationListResponse(BaseModel):
     """Standard API response envelope for all v3 endpoints"""
 
     data: Optional[Data] = None
-    """The webhook event types a customer can subscribe to."""
+    """A paginated list of messages — used by both conversation read endpoints."""
 
     error: Optional[Error] = None
     """Error information"""

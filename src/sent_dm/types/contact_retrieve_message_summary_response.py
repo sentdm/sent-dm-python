@@ -5,29 +5,36 @@ from datetime import datetime
 
 from .._models import BaseModel
 
-__all__ = ["NumberLookupResponse", "Data", "Error", "Meta"]
+__all__ = ["ContactRetrieveMessageSummaryResponse", "Data", "DataChannelScore", "Error", "Meta"]
+
+
+class DataChannelScore(BaseModel):
+    channel: Optional[str] = None
+
+    fail_score: Optional[int] = None
+    """Percentage (0-100) of messages on this channel that ended in FAILED."""
+
+    success_score: Optional[int] = None
+    """
+    Percentage (0-100) of messages on this channel that reached a successful
+    terminal state: SENT/DELIVERED/READ for outbound, RECEIVED for inbound.
+    """
 
 
 class Data(BaseModel):
     """The response data (null if error)"""
 
-    carrier_name: Optional[str] = None
+    channel_scores: Optional[List[DataChannelScore]] = None
 
-    country_code: Optional[str] = None
+    channels_used: Optional[List[str]] = None
 
-    is_ported: Optional[bool] = None
+    contact_id: Optional[str] = None
 
-    is_valid: Optional[bool] = None
+    first_message_at: Optional[datetime] = None
 
-    is_voip: Optional[bool] = None
+    last_message_at: Optional[datetime] = None
 
-    line_type: Optional[str] = None
-
-    mobile_country_code: Optional[str] = None
-
-    mobile_network_code: Optional[str] = None
-
-    phone_number: Optional[str] = None
+    message_count: Optional[int] = None
 
 
 class Error(BaseModel):
@@ -59,7 +66,7 @@ class Meta(BaseModel):
     """API version used for this request"""
 
 
-class NumberLookupResponse(BaseModel):
+class ContactRetrieveMessageSummaryResponse(BaseModel):
     """Standard API response envelope for all v3 endpoints"""
 
     data: Optional[Data] = None

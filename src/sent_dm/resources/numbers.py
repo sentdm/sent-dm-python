@@ -21,7 +21,10 @@ __all__ = ["NumbersResource", "AsyncNumbersResource"]
 
 
 class NumbersResource(SyncAPIResource):
-    """Manage and lookup phone numbers"""
+    """What a phone number actually is, before you send to it.
+
+    A lookup returns the number's country, line type and carrier, which is what decides whether it is reachable on a channel and what it costs. Worth doing on import rather than on send: a landline in a contact list is a message that can never be delivered.
+    """
 
     @cached_property
     def with_raw_response(self) -> NumbersResourceWithRawResponse:
@@ -81,7 +84,10 @@ class NumbersResource(SyncAPIResource):
 
 
 class AsyncNumbersResource(AsyncAPIResource):
-    """Manage and lookup phone numbers"""
+    """What a phone number actually is, before you send to it.
+
+    A lookup returns the number's country, line type and carrier, which is what decides whether it is reachable on a channel and what it costs. Worth doing on import rather than on send: a landline in a contact list is a message that can never be delivered.
+    """
 
     @cached_property
     def with_raw_response(self) -> AsyncNumbersResourceWithRawResponse:

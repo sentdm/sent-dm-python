@@ -26,18 +26,26 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
-from ..types.api_response_webhook import APIResponseWebhook
 from ..types.webhook_list_response import WebhookListResponse
 from ..types.webhook_test_response import WebhookTestResponse
+from ..types.webhook_create_response import WebhookCreateResponse
+from ..types.webhook_update_response import WebhookUpdateResponse
+from ..types.webhook_retrieve_response import WebhookRetrieveResponse
 from ..types.webhook_list_events_response import WebhookListEventsResponse
 from ..types.webhook_rotate_secret_response import WebhookRotateSecretResponse
+from ..types.webhook_toggle_status_response import WebhookToggleStatusResponse
 from ..types.webhook_list_event_types_response import WebhookListEventTypesResponse
 
 __all__ = ["WebhooksResource", "AsyncWebhooksResource"]
 
 
 class WebhooksResource(SyncAPIResource):
-    """Configure webhook endpoints for real-time event delivery"""
+    """Delivery reports and inbound messages, pushed to you.
+
+    Subscribe an endpoint to the event types you care about — `GET /v3/webhooks/event-types` lists them — and we POST each one as it happens, retrying on failure. Polling `GET /v3/messages/{id}` works and does not scale.
+
+    **Verify the signature.** Every delivery is signed with your endpoint's secret; an unverified endpoint is one anybody can post to. `rotate-secret` replaces it, `test` sends a specimen event, and `GET /v3/webhooks/{id}/events` shows what we tried to deliver and what your endpoint answered — which is the first place to look when something appears to be missing.
+    """
 
     @cached_property
     def with_raw_response(self) -> WebhooksResourceWithRawResponse:
@@ -76,7 +84,7 @@ class WebhooksResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseWebhook:
+    ) -> WebhookCreateResponse:
         """
         Creates a new webhook endpoint for the authenticated customer.
 
@@ -118,7 +126,7 @@ class WebhooksResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseWebhook,
+            cast_to=WebhookCreateResponse,
         )
 
     def retrieve(
@@ -132,7 +140,7 @@ class WebhooksResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseWebhook:
+    ) -> WebhookRetrieveResponse:
         """
         Retrieves a single webhook by ID for the authenticated customer.
 
@@ -153,7 +161,7 @@ class WebhooksResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseWebhook,
+            cast_to=WebhookRetrieveResponse,
         )
 
     def update(
@@ -175,7 +183,7 @@ class WebhooksResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseWebhook:
+    ) -> WebhookUpdateResponse:
         """
         Updates an existing webhook for the authenticated customer.
 
@@ -219,7 +227,7 @@ class WebhooksResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseWebhook,
+            cast_to=WebhookUpdateResponse,
         )
 
     def list(
@@ -508,7 +516,7 @@ class WebhooksResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseWebhook:
+    ) -> WebhookToggleStatusResponse:
         """
         Activates or deactivates a webhook for the authenticated customer.
 
@@ -547,12 +555,17 @@ class WebhooksResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseWebhook,
+            cast_to=WebhookToggleStatusResponse,
         )
 
 
 class AsyncWebhooksResource(AsyncAPIResource):
-    """Configure webhook endpoints for real-time event delivery"""
+    """Delivery reports and inbound messages, pushed to you.
+
+    Subscribe an endpoint to the event types you care about — `GET /v3/webhooks/event-types` lists them — and we POST each one as it happens, retrying on failure. Polling `GET /v3/messages/{id}` works and does not scale.
+
+    **Verify the signature.** Every delivery is signed with your endpoint's secret; an unverified endpoint is one anybody can post to. `rotate-secret` replaces it, `test` sends a specimen event, and `GET /v3/webhooks/{id}/events` shows what we tried to deliver and what your endpoint answered — which is the first place to look when something appears to be missing.
+    """
 
     @cached_property
     def with_raw_response(self) -> AsyncWebhooksResourceWithRawResponse:
@@ -591,7 +604,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseWebhook:
+    ) -> WebhookCreateResponse:
         """
         Creates a new webhook endpoint for the authenticated customer.
 
@@ -633,7 +646,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseWebhook,
+            cast_to=WebhookCreateResponse,
         )
 
     async def retrieve(
@@ -647,7 +660,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseWebhook:
+    ) -> WebhookRetrieveResponse:
         """
         Retrieves a single webhook by ID for the authenticated customer.
 
@@ -668,7 +681,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseWebhook,
+            cast_to=WebhookRetrieveResponse,
         )
 
     async def update(
@@ -690,7 +703,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseWebhook:
+    ) -> WebhookUpdateResponse:
         """
         Updates an existing webhook for the authenticated customer.
 
@@ -734,7 +747,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseWebhook,
+            cast_to=WebhookUpdateResponse,
         )
 
     async def list(
@@ -1025,7 +1038,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseWebhook:
+    ) -> WebhookToggleStatusResponse:
         """
         Activates or deactivates a webhook for the authenticated customer.
 
@@ -1064,7 +1077,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseWebhook,
+            cast_to=WebhookToggleStatusResponse,
         )
 
 

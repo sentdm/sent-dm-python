@@ -2,16 +2,12 @@
 
 from __future__ import annotations
 
+import typing_extensions
 from typing import Optional
 
 import httpx
 
-from ...types import (
-    profile_create_params,
-    profile_delete_params,
-    profile_update_params,
-    profile_complete_params,
-)
+from ...types import profile_create_params, profile_delete_params, profile_update_params, profile_complete_params
 from ..._types import Body, Omit, Query, Headers, NoneType, NotGiven, omit, not_given
 from ..._utils import path_template, maybe_transform, strip_not_given, async_maybe_transform
 from ..._compat import cached_property
@@ -31,22 +27,31 @@ from ..._response import (
     async_to_streamed_response_wrapper,
 )
 from ..._base_client import make_request_options
-from ...types.payment_details_param import PaymentDetailsParam
 from ...types.profile_list_response import ProfileListResponse
-from ...types.brands_brand_data_param import BrandsBrandDataParam
+from ...types.profile_create_response import ProfileCreateResponse
+from ...types.profile_update_response import ProfileUpdateResponse
 from ...types.profile_complete_response import ProfileCompleteResponse
-from ...types.billing_contact_info_param import BillingContactInfoParam
-from ...types.api_response_of_profile_detail import APIResponseOfProfileDetail
+from ...types.profile_retrieve_response import ProfileRetrieveResponse
 
 __all__ = ["ProfilesResource", "AsyncProfilesResource"]
 
 
 class ProfilesResource(SyncAPIResource):
-    """Manage organization profiles"""
+    """**Deprecated — use Sender Profiles.**
+
+    The original profile resource, kept because it has live callers. It still works, and its replacement is `/v3/sender-profiles`, which takes the identity and the campaign in one call instead of across three.
+
+    New integrations should not start here.
+    """
 
     @cached_property
     def campaigns(self) -> CampaignsResource:
-        """Manage organization profiles"""
+        """**Deprecated — use Sender Profiles.**
+
+        The original profile resource, kept because it has live callers. It still works, and its replacement is `/v3/sender-profiles`, which takes the identity and the campaign in one call instead of across three.
+
+        New integrations should not start here.
+        """
         return CampaignsResource(self._client)
 
     @cached_property
@@ -68,14 +73,15 @@ class ProfilesResource(SyncAPIResource):
         """
         return ProfilesResourceWithStreamingResponse(self)
 
+    @typing_extensions.deprecated("deprecated")
     def create(
         self,
         *,
-        allow_contact_sharing: bool | Omit = omit,
-        allow_template_sharing: bool | Omit = omit,
-        billing_contact: Optional[BillingContactInfoParam] | Omit = omit,
+        allow_contact_sharing: Optional[bool] | Omit = omit,
+        allow_template_sharing: Optional[bool] | Omit = omit,
+        billing_contact: Optional[profile_create_params.BillingContact] | Omit = omit,
         billing_model: Optional[str] | Omit = omit,
-        brand: Optional[BrandsBrandDataParam] | Omit = omit,
+        brand: Optional[profile_create_params.Brand] | Omit = omit,
         description: Optional[str] | Omit = omit,
         icon: Optional[str] | Omit = omit,
         inherit_contacts: Optional[bool] | Omit = omit,
@@ -83,7 +89,7 @@ class ProfilesResource(SyncAPIResource):
         inherit_tcr_campaign: Optional[bool] | Omit = omit,
         inherit_templates: Optional[bool] | Omit = omit,
         name: str | Omit = omit,
-        payment_details: Optional[PaymentDetailsParam] | Omit = omit,
+        payment_details: Optional[profile_create_params.PaymentDetails] | Omit = omit,
         sandbox: bool | Omit = omit,
         short_name: Optional[str] | Omit = omit,
         whatsapp_business_account: Optional[profile_create_params.WhatsappBusinessAccount] | Omit = omit,
@@ -95,32 +101,29 @@ class ProfilesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfProfileDetail:
-        """Creates a new sender profile within an organization.
+    ) -> ProfileCreateResponse:
+        """
+        **Deprecated.** This endpoint is replaced by `/v3/sender-profiles` and will be
+        removed in a future release. It still behaves exactly as before, so nothing
+        needs to change today — but new integrations should use `/v3/sender-profiles`,
+        which models a profile's markets, compliance, brand, campaigns and billing
+        explicitly.
 
-        Profiles represent
+        Creates a new sender profile within an organization. Profiles represent
         different brands, departments, or use cases, each with their own messaging
         configuration and settings. Requires admin role in the organization.
 
         ## WhatsApp Business Account
 
-        Every profile must be linked to a WhatsApp Business Account. There are two ways
-        to do this:
+        Every profile owns its own WhatsApp Business Account — accounts are never shared
+        between profiles or inherited from the organization. Provide a
+        `whatsapp_business_account` object with `waba_id`, `phone_number_id`, and
+        `access_token`. Obtain these from Meta Business Manager by creating a System
+        User with `whatsapp_business_messaging` and `whatsapp_business_management`
+        permissions.
 
-        **1. Inherit from organization (default)** — Omit the
-        `whatsapp_business_account` field. The profile will share the organization's
-        WhatsApp Business Account, which must have been set up via WhatsApp Embedded
-        Signup. This is the recommended path for most use cases.
-
-        **2. Direct credentials** — Provide a `whatsapp_business_account` object with
-        `waba_id`, `phone_number_id`, and `access_token`. Use this when the profile
-        needs its own independent WhatsApp Business Account. Obtain these from Meta
-        Business Manager by creating a System User with `whatsapp_business_messaging`
-        and `whatsapp_business_management` permissions.
-
-        If the `whatsapp_business_account` field is omitted and the organization has no
-        WhatsApp Business Account configured, the request will be rejected with
-        HTTP 422.
+        Omit the field and the profile is created without WhatsApp, staying incomplete
+        until it has an account of its own.
 
         ## Brand
 
@@ -136,9 +139,21 @@ class ProfilesResource(SyncAPIResource):
         when `billing_model` is `"organization"` is not allowed.
 
         Args:
-          allow_contact_sharing: Whether contacts are shared across profiles (default: false)
+          allow_contact_sharing: Deprecated. Accepted and ignored. Contact and template sharing between sender
+              profiles is gone — a profile sees only what it owns, and the organization still
+              sees all of its profiles' contacts and templates through read-time widening. The
+              four columns behind these flags were dropped by M260720120000.
 
-          allow_template_sharing: Whether templates are shared across profiles (default: false)
+              Bound rather than dropped so the properties survive on the wire and in a
+              generated client: an SDK that assigns them keeps compiling, which is the
+              compatibility this exists for. Deliberately not refused either — a 400 would
+              break an integration that is otherwise working, and the capability they ask for
+              is gone either way. Same rule as SendingPhoneNumberProfileId.
+
+              The read is what makes this survivable: every profile reports all four as false,
+              so a caller that checks its own write can see it did not take. Requests carrying
+              one are logged, so we can tell when nobody sends them any more and the fields
+              can go for real.
 
           billing_contact: Billing contact information for a profile. Required when billing_model is
               "profile" or "profile_and_organization".
@@ -159,19 +174,15 @@ class ProfilesResource(SyncAPIResource):
 
           icon: Profile icon URL (optional)
 
-          inherit_contacts: Whether this profile inherits contacts from organization (default: true)
+          inherit_tcr_brand: Whether this profile inherits TCR brand from organization (default: false)
 
-          inherit_tcr_brand: Whether this profile inherits TCR brand from organization (default: true)
-
-          inherit_tcr_campaign: Whether this profile inherits TCR campaign from organization (default: true)
-
-          inherit_templates: Whether this profile inherits templates from organization (default: true)
+          inherit_tcr_campaign: Whether this profile inherits TCR campaign from organization (default: false)
 
           name: Profile name (required)
 
-          payment_details: Payment card details for a profile. Accepted when billing_model is "profile" or
-              "profile_and_organization". These details are not stored on our servers and will
-              be forwarded to the payment processor.
+          payment_details: Payment card details for this profile (optional). Accepted when billing_model is
+              "profile" or "profile_and_organization". Not persisted on our servers —
+              forwarded to the payment processor.
 
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
@@ -229,9 +240,10 @@ class ProfilesResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfProfileDetail,
+            cast_to=ProfileCreateResponse,
         )
 
+    @typing_extensions.deprecated("deprecated")
     def retrieve(
         self,
         profile_id: str,
@@ -243,8 +255,14 @@ class ProfilesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfProfileDetail:
+    ) -> ProfileRetrieveResponse:
         """
+        **Deprecated.** This endpoint is replaced by `/v3/sender-profiles` and will be
+        removed in a future release. It still behaves exactly as before, so nothing
+        needs to change today — but new integrations should use `/v3/sender-profiles`,
+        which models a profile's markets, compliance, brand, campaigns and billing
+        explicitly.
+
         Retrieves detailed information about a specific sender profile within an
         organization, including brand and KYC information if a brand has been
         configured.
@@ -266,9 +284,10 @@ class ProfilesResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfProfileDetail,
+            cast_to=ProfileRetrieveResponse,
         )
 
+    @typing_extensions.deprecated("deprecated")
     def update(
         self,
         profile_id: str,
@@ -276,9 +295,9 @@ class ProfilesResource(SyncAPIResource):
         allow_contact_sharing: Optional[bool] | Omit = omit,
         allow_number_change_during_onboarding: Optional[bool] | Omit = omit,
         allow_template_sharing: Optional[bool] | Omit = omit,
-        billing_contact: Optional[BillingContactInfoParam] | Omit = omit,
+        billing_contact: Optional[profile_update_params.BillingContact] | Omit = omit,
         billing_model: Optional[str] | Omit = omit,
-        brand: Optional[BrandsBrandDataParam] | Omit = omit,
+        brand: Optional[profile_update_params.Brand] | Omit = omit,
         description: Optional[str] | Omit = omit,
         icon: Optional[str] | Omit = omit,
         inherit_contacts: Optional[bool] | Omit = omit,
@@ -286,7 +305,7 @@ class ProfilesResource(SyncAPIResource):
         inherit_tcr_campaign: Optional[bool] | Omit = omit,
         inherit_templates: Optional[bool] | Omit = omit,
         name: Optional[str] | Omit = omit,
-        payment_details: Optional[PaymentDetailsParam] | Omit = omit,
+        payment_details: Optional[profile_update_params.PaymentDetails] | Omit = omit,
         sandbox: bool | Omit = omit,
         sending_phone_number: Optional[str] | Omit = omit,
         sending_phone_number_profile_id: Optional[str] | Omit = omit,
@@ -301,10 +320,15 @@ class ProfilesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfProfileDetail:
-        """Updates a profile's configuration and settings.
+    ) -> ProfileUpdateResponse:
+        """
+        **Deprecated.** This endpoint is replaced by `/v3/sender-profiles` and will be
+        removed in a future release. It still behaves exactly as before, so nothing
+        needs to change today — but new integrations should use `/v3/sender-profiles`,
+        which models a profile's markets, compliance, brand, campaigns and billing
+        explicitly.
 
-        Requires admin role in the
+        Updates a profile's configuration and settings. Requires admin role in the
         organization. Only provided fields will be updated (partial update).
 
         ## Brand Management
@@ -323,12 +347,33 @@ class ProfilesResource(SyncAPIResource):
         and are forwarded directly to the payment processor. Providing `payment_details`
         when `billing_model` is `"organization"` is not allowed.
 
+        ## Deprecated fields
+
+        `sending_phone_number_profile_id` and `sending_whatsapp_number_profile_id` are
+        **accepted and ignored**. Sender borrowing is gone: a profile cannot send from
+        another profile's number, because two profiles behind one sender makes an
+        inbound reply and a delivery receipt ambiguous about whose they are.
+
+        Sending either **changes nothing and still returns `200`** — they are kept on
+        the contract so an existing integration keeps working. Reads carry both keys too
+        and always answer `null`, which is how you can confirm the value did not take.
+
+        Give the profile a sender of its own instead — `POST /v3/channels/sms` or
+        `POST /v3/channels/whatsapp`, sent with the `x-profile-id` header naming it.
+
         Args:
-          allow_contact_sharing: Whether contacts are shared across profiles (optional)
+          allow_contact_sharing: Deprecated. Accepted and ignored. Contact and template sharing between sender
+              profiles is gone — a profile sees only what it owns, and the organization still
+              sees all of its profiles' contacts and templates through read-time widening. The
+              four columns behind these flags were dropped by M260720120000.
+
+              Retired the same way as SendingPhoneNumberProfileId, and for the same reason:
+              the properties stay bound so an SDK that assigns them keeps compiling, and a 400
+              would break a working integration over a capability that is gone regardless.
+              Every profile reports all four as false, so a caller that checks its own write
+              can see it did not take.
 
           allow_number_change_during_onboarding: Whether number changes are allowed during onboarding (optional)
-
-          allow_template_sharing: Whether templates are shared across profiles (optional)
 
           billing_contact: Billing contact information for a profile. Required when billing_model is
               "profile" or "profile_and_organization".
@@ -347,28 +392,40 @@ class ProfilesResource(SyncAPIResource):
 
           icon: Profile icon URL (optional)
 
-          inherit_contacts: Whether this profile inherits contacts from organization (optional)
-
           inherit_tcr_brand: Whether this profile inherits TCR brand from organization (optional)
 
           inherit_tcr_campaign: Whether this profile inherits TCR campaign from organization (optional)
 
-          inherit_templates: Whether this profile inherits templates from organization (optional)
-
           name: Profile name (optional)
 
-          payment_details: Payment card details for a profile. Accepted when billing_model is "profile" or
-              "profile_and_organization". These details are not stored on our servers and will
-              be forwarded to the payment processor.
+          payment_details: Payment card details for this profile (optional). Accepted when billing_model is
+              "profile" or "profile_and_organization". Not persisted on our servers —
+              forwarded to the payment processor.
 
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
 
           sending_phone_number: Direct phone number for SMS sending (optional)
 
-          sending_phone_number_profile_id: Reference to another profile to use for SMS configuration (optional)
+          sending_phone_number_profile_id: Deprecated. Accepted and ignored. Sender borrowing is gone: a profile cannot
+              send from another profile's SMS number. Supplying this changes nothing and the
+              request still succeeds.
 
-          sending_whatsapp_number_profile_id: Reference to another profile to use for WhatsApp configuration (optional)
+              Bound rather than dropped so the property survives on the wire and in a
+              generated client — an SDK that assigns it keeps compiling, which is the
+              compatibility this exists for. It is deliberately not refused: a 400 here would
+              break an integration that is otherwise working, and the capability it asks for
+              is gone either way.
+
+              The trade-off, stated plainly. A caller asking for borrowing is told it
+              succeeded when nothing happened. What makes that survivable is the read:
+              sending_phone_number_profile_id comes back null on every profile, so a caller
+              that checks its own write can see it did not take. Every request that carries
+              one is logged, so we can tell when nobody is sending it any more and the field
+              can go for real.
+
+              Give the profile a sender of its own instead: POST /v3/channels/sms with the
+              x-profile-id header naming it.
 
           short_name: Profile short name/abbreviation (optional). Must be 3–11 characters, contain
               only letters, numbers, and spaces, and include at least one letter. Example:
@@ -425,9 +482,10 @@ class ProfilesResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfProfileDetail,
+            cast_to=ProfileUpdateResponse,
         )
 
+    @typing_extensions.deprecated("deprecated")
     def list(
         self,
         *,
@@ -440,6 +498,12 @@ class ProfilesResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ProfileListResponse:
         """
+        **Deprecated.** This endpoint is replaced by `/v3/sender-profiles` and will be
+        removed in a future release. It still behaves exactly as before, so nothing
+        needs to change today — but new integrations should use `/v3/sender-profiles`,
+        which models a profile's markets, compliance, brand, campaigns and billing
+        explicitly.
+
         Retrieves all sender profiles within an organization, including brand
         information for each profile. Profiles represent different brands, departments,
         or use cases within an organization, each with their own messaging
@@ -463,6 +527,7 @@ class ProfilesResource(SyncAPIResource):
             cast_to=ProfileListResponse,
         )
 
+    @typing_extensions.deprecated("deprecated")
     def delete(
         self,
         profile_id: str,
@@ -476,10 +541,18 @@ class ProfilesResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> None:
-        """Soft deletes a sender profile.
+        """
+        **Deprecated.** This endpoint is replaced by `/v3/sender-profiles` and will be
+        removed in a future release. It still behaves exactly as before, so nothing
+        needs to change today — but new integrations should use `/v3/sender-profiles`,
+        which models a profile's markets, compliance, brand, campaigns and billing
+        explicitly.
 
-        The profile will be marked as deleted but data is
-        retained. Requires admin role in the organization.
+        Soft deletes a sender profile. The profile will be marked as deleted but data is
+        retained. Anything it still held is released first: phone numbers return to our
+        inventory and can go to whoever asks next, its own WhatsApp account is
+        deregistered, and its routing rules stop being used. Requires admin role in the
+        organization.
 
         Args:
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
@@ -506,6 +579,7 @@ class ProfilesResource(SyncAPIResource):
             cast_to=NoneType,
         )
 
+    @typing_extensions.deprecated("deprecated")
     def complete(
         self,
         profile_id: str,
@@ -521,17 +595,28 @@ class ProfilesResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ProfileCompleteResponse:
-        """Final step in the profile compliance workflow.
+        """
+        **Deprecated.** This endpoint is replaced by `/v3/sender-profiles` and will be
+        removed in a future release. It still behaves exactly as before, so nothing
+        needs to change today — but new integrations should use `/v3/sender-profiles`,
+        which models a profile's markets, compliance, brand, campaigns and billing
+        explicitly.
 
-        Validates all prerequisites (KYC,
+        Final step in the profile compliance workflow. Validates all prerequisites (KYC,
         brand, campaigns, required documents), connects the profile to the SMS and
-        WhatsApp channels, and sets its status based on configuration. Prerequisites are
-        always validated first: if any fail the call returns 400. If they pass and the
-        profile is already completed, the call returns 200 and does nothing. Otherwise
-        it returns 202 and calls the provided webhook URL when background processing
-        finishes.
+        WhatsApp channels, and marks it onboarded. Prerequisites are always validated
+        first: if any fail the call returns 400 naming every unmet one, and nothing is
+        started. If they pass and the profile is already onboarded, the call returns 200
+        and does nothing. Otherwise it returns 202 and calls the provided webhook URL
+        when background processing finishes.
 
-        Prerequisites:
+        Callable with the organization's API key or the profile's own key. The key's
+        user must be an admin or owner of the profile, or of the organization it belongs
+        to.
+
+        Prerequisites (all but the last are checked before the already-onboarded
+        short-circuit, matching the previous contract; the last is checked after it, so
+        a profile that is already onboarded is never rejected by it):
 
         - Profile must have a name, short name, and description (short name max 50
           characters, description max 5000)
@@ -542,17 +627,18 @@ class ProfilesResource(SyncAPIResource):
         - TCR applications must have at least one campaign, own or inherited
         - Destination countries marked as main must have their required compliance
           documents uploaded
+        - TCR applications must state whether they inherit the organization's TCR brand
+          and campaign
 
-        Resulting status:
+        Outcome:
 
-        - If either the SMS or WhatsApp channel is unconfigured, the profile is
-          SUBMITTED
-        - For a TCR application that inherits both its brand and its campaigns, the
-          profile is COMPLETED
-        - For a TCR application that owns either its brand or its campaigns, the profile
-          is COMPLETED once both have been submitted to TCR, and SUBMITTED until then
-        - For a non-TCR application, the profile is SUBMITTED when a main destination
-          country is set, and COMPLETED otherwise
+        - Once the prerequisites pass and background processing succeeds, the profile's
+          conversionFlowStatus becomes ONBOARDED and its public status reads `approved`
+        - A profile with no WhatsApp channel, or one still awaiting TCR registration or
+          country documents, is onboarded like any other. Those are answered by the
+          brand and campaign records, not by a status on the profile
+        - If background processing fails, the profile keeps the status it already had
+          and the webhook reports the reason
 
         Args:
           web_hook_url: Webhook URL to call when profile completion finishes (success or failure)
@@ -596,11 +682,21 @@ class ProfilesResource(SyncAPIResource):
 
 
 class AsyncProfilesResource(AsyncAPIResource):
-    """Manage organization profiles"""
+    """**Deprecated — use Sender Profiles.**
+
+    The original profile resource, kept because it has live callers. It still works, and its replacement is `/v3/sender-profiles`, which takes the identity and the campaign in one call instead of across three.
+
+    New integrations should not start here.
+    """
 
     @cached_property
     def campaigns(self) -> AsyncCampaignsResource:
-        """Manage organization profiles"""
+        """**Deprecated — use Sender Profiles.**
+
+        The original profile resource, kept because it has live callers. It still works, and its replacement is `/v3/sender-profiles`, which takes the identity and the campaign in one call instead of across three.
+
+        New integrations should not start here.
+        """
         return AsyncCampaignsResource(self._client)
 
     @cached_property
@@ -622,14 +718,15 @@ class AsyncProfilesResource(AsyncAPIResource):
         """
         return AsyncProfilesResourceWithStreamingResponse(self)
 
+    @typing_extensions.deprecated("deprecated")
     async def create(
         self,
         *,
-        allow_contact_sharing: bool | Omit = omit,
-        allow_template_sharing: bool | Omit = omit,
-        billing_contact: Optional[BillingContactInfoParam] | Omit = omit,
+        allow_contact_sharing: Optional[bool] | Omit = omit,
+        allow_template_sharing: Optional[bool] | Omit = omit,
+        billing_contact: Optional[profile_create_params.BillingContact] | Omit = omit,
         billing_model: Optional[str] | Omit = omit,
-        brand: Optional[BrandsBrandDataParam] | Omit = omit,
+        brand: Optional[profile_create_params.Brand] | Omit = omit,
         description: Optional[str] | Omit = omit,
         icon: Optional[str] | Omit = omit,
         inherit_contacts: Optional[bool] | Omit = omit,
@@ -637,7 +734,7 @@ class AsyncProfilesResource(AsyncAPIResource):
         inherit_tcr_campaign: Optional[bool] | Omit = omit,
         inherit_templates: Optional[bool] | Omit = omit,
         name: str | Omit = omit,
-        payment_details: Optional[PaymentDetailsParam] | Omit = omit,
+        payment_details: Optional[profile_create_params.PaymentDetails] | Omit = omit,
         sandbox: bool | Omit = omit,
         short_name: Optional[str] | Omit = omit,
         whatsapp_business_account: Optional[profile_create_params.WhatsappBusinessAccount] | Omit = omit,
@@ -649,32 +746,29 @@ class AsyncProfilesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfProfileDetail:
-        """Creates a new sender profile within an organization.
+    ) -> ProfileCreateResponse:
+        """
+        **Deprecated.** This endpoint is replaced by `/v3/sender-profiles` and will be
+        removed in a future release. It still behaves exactly as before, so nothing
+        needs to change today — but new integrations should use `/v3/sender-profiles`,
+        which models a profile's markets, compliance, brand, campaigns and billing
+        explicitly.
 
-        Profiles represent
+        Creates a new sender profile within an organization. Profiles represent
         different brands, departments, or use cases, each with their own messaging
         configuration and settings. Requires admin role in the organization.
 
         ## WhatsApp Business Account
 
-        Every profile must be linked to a WhatsApp Business Account. There are two ways
-        to do this:
+        Every profile owns its own WhatsApp Business Account — accounts are never shared
+        between profiles or inherited from the organization. Provide a
+        `whatsapp_business_account` object with `waba_id`, `phone_number_id`, and
+        `access_token`. Obtain these from Meta Business Manager by creating a System
+        User with `whatsapp_business_messaging` and `whatsapp_business_management`
+        permissions.
 
-        **1. Inherit from organization (default)** — Omit the
-        `whatsapp_business_account` field. The profile will share the organization's
-        WhatsApp Business Account, which must have been set up via WhatsApp Embedded
-        Signup. This is the recommended path for most use cases.
-
-        **2. Direct credentials** — Provide a `whatsapp_business_account` object with
-        `waba_id`, `phone_number_id`, and `access_token`. Use this when the profile
-        needs its own independent WhatsApp Business Account. Obtain these from Meta
-        Business Manager by creating a System User with `whatsapp_business_messaging`
-        and `whatsapp_business_management` permissions.
-
-        If the `whatsapp_business_account` field is omitted and the organization has no
-        WhatsApp Business Account configured, the request will be rejected with
-        HTTP 422.
+        Omit the field and the profile is created without WhatsApp, staying incomplete
+        until it has an account of its own.
 
         ## Brand
 
@@ -690,9 +784,21 @@ class AsyncProfilesResource(AsyncAPIResource):
         when `billing_model` is `"organization"` is not allowed.
 
         Args:
-          allow_contact_sharing: Whether contacts are shared across profiles (default: false)
+          allow_contact_sharing: Deprecated. Accepted and ignored. Contact and template sharing between sender
+              profiles is gone — a profile sees only what it owns, and the organization still
+              sees all of its profiles' contacts and templates through read-time widening. The
+              four columns behind these flags were dropped by M260720120000.
 
-          allow_template_sharing: Whether templates are shared across profiles (default: false)
+              Bound rather than dropped so the properties survive on the wire and in a
+              generated client: an SDK that assigns them keeps compiling, which is the
+              compatibility this exists for. Deliberately not refused either — a 400 would
+              break an integration that is otherwise working, and the capability they ask for
+              is gone either way. Same rule as SendingPhoneNumberProfileId.
+
+              The read is what makes this survivable: every profile reports all four as false,
+              so a caller that checks its own write can see it did not take. Requests carrying
+              one are logged, so we can tell when nobody sends them any more and the fields
+              can go for real.
 
           billing_contact: Billing contact information for a profile. Required when billing_model is
               "profile" or "profile_and_organization".
@@ -713,19 +819,15 @@ class AsyncProfilesResource(AsyncAPIResource):
 
           icon: Profile icon URL (optional)
 
-          inherit_contacts: Whether this profile inherits contacts from organization (default: true)
+          inherit_tcr_brand: Whether this profile inherits TCR brand from organization (default: false)
 
-          inherit_tcr_brand: Whether this profile inherits TCR brand from organization (default: true)
-
-          inherit_tcr_campaign: Whether this profile inherits TCR campaign from organization (default: true)
-
-          inherit_templates: Whether this profile inherits templates from organization (default: true)
+          inherit_tcr_campaign: Whether this profile inherits TCR campaign from organization (default: false)
 
           name: Profile name (required)
 
-          payment_details: Payment card details for a profile. Accepted when billing_model is "profile" or
-              "profile_and_organization". These details are not stored on our servers and will
-              be forwarded to the payment processor.
+          payment_details: Payment card details for this profile (optional). Accepted when billing_model is
+              "profile" or "profile_and_organization". Not persisted on our servers —
+              forwarded to the payment processor.
 
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
@@ -783,9 +885,10 @@ class AsyncProfilesResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfProfileDetail,
+            cast_to=ProfileCreateResponse,
         )
 
+    @typing_extensions.deprecated("deprecated")
     async def retrieve(
         self,
         profile_id: str,
@@ -797,8 +900,14 @@ class AsyncProfilesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfProfileDetail:
+    ) -> ProfileRetrieveResponse:
         """
+        **Deprecated.** This endpoint is replaced by `/v3/sender-profiles` and will be
+        removed in a future release. It still behaves exactly as before, so nothing
+        needs to change today — but new integrations should use `/v3/sender-profiles`,
+        which models a profile's markets, compliance, brand, campaigns and billing
+        explicitly.
+
         Retrieves detailed information about a specific sender profile within an
         organization, including brand and KYC information if a brand has been
         configured.
@@ -820,9 +929,10 @@ class AsyncProfilesResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfProfileDetail,
+            cast_to=ProfileRetrieveResponse,
         )
 
+    @typing_extensions.deprecated("deprecated")
     async def update(
         self,
         profile_id: str,
@@ -830,9 +940,9 @@ class AsyncProfilesResource(AsyncAPIResource):
         allow_contact_sharing: Optional[bool] | Omit = omit,
         allow_number_change_during_onboarding: Optional[bool] | Omit = omit,
         allow_template_sharing: Optional[bool] | Omit = omit,
-        billing_contact: Optional[BillingContactInfoParam] | Omit = omit,
+        billing_contact: Optional[profile_update_params.BillingContact] | Omit = omit,
         billing_model: Optional[str] | Omit = omit,
-        brand: Optional[BrandsBrandDataParam] | Omit = omit,
+        brand: Optional[profile_update_params.Brand] | Omit = omit,
         description: Optional[str] | Omit = omit,
         icon: Optional[str] | Omit = omit,
         inherit_contacts: Optional[bool] | Omit = omit,
@@ -840,7 +950,7 @@ class AsyncProfilesResource(AsyncAPIResource):
         inherit_tcr_campaign: Optional[bool] | Omit = omit,
         inherit_templates: Optional[bool] | Omit = omit,
         name: Optional[str] | Omit = omit,
-        payment_details: Optional[PaymentDetailsParam] | Omit = omit,
+        payment_details: Optional[profile_update_params.PaymentDetails] | Omit = omit,
         sandbox: bool | Omit = omit,
         sending_phone_number: Optional[str] | Omit = omit,
         sending_phone_number_profile_id: Optional[str] | Omit = omit,
@@ -855,10 +965,15 @@ class AsyncProfilesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfProfileDetail:
-        """Updates a profile's configuration and settings.
+    ) -> ProfileUpdateResponse:
+        """
+        **Deprecated.** This endpoint is replaced by `/v3/sender-profiles` and will be
+        removed in a future release. It still behaves exactly as before, so nothing
+        needs to change today — but new integrations should use `/v3/sender-profiles`,
+        which models a profile's markets, compliance, brand, campaigns and billing
+        explicitly.
 
-        Requires admin role in the
+        Updates a profile's configuration and settings. Requires admin role in the
         organization. Only provided fields will be updated (partial update).
 
         ## Brand Management
@@ -877,12 +992,33 @@ class AsyncProfilesResource(AsyncAPIResource):
         and are forwarded directly to the payment processor. Providing `payment_details`
         when `billing_model` is `"organization"` is not allowed.
 
+        ## Deprecated fields
+
+        `sending_phone_number_profile_id` and `sending_whatsapp_number_profile_id` are
+        **accepted and ignored**. Sender borrowing is gone: a profile cannot send from
+        another profile's number, because two profiles behind one sender makes an
+        inbound reply and a delivery receipt ambiguous about whose they are.
+
+        Sending either **changes nothing and still returns `200`** — they are kept on
+        the contract so an existing integration keeps working. Reads carry both keys too
+        and always answer `null`, which is how you can confirm the value did not take.
+
+        Give the profile a sender of its own instead — `POST /v3/channels/sms` or
+        `POST /v3/channels/whatsapp`, sent with the `x-profile-id` header naming it.
+
         Args:
-          allow_contact_sharing: Whether contacts are shared across profiles (optional)
+          allow_contact_sharing: Deprecated. Accepted and ignored. Contact and template sharing between sender
+              profiles is gone — a profile sees only what it owns, and the organization still
+              sees all of its profiles' contacts and templates through read-time widening. The
+              four columns behind these flags were dropped by M260720120000.
+
+              Retired the same way as SendingPhoneNumberProfileId, and for the same reason:
+              the properties stay bound so an SDK that assigns them keeps compiling, and a 400
+              would break a working integration over a capability that is gone regardless.
+              Every profile reports all four as false, so a caller that checks its own write
+              can see it did not take.
 
           allow_number_change_during_onboarding: Whether number changes are allowed during onboarding (optional)
-
-          allow_template_sharing: Whether templates are shared across profiles (optional)
 
           billing_contact: Billing contact information for a profile. Required when billing_model is
               "profile" or "profile_and_organization".
@@ -901,28 +1037,40 @@ class AsyncProfilesResource(AsyncAPIResource):
 
           icon: Profile icon URL (optional)
 
-          inherit_contacts: Whether this profile inherits contacts from organization (optional)
-
           inherit_tcr_brand: Whether this profile inherits TCR brand from organization (optional)
 
           inherit_tcr_campaign: Whether this profile inherits TCR campaign from organization (optional)
 
-          inherit_templates: Whether this profile inherits templates from organization (optional)
-
           name: Profile name (optional)
 
-          payment_details: Payment card details for a profile. Accepted when billing_model is "profile" or
-              "profile_and_organization". These details are not stored on our servers and will
-              be forwarded to the payment processor.
+          payment_details: Payment card details for this profile (optional). Accepted when billing_model is
+              "profile" or "profile_and_organization". Not persisted on our servers —
+              forwarded to the payment processor.
 
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
 
           sending_phone_number: Direct phone number for SMS sending (optional)
 
-          sending_phone_number_profile_id: Reference to another profile to use for SMS configuration (optional)
+          sending_phone_number_profile_id: Deprecated. Accepted and ignored. Sender borrowing is gone: a profile cannot
+              send from another profile's SMS number. Supplying this changes nothing and the
+              request still succeeds.
 
-          sending_whatsapp_number_profile_id: Reference to another profile to use for WhatsApp configuration (optional)
+              Bound rather than dropped so the property survives on the wire and in a
+              generated client — an SDK that assigns it keeps compiling, which is the
+              compatibility this exists for. It is deliberately not refused: a 400 here would
+              break an integration that is otherwise working, and the capability it asks for
+              is gone either way.
+
+              The trade-off, stated plainly. A caller asking for borrowing is told it
+              succeeded when nothing happened. What makes that survivable is the read:
+              sending_phone_number_profile_id comes back null on every profile, so a caller
+              that checks its own write can see it did not take. Every request that carries
+              one is logged, so we can tell when nobody is sending it any more and the field
+              can go for real.
+
+              Give the profile a sender of its own instead: POST /v3/channels/sms with the
+              x-profile-id header naming it.
 
           short_name: Profile short name/abbreviation (optional). Must be 3–11 characters, contain
               only letters, numbers, and spaces, and include at least one letter. Example:
@@ -979,9 +1127,10 @@ class AsyncProfilesResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfProfileDetail,
+            cast_to=ProfileUpdateResponse,
         )
 
+    @typing_extensions.deprecated("deprecated")
     async def list(
         self,
         *,
@@ -994,6 +1143,12 @@ class AsyncProfilesResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ProfileListResponse:
         """
+        **Deprecated.** This endpoint is replaced by `/v3/sender-profiles` and will be
+        removed in a future release. It still behaves exactly as before, so nothing
+        needs to change today — but new integrations should use `/v3/sender-profiles`,
+        which models a profile's markets, compliance, brand, campaigns and billing
+        explicitly.
+
         Retrieves all sender profiles within an organization, including brand
         information for each profile. Profiles represent different brands, departments,
         or use cases within an organization, each with their own messaging
@@ -1017,6 +1172,7 @@ class AsyncProfilesResource(AsyncAPIResource):
             cast_to=ProfileListResponse,
         )
 
+    @typing_extensions.deprecated("deprecated")
     async def delete(
         self,
         profile_id: str,
@@ -1030,10 +1186,18 @@ class AsyncProfilesResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> None:
-        """Soft deletes a sender profile.
+        """
+        **Deprecated.** This endpoint is replaced by `/v3/sender-profiles` and will be
+        removed in a future release. It still behaves exactly as before, so nothing
+        needs to change today — but new integrations should use `/v3/sender-profiles`,
+        which models a profile's markets, compliance, brand, campaigns and billing
+        explicitly.
 
-        The profile will be marked as deleted but data is
-        retained. Requires admin role in the organization.
+        Soft deletes a sender profile. The profile will be marked as deleted but data is
+        retained. Anything it still held is released first: phone numbers return to our
+        inventory and can go to whoever asks next, its own WhatsApp account is
+        deregistered, and its routing rules stop being used. Requires admin role in the
+        organization.
 
         Args:
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
@@ -1060,6 +1224,7 @@ class AsyncProfilesResource(AsyncAPIResource):
             cast_to=NoneType,
         )
 
+    @typing_extensions.deprecated("deprecated")
     async def complete(
         self,
         profile_id: str,
@@ -1075,17 +1240,28 @@ class AsyncProfilesResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ProfileCompleteResponse:
-        """Final step in the profile compliance workflow.
+        """
+        **Deprecated.** This endpoint is replaced by `/v3/sender-profiles` and will be
+        removed in a future release. It still behaves exactly as before, so nothing
+        needs to change today — but new integrations should use `/v3/sender-profiles`,
+        which models a profile's markets, compliance, brand, campaigns and billing
+        explicitly.
 
-        Validates all prerequisites (KYC,
+        Final step in the profile compliance workflow. Validates all prerequisites (KYC,
         brand, campaigns, required documents), connects the profile to the SMS and
-        WhatsApp channels, and sets its status based on configuration. Prerequisites are
-        always validated first: if any fail the call returns 400. If they pass and the
-        profile is already completed, the call returns 200 and does nothing. Otherwise
-        it returns 202 and calls the provided webhook URL when background processing
-        finishes.
+        WhatsApp channels, and marks it onboarded. Prerequisites are always validated
+        first: if any fail the call returns 400 naming every unmet one, and nothing is
+        started. If they pass and the profile is already onboarded, the call returns 200
+        and does nothing. Otherwise it returns 202 and calls the provided webhook URL
+        when background processing finishes.
 
-        Prerequisites:
+        Callable with the organization's API key or the profile's own key. The key's
+        user must be an admin or owner of the profile, or of the organization it belongs
+        to.
+
+        Prerequisites (all but the last are checked before the already-onboarded
+        short-circuit, matching the previous contract; the last is checked after it, so
+        a profile that is already onboarded is never rejected by it):
 
         - Profile must have a name, short name, and description (short name max 50
           characters, description max 5000)
@@ -1096,17 +1272,18 @@ class AsyncProfilesResource(AsyncAPIResource):
         - TCR applications must have at least one campaign, own or inherited
         - Destination countries marked as main must have their required compliance
           documents uploaded
+        - TCR applications must state whether they inherit the organization's TCR brand
+          and campaign
 
-        Resulting status:
+        Outcome:
 
-        - If either the SMS or WhatsApp channel is unconfigured, the profile is
-          SUBMITTED
-        - For a TCR application that inherits both its brand and its campaigns, the
-          profile is COMPLETED
-        - For a TCR application that owns either its brand or its campaigns, the profile
-          is COMPLETED once both have been submitted to TCR, and SUBMITTED until then
-        - For a non-TCR application, the profile is SUBMITTED when a main destination
-          country is set, and COMPLETED otherwise
+        - Once the prerequisites pass and background processing succeeds, the profile's
+          conversionFlowStatus becomes ONBOARDED and its public status reads `approved`
+        - A profile with no WhatsApp channel, or one still awaiting TCR registration or
+          country documents, is onboarded like any other. Those are answered by the
+          brand and campaign records, not by a status on the profile
+        - If background processing fails, the profile keeps the status it already had
+          and the webhook reports the reason
 
         Args:
           web_hook_url: Webhook URL to call when profile completion finishes (success or failure)
@@ -1153,28 +1330,45 @@ class ProfilesResourceWithRawResponse:
     def __init__(self, profiles: ProfilesResource) -> None:
         self._profiles = profiles
 
-        self.create = to_raw_response_wrapper(
-            profiles.create,
+        self.create = (  # pyright: ignore[reportDeprecated]
+            to_raw_response_wrapper(
+                profiles.create,  # pyright: ignore[reportDeprecated],
+            )
         )
-        self.retrieve = to_raw_response_wrapper(
-            profiles.retrieve,
+        self.retrieve = (  # pyright: ignore[reportDeprecated]
+            to_raw_response_wrapper(
+                profiles.retrieve,  # pyright: ignore[reportDeprecated],
+            )
         )
-        self.update = to_raw_response_wrapper(
-            profiles.update,
+        self.update = (  # pyright: ignore[reportDeprecated]
+            to_raw_response_wrapper(
+                profiles.update,  # pyright: ignore[reportDeprecated],
+            )
         )
-        self.list = to_raw_response_wrapper(
-            profiles.list,
+        self.list = (  # pyright: ignore[reportDeprecated]
+            to_raw_response_wrapper(
+                profiles.list,  # pyright: ignore[reportDeprecated],
+            )
         )
-        self.delete = to_raw_response_wrapper(
-            profiles.delete,
+        self.delete = (  # pyright: ignore[reportDeprecated]
+            to_raw_response_wrapper(
+                profiles.delete,  # pyright: ignore[reportDeprecated],
+            )
         )
-        self.complete = to_raw_response_wrapper(
-            profiles.complete,
+        self.complete = (  # pyright: ignore[reportDeprecated]
+            to_raw_response_wrapper(
+                profiles.complete,  # pyright: ignore[reportDeprecated],
+            )
         )
 
     @cached_property
     def campaigns(self) -> CampaignsResourceWithRawResponse:
-        """Manage organization profiles"""
+        """**Deprecated — use Sender Profiles.**
+
+        The original profile resource, kept because it has live callers. It still works, and its replacement is `/v3/sender-profiles`, which takes the identity and the campaign in one call instead of across three.
+
+        New integrations should not start here.
+        """
         return CampaignsResourceWithRawResponse(self._profiles.campaigns)
 
 
@@ -1182,28 +1376,45 @@ class AsyncProfilesResourceWithRawResponse:
     def __init__(self, profiles: AsyncProfilesResource) -> None:
         self._profiles = profiles
 
-        self.create = async_to_raw_response_wrapper(
-            profiles.create,
+        self.create = (  # pyright: ignore[reportDeprecated]
+            async_to_raw_response_wrapper(
+                profiles.create,  # pyright: ignore[reportDeprecated],
+            )
         )
-        self.retrieve = async_to_raw_response_wrapper(
-            profiles.retrieve,
+        self.retrieve = (  # pyright: ignore[reportDeprecated]
+            async_to_raw_response_wrapper(
+                profiles.retrieve,  # pyright: ignore[reportDeprecated],
+            )
         )
-        self.update = async_to_raw_response_wrapper(
-            profiles.update,
+        self.update = (  # pyright: ignore[reportDeprecated]
+            async_to_raw_response_wrapper(
+                profiles.update,  # pyright: ignore[reportDeprecated],
+            )
         )
-        self.list = async_to_raw_response_wrapper(
-            profiles.list,
+        self.list = (  # pyright: ignore[reportDeprecated]
+            async_to_raw_response_wrapper(
+                profiles.list,  # pyright: ignore[reportDeprecated],
+            )
         )
-        self.delete = async_to_raw_response_wrapper(
-            profiles.delete,
+        self.delete = (  # pyright: ignore[reportDeprecated]
+            async_to_raw_response_wrapper(
+                profiles.delete,  # pyright: ignore[reportDeprecated],
+            )
         )
-        self.complete = async_to_raw_response_wrapper(
-            profiles.complete,
+        self.complete = (  # pyright: ignore[reportDeprecated]
+            async_to_raw_response_wrapper(
+                profiles.complete,  # pyright: ignore[reportDeprecated],
+            )
         )
 
     @cached_property
     def campaigns(self) -> AsyncCampaignsResourceWithRawResponse:
-        """Manage organization profiles"""
+        """**Deprecated — use Sender Profiles.**
+
+        The original profile resource, kept because it has live callers. It still works, and its replacement is `/v3/sender-profiles`, which takes the identity and the campaign in one call instead of across three.
+
+        New integrations should not start here.
+        """
         return AsyncCampaignsResourceWithRawResponse(self._profiles.campaigns)
 
 
@@ -1211,28 +1422,45 @@ class ProfilesResourceWithStreamingResponse:
     def __init__(self, profiles: ProfilesResource) -> None:
         self._profiles = profiles
 
-        self.create = to_streamed_response_wrapper(
-            profiles.create,
+        self.create = (  # pyright: ignore[reportDeprecated]
+            to_streamed_response_wrapper(
+                profiles.create,  # pyright: ignore[reportDeprecated],
+            )
         )
-        self.retrieve = to_streamed_response_wrapper(
-            profiles.retrieve,
+        self.retrieve = (  # pyright: ignore[reportDeprecated]
+            to_streamed_response_wrapper(
+                profiles.retrieve,  # pyright: ignore[reportDeprecated],
+            )
         )
-        self.update = to_streamed_response_wrapper(
-            profiles.update,
+        self.update = (  # pyright: ignore[reportDeprecated]
+            to_streamed_response_wrapper(
+                profiles.update,  # pyright: ignore[reportDeprecated],
+            )
         )
-        self.list = to_streamed_response_wrapper(
-            profiles.list,
+        self.list = (  # pyright: ignore[reportDeprecated]
+            to_streamed_response_wrapper(
+                profiles.list,  # pyright: ignore[reportDeprecated],
+            )
         )
-        self.delete = to_streamed_response_wrapper(
-            profiles.delete,
+        self.delete = (  # pyright: ignore[reportDeprecated]
+            to_streamed_response_wrapper(
+                profiles.delete,  # pyright: ignore[reportDeprecated],
+            )
         )
-        self.complete = to_streamed_response_wrapper(
-            profiles.complete,
+        self.complete = (  # pyright: ignore[reportDeprecated]
+            to_streamed_response_wrapper(
+                profiles.complete,  # pyright: ignore[reportDeprecated],
+            )
         )
 
     @cached_property
     def campaigns(self) -> CampaignsResourceWithStreamingResponse:
-        """Manage organization profiles"""
+        """**Deprecated — use Sender Profiles.**
+
+        The original profile resource, kept because it has live callers. It still works, and its replacement is `/v3/sender-profiles`, which takes the identity and the campaign in one call instead of across three.
+
+        New integrations should not start here.
+        """
         return CampaignsResourceWithStreamingResponse(self._profiles.campaigns)
 
 
@@ -1240,26 +1468,43 @@ class AsyncProfilesResourceWithStreamingResponse:
     def __init__(self, profiles: AsyncProfilesResource) -> None:
         self._profiles = profiles
 
-        self.create = async_to_streamed_response_wrapper(
-            profiles.create,
+        self.create = (  # pyright: ignore[reportDeprecated]
+            async_to_streamed_response_wrapper(
+                profiles.create,  # pyright: ignore[reportDeprecated],
+            )
         )
-        self.retrieve = async_to_streamed_response_wrapper(
-            profiles.retrieve,
+        self.retrieve = (  # pyright: ignore[reportDeprecated]
+            async_to_streamed_response_wrapper(
+                profiles.retrieve,  # pyright: ignore[reportDeprecated],
+            )
         )
-        self.update = async_to_streamed_response_wrapper(
-            profiles.update,
+        self.update = (  # pyright: ignore[reportDeprecated]
+            async_to_streamed_response_wrapper(
+                profiles.update,  # pyright: ignore[reportDeprecated],
+            )
         )
-        self.list = async_to_streamed_response_wrapper(
-            profiles.list,
+        self.list = (  # pyright: ignore[reportDeprecated]
+            async_to_streamed_response_wrapper(
+                profiles.list,  # pyright: ignore[reportDeprecated],
+            )
         )
-        self.delete = async_to_streamed_response_wrapper(
-            profiles.delete,
+        self.delete = (  # pyright: ignore[reportDeprecated]
+            async_to_streamed_response_wrapper(
+                profiles.delete,  # pyright: ignore[reportDeprecated],
+            )
         )
-        self.complete = async_to_streamed_response_wrapper(
-            profiles.complete,
+        self.complete = (  # pyright: ignore[reportDeprecated]
+            async_to_streamed_response_wrapper(
+                profiles.complete,  # pyright: ignore[reportDeprecated],
+            )
         )
 
     @cached_property
     def campaigns(self) -> AsyncCampaignsResourceWithStreamingResponse:
-        """Manage organization profiles"""
+        """**Deprecated — use Sender Profiles.**
+
+        The original profile resource, kept because it has live callers. It still works, and its replacement is `/v3/sender-profiles`, which takes the identity and the campaign in one call instead of across three.
+
+        New integrations should not start here.
+        """
         return AsyncCampaignsResourceWithStreamingResponse(self._profiles.campaigns)

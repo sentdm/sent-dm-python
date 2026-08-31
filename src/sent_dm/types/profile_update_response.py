@@ -10,54 +10,19 @@ from .destination_country import DestinationCountry
 from .tcr_brand_relationship import TcrBrandRelationship
 
 __all__ = [
-    "ProfileListResponse",
+    "ProfileUpdateResponse",
     "Data",
-    "DataPagination",
-    "DataPaginationCursors",
-    "DataProfile",
-    "DataProfileBillingContact",
-    "DataProfileBrand",
-    "DataProfileBrandBusiness",
-    "DataProfileBrandCompliance",
-    "DataProfileBrandContact",
+    "DataBillingContact",
+    "DataBrand",
+    "DataBrandBusiness",
+    "DataBrandCompliance",
+    "DataBrandContact",
     "Error",
     "Meta",
 ]
 
 
-class DataPaginationCursors(BaseModel):
-    """Cursor-based pagination. Never populated — see Cursors."""
-
-    after: Optional[str] = None
-    """Cursor to fetch the next page."""
-
-    before: Optional[str] = None
-    """Cursor to fetch the previous page."""
-
-
-class DataPagination(BaseModel):
-    """Pagination metadata for list responses"""
-
-    cursors: Optional[DataPaginationCursors] = None
-    """Cursor-based pagination. Never populated — see Cursors."""
-
-    has_more: Optional[bool] = None
-    """Whether there are more pages after this one"""
-
-    page: Optional[int] = None
-    """Current page number (1-indexed)"""
-
-    page_size: Optional[int] = None
-    """Number of items per page"""
-
-    total_count: Optional[int] = None
-    """Total number of items across all pages"""
-
-    total_pages: Optional[int] = None
-    """Total number of pages"""
-
-
-class DataProfileBillingContact(BaseModel):
+class DataBillingContact(BaseModel):
     """Billing contact info returned in profile responses"""
 
     address: Optional[str] = None
@@ -69,7 +34,7 @@ class DataProfileBillingContact(BaseModel):
     phone: Optional[str] = None
 
 
-class DataProfileBrandBusiness(BaseModel):
+class DataBrandBusiness(BaseModel):
     """Business details and address information"""
 
     city: Optional[str] = None
@@ -106,7 +71,7 @@ class DataProfileBrandBusiness(BaseModel):
     """Business website URL"""
 
 
-class DataProfileBrandCompliance(BaseModel):
+class DataBrandCompliance(BaseModel):
     """Compliance and TCR-related information"""
 
     brand_relationship: Optional[TcrBrandRelationship] = None
@@ -139,7 +104,7 @@ class DataProfileBrandCompliance(BaseModel):
     vertical: Optional[TcrVertical] = None
 
 
-class DataProfileBrandContact(BaseModel):
+class DataBrandContact(BaseModel):
     """Contact information for the brand"""
 
     business_name: Optional[str] = None
@@ -161,7 +126,7 @@ class DataProfileBrandContact(BaseModel):
     """Contact's role in the business"""
 
 
-class DataProfileBrand(BaseModel):
+class DataBrand(BaseModel):
     """
     Brand response with nested contact, business, and compliance sections — mirrors the request structure.
     """
@@ -169,13 +134,13 @@ class DataProfileBrand(BaseModel):
     id: Optional[str] = None
     """Unique identifier for the brand"""
 
-    business: Optional[DataProfileBrandBusiness] = None
+    business: Optional[DataBrandBusiness] = None
     """Business details and address information"""
 
-    compliance: Optional[DataProfileBrandCompliance] = None
+    compliance: Optional[DataBrandCompliance] = None
     """Compliance and TCR-related information"""
 
-    contact: Optional[DataProfileBrandContact] = None
+    contact: Optional[DataBrandContact] = None
     """Contact information for the brand"""
 
     created_at: Optional[datetime] = None
@@ -212,7 +177,7 @@ class DataProfileBrand(BaseModel):
     """When the brand was last updated"""
 
 
-class DataProfile(BaseModel):
+class Data(BaseModel):
     """Detailed profile response for v3 API"""
 
     id: Optional[str] = None
@@ -237,13 +202,13 @@ class DataProfile(BaseModel):
     information.
     """
 
-    billing_contact: Optional[DataProfileBillingContact] = None
+    billing_contact: Optional[DataBillingContact] = None
     """Billing contact info returned in profile responses"""
 
     billing_model: Optional[str] = None
     """Billing model: profile, organization, or profile_and_organization"""
 
-    brand: Optional[DataProfileBrand] = None
+    brand: Optional[DataBrand] = None
     """
     Brand response with nested contact, business, and compliance sections — mirrors
     the request structure.
@@ -335,16 +300,6 @@ class DataProfile(BaseModel):
     """Direct WhatsApp phone number"""
 
 
-class Data(BaseModel):
-    """The profiles in the organization."""
-
-    pagination: Optional[DataPagination] = None
-    """Pagination metadata for list responses"""
-
-    profiles: Optional[List[DataProfile]] = None
-    """The profiles on this page."""
-
-
 class Error(BaseModel):
     """Error information"""
 
@@ -374,11 +329,11 @@ class Meta(BaseModel):
     """API version used for this request"""
 
 
-class ProfileListResponse(BaseModel):
+class ProfileUpdateResponse(BaseModel):
     """Standard API response envelope for all v3 endpoints"""
 
     data: Optional[Data] = None
-    """The profiles in the organization."""
+    """Detailed profile response for v3 API"""
 
     error: Optional[Error] = None
     """Error information"""

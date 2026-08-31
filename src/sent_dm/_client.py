@@ -116,62 +116,100 @@ class Sent(SyncAPIClient):
 
     @cached_property
     def webhooks(self) -> WebhooksResource:
-        """Configure webhook endpoints for real-time event delivery"""
+        """Delivery reports and inbound messages, pushed to you.
+
+        Subscribe an endpoint to the event types you care about — `GET /v3/webhooks/event-types` lists them — and we POST each one as it happens, retrying on failure. Polling `GET /v3/messages/{id}` works and does not scale.
+
+        **Verify the signature.** Every delivery is signed with your endpoint's secret; an unverified endpoint is one anybody can post to. `rotate-secret` replaces it, `test` sends a specimen event, and `GET /v3/webhooks/{id}/events` shows what we tried to deliver and what your endpoint answered — which is the first place to look when something appears to be missing.
+        """
         from .resources.webhooks import WebhooksResource
 
         return WebhooksResource(self)
 
     @cached_property
     def users(self) -> UsersResource:
-        """Invite, update, and manage organization users and roles"""
+        """The people who can sign in to your organization, and what each may do.
+
+        Users are dashboard access and nothing else — they do not send, and removing one does not affect traffic. An API key is not a user: it belongs to the organization or to a sender profile, so revoking a person's access leaves your integration running.
+        """
         from .resources.users import UsersResource
 
         return UsersResource(self)
 
     @cached_property
     def templates(self) -> TemplatesResource:
-        """Manage message templates with variable substitution"""
+        """Reusable message bodies with named variables.
+
+        A template is substituted at send time from the values you pass, so the copy lives here rather than in your application. WhatsApp templates additionally need Meta's approval before they can be sent, and a template's channel status reports where that stands — an approved SMS template and an unapproved WhatsApp one are the same template in two states.
+        """
         from .resources.templates import TemplatesResource
 
         return TemplatesResource(self)
 
     @cached_property
     def profiles(self) -> ProfilesResource:
-        """Manage organization profiles"""
+        """**Deprecated — use Sender Profiles.**
+
+        The original profile resource, kept because it has live callers. It still works, and its replacement is `/v3/sender-profiles`, which takes the identity and the campaign in one call instead of across three.
+
+        New integrations should not start here.
+        """
         from .resources.profiles import ProfilesResource
 
         return ProfilesResource(self)
 
     @cached_property
     def numbers(self) -> NumbersResource:
-        """Manage and lookup phone numbers"""
+        """What a phone number actually is, before you send to it.
+
+        A lookup returns the number's country, line type and carrier, which is what decides whether it is reachable on a channel and what it costs. Worth doing on import rather than on send: a landline in a contact list is a message that can never be delivered.
+        """
         from .resources.numbers import NumbersResource
 
         return NumbersResource(self)
 
     @cached_property
     def messages(self) -> MessagesResource:
-        """Send and track SMS and WhatsApp messages"""
+        """Send a message and follow what happened to it.
+
+        One endpoint sends on any channel: pass `channel: "sent"` and we pick between SMS, WhatsApp and RCS per recipient using your routing rules, or name a channel to pin it. A send is accepted asynchronously — `POST /v3/messages` returns an id, and delivery is reported through `GET /v3/messages/{id}`, its activities, or a webhook.
+
+        **A message needs a sender.** What you can send, where, and at what cost is decided by the markets under **Channels** — so a recipient in a country you hold no sender for is refused here rather than queued.
+        """
         from .resources.messages import MessagesResource
 
         return MessagesResource(self)
 
     @cached_property
     def contacts(self) -> ContactsResource:
-        """Create, update, and manage customer contact lists"""
+        """The people you message, and their channel identities.
+
+        A contact holds one identity per channel — a phone number, a WhatsApp number — so routing can choose between them for the same person. Opt-out is recorded against the contact and honoured on every send, whichever channel it came through.
+
+        `GET /v3/contacts/{id}/message-summary` is the per-contact view of what you have sent and what happened to it.
+        """
         from .resources.contacts import ContactsResource
 
         return ContactsResource(self)
 
     @cached_property
     def conversations(self) -> ConversationsResource:
+        """Inbound and outbound messages, grouped by the person they are with.
+
+        A conversation is the thread for one contact across every channel — a reply by SMS and one by WhatsApp belong to the same conversation, because they are the same person talking to you.
+
+        Read-only. Sending is **Messages**; a reply arrives here and through your webhooks.
+        """
         from .resources.conversations import ConversationsResource
 
         return ConversationsResource(self)
 
     @cached_property
     def me(self) -> MeResource:
-        """Retrieve account details"""
+        """Who the current key is.
+
+        `GET /v3/me` answers with the account the key authenticates as, which is the quickest way to tell a live key from a test one, an organization key from a sender profile's, and to confirm `x-profile-id` resolved to the profile you meant.
+        """
         from .resources.me import MeResource
 
         return MeResource(self)
@@ -362,62 +400,100 @@ class AsyncSent(AsyncAPIClient):
 
     @cached_property
     def webhooks(self) -> AsyncWebhooksResource:
-        """Configure webhook endpoints for real-time event delivery"""
+        """Delivery reports and inbound messages, pushed to you.
+
+        Subscribe an endpoint to the event types you care about — `GET /v3/webhooks/event-types` lists them — and we POST each one as it happens, retrying on failure. Polling `GET /v3/messages/{id}` works and does not scale.
+
+        **Verify the signature.** Every delivery is signed with your endpoint's secret; an unverified endpoint is one anybody can post to. `rotate-secret` replaces it, `test` sends a specimen event, and `GET /v3/webhooks/{id}/events` shows what we tried to deliver and what your endpoint answered — which is the first place to look when something appears to be missing.
+        """
         from .resources.webhooks import AsyncWebhooksResource
 
         return AsyncWebhooksResource(self)
 
     @cached_property
     def users(self) -> AsyncUsersResource:
-        """Invite, update, and manage organization users and roles"""
+        """The people who can sign in to your organization, and what each may do.
+
+        Users are dashboard access and nothing else — they do not send, and removing one does not affect traffic. An API key is not a user: it belongs to the organization or to a sender profile, so revoking a person's access leaves your integration running.
+        """
         from .resources.users import AsyncUsersResource
 
         return AsyncUsersResource(self)
 
     @cached_property
     def templates(self) -> AsyncTemplatesResource:
-        """Manage message templates with variable substitution"""
+        """Reusable message bodies with named variables.
+
+        A template is substituted at send time from the values you pass, so the copy lives here rather than in your application. WhatsApp templates additionally need Meta's approval before they can be sent, and a template's channel status reports where that stands — an approved SMS template and an unapproved WhatsApp one are the same template in two states.
+        """
         from .resources.templates import AsyncTemplatesResource
 
         return AsyncTemplatesResource(self)
 
     @cached_property
     def profiles(self) -> AsyncProfilesResource:
-        """Manage organization profiles"""
+        """**Deprecated — use Sender Profiles.**
+
+        The original profile resource, kept because it has live callers. It still works, and its replacement is `/v3/sender-profiles`, which takes the identity and the campaign in one call instead of across three.
+
+        New integrations should not start here.
+        """
         from .resources.profiles import AsyncProfilesResource
 
         return AsyncProfilesResource(self)
 
     @cached_property
     def numbers(self) -> AsyncNumbersResource:
-        """Manage and lookup phone numbers"""
+        """What a phone number actually is, before you send to it.
+
+        A lookup returns the number's country, line type and carrier, which is what decides whether it is reachable on a channel and what it costs. Worth doing on import rather than on send: a landline in a contact list is a message that can never be delivered.
+        """
         from .resources.numbers import AsyncNumbersResource
 
         return AsyncNumbersResource(self)
 
     @cached_property
     def messages(self) -> AsyncMessagesResource:
-        """Send and track SMS and WhatsApp messages"""
+        """Send a message and follow what happened to it.
+
+        One endpoint sends on any channel: pass `channel: "sent"` and we pick between SMS, WhatsApp and RCS per recipient using your routing rules, or name a channel to pin it. A send is accepted asynchronously — `POST /v3/messages` returns an id, and delivery is reported through `GET /v3/messages/{id}`, its activities, or a webhook.
+
+        **A message needs a sender.** What you can send, where, and at what cost is decided by the markets under **Channels** — so a recipient in a country you hold no sender for is refused here rather than queued.
+        """
         from .resources.messages import AsyncMessagesResource
 
         return AsyncMessagesResource(self)
 
     @cached_property
     def contacts(self) -> AsyncContactsResource:
-        """Create, update, and manage customer contact lists"""
+        """The people you message, and their channel identities.
+
+        A contact holds one identity per channel — a phone number, a WhatsApp number — so routing can choose between them for the same person. Opt-out is recorded against the contact and honoured on every send, whichever channel it came through.
+
+        `GET /v3/contacts/{id}/message-summary` is the per-contact view of what you have sent and what happened to it.
+        """
         from .resources.contacts import AsyncContactsResource
 
         return AsyncContactsResource(self)
 
     @cached_property
     def conversations(self) -> AsyncConversationsResource:
+        """Inbound and outbound messages, grouped by the person they are with.
+
+        A conversation is the thread for one contact across every channel — a reply by SMS and one by WhatsApp belong to the same conversation, because they are the same person talking to you.
+
+        Read-only. Sending is **Messages**; a reply arrives here and through your webhooks.
+        """
         from .resources.conversations import AsyncConversationsResource
 
         return AsyncConversationsResource(self)
 
     @cached_property
     def me(self) -> AsyncMeResource:
-        """Retrieve account details"""
+        """Who the current key is.
+
+        `GET /v3/me` answers with the account the key authenticates as, which is the quickest way to tell a live key from a test one, an organization key from a sender profile's, and to confirm `x-profile-id` resolved to the profile you meant.
+        """
         from .resources.me import AsyncMeResource
 
         return AsyncMeResource(self)
@@ -550,62 +626,100 @@ class SentWithRawResponse:
 
     @cached_property
     def webhooks(self) -> webhooks.WebhooksResourceWithRawResponse:
-        """Configure webhook endpoints for real-time event delivery"""
+        """Delivery reports and inbound messages, pushed to you.
+
+        Subscribe an endpoint to the event types you care about — `GET /v3/webhooks/event-types` lists them — and we POST each one as it happens, retrying on failure. Polling `GET /v3/messages/{id}` works and does not scale.
+
+        **Verify the signature.** Every delivery is signed with your endpoint's secret; an unverified endpoint is one anybody can post to. `rotate-secret` replaces it, `test` sends a specimen event, and `GET /v3/webhooks/{id}/events` shows what we tried to deliver and what your endpoint answered — which is the first place to look when something appears to be missing.
+        """
         from .resources.webhooks import WebhooksResourceWithRawResponse
 
         return WebhooksResourceWithRawResponse(self._client.webhooks)
 
     @cached_property
     def users(self) -> users.UsersResourceWithRawResponse:
-        """Invite, update, and manage organization users and roles"""
+        """The people who can sign in to your organization, and what each may do.
+
+        Users are dashboard access and nothing else — they do not send, and removing one does not affect traffic. An API key is not a user: it belongs to the organization or to a sender profile, so revoking a person's access leaves your integration running.
+        """
         from .resources.users import UsersResourceWithRawResponse
 
         return UsersResourceWithRawResponse(self._client.users)
 
     @cached_property
     def templates(self) -> templates.TemplatesResourceWithRawResponse:
-        """Manage message templates with variable substitution"""
+        """Reusable message bodies with named variables.
+
+        A template is substituted at send time from the values you pass, so the copy lives here rather than in your application. WhatsApp templates additionally need Meta's approval before they can be sent, and a template's channel status reports where that stands — an approved SMS template and an unapproved WhatsApp one are the same template in two states.
+        """
         from .resources.templates import TemplatesResourceWithRawResponse
 
         return TemplatesResourceWithRawResponse(self._client.templates)
 
     @cached_property
     def profiles(self) -> profiles.ProfilesResourceWithRawResponse:
-        """Manage organization profiles"""
+        """**Deprecated — use Sender Profiles.**
+
+        The original profile resource, kept because it has live callers. It still works, and its replacement is `/v3/sender-profiles`, which takes the identity and the campaign in one call instead of across three.
+
+        New integrations should not start here.
+        """
         from .resources.profiles import ProfilesResourceWithRawResponse
 
         return ProfilesResourceWithRawResponse(self._client.profiles)
 
     @cached_property
     def numbers(self) -> numbers.NumbersResourceWithRawResponse:
-        """Manage and lookup phone numbers"""
+        """What a phone number actually is, before you send to it.
+
+        A lookup returns the number's country, line type and carrier, which is what decides whether it is reachable on a channel and what it costs. Worth doing on import rather than on send: a landline in a contact list is a message that can never be delivered.
+        """
         from .resources.numbers import NumbersResourceWithRawResponse
 
         return NumbersResourceWithRawResponse(self._client.numbers)
 
     @cached_property
     def messages(self) -> messages.MessagesResourceWithRawResponse:
-        """Send and track SMS and WhatsApp messages"""
+        """Send a message and follow what happened to it.
+
+        One endpoint sends on any channel: pass `channel: "sent"` and we pick between SMS, WhatsApp and RCS per recipient using your routing rules, or name a channel to pin it. A send is accepted asynchronously — `POST /v3/messages` returns an id, and delivery is reported through `GET /v3/messages/{id}`, its activities, or a webhook.
+
+        **A message needs a sender.** What you can send, where, and at what cost is decided by the markets under **Channels** — so a recipient in a country you hold no sender for is refused here rather than queued.
+        """
         from .resources.messages import MessagesResourceWithRawResponse
 
         return MessagesResourceWithRawResponse(self._client.messages)
 
     @cached_property
     def contacts(self) -> contacts.ContactsResourceWithRawResponse:
-        """Create, update, and manage customer contact lists"""
+        """The people you message, and their channel identities.
+
+        A contact holds one identity per channel — a phone number, a WhatsApp number — so routing can choose between them for the same person. Opt-out is recorded against the contact and honoured on every send, whichever channel it came through.
+
+        `GET /v3/contacts/{id}/message-summary` is the per-contact view of what you have sent and what happened to it.
+        """
         from .resources.contacts import ContactsResourceWithRawResponse
 
         return ContactsResourceWithRawResponse(self._client.contacts)
 
     @cached_property
     def conversations(self) -> conversations.ConversationsResourceWithRawResponse:
+        """Inbound and outbound messages, grouped by the person they are with.
+
+        A conversation is the thread for one contact across every channel — a reply by SMS and one by WhatsApp belong to the same conversation, because they are the same person talking to you.
+
+        Read-only. Sending is **Messages**; a reply arrives here and through your webhooks.
+        """
         from .resources.conversations import ConversationsResourceWithRawResponse
 
         return ConversationsResourceWithRawResponse(self._client.conversations)
 
     @cached_property
     def me(self) -> me.MeResourceWithRawResponse:
-        """Retrieve account details"""
+        """Who the current key is.
+
+        `GET /v3/me` answers with the account the key authenticates as, which is the quickest way to tell a live key from a test one, an organization key from a sender profile's, and to confirm `x-profile-id` resolved to the profile you meant.
+        """
         from .resources.me import MeResourceWithRawResponse
 
         return MeResourceWithRawResponse(self._client.me)
@@ -619,62 +733,100 @@ class AsyncSentWithRawResponse:
 
     @cached_property
     def webhooks(self) -> webhooks.AsyncWebhooksResourceWithRawResponse:
-        """Configure webhook endpoints for real-time event delivery"""
+        """Delivery reports and inbound messages, pushed to you.
+
+        Subscribe an endpoint to the event types you care about — `GET /v3/webhooks/event-types` lists them — and we POST each one as it happens, retrying on failure. Polling `GET /v3/messages/{id}` works and does not scale.
+
+        **Verify the signature.** Every delivery is signed with your endpoint's secret; an unverified endpoint is one anybody can post to. `rotate-secret` replaces it, `test` sends a specimen event, and `GET /v3/webhooks/{id}/events` shows what we tried to deliver and what your endpoint answered — which is the first place to look when something appears to be missing.
+        """
         from .resources.webhooks import AsyncWebhooksResourceWithRawResponse
 
         return AsyncWebhooksResourceWithRawResponse(self._client.webhooks)
 
     @cached_property
     def users(self) -> users.AsyncUsersResourceWithRawResponse:
-        """Invite, update, and manage organization users and roles"""
+        """The people who can sign in to your organization, and what each may do.
+
+        Users are dashboard access and nothing else — they do not send, and removing one does not affect traffic. An API key is not a user: it belongs to the organization or to a sender profile, so revoking a person's access leaves your integration running.
+        """
         from .resources.users import AsyncUsersResourceWithRawResponse
 
         return AsyncUsersResourceWithRawResponse(self._client.users)
 
     @cached_property
     def templates(self) -> templates.AsyncTemplatesResourceWithRawResponse:
-        """Manage message templates with variable substitution"""
+        """Reusable message bodies with named variables.
+
+        A template is substituted at send time from the values you pass, so the copy lives here rather than in your application. WhatsApp templates additionally need Meta's approval before they can be sent, and a template's channel status reports where that stands — an approved SMS template and an unapproved WhatsApp one are the same template in two states.
+        """
         from .resources.templates import AsyncTemplatesResourceWithRawResponse
 
         return AsyncTemplatesResourceWithRawResponse(self._client.templates)
 
     @cached_property
     def profiles(self) -> profiles.AsyncProfilesResourceWithRawResponse:
-        """Manage organization profiles"""
+        """**Deprecated — use Sender Profiles.**
+
+        The original profile resource, kept because it has live callers. It still works, and its replacement is `/v3/sender-profiles`, which takes the identity and the campaign in one call instead of across three.
+
+        New integrations should not start here.
+        """
         from .resources.profiles import AsyncProfilesResourceWithRawResponse
 
         return AsyncProfilesResourceWithRawResponse(self._client.profiles)
 
     @cached_property
     def numbers(self) -> numbers.AsyncNumbersResourceWithRawResponse:
-        """Manage and lookup phone numbers"""
+        """What a phone number actually is, before you send to it.
+
+        A lookup returns the number's country, line type and carrier, which is what decides whether it is reachable on a channel and what it costs. Worth doing on import rather than on send: a landline in a contact list is a message that can never be delivered.
+        """
         from .resources.numbers import AsyncNumbersResourceWithRawResponse
 
         return AsyncNumbersResourceWithRawResponse(self._client.numbers)
 
     @cached_property
     def messages(self) -> messages.AsyncMessagesResourceWithRawResponse:
-        """Send and track SMS and WhatsApp messages"""
+        """Send a message and follow what happened to it.
+
+        One endpoint sends on any channel: pass `channel: "sent"` and we pick between SMS, WhatsApp and RCS per recipient using your routing rules, or name a channel to pin it. A send is accepted asynchronously — `POST /v3/messages` returns an id, and delivery is reported through `GET /v3/messages/{id}`, its activities, or a webhook.
+
+        **A message needs a sender.** What you can send, where, and at what cost is decided by the markets under **Channels** — so a recipient in a country you hold no sender for is refused here rather than queued.
+        """
         from .resources.messages import AsyncMessagesResourceWithRawResponse
 
         return AsyncMessagesResourceWithRawResponse(self._client.messages)
 
     @cached_property
     def contacts(self) -> contacts.AsyncContactsResourceWithRawResponse:
-        """Create, update, and manage customer contact lists"""
+        """The people you message, and their channel identities.
+
+        A contact holds one identity per channel — a phone number, a WhatsApp number — so routing can choose between them for the same person. Opt-out is recorded against the contact and honoured on every send, whichever channel it came through.
+
+        `GET /v3/contacts/{id}/message-summary` is the per-contact view of what you have sent and what happened to it.
+        """
         from .resources.contacts import AsyncContactsResourceWithRawResponse
 
         return AsyncContactsResourceWithRawResponse(self._client.contacts)
 
     @cached_property
     def conversations(self) -> conversations.AsyncConversationsResourceWithRawResponse:
+        """Inbound and outbound messages, grouped by the person they are with.
+
+        A conversation is the thread for one contact across every channel — a reply by SMS and one by WhatsApp belong to the same conversation, because they are the same person talking to you.
+
+        Read-only. Sending is **Messages**; a reply arrives here and through your webhooks.
+        """
         from .resources.conversations import AsyncConversationsResourceWithRawResponse
 
         return AsyncConversationsResourceWithRawResponse(self._client.conversations)
 
     @cached_property
     def me(self) -> me.AsyncMeResourceWithRawResponse:
-        """Retrieve account details"""
+        """Who the current key is.
+
+        `GET /v3/me` answers with the account the key authenticates as, which is the quickest way to tell a live key from a test one, an organization key from a sender profile's, and to confirm `x-profile-id` resolved to the profile you meant.
+        """
         from .resources.me import AsyncMeResourceWithRawResponse
 
         return AsyncMeResourceWithRawResponse(self._client.me)
@@ -688,62 +840,100 @@ class SentWithStreamedResponse:
 
     @cached_property
     def webhooks(self) -> webhooks.WebhooksResourceWithStreamingResponse:
-        """Configure webhook endpoints for real-time event delivery"""
+        """Delivery reports and inbound messages, pushed to you.
+
+        Subscribe an endpoint to the event types you care about — `GET /v3/webhooks/event-types` lists them — and we POST each one as it happens, retrying on failure. Polling `GET /v3/messages/{id}` works and does not scale.
+
+        **Verify the signature.** Every delivery is signed with your endpoint's secret; an unverified endpoint is one anybody can post to. `rotate-secret` replaces it, `test` sends a specimen event, and `GET /v3/webhooks/{id}/events` shows what we tried to deliver and what your endpoint answered — which is the first place to look when something appears to be missing.
+        """
         from .resources.webhooks import WebhooksResourceWithStreamingResponse
 
         return WebhooksResourceWithStreamingResponse(self._client.webhooks)
 
     @cached_property
     def users(self) -> users.UsersResourceWithStreamingResponse:
-        """Invite, update, and manage organization users and roles"""
+        """The people who can sign in to your organization, and what each may do.
+
+        Users are dashboard access and nothing else — they do not send, and removing one does not affect traffic. An API key is not a user: it belongs to the organization or to a sender profile, so revoking a person's access leaves your integration running.
+        """
         from .resources.users import UsersResourceWithStreamingResponse
 
         return UsersResourceWithStreamingResponse(self._client.users)
 
     @cached_property
     def templates(self) -> templates.TemplatesResourceWithStreamingResponse:
-        """Manage message templates with variable substitution"""
+        """Reusable message bodies with named variables.
+
+        A template is substituted at send time from the values you pass, so the copy lives here rather than in your application. WhatsApp templates additionally need Meta's approval before they can be sent, and a template's channel status reports where that stands — an approved SMS template and an unapproved WhatsApp one are the same template in two states.
+        """
         from .resources.templates import TemplatesResourceWithStreamingResponse
 
         return TemplatesResourceWithStreamingResponse(self._client.templates)
 
     @cached_property
     def profiles(self) -> profiles.ProfilesResourceWithStreamingResponse:
-        """Manage organization profiles"""
+        """**Deprecated — use Sender Profiles.**
+
+        The original profile resource, kept because it has live callers. It still works, and its replacement is `/v3/sender-profiles`, which takes the identity and the campaign in one call instead of across three.
+
+        New integrations should not start here.
+        """
         from .resources.profiles import ProfilesResourceWithStreamingResponse
 
         return ProfilesResourceWithStreamingResponse(self._client.profiles)
 
     @cached_property
     def numbers(self) -> numbers.NumbersResourceWithStreamingResponse:
-        """Manage and lookup phone numbers"""
+        """What a phone number actually is, before you send to it.
+
+        A lookup returns the number's country, line type and carrier, which is what decides whether it is reachable on a channel and what it costs. Worth doing on import rather than on send: a landline in a contact list is a message that can never be delivered.
+        """
         from .resources.numbers import NumbersResourceWithStreamingResponse
 
         return NumbersResourceWithStreamingResponse(self._client.numbers)
 
     @cached_property
     def messages(self) -> messages.MessagesResourceWithStreamingResponse:
-        """Send and track SMS and WhatsApp messages"""
+        """Send a message and follow what happened to it.
+
+        One endpoint sends on any channel: pass `channel: "sent"` and we pick between SMS, WhatsApp and RCS per recipient using your routing rules, or name a channel to pin it. A send is accepted asynchronously — `POST /v3/messages` returns an id, and delivery is reported through `GET /v3/messages/{id}`, its activities, or a webhook.
+
+        **A message needs a sender.** What you can send, where, and at what cost is decided by the markets under **Channels** — so a recipient in a country you hold no sender for is refused here rather than queued.
+        """
         from .resources.messages import MessagesResourceWithStreamingResponse
 
         return MessagesResourceWithStreamingResponse(self._client.messages)
 
     @cached_property
     def contacts(self) -> contacts.ContactsResourceWithStreamingResponse:
-        """Create, update, and manage customer contact lists"""
+        """The people you message, and their channel identities.
+
+        A contact holds one identity per channel — a phone number, a WhatsApp number — so routing can choose between them for the same person. Opt-out is recorded against the contact and honoured on every send, whichever channel it came through.
+
+        `GET /v3/contacts/{id}/message-summary` is the per-contact view of what you have sent and what happened to it.
+        """
         from .resources.contacts import ContactsResourceWithStreamingResponse
 
         return ContactsResourceWithStreamingResponse(self._client.contacts)
 
     @cached_property
     def conversations(self) -> conversations.ConversationsResourceWithStreamingResponse:
+        """Inbound and outbound messages, grouped by the person they are with.
+
+        A conversation is the thread for one contact across every channel — a reply by SMS and one by WhatsApp belong to the same conversation, because they are the same person talking to you.
+
+        Read-only. Sending is **Messages**; a reply arrives here and through your webhooks.
+        """
         from .resources.conversations import ConversationsResourceWithStreamingResponse
 
         return ConversationsResourceWithStreamingResponse(self._client.conversations)
 
     @cached_property
     def me(self) -> me.MeResourceWithStreamingResponse:
-        """Retrieve account details"""
+        """Who the current key is.
+
+        `GET /v3/me` answers with the account the key authenticates as, which is the quickest way to tell a live key from a test one, an organization key from a sender profile's, and to confirm `x-profile-id` resolved to the profile you meant.
+        """
         from .resources.me import MeResourceWithStreamingResponse
 
         return MeResourceWithStreamingResponse(self._client.me)
@@ -757,62 +947,100 @@ class AsyncSentWithStreamedResponse:
 
     @cached_property
     def webhooks(self) -> webhooks.AsyncWebhooksResourceWithStreamingResponse:
-        """Configure webhook endpoints for real-time event delivery"""
+        """Delivery reports and inbound messages, pushed to you.
+
+        Subscribe an endpoint to the event types you care about — `GET /v3/webhooks/event-types` lists them — and we POST each one as it happens, retrying on failure. Polling `GET /v3/messages/{id}` works and does not scale.
+
+        **Verify the signature.** Every delivery is signed with your endpoint's secret; an unverified endpoint is one anybody can post to. `rotate-secret` replaces it, `test` sends a specimen event, and `GET /v3/webhooks/{id}/events` shows what we tried to deliver and what your endpoint answered — which is the first place to look when something appears to be missing.
+        """
         from .resources.webhooks import AsyncWebhooksResourceWithStreamingResponse
 
         return AsyncWebhooksResourceWithStreamingResponse(self._client.webhooks)
 
     @cached_property
     def users(self) -> users.AsyncUsersResourceWithStreamingResponse:
-        """Invite, update, and manage organization users and roles"""
+        """The people who can sign in to your organization, and what each may do.
+
+        Users are dashboard access and nothing else — they do not send, and removing one does not affect traffic. An API key is not a user: it belongs to the organization or to a sender profile, so revoking a person's access leaves your integration running.
+        """
         from .resources.users import AsyncUsersResourceWithStreamingResponse
 
         return AsyncUsersResourceWithStreamingResponse(self._client.users)
 
     @cached_property
     def templates(self) -> templates.AsyncTemplatesResourceWithStreamingResponse:
-        """Manage message templates with variable substitution"""
+        """Reusable message bodies with named variables.
+
+        A template is substituted at send time from the values you pass, so the copy lives here rather than in your application. WhatsApp templates additionally need Meta's approval before they can be sent, and a template's channel status reports where that stands — an approved SMS template and an unapproved WhatsApp one are the same template in two states.
+        """
         from .resources.templates import AsyncTemplatesResourceWithStreamingResponse
 
         return AsyncTemplatesResourceWithStreamingResponse(self._client.templates)
 
     @cached_property
     def profiles(self) -> profiles.AsyncProfilesResourceWithStreamingResponse:
-        """Manage organization profiles"""
+        """**Deprecated — use Sender Profiles.**
+
+        The original profile resource, kept because it has live callers. It still works, and its replacement is `/v3/sender-profiles`, which takes the identity and the campaign in one call instead of across three.
+
+        New integrations should not start here.
+        """
         from .resources.profiles import AsyncProfilesResourceWithStreamingResponse
 
         return AsyncProfilesResourceWithStreamingResponse(self._client.profiles)
 
     @cached_property
     def numbers(self) -> numbers.AsyncNumbersResourceWithStreamingResponse:
-        """Manage and lookup phone numbers"""
+        """What a phone number actually is, before you send to it.
+
+        A lookup returns the number's country, line type and carrier, which is what decides whether it is reachable on a channel and what it costs. Worth doing on import rather than on send: a landline in a contact list is a message that can never be delivered.
+        """
         from .resources.numbers import AsyncNumbersResourceWithStreamingResponse
 
         return AsyncNumbersResourceWithStreamingResponse(self._client.numbers)
 
     @cached_property
     def messages(self) -> messages.AsyncMessagesResourceWithStreamingResponse:
-        """Send and track SMS and WhatsApp messages"""
+        """Send a message and follow what happened to it.
+
+        One endpoint sends on any channel: pass `channel: "sent"` and we pick between SMS, WhatsApp and RCS per recipient using your routing rules, or name a channel to pin it. A send is accepted asynchronously — `POST /v3/messages` returns an id, and delivery is reported through `GET /v3/messages/{id}`, its activities, or a webhook.
+
+        **A message needs a sender.** What you can send, where, and at what cost is decided by the markets under **Channels** — so a recipient in a country you hold no sender for is refused here rather than queued.
+        """
         from .resources.messages import AsyncMessagesResourceWithStreamingResponse
 
         return AsyncMessagesResourceWithStreamingResponse(self._client.messages)
 
     @cached_property
     def contacts(self) -> contacts.AsyncContactsResourceWithStreamingResponse:
-        """Create, update, and manage customer contact lists"""
+        """The people you message, and their channel identities.
+
+        A contact holds one identity per channel — a phone number, a WhatsApp number — so routing can choose between them for the same person. Opt-out is recorded against the contact and honoured on every send, whichever channel it came through.
+
+        `GET /v3/contacts/{id}/message-summary` is the per-contact view of what you have sent and what happened to it.
+        """
         from .resources.contacts import AsyncContactsResourceWithStreamingResponse
 
         return AsyncContactsResourceWithStreamingResponse(self._client.contacts)
 
     @cached_property
     def conversations(self) -> conversations.AsyncConversationsResourceWithStreamingResponse:
+        """Inbound and outbound messages, grouped by the person they are with.
+
+        A conversation is the thread for one contact across every channel — a reply by SMS and one by WhatsApp belong to the same conversation, because they are the same person talking to you.
+
+        Read-only. Sending is **Messages**; a reply arrives here and through your webhooks.
+        """
         from .resources.conversations import AsyncConversationsResourceWithStreamingResponse
 
         return AsyncConversationsResourceWithStreamingResponse(self._client.conversations)
 
     @cached_property
     def me(self) -> me.AsyncMeResourceWithStreamingResponse:
-        """Retrieve account details"""
+        """Who the current key is.
+
+        `GET /v3/me` answers with the account the key authenticates as, which is the quickest way to tell a live key from a test one, an organization key from a sender profile's, and to confirm `x-profile-id` resolved to the profile you meant.
+        """
         from .resources.me import AsyncMeResourceWithStreamingResponse
 
         return AsyncMeResourceWithStreamingResponse(self._client.me)

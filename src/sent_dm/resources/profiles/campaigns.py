@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import typing_extensions
+
 import httpx
 
 from ..._types import Body, Omit, Query, Headers, NoneType, NotGiven, omit, not_given
@@ -16,15 +18,20 @@ from ..._response import (
 )
 from ..._base_client import make_request_options
 from ...types.profiles import campaign_create_params, campaign_delete_params, campaign_update_params
-from ...types.profiles.campaign_data_param import CampaignDataParam
-from ...types.profiles.api_response_of_brand_campaign import APIResponseOfBrandCampaign
-from ...types.profiles.api_response_of_list_of_brand_campaign import APIResponseOfListOfBrandCampaign
+from ...types.profiles.campaign_list_response import CampaignListResponse
+from ...types.profiles.campaign_create_response import CampaignCreateResponse
+from ...types.profiles.campaign_update_response import CampaignUpdateResponse
 
 __all__ = ["CampaignsResource", "AsyncCampaignsResource"]
 
 
 class CampaignsResource(SyncAPIResource):
-    """Manage organization profiles"""
+    """**Deprecated — use Sender Profiles.**
+
+    The original profile resource, kept because it has live callers. It still works, and its replacement is `/v3/sender-profiles`, which takes the identity and the campaign in one call instead of across three.
+
+    New integrations should not start here.
+    """
 
     @cached_property
     def with_raw_response(self) -> CampaignsResourceWithRawResponse:
@@ -45,11 +52,12 @@ class CampaignsResource(SyncAPIResource):
         """
         return CampaignsResourceWithStreamingResponse(self)
 
+    @typing_extensions.deprecated("deprecated")
     def create(
         self,
         profile_id: str,
         *,
-        campaign: CampaignDataParam,
+        campaign: campaign_create_params.Campaign,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -59,10 +67,15 @@ class CampaignsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfBrandCampaign:
-        """Creates a new campaign scoped under the brand of the specified profile.
+    ) -> CampaignCreateResponse:
+        """
+        **Deprecated.** This endpoint is replaced by `/v3/sender-profiles` and will be
+        removed in a future release. It still behaves exactly as before, so nothing
+        needs to change today — but new integrations should use `/v3/sender-profiles`,
+        which models a profile's markets, compliance, brand, campaigns and billing
+        explicitly.
 
-        Each
+        Creates a new campaign scoped under the brand of the specified profile. Each
         campaign must include at least one use case with sample messages.
 
         Args:
@@ -102,15 +115,16 @@ class CampaignsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfBrandCampaign,
+            cast_to=CampaignCreateResponse,
         )
 
+    @typing_extensions.deprecated("deprecated")
     def update(
         self,
         campaign_id: str,
         *,
         profile_id: str,
-        campaign: CampaignDataParam,
+        campaign: campaign_update_params.Campaign,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -120,10 +134,15 @@ class CampaignsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfBrandCampaign:
-        """Updates an existing campaign under the brand of the specified profile.
+    ) -> CampaignUpdateResponse:
+        """
+        **Deprecated.** This endpoint is replaced by `/v3/sender-profiles` and will be
+        removed in a future release. It still behaves exactly as before, so nothing
+        needs to change today — but new integrations should use `/v3/sender-profiles`,
+        which models a profile's markets, compliance, brand, campaigns and billing
+        explicitly.
 
-        Cannot
+        Updates an existing campaign under the brand of the specified profile. Cannot
         update campaigns that have already been submitted to TCR.
 
         Args:
@@ -167,9 +186,10 @@ class CampaignsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfBrandCampaign,
+            cast_to=CampaignUpdateResponse,
         )
 
+    @typing_extensions.deprecated("deprecated")
     def list(
         self,
         profile_id: str,
@@ -181,8 +201,14 @@ class CampaignsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfListOfBrandCampaign:
+    ) -> CampaignListResponse:
         """
+        **Deprecated.** This endpoint is replaced by `/v3/sender-profiles` and will be
+        removed in a future release. It still behaves exactly as before, so nothing
+        needs to change today — but new integrations should use `/v3/sender-profiles`,
+        which models a profile's markets, compliance, brand, campaigns and billing
+        explicitly.
+
         Retrieves all campaigns linked to the profile's brand, including use cases and
         sample messages. Returns inherited campaigns if inherit_tcr_campaign=true.
 
@@ -203,9 +229,10 @@ class CampaignsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfListOfBrandCampaign,
+            cast_to=CampaignListResponse,
         )
 
+    @typing_extensions.deprecated("deprecated")
     def delete(
         self,
         campaign_id: str,
@@ -220,9 +247,14 @@ class CampaignsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> None:
-        """Deletes a campaign by ID from the brand of the specified profile.
+        """
+        **Deprecated.** This endpoint is replaced by `/v3/sender-profiles` and will be
+        removed in a future release. It still behaves exactly as before, so nothing
+        needs to change today — but new integrations should use `/v3/sender-profiles`,
+        which models a profile's markets, compliance, brand, campaigns and billing
+        explicitly.
 
-        The profile
+        Deletes a campaign by ID from the brand of the specified profile. The profile
         must belong to the authenticated organization.
 
         Args:
@@ -256,7 +288,12 @@ class CampaignsResource(SyncAPIResource):
 
 
 class AsyncCampaignsResource(AsyncAPIResource):
-    """Manage organization profiles"""
+    """**Deprecated — use Sender Profiles.**
+
+    The original profile resource, kept because it has live callers. It still works, and its replacement is `/v3/sender-profiles`, which takes the identity and the campaign in one call instead of across three.
+
+    New integrations should not start here.
+    """
 
     @cached_property
     def with_raw_response(self) -> AsyncCampaignsResourceWithRawResponse:
@@ -277,11 +314,12 @@ class AsyncCampaignsResource(AsyncAPIResource):
         """
         return AsyncCampaignsResourceWithStreamingResponse(self)
 
+    @typing_extensions.deprecated("deprecated")
     async def create(
         self,
         profile_id: str,
         *,
-        campaign: CampaignDataParam,
+        campaign: campaign_create_params.Campaign,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -291,10 +329,15 @@ class AsyncCampaignsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfBrandCampaign:
-        """Creates a new campaign scoped under the brand of the specified profile.
+    ) -> CampaignCreateResponse:
+        """
+        **Deprecated.** This endpoint is replaced by `/v3/sender-profiles` and will be
+        removed in a future release. It still behaves exactly as before, so nothing
+        needs to change today — but new integrations should use `/v3/sender-profiles`,
+        which models a profile's markets, compliance, brand, campaigns and billing
+        explicitly.
 
-        Each
+        Creates a new campaign scoped under the brand of the specified profile. Each
         campaign must include at least one use case with sample messages.
 
         Args:
@@ -334,15 +377,16 @@ class AsyncCampaignsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfBrandCampaign,
+            cast_to=CampaignCreateResponse,
         )
 
+    @typing_extensions.deprecated("deprecated")
     async def update(
         self,
         campaign_id: str,
         *,
         profile_id: str,
-        campaign: CampaignDataParam,
+        campaign: campaign_update_params.Campaign,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -352,10 +396,15 @@ class AsyncCampaignsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfBrandCampaign:
-        """Updates an existing campaign under the brand of the specified profile.
+    ) -> CampaignUpdateResponse:
+        """
+        **Deprecated.** This endpoint is replaced by `/v3/sender-profiles` and will be
+        removed in a future release. It still behaves exactly as before, so nothing
+        needs to change today — but new integrations should use `/v3/sender-profiles`,
+        which models a profile's markets, compliance, brand, campaigns and billing
+        explicitly.
 
-        Cannot
+        Updates an existing campaign under the brand of the specified profile. Cannot
         update campaigns that have already been submitted to TCR.
 
         Args:
@@ -399,9 +448,10 @@ class AsyncCampaignsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfBrandCampaign,
+            cast_to=CampaignUpdateResponse,
         )
 
+    @typing_extensions.deprecated("deprecated")
     async def list(
         self,
         profile_id: str,
@@ -413,8 +463,14 @@ class AsyncCampaignsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfListOfBrandCampaign:
+    ) -> CampaignListResponse:
         """
+        **Deprecated.** This endpoint is replaced by `/v3/sender-profiles` and will be
+        removed in a future release. It still behaves exactly as before, so nothing
+        needs to change today — but new integrations should use `/v3/sender-profiles`,
+        which models a profile's markets, compliance, brand, campaigns and billing
+        explicitly.
+
         Retrieves all campaigns linked to the profile's brand, including use cases and
         sample messages. Returns inherited campaigns if inherit_tcr_campaign=true.
 
@@ -435,9 +491,10 @@ class AsyncCampaignsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseOfListOfBrandCampaign,
+            cast_to=CampaignListResponse,
         )
 
+    @typing_extensions.deprecated("deprecated")
     async def delete(
         self,
         campaign_id: str,
@@ -452,9 +509,14 @@ class AsyncCampaignsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> None:
-        """Deletes a campaign by ID from the brand of the specified profile.
+        """
+        **Deprecated.** This endpoint is replaced by `/v3/sender-profiles` and will be
+        removed in a future release. It still behaves exactly as before, so nothing
+        needs to change today — but new integrations should use `/v3/sender-profiles`,
+        which models a profile's markets, compliance, brand, campaigns and billing
+        explicitly.
 
-        The profile
+        Deletes a campaign by ID from the brand of the specified profile. The profile
         must belong to the authenticated organization.
 
         Args:
@@ -491,17 +553,25 @@ class CampaignsResourceWithRawResponse:
     def __init__(self, campaigns: CampaignsResource) -> None:
         self._campaigns = campaigns
 
-        self.create = to_raw_response_wrapper(
-            campaigns.create,
+        self.create = (  # pyright: ignore[reportDeprecated]
+            to_raw_response_wrapper(
+                campaigns.create,  # pyright: ignore[reportDeprecated],
+            )
         )
-        self.update = to_raw_response_wrapper(
-            campaigns.update,
+        self.update = (  # pyright: ignore[reportDeprecated]
+            to_raw_response_wrapper(
+                campaigns.update,  # pyright: ignore[reportDeprecated],
+            )
         )
-        self.list = to_raw_response_wrapper(
-            campaigns.list,
+        self.list = (  # pyright: ignore[reportDeprecated]
+            to_raw_response_wrapper(
+                campaigns.list,  # pyright: ignore[reportDeprecated],
+            )
         )
-        self.delete = to_raw_response_wrapper(
-            campaigns.delete,
+        self.delete = (  # pyright: ignore[reportDeprecated]
+            to_raw_response_wrapper(
+                campaigns.delete,  # pyright: ignore[reportDeprecated],
+            )
         )
 
 
@@ -509,17 +579,25 @@ class AsyncCampaignsResourceWithRawResponse:
     def __init__(self, campaigns: AsyncCampaignsResource) -> None:
         self._campaigns = campaigns
 
-        self.create = async_to_raw_response_wrapper(
-            campaigns.create,
+        self.create = (  # pyright: ignore[reportDeprecated]
+            async_to_raw_response_wrapper(
+                campaigns.create,  # pyright: ignore[reportDeprecated],
+            )
         )
-        self.update = async_to_raw_response_wrapper(
-            campaigns.update,
+        self.update = (  # pyright: ignore[reportDeprecated]
+            async_to_raw_response_wrapper(
+                campaigns.update,  # pyright: ignore[reportDeprecated],
+            )
         )
-        self.list = async_to_raw_response_wrapper(
-            campaigns.list,
+        self.list = (  # pyright: ignore[reportDeprecated]
+            async_to_raw_response_wrapper(
+                campaigns.list,  # pyright: ignore[reportDeprecated],
+            )
         )
-        self.delete = async_to_raw_response_wrapper(
-            campaigns.delete,
+        self.delete = (  # pyright: ignore[reportDeprecated]
+            async_to_raw_response_wrapper(
+                campaigns.delete,  # pyright: ignore[reportDeprecated],
+            )
         )
 
 
@@ -527,17 +605,25 @@ class CampaignsResourceWithStreamingResponse:
     def __init__(self, campaigns: CampaignsResource) -> None:
         self._campaigns = campaigns
 
-        self.create = to_streamed_response_wrapper(
-            campaigns.create,
+        self.create = (  # pyright: ignore[reportDeprecated]
+            to_streamed_response_wrapper(
+                campaigns.create,  # pyright: ignore[reportDeprecated],
+            )
         )
-        self.update = to_streamed_response_wrapper(
-            campaigns.update,
+        self.update = (  # pyright: ignore[reportDeprecated]
+            to_streamed_response_wrapper(
+                campaigns.update,  # pyright: ignore[reportDeprecated],
+            )
         )
-        self.list = to_streamed_response_wrapper(
-            campaigns.list,
+        self.list = (  # pyright: ignore[reportDeprecated]
+            to_streamed_response_wrapper(
+                campaigns.list,  # pyright: ignore[reportDeprecated],
+            )
         )
-        self.delete = to_streamed_response_wrapper(
-            campaigns.delete,
+        self.delete = (  # pyright: ignore[reportDeprecated]
+            to_streamed_response_wrapper(
+                campaigns.delete,  # pyright: ignore[reportDeprecated],
+            )
         )
 
 
@@ -545,15 +631,23 @@ class AsyncCampaignsResourceWithStreamingResponse:
     def __init__(self, campaigns: AsyncCampaignsResource) -> None:
         self._campaigns = campaigns
 
-        self.create = async_to_streamed_response_wrapper(
-            campaigns.create,
+        self.create = (  # pyright: ignore[reportDeprecated]
+            async_to_streamed_response_wrapper(
+                campaigns.create,  # pyright: ignore[reportDeprecated],
+            )
         )
-        self.update = async_to_streamed_response_wrapper(
-            campaigns.update,
+        self.update = (  # pyright: ignore[reportDeprecated]
+            async_to_streamed_response_wrapper(
+                campaigns.update,  # pyright: ignore[reportDeprecated],
+            )
         )
-        self.list = async_to_streamed_response_wrapper(
-            campaigns.list,
+        self.list = (  # pyright: ignore[reportDeprecated]
+            async_to_streamed_response_wrapper(
+                campaigns.list,  # pyright: ignore[reportDeprecated],
+            )
         )
-        self.delete = async_to_streamed_response_wrapper(
-            campaigns.delete,
+        self.delete = (  # pyright: ignore[reportDeprecated]
+            async_to_streamed_response_wrapper(
+                campaigns.delete,  # pyright: ignore[reportDeprecated],
+            )
         )

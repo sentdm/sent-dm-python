@@ -10,7 +10,8 @@ import pytest
 from sent_dm import Sent, AsyncSent
 from tests.utils import assert_matches_type
 from sent_dm.types import (
-    APIResponseOfConversationMessagesList,
+    ConversationListResponse,
+    ConversationListMessagesResponse,
 )
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
@@ -26,7 +27,7 @@ class TestConversations:
             page=0,
             page_size=0,
         )
-        assert_matches_type(APIResponseOfConversationMessagesList, conversation, path=["response"])
+        assert_matches_type(ConversationListResponse, conversation, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -36,7 +37,7 @@ class TestConversations:
             page_size=0,
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(APIResponseOfConversationMessagesList, conversation, path=["response"])
+        assert_matches_type(ConversationListResponse, conversation, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -49,7 +50,7 @@ class TestConversations:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         conversation = response.parse()
-        assert_matches_type(APIResponseOfConversationMessagesList, conversation, path=["response"])
+        assert_matches_type(ConversationListResponse, conversation, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -62,7 +63,7 @@ class TestConversations:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             conversation = response.parse()
-            assert_matches_type(APIResponseOfConversationMessagesList, conversation, path=["response"])
+            assert_matches_type(ConversationListResponse, conversation, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -74,7 +75,7 @@ class TestConversations:
             page=0,
             page_size=0,
         )
-        assert_matches_type(APIResponseOfConversationMessagesList, conversation, path=["response"])
+        assert_matches_type(ConversationListMessagesResponse, conversation, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -85,7 +86,7 @@ class TestConversations:
             page_size=0,
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(APIResponseOfConversationMessagesList, conversation, path=["response"])
+        assert_matches_type(ConversationListMessagesResponse, conversation, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -99,7 +100,7 @@ class TestConversations:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         conversation = response.parse()
-        assert_matches_type(APIResponseOfConversationMessagesList, conversation, path=["response"])
+        assert_matches_type(ConversationListMessagesResponse, conversation, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -113,7 +114,7 @@ class TestConversations:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             conversation = response.parse()
-            assert_matches_type(APIResponseOfConversationMessagesList, conversation, path=["response"])
+            assert_matches_type(ConversationListMessagesResponse, conversation, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -140,7 +141,7 @@ class TestAsyncConversations:
             page=0,
             page_size=0,
         )
-        assert_matches_type(APIResponseOfConversationMessagesList, conversation, path=["response"])
+        assert_matches_type(ConversationListResponse, conversation, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -150,7 +151,7 @@ class TestAsyncConversations:
             page_size=0,
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(APIResponseOfConversationMessagesList, conversation, path=["response"])
+        assert_matches_type(ConversationListResponse, conversation, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -163,7 +164,7 @@ class TestAsyncConversations:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         conversation = await response.parse()
-        assert_matches_type(APIResponseOfConversationMessagesList, conversation, path=["response"])
+        assert_matches_type(ConversationListResponse, conversation, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -176,7 +177,7 @@ class TestAsyncConversations:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             conversation = await response.parse()
-            assert_matches_type(APIResponseOfConversationMessagesList, conversation, path=["response"])
+            assert_matches_type(ConversationListResponse, conversation, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -188,7 +189,7 @@ class TestAsyncConversations:
             page=0,
             page_size=0,
         )
-        assert_matches_type(APIResponseOfConversationMessagesList, conversation, path=["response"])
+        assert_matches_type(ConversationListMessagesResponse, conversation, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -199,7 +200,7 @@ class TestAsyncConversations:
             page_size=0,
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(APIResponseOfConversationMessagesList, conversation, path=["response"])
+        assert_matches_type(ConversationListMessagesResponse, conversation, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -213,7 +214,7 @@ class TestAsyncConversations:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         conversation = await response.parse()
-        assert_matches_type(APIResponseOfConversationMessagesList, conversation, path=["response"])
+        assert_matches_type(ConversationListMessagesResponse, conversation, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -227,7 +228,7 @@ class TestAsyncConversations:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             conversation = await response.parse()
-            assert_matches_type(APIResponseOfConversationMessagesList, conversation, path=["response"])
+            assert_matches_type(ConversationListMessagesResponse, conversation, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
