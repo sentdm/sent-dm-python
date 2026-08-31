@@ -23,15 +23,20 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
-from ..types.api_response_template import APIResponseTemplate
 from ..types.template_list_response import TemplateListResponse
+from ..types.template_create_response import TemplateCreateResponse
+from ..types.template_update_response import TemplateUpdateResponse
 from ..types.template_definition_param import TemplateDefinitionParam
+from ..types.template_retrieve_response import TemplateRetrieveResponse
 
 __all__ = ["TemplatesResource", "AsyncTemplatesResource"]
 
 
 class TemplatesResource(SyncAPIResource):
-    """Manage message templates with variable substitution"""
+    """Reusable message bodies with named variables.
+
+    A template is substituted at send time from the values you pass, so the copy lives here rather than in your application. WhatsApp templates additionally need Meta's approval before they can be sent, and a template's channel status reports where that stands — an approved SMS template and an unapproved WhatsApp one are the same template in two states.
+    """
 
     @cached_property
     def with_raw_response(self) -> TemplatesResourceWithRawResponse:
@@ -69,7 +74,7 @@ class TemplatesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseTemplate:
+    ) -> TemplateCreateResponse:
         """Creates a new message template with header, body, footer, and buttons.
 
         The
@@ -125,7 +130,7 @@ class TemplatesResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseTemplate,
+            cast_to=TemplateCreateResponse,
         )
 
     def retrieve(
@@ -139,7 +144,7 @@ class TemplatesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseTemplate:
+    ) -> TemplateRetrieveResponse:
         """Retrieves a specific template by its ID.
 
         Returns template details including
@@ -162,7 +167,7 @@ class TemplatesResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseTemplate,
+            cast_to=TemplateRetrieveResponse,
         )
 
     def update(
@@ -183,7 +188,7 @@ class TemplatesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseTemplate:
+    ) -> TemplateUpdateResponse:
         """
         Updates an existing template's name, category, language, definition, or submits
         it for review.
@@ -238,7 +243,7 @@ class TemplatesResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseTemplate,
+            cast_to=TemplateUpdateResponse,
         )
 
     def list(
@@ -269,7 +274,11 @@ class TemplatesResource(SyncAPIResource):
 
           category: Optional category filter: MARKETING, UTILITY, AUTHENTICATION
 
-          is_welcome_playground: Optional filter by welcome playground flag
+          is_welcome_playground: Accepted and ignored. It used to filter on the welcome-playground marker inside
+              a template's LOB details; that filter is gone and nothing reads this value, so
+              sending it neither narrows nor widens the result. Retained only so a client
+              still passing is_welcome_playground keeps binding instead of the request shape
+              changing under it.
 
           search: Optional search term for filtering templates
 
@@ -361,7 +370,10 @@ class TemplatesResource(SyncAPIResource):
 
 
 class AsyncTemplatesResource(AsyncAPIResource):
-    """Manage message templates with variable substitution"""
+    """Reusable message bodies with named variables.
+
+    A template is substituted at send time from the values you pass, so the copy lives here rather than in your application. WhatsApp templates additionally need Meta's approval before they can be sent, and a template's channel status reports where that stands — an approved SMS template and an unapproved WhatsApp one are the same template in two states.
+    """
 
     @cached_property
     def with_raw_response(self) -> AsyncTemplatesResourceWithRawResponse:
@@ -399,7 +411,7 @@ class AsyncTemplatesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseTemplate:
+    ) -> TemplateCreateResponse:
         """Creates a new message template with header, body, footer, and buttons.
 
         The
@@ -455,7 +467,7 @@ class AsyncTemplatesResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseTemplate,
+            cast_to=TemplateCreateResponse,
         )
 
     async def retrieve(
@@ -469,7 +481,7 @@ class AsyncTemplatesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseTemplate:
+    ) -> TemplateRetrieveResponse:
         """Retrieves a specific template by its ID.
 
         Returns template details including
@@ -492,7 +504,7 @@ class AsyncTemplatesResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseTemplate,
+            cast_to=TemplateRetrieveResponse,
         )
 
     async def update(
@@ -513,7 +525,7 @@ class AsyncTemplatesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseTemplate:
+    ) -> TemplateUpdateResponse:
         """
         Updates an existing template's name, category, language, definition, or submits
         it for review.
@@ -568,7 +580,7 @@ class AsyncTemplatesResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=APIResponseTemplate,
+            cast_to=TemplateUpdateResponse,
         )
 
     async def list(
@@ -599,7 +611,11 @@ class AsyncTemplatesResource(AsyncAPIResource):
 
           category: Optional category filter: MARKETING, UTILITY, AUTHENTICATION
 
-          is_welcome_playground: Optional filter by welcome playground flag
+          is_welcome_playground: Accepted and ignored. It used to filter on the welcome-playground marker inside
+              a template's LOB details; that filter is gone and nothing reads this value, so
+              sending it neither narrows nor widens the result. Retained only so a client
+              still passing is_welcome_playground keeps binding instead of the request shape
+              changing under it.
 
           search: Optional search term for filtering templates
 

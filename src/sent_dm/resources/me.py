@@ -21,7 +21,10 @@ __all__ = ["MeResource", "AsyncMeResource"]
 
 
 class MeResource(SyncAPIResource):
-    """Retrieve account details"""
+    """Who the current key is.
+
+    `GET /v3/me` answers with the account the key authenticates as, which is the quickest way to tell a live key from a test one, an organization key from a sender profile's, and to confirm `x-profile-id` resolved to the profile you meant.
+    """
 
     @cached_property
     def with_raw_response(self) -> MeResourceWithRawResponse:
@@ -91,7 +94,10 @@ class MeResource(SyncAPIResource):
 
 
 class AsyncMeResource(AsyncAPIResource):
-    """Retrieve account details"""
+    """Who the current key is.
+
+    `GET /v3/me` answers with the account the key authenticates as, which is the quickest way to tell a live key from a test one, an organization key from a sender profile's, and to confirm `x-profile-id` resolved to the profile you meant.
+    """
 
     @cached_property
     def with_raw_response(self) -> AsyncMeResourceWithRawResponse:
