@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.35.0](https://github.com/sentdm/sent-dm-python/compare/v0.34.0...v0.35.0) (2026-08-31)
+
+
+### Features
+
+* **api:** sync OpenAPI spec from production ([3049959](https://github.com/sentdm/sent-dm-python/commit/304995997afa4dc5c2eab284e6a71daf66caa467))
+* **api:** sync OpenAPI spec from production ([7157d85](https://github.com/sentdm/sent-dm-python/commit/7157d85809c333f9ef780e4021bc7e470ea7d812))
+
+
+### Bug Fixes
+
+* sync the package version in uv.lock to 0.34.0 ([c4a4aec](https://github.com/sentdm/sent-dm-python/commit/c4a4aec36608d2743f15fcc2e28e2fbc0d2b7a19))
+
 ## [0.34.0](https://github.com/sentdm/sent-dm-python/compare/v0.33.0...v0.34.0) (2026-08-17)
 
 
