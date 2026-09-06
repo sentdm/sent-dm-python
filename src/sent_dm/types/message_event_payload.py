@@ -14,6 +14,13 @@ class MessageEventPayload(BaseModel):
     message produces several of these as it moves toward a terminal status.
     """
 
+    message_status: str
+    """The status the message just reached, for example SENT, DELIVERED, or FAILED.
+
+    Sent means dispatched and delivered means confirmed, so treat them as distinct
+    outcomes.
+    """
+
     account_id: Optional[str] = None
     """The account the message belongs to."""
 
@@ -31,13 +38,6 @@ class MessageEventPayload(BaseModel):
 
     Stable across every event in the message's lifecycle, so use it to correlate
     them.
-    """
-
-    message_status: Optional[str] = None
-    """The status the message just reached, for example SENT, DELIVERED, or FAILED.
-
-    Sent means dispatched and delivered means confirmed, so treat them as distinct
-    outcomes.
     """
 
     outbound_number: Optional[str] = None

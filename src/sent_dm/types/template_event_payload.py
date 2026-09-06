@@ -14,6 +14,15 @@ class TemplateEventPayload(BaseModel):
     react without polling.
     """
 
+    status: str
+    """The review status the template just reached, for example APPROVED or REJECTED."""
+
+    whatsapp_template_id: str
+    """
+    The template's identifier with Meta, assigned when the template is submitted for
+    review.
+    """
+
     account_id: Optional[str] = None
     """The account the template belongs to."""
 
@@ -32,17 +41,8 @@ class TemplateEventPayload(BaseModel):
     Populated on a rejection.
     """
 
-    status: Optional[str] = None
-    """The review status the template just reached, for example APPROVED or REJECTED."""
-
     template_id: Optional[str] = None
     """The template in Sent."""
 
     template_name: Optional[str] = None
     """The template's display name."""
-
-    whatsapp_template_id: Optional[str] = None
-    """
-    The template's identifier with Meta, assigned when the template is submitted for
-    review.
-    """
