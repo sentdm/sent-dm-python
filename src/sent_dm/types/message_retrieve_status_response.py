@@ -1,21 +1,15 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import Dict, List, Optional
+from typing import List, Optional
 from datetime import datetime
 
 from pydantic import Field as FieldInfo
 
 from .._models import BaseModel
+from .api_meta import APIMeta
+from .error_detail import ErrorDetail
 
-__all__ = [
-    "MessageRetrieveStatusResponse",
-    "Data",
-    "DataEvent",
-    "DataMessageBody",
-    "DataMessageBodyButton",
-    "Error",
-    "Meta",
-]
+__all__ = ["MessageRetrieveStatusResponse", "Data", "DataEvent", "DataMessageBody", "DataMessageBodyButton"]
 
 
 class DataEvent(BaseModel):
@@ -95,45 +89,16 @@ class Data(BaseModel):
     template_name: Optional[str] = None
 
 
-class Error(BaseModel):
-    """Error information"""
-
-    code: Optional[str] = None
-    """Machine-readable error code (e.g., "RESOURCE_001")"""
-
-    details: Optional[Dict[str, List[str]]] = None
-    """Additional validation error details (field-level errors)"""
-
-    doc_url: Optional[str] = None
-    """URL to documentation about this error"""
-
-    message: Optional[str] = None
-    """Human-readable error message"""
-
-
-class Meta(BaseModel):
-    """Request and response metadata"""
-
-    request_id: Optional[str] = None
-    """Unique identifier for this request (for tracing and support)"""
-
-    timestamp: Optional[datetime] = None
-    """Server timestamp when the response was generated"""
-
-    version: Optional[str] = None
-    """API version used for this request"""
-
-
 class MessageRetrieveStatusResponse(BaseModel):
     """Standard API response envelope for all v3 endpoints"""
 
     data: Optional[Data] = None
     """Message response for v3 API — same shape as v2 with snake_case JSON conventions"""
 
-    error: Optional[Error] = None
+    error: Optional[ErrorDetail] = None
     """Error information"""
 
-    meta: Optional[Meta] = None
+    meta: Optional[APIMeta] = None
     """Request and response metadata"""
 
     success: Optional[bool] = None
