@@ -1,6 +1,6 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import Dict, List, Optional
+from typing import List, Optional
 from datetime import datetime
 from typing_extensions import Literal
 
@@ -9,20 +9,10 @@ from .tcr_vertical import TcrVertical
 from .destination_country import DestinationCountry
 from .tcr_brand_relationship import TcrBrandRelationship
 
-__all__ = [
-    "ProfileRetrieveResponse",
-    "Data",
-    "DataBillingContact",
-    "DataBrand",
-    "DataBrandBusiness",
-    "DataBrandCompliance",
-    "DataBrandContact",
-    "Error",
-    "Meta",
-]
+__all__ = ["ProfileDetail", "BillingContact", "Brand", "BrandBusiness", "BrandCompliance", "BrandContact"]
 
 
-class DataBillingContact(BaseModel):
+class BillingContact(BaseModel):
     """Billing contact info returned in profile responses"""
 
     address: Optional[str] = None
@@ -34,7 +24,7 @@ class DataBillingContact(BaseModel):
     phone: Optional[str] = None
 
 
-class DataBrandBusiness(BaseModel):
+class BrandBusiness(BaseModel):
     """Business details and address information"""
 
     city: Optional[str] = None
@@ -71,7 +61,7 @@ class DataBrandBusiness(BaseModel):
     """Business website URL"""
 
 
-class DataBrandCompliance(BaseModel):
+class BrandCompliance(BaseModel):
     """Compliance and TCR-related information"""
 
     brand_relationship: Optional[TcrBrandRelationship] = None
@@ -104,7 +94,7 @@ class DataBrandCompliance(BaseModel):
     vertical: Optional[TcrVertical] = None
 
 
-class DataBrandContact(BaseModel):
+class BrandContact(BaseModel):
     """Contact information for the brand"""
 
     business_name: Optional[str] = None
@@ -126,7 +116,7 @@ class DataBrandContact(BaseModel):
     """Contact's role in the business"""
 
 
-class DataBrand(BaseModel):
+class Brand(BaseModel):
     """
     Brand response with nested contact, business, and compliance sections — mirrors the request structure.
     """
@@ -134,13 +124,13 @@ class DataBrand(BaseModel):
     id: Optional[str] = None
     """Unique identifier for the brand"""
 
-    business: Optional[DataBrandBusiness] = None
+    business: Optional[BrandBusiness] = None
     """Business details and address information"""
 
-    compliance: Optional[DataBrandCompliance] = None
+    compliance: Optional[BrandCompliance] = None
     """Compliance and TCR-related information"""
 
-    contact: Optional[DataBrandContact] = None
+    contact: Optional[BrandContact] = None
     """Contact information for the brand"""
 
     created_at: Optional[datetime] = None
@@ -177,7 +167,7 @@ class DataBrand(BaseModel):
     """When the brand was last updated"""
 
 
-class Data(BaseModel):
+class ProfileDetail(BaseModel):
     """Detailed profile response for v3 API"""
 
     id: Optional[str] = None
@@ -202,13 +192,13 @@ class Data(BaseModel):
     information.
     """
 
-    billing_contact: Optional[DataBillingContact] = None
+    billing_contact: Optional[BillingContact] = None
     """Billing contact info returned in profile responses"""
 
     billing_model: Optional[str] = None
     """Billing model: profile, organization, or profile_and_organization"""
 
-    brand: Optional[DataBrand] = None
+    brand: Optional[Brand] = None
     """
     Brand response with nested contact, business, and compliance sections — mirrors
     the request structure.
@@ -298,48 +288,3 @@ class Data(BaseModel):
 
     whatsapp_phone_number: Optional[str] = None
     """Direct WhatsApp phone number"""
-
-
-class Error(BaseModel):
-    """Error information"""
-
-    code: Optional[str] = None
-    """Machine-readable error code (e.g., "RESOURCE_001")"""
-
-    details: Optional[Dict[str, List[str]]] = None
-    """Additional validation error details (field-level errors)"""
-
-    doc_url: Optional[str] = None
-    """URL to documentation about this error"""
-
-    message: Optional[str] = None
-    """Human-readable error message"""
-
-
-class Meta(BaseModel):
-    """Request and response metadata"""
-
-    request_id: Optional[str] = None
-    """Unique identifier for this request (for tracing and support)"""
-
-    timestamp: Optional[datetime] = None
-    """Server timestamp when the response was generated"""
-
-    version: Optional[str] = None
-    """API version used for this request"""
-
-
-class ProfileRetrieveResponse(BaseModel):
-    """Standard API response envelope for all v3 endpoints"""
-
-    data: Optional[Data] = None
-    """Detailed profile response for v3 API"""
-
-    error: Optional[Error] = None
-    """Error information"""
-
-    meta: Optional[Meta] = None
-    """Request and response metadata"""
-
-    success: Optional[bool] = None
-    """Indicates whether the request was successful"""

@@ -23,11 +23,9 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
+from ..types.api_response_template import APIResponseTemplate
 from ..types.template_list_response import TemplateListResponse
-from ..types.template_create_response import TemplateCreateResponse
-from ..types.template_update_response import TemplateUpdateResponse
 from ..types.template_definition_param import TemplateDefinitionParam
-from ..types.template_retrieve_response import TemplateRetrieveResponse
 
 __all__ = ["TemplatesResource", "AsyncTemplatesResource"]
 
@@ -74,7 +72,7 @@ class TemplatesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> TemplateCreateResponse:
+    ) -> APIResponseTemplate:
         """Creates a new message template with header, body, footer, and buttons.
 
         The
@@ -130,7 +128,7 @@ class TemplatesResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=TemplateCreateResponse,
+            cast_to=APIResponseTemplate,
         )
 
     def retrieve(
@@ -144,7 +142,7 @@ class TemplatesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> TemplateRetrieveResponse:
+    ) -> APIResponseTemplate:
         """Retrieves a specific template by its ID.
 
         Returns template details including
@@ -167,7 +165,7 @@ class TemplatesResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=TemplateRetrieveResponse,
+            cast_to=APIResponseTemplate,
         )
 
     def update(
@@ -188,7 +186,7 @@ class TemplatesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> TemplateUpdateResponse:
+    ) -> APIResponseTemplate:
         """
         Updates an existing template's name, category, language, definition, or submits
         it for review.
@@ -243,7 +241,7 @@ class TemplatesResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=TemplateUpdateResponse,
+            cast_to=APIResponseTemplate,
         )
 
     def list(
@@ -411,7 +409,7 @@ class AsyncTemplatesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> TemplateCreateResponse:
+    ) -> APIResponseTemplate:
         """Creates a new message template with header, body, footer, and buttons.
 
         The
@@ -467,7 +465,7 @@ class AsyncTemplatesResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=TemplateCreateResponse,
+            cast_to=APIResponseTemplate,
         )
 
     async def retrieve(
@@ -481,7 +479,7 @@ class AsyncTemplatesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> TemplateRetrieveResponse:
+    ) -> APIResponseTemplate:
         """Retrieves a specific template by its ID.
 
         Returns template details including
@@ -504,7 +502,7 @@ class AsyncTemplatesResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=TemplateRetrieveResponse,
+            cast_to=APIResponseTemplate,
         )
 
     async def update(
@@ -525,7 +523,7 @@ class AsyncTemplatesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> TemplateUpdateResponse:
+    ) -> APIResponseTemplate:
         """
         Updates an existing template's name, category, language, definition, or submits
         it for review.
@@ -580,7 +578,7 @@ class AsyncTemplatesResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=TemplateUpdateResponse,
+            cast_to=APIResponseTemplate,
         )
 
     async def list(

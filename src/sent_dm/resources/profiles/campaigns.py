@@ -18,9 +18,9 @@ from ..._response import (
 )
 from ..._base_client import make_request_options
 from ...types.profiles import campaign_create_params, campaign_delete_params, campaign_update_params
-from ...types.profiles.campaign_list_response import CampaignListResponse
-from ...types.profiles.campaign_create_response import CampaignCreateResponse
-from ...types.profiles.campaign_update_response import CampaignUpdateResponse
+from ...types.profiles.campaign_data_param import CampaignDataParam
+from ...types.profiles.api_response_of_brand_campaign import APIResponseOfBrandCampaign
+from ...types.profiles.api_response_of_list_of_brand_campaign import APIResponseOfListOfBrandCampaign
 
 __all__ = ["CampaignsResource", "AsyncCampaignsResource"]
 
@@ -57,7 +57,7 @@ class CampaignsResource(SyncAPIResource):
         self,
         profile_id: str,
         *,
-        campaign: campaign_create_params.Campaign,
+        campaign: CampaignDataParam,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -67,7 +67,7 @@ class CampaignsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> CampaignCreateResponse:
+    ) -> APIResponseOfBrandCampaign:
         """
         **Deprecated.** This endpoint is replaced by `/v3/sender-profiles` and will be
         removed in a future release. It still behaves exactly as before, so nothing
@@ -115,7 +115,7 @@ class CampaignsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=CampaignCreateResponse,
+            cast_to=APIResponseOfBrandCampaign,
         )
 
     @typing_extensions.deprecated("deprecated")
@@ -124,7 +124,7 @@ class CampaignsResource(SyncAPIResource):
         campaign_id: str,
         *,
         profile_id: str,
-        campaign: campaign_update_params.Campaign,
+        campaign: CampaignDataParam,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -134,7 +134,7 @@ class CampaignsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> CampaignUpdateResponse:
+    ) -> APIResponseOfBrandCampaign:
         """
         **Deprecated.** This endpoint is replaced by `/v3/sender-profiles` and will be
         removed in a future release. It still behaves exactly as before, so nothing
@@ -186,7 +186,7 @@ class CampaignsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=CampaignUpdateResponse,
+            cast_to=APIResponseOfBrandCampaign,
         )
 
     @typing_extensions.deprecated("deprecated")
@@ -201,7 +201,7 @@ class CampaignsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> CampaignListResponse:
+    ) -> APIResponseOfListOfBrandCampaign:
         """
         **Deprecated.** This endpoint is replaced by `/v3/sender-profiles` and will be
         removed in a future release. It still behaves exactly as before, so nothing
@@ -229,7 +229,7 @@ class CampaignsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=CampaignListResponse,
+            cast_to=APIResponseOfListOfBrandCampaign,
         )
 
     @typing_extensions.deprecated("deprecated")
@@ -319,7 +319,7 @@ class AsyncCampaignsResource(AsyncAPIResource):
         self,
         profile_id: str,
         *,
-        campaign: campaign_create_params.Campaign,
+        campaign: CampaignDataParam,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -329,7 +329,7 @@ class AsyncCampaignsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> CampaignCreateResponse:
+    ) -> APIResponseOfBrandCampaign:
         """
         **Deprecated.** This endpoint is replaced by `/v3/sender-profiles` and will be
         removed in a future release. It still behaves exactly as before, so nothing
@@ -377,7 +377,7 @@ class AsyncCampaignsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=CampaignCreateResponse,
+            cast_to=APIResponseOfBrandCampaign,
         )
 
     @typing_extensions.deprecated("deprecated")
@@ -386,7 +386,7 @@ class AsyncCampaignsResource(AsyncAPIResource):
         campaign_id: str,
         *,
         profile_id: str,
-        campaign: campaign_update_params.Campaign,
+        campaign: CampaignDataParam,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -396,7 +396,7 @@ class AsyncCampaignsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> CampaignUpdateResponse:
+    ) -> APIResponseOfBrandCampaign:
         """
         **Deprecated.** This endpoint is replaced by `/v3/sender-profiles` and will be
         removed in a future release. It still behaves exactly as before, so nothing
@@ -448,7 +448,7 @@ class AsyncCampaignsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=CampaignUpdateResponse,
+            cast_to=APIResponseOfBrandCampaign,
         )
 
     @typing_extensions.deprecated("deprecated")
@@ -463,7 +463,7 @@ class AsyncCampaignsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> CampaignListResponse:
+    ) -> APIResponseOfListOfBrandCampaign:
         """
         **Deprecated.** This endpoint is replaced by `/v3/sender-profiles` and will be
         removed in a future release. It still behaves exactly as before, so nothing
@@ -491,7 +491,7 @@ class AsyncCampaignsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=CampaignListResponse,
+            cast_to=APIResponseOfListOfBrandCampaign,
         )
 
     @typing_extensions.deprecated("deprecated")

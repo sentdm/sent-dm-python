@@ -20,10 +20,8 @@ from .._response import (
 )
 from .._base_client import make_request_options
 from ..types.contact_list_response import ContactListResponse
-from ..types.contact_create_response import ContactCreateResponse
-from ..types.contact_update_response import ContactUpdateResponse
-from ..types.contact_retrieve_response import ContactRetrieveResponse
-from ..types.contact_retrieve_message_summary_response import ContactRetrieveMessageSummaryResponse
+from ..types.api_response_of_contact import APIResponseOfContact
+from ..types.api_response_of_contact_message_summary import APIResponseOfContactMessageSummary
 
 __all__ = ["ContactsResource", "AsyncContactsResource"]
 
@@ -68,7 +66,7 @@ class ContactsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ContactCreateResponse:
+    ) -> APIResponseOfContact:
         """
         Creates a new contact by phone number and associates it with the authenticated
         customer.
@@ -108,7 +106,7 @@ class ContactsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ContactCreateResponse,
+            cast_to=APIResponseOfContact,
         )
 
     def retrieve(
@@ -122,7 +120,7 @@ class ContactsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ContactRetrieveResponse:
+    ) -> APIResponseOfContact:
         """Retrieves a specific contact by their unique identifier.
 
         Returns detailed
@@ -146,7 +144,7 @@ class ContactsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ContactRetrieveResponse,
+            cast_to=APIResponseOfContact,
         )
 
     def update(
@@ -164,7 +162,7 @@ class ContactsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ContactUpdateResponse:
+    ) -> APIResponseOfContact:
         """
         Updates a contact's default channel and/or opt-out status.
 
@@ -209,7 +207,7 @@ class ContactsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ContactUpdateResponse,
+            cast_to=APIResponseOfContact,
         )
 
     def list(
@@ -336,7 +334,7 @@ class ContactsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ContactRetrieveMessageSummaryResponse:
+    ) -> APIResponseOfContactMessageSummary:
         """
         Returns aggregate message counts, time bounds, channels used, and per-channel
         success/fail scores (each as a percentage 0-100 of messages on that channel) for
@@ -360,7 +358,7 @@ class ContactsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ContactRetrieveMessageSummaryResponse,
+            cast_to=APIResponseOfContactMessageSummary,
         )
 
 
@@ -404,7 +402,7 @@ class AsyncContactsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ContactCreateResponse:
+    ) -> APIResponseOfContact:
         """
         Creates a new contact by phone number and associates it with the authenticated
         customer.
@@ -444,7 +442,7 @@ class AsyncContactsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ContactCreateResponse,
+            cast_to=APIResponseOfContact,
         )
 
     async def retrieve(
@@ -458,7 +456,7 @@ class AsyncContactsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ContactRetrieveResponse:
+    ) -> APIResponseOfContact:
         """Retrieves a specific contact by their unique identifier.
 
         Returns detailed
@@ -482,7 +480,7 @@ class AsyncContactsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ContactRetrieveResponse,
+            cast_to=APIResponseOfContact,
         )
 
     async def update(
@@ -500,7 +498,7 @@ class AsyncContactsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ContactUpdateResponse:
+    ) -> APIResponseOfContact:
         """
         Updates a contact's default channel and/or opt-out status.
 
@@ -545,7 +543,7 @@ class AsyncContactsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ContactUpdateResponse,
+            cast_to=APIResponseOfContact,
         )
 
     async def list(
@@ -672,7 +670,7 @@ class AsyncContactsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ContactRetrieveMessageSummaryResponse:
+    ) -> APIResponseOfContactMessageSummary:
         """
         Returns aggregate message counts, time bounds, channels used, and per-channel
         success/fail scores (each as a percentage 0-100 of messages on that channel) for
@@ -696,7 +694,7 @@ class AsyncContactsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ContactRetrieveMessageSummaryResponse,
+            cast_to=APIResponseOfContactMessageSummary,
         )
 
 
