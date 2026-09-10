@@ -3,6 +3,12 @@
 ## [0.38.0](https://github.com/sentdm/sent-dm-python/compare/v0.37.0...v0.38.0) (2026-09-10)
 
 
+### Highlights
+
+The contacts, templates, webhooks, webhook events, conversations, and conversation messages list methods now return a page you can iterate instead of a single response body. Iterate the result and the SDK fetches each page as it goes. This changes those methods' return type, so code that read the response body directly needs to iterate the page, or read its items, instead.
+
+`page` and `page_size` are now optional on those calls. You don't have to pass them to list anything.
+
 ### Features
 
 * **api:** configure page_number pagination for the v3 list endpoints ([a5aed1a](https://github.com/sentdm/sent-dm-python/commit/a5aed1a7f415c8c1aa273c2fc872b84b87bb092b))
