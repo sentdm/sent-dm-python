@@ -9,9 +9,8 @@ import pytest
 
 from sent_dm import Sent, AsyncSent
 from tests.utils import assert_matches_type
-from sent_dm.types import (
-    APIResponseOfConversationMessagesList,
-)
+from sent_dm.pagination import SyncConversationsPage, AsyncConversationsPage
+from sent_dm.types.conversation_messages_list import Message
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -22,11 +21,8 @@ class TestConversations:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_list(self, client: Sent) -> None:
-        conversation = client.conversations.list(
-            page=0,
-            page_size=0,
-        )
-        assert_matches_type(APIResponseOfConversationMessagesList, conversation, path=["response"])
+        conversation = client.conversations.list()
+        assert_matches_type(SyncConversationsPage[Message], conversation, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -36,33 +32,27 @@ class TestConversations:
             page_size=0,
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(APIResponseOfConversationMessagesList, conversation, path=["response"])
+        assert_matches_type(SyncConversationsPage[Message], conversation, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_list(self, client: Sent) -> None:
-        response = client.conversations.with_raw_response.list(
-            page=0,
-            page_size=0,
-        )
+        response = client.conversations.with_raw_response.list()
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         conversation = response.parse()
-        assert_matches_type(APIResponseOfConversationMessagesList, conversation, path=["response"])
+        assert_matches_type(SyncConversationsPage[Message], conversation, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_list(self, client: Sent) -> None:
-        with client.conversations.with_streaming_response.list(
-            page=0,
-            page_size=0,
-        ) as response:
+        with client.conversations.with_streaming_response.list() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             conversation = response.parse()
-            assert_matches_type(APIResponseOfConversationMessagesList, conversation, path=["response"])
+            assert_matches_type(SyncConversationsPage[Message], conversation, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -71,10 +61,8 @@ class TestConversations:
     def test_method_list_messages(self, client: Sent) -> None:
         conversation = client.conversations.list_messages(
             id="08fab313-c9e2-502c-975e-08b0356c432e",
-            page=0,
-            page_size=0,
         )
-        assert_matches_type(APIResponseOfConversationMessagesList, conversation, path=["response"])
+        assert_matches_type(SyncConversationsPage[Message], conversation, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -85,35 +73,31 @@ class TestConversations:
             page_size=0,
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(APIResponseOfConversationMessagesList, conversation, path=["response"])
+        assert_matches_type(SyncConversationsPage[Message], conversation, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_list_messages(self, client: Sent) -> None:
         response = client.conversations.with_raw_response.list_messages(
             id="08fab313-c9e2-502c-975e-08b0356c432e",
-            page=0,
-            page_size=0,
         )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         conversation = response.parse()
-        assert_matches_type(APIResponseOfConversationMessagesList, conversation, path=["response"])
+        assert_matches_type(SyncConversationsPage[Message], conversation, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_list_messages(self, client: Sent) -> None:
         with client.conversations.with_streaming_response.list_messages(
             id="08fab313-c9e2-502c-975e-08b0356c432e",
-            page=0,
-            page_size=0,
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             conversation = response.parse()
-            assert_matches_type(APIResponseOfConversationMessagesList, conversation, path=["response"])
+            assert_matches_type(SyncConversationsPage[Message], conversation, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -123,8 +107,6 @@ class TestConversations:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             client.conversations.with_raw_response.list_messages(
                 id="",
-                page=0,
-                page_size=0,
             )
 
 
@@ -136,11 +118,8 @@ class TestAsyncConversations:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_list(self, async_client: AsyncSent) -> None:
-        conversation = await async_client.conversations.list(
-            page=0,
-            page_size=0,
-        )
-        assert_matches_type(APIResponseOfConversationMessagesList, conversation, path=["response"])
+        conversation = await async_client.conversations.list()
+        assert_matches_type(AsyncConversationsPage[Message], conversation, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -150,33 +129,27 @@ class TestAsyncConversations:
             page_size=0,
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(APIResponseOfConversationMessagesList, conversation, path=["response"])
+        assert_matches_type(AsyncConversationsPage[Message], conversation, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_list(self, async_client: AsyncSent) -> None:
-        response = await async_client.conversations.with_raw_response.list(
-            page=0,
-            page_size=0,
-        )
+        response = await async_client.conversations.with_raw_response.list()
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         conversation = await response.parse()
-        assert_matches_type(APIResponseOfConversationMessagesList, conversation, path=["response"])
+        assert_matches_type(AsyncConversationsPage[Message], conversation, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_list(self, async_client: AsyncSent) -> None:
-        async with async_client.conversations.with_streaming_response.list(
-            page=0,
-            page_size=0,
-        ) as response:
+        async with async_client.conversations.with_streaming_response.list() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             conversation = await response.parse()
-            assert_matches_type(APIResponseOfConversationMessagesList, conversation, path=["response"])
+            assert_matches_type(AsyncConversationsPage[Message], conversation, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -185,10 +158,8 @@ class TestAsyncConversations:
     async def test_method_list_messages(self, async_client: AsyncSent) -> None:
         conversation = await async_client.conversations.list_messages(
             id="08fab313-c9e2-502c-975e-08b0356c432e",
-            page=0,
-            page_size=0,
         )
-        assert_matches_type(APIResponseOfConversationMessagesList, conversation, path=["response"])
+        assert_matches_type(AsyncConversationsPage[Message], conversation, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -199,35 +170,31 @@ class TestAsyncConversations:
             page_size=0,
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(APIResponseOfConversationMessagesList, conversation, path=["response"])
+        assert_matches_type(AsyncConversationsPage[Message], conversation, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_list_messages(self, async_client: AsyncSent) -> None:
         response = await async_client.conversations.with_raw_response.list_messages(
             id="08fab313-c9e2-502c-975e-08b0356c432e",
-            page=0,
-            page_size=0,
         )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         conversation = await response.parse()
-        assert_matches_type(APIResponseOfConversationMessagesList, conversation, path=["response"])
+        assert_matches_type(AsyncConversationsPage[Message], conversation, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_list_messages(self, async_client: AsyncSent) -> None:
         async with async_client.conversations.with_streaming_response.list_messages(
             id="08fab313-c9e2-502c-975e-08b0356c432e",
-            page=0,
-            page_size=0,
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             conversation = await response.parse()
-            assert_matches_type(APIResponseOfConversationMessagesList, conversation, path=["response"])
+            assert_matches_type(AsyncConversationsPage[Message], conversation, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -237,6 +204,4 @@ class TestAsyncConversations:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             await async_client.conversations.with_raw_response.list_messages(
                 id="",
-                page=0,
-                page_size=0,
             )
