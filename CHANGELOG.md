@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.38.0](https://github.com/sentdm/sent-dm-python/compare/v0.37.0...v0.38.0) (2026-09-10)
+
+
+### Features
+
+* **api:** configure page_number pagination for the v3 list endpoints ([a5aed1a](https://github.com/sentdm/sent-dm-python/commit/a5aed1a7f415c8c1aa273c2fc872b84b87bb092b))
+* **api:** sync generated SDKs from the committed spec ([2fdafb6](https://github.com/sentdm/sent-dm-python/commit/2fdafb69e231f683f38561e1adecdcd5c37e5802))
+
 ## [0.37.0](https://github.com/sentdm/sent-dm-python/compare/v0.36.0...v0.37.0) (2026-09-09)
 
 
