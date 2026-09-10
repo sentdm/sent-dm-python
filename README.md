@@ -206,8 +206,6 @@ first_page = await client.webhooks.list(
     page=0,
     page_size=0,
 )
-
-print(f"page number: {first_page.data.pagination.page}")  # => "page number: 1"
 for webhook in first_page.data.webhooks:
     print(webhook.id)
 

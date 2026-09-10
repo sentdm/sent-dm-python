@@ -1,6 +1,6 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import List, Generic, TypeVar, Optional
+from typing import List, Generic, TypeVar, Optional, cast
 from typing_extensions import override
 
 from ._models import BaseModel, GenericModel
@@ -34,10 +34,6 @@ _T = TypeVar("_T")
 
 class ContactsPagePagination(BaseModel):
     has_more: Optional[bool] = None
-
-    page: Optional[int] = None
-
-    total_pages: Optional[int] = None
 
 
 class ContactsPageData(GenericModel, Generic[_T]):
@@ -73,23 +69,9 @@ class SyncContactsPage(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
 
     @override
     def next_page_info(self) -> Optional[PageInfo]:
-        current_page = None
-        if self.data is not None:
-            if self.data.pagination is not None:
-                if self.data.pagination.page is not None:
-                    current_page = self.data.pagination.page
-        if current_page is None:
-            current_page = 1
+        last_page = cast("int | None", self._options.params.get("page")) or 1
 
-        total_pages = None
-        if self.data is not None:
-            if self.data.pagination is not None:
-                if self.data.pagination.total_pages is not None:
-                    total_pages = self.data.pagination.total_pages
-        if total_pages is not None and current_page >= total_pages:
-            return None
-
-        return PageInfo(params={"page": current_page + 1})
+        return PageInfo(params={"page": last_page + 1})
 
 
 class AsyncContactsPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
@@ -119,31 +101,13 @@ class AsyncContactsPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
 
     @override
     def next_page_info(self) -> Optional[PageInfo]:
-        current_page = None
-        if self.data is not None:
-            if self.data.pagination is not None:
-                if self.data.pagination.page is not None:
-                    current_page = self.data.pagination.page
-        if current_page is None:
-            current_page = 1
+        last_page = cast("int | None", self._options.params.get("page")) or 1
 
-        total_pages = None
-        if self.data is not None:
-            if self.data.pagination is not None:
-                if self.data.pagination.total_pages is not None:
-                    total_pages = self.data.pagination.total_pages
-        if total_pages is not None and current_page >= total_pages:
-            return None
-
-        return PageInfo(params={"page": current_page + 1})
+        return PageInfo(params={"page": last_page + 1})
 
 
 class ConversationsPagePagination(BaseModel):
     has_more: Optional[bool] = None
-
-    page: Optional[int] = None
-
-    total_pages: Optional[int] = None
 
 
 class ConversationsPageData(GenericModel, Generic[_T]):
@@ -179,23 +143,9 @@ class SyncConversationsPage(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
 
     @override
     def next_page_info(self) -> Optional[PageInfo]:
-        current_page = None
-        if self.data is not None:
-            if self.data.pagination is not None:
-                if self.data.pagination.page is not None:
-                    current_page = self.data.pagination.page
-        if current_page is None:
-            current_page = 1
+        last_page = cast("int | None", self._options.params.get("page")) or 1
 
-        total_pages = None
-        if self.data is not None:
-            if self.data.pagination is not None:
-                if self.data.pagination.total_pages is not None:
-                    total_pages = self.data.pagination.total_pages
-        if total_pages is not None and current_page >= total_pages:
-            return None
-
-        return PageInfo(params={"page": current_page + 1})
+        return PageInfo(params={"page": last_page + 1})
 
 
 class AsyncConversationsPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
@@ -225,31 +175,13 @@ class AsyncConversationsPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
 
     @override
     def next_page_info(self) -> Optional[PageInfo]:
-        current_page = None
-        if self.data is not None:
-            if self.data.pagination is not None:
-                if self.data.pagination.page is not None:
-                    current_page = self.data.pagination.page
-        if current_page is None:
-            current_page = 1
+        last_page = cast("int | None", self._options.params.get("page")) or 1
 
-        total_pages = None
-        if self.data is not None:
-            if self.data.pagination is not None:
-                if self.data.pagination.total_pages is not None:
-                    total_pages = self.data.pagination.total_pages
-        if total_pages is not None and current_page >= total_pages:
-            return None
-
-        return PageInfo(params={"page": current_page + 1})
+        return PageInfo(params={"page": last_page + 1})
 
 
 class TemplatesPagePagination(BaseModel):
     has_more: Optional[bool] = None
-
-    page: Optional[int] = None
-
-    total_pages: Optional[int] = None
 
 
 class TemplatesPageData(GenericModel, Generic[_T]):
@@ -285,23 +217,9 @@ class SyncTemplatesPage(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
 
     @override
     def next_page_info(self) -> Optional[PageInfo]:
-        current_page = None
-        if self.data is not None:
-            if self.data.pagination is not None:
-                if self.data.pagination.page is not None:
-                    current_page = self.data.pagination.page
-        if current_page is None:
-            current_page = 1
+        last_page = cast("int | None", self._options.params.get("page")) or 1
 
-        total_pages = None
-        if self.data is not None:
-            if self.data.pagination is not None:
-                if self.data.pagination.total_pages is not None:
-                    total_pages = self.data.pagination.total_pages
-        if total_pages is not None and current_page >= total_pages:
-            return None
-
-        return PageInfo(params={"page": current_page + 1})
+        return PageInfo(params={"page": last_page + 1})
 
 
 class AsyncTemplatesPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
@@ -331,31 +249,13 @@ class AsyncTemplatesPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
 
     @override
     def next_page_info(self) -> Optional[PageInfo]:
-        current_page = None
-        if self.data is not None:
-            if self.data.pagination is not None:
-                if self.data.pagination.page is not None:
-                    current_page = self.data.pagination.page
-        if current_page is None:
-            current_page = 1
+        last_page = cast("int | None", self._options.params.get("page")) or 1
 
-        total_pages = None
-        if self.data is not None:
-            if self.data.pagination is not None:
-                if self.data.pagination.total_pages is not None:
-                    total_pages = self.data.pagination.total_pages
-        if total_pages is not None and current_page >= total_pages:
-            return None
-
-        return PageInfo(params={"page": current_page + 1})
+        return PageInfo(params={"page": last_page + 1})
 
 
 class WebhooksPagePagination(BaseModel):
     has_more: Optional[bool] = None
-
-    page: Optional[int] = None
-
-    total_pages: Optional[int] = None
 
 
 class WebhooksPageData(GenericModel, Generic[_T]):
@@ -391,23 +291,9 @@ class SyncWebhooksPage(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
 
     @override
     def next_page_info(self) -> Optional[PageInfo]:
-        current_page = None
-        if self.data is not None:
-            if self.data.pagination is not None:
-                if self.data.pagination.page is not None:
-                    current_page = self.data.pagination.page
-        if current_page is None:
-            current_page = 1
+        last_page = cast("int | None", self._options.params.get("page")) or 1
 
-        total_pages = None
-        if self.data is not None:
-            if self.data.pagination is not None:
-                if self.data.pagination.total_pages is not None:
-                    total_pages = self.data.pagination.total_pages
-        if total_pages is not None and current_page >= total_pages:
-            return None
-
-        return PageInfo(params={"page": current_page + 1})
+        return PageInfo(params={"page": last_page + 1})
 
 
 class AsyncWebhooksPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
@@ -437,31 +323,13 @@ class AsyncWebhooksPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
 
     @override
     def next_page_info(self) -> Optional[PageInfo]:
-        current_page = None
-        if self.data is not None:
-            if self.data.pagination is not None:
-                if self.data.pagination.page is not None:
-                    current_page = self.data.pagination.page
-        if current_page is None:
-            current_page = 1
+        last_page = cast("int | None", self._options.params.get("page")) or 1
 
-        total_pages = None
-        if self.data is not None:
-            if self.data.pagination is not None:
-                if self.data.pagination.total_pages is not None:
-                    total_pages = self.data.pagination.total_pages
-        if total_pages is not None and current_page >= total_pages:
-            return None
-
-        return PageInfo(params={"page": current_page + 1})
+        return PageInfo(params={"page": last_page + 1})
 
 
 class WebhookEventsPagePagination(BaseModel):
     has_more: Optional[bool] = None
-
-    page: Optional[int] = None
-
-    total_pages: Optional[int] = None
 
 
 class WebhookEventsPageData(GenericModel, Generic[_T]):
@@ -497,23 +365,9 @@ class SyncWebhookEventsPage(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
 
     @override
     def next_page_info(self) -> Optional[PageInfo]:
-        current_page = None
-        if self.data is not None:
-            if self.data.pagination is not None:
-                if self.data.pagination.page is not None:
-                    current_page = self.data.pagination.page
-        if current_page is None:
-            current_page = 1
+        last_page = cast("int | None", self._options.params.get("page")) or 1
 
-        total_pages = None
-        if self.data is not None:
-            if self.data.pagination is not None:
-                if self.data.pagination.total_pages is not None:
-                    total_pages = self.data.pagination.total_pages
-        if total_pages is not None and current_page >= total_pages:
-            return None
-
-        return PageInfo(params={"page": current_page + 1})
+        return PageInfo(params={"page": last_page + 1})
 
 
 class AsyncWebhookEventsPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
@@ -543,20 +397,6 @@ class AsyncWebhookEventsPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
 
     @override
     def next_page_info(self) -> Optional[PageInfo]:
-        current_page = None
-        if self.data is not None:
-            if self.data.pagination is not None:
-                if self.data.pagination.page is not None:
-                    current_page = self.data.pagination.page
-        if current_page is None:
-            current_page = 1
+        last_page = cast("int | None", self._options.params.get("page")) or 1
 
-        total_pages = None
-        if self.data is not None:
-            if self.data.pagination is not None:
-                if self.data.pagination.total_pages is not None:
-                    total_pages = self.data.pagination.total_pages
-        if total_pages is not None and current_page >= total_pages:
-            return None
-
-        return PageInfo(params={"page": current_page + 1})
+        return PageInfo(params={"page": last_page + 1})
