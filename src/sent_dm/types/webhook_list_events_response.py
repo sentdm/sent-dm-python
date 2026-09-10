@@ -1,23 +1,20 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import List, Union, Optional
+from typing import Union, Optional
 from datetime import datetime
 from typing_extensions import TypeAlias
 
 from .._models import BaseModel
-from .api_meta import APIMeta
-from .error_detail import ErrorDetail
 from .message_event import MessageEvent
 from .template_event import TemplateEvent
-from .pagination_meta import PaginationMeta
 from .inbound_message_event import InboundMessageEvent
 
-__all__ = ["WebhookListEventsResponse", "Data", "DataEvent", "DataEventEventData"]
+__all__ = ["WebhookListEventsResponse", "EventData"]
 
-DataEventEventData: TypeAlias = Union[MessageEvent, InboundMessageEvent, TemplateEvent]
+EventData: TypeAlias = Union[MessageEvent, InboundMessageEvent, TemplateEvent]
 
 
-class DataEvent(BaseModel):
+class WebhookListEventsResponse(BaseModel):
     id: Optional[str] = None
 
     created_at: Optional[datetime] = None
@@ -28,7 +25,7 @@ class DataEvent(BaseModel):
 
     error_message: Optional[str] = None
 
-    event_data: Optional[DataEventEventData] = None
+    event_data: Optional[EventData] = None
     """The exact event body that was delivered, or attempted, for this record.
 
     One of the three webhook envelopes: a message status change, an inbound message,
@@ -45,29 +42,3 @@ class DataEvent(BaseModel):
     processing_started_at: Optional[datetime] = None
 
     response_body: Optional[str] = None
-
-
-class Data(BaseModel):
-    """A paginated list of webhook delivery records."""
-
-    events: Optional[List[DataEvent]] = None
-    """The events on this page."""
-
-    pagination: Optional[PaginationMeta] = None
-    """Pagination metadata for list responses"""
-
-
-class WebhookListEventsResponse(BaseModel):
-    """Standard API response envelope for all v3 endpoints"""
-
-    data: Optional[Data] = None
-    """A paginated list of webhook delivery records."""
-
-    error: Optional[ErrorDetail] = None
-    """Error information"""
-
-    meta: Optional[APIMeta] = None
-    """Request and response metadata"""
-
-    success: Optional[bool] = None
-    """Indicates whether the request was successful"""

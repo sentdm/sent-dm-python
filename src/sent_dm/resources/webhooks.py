@@ -25,9 +25,10 @@ from .._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from .._base_client import make_request_options
+from ..pagination import SyncWebhooksPage, AsyncWebhooksPage, SyncWebhookEventsPage, AsyncWebhookEventsPage
+from .._base_client import AsyncPaginator, make_request_options
+from ..types.webhook_response import WebhookResponse
 from ..types.api_response_webhook import APIResponseWebhook
-from ..types.webhook_list_response import WebhookListResponse
 from ..types.webhook_test_response import WebhookTestResponse
 from ..types.webhook_list_events_response import WebhookListEventsResponse
 from ..types.webhook_rotate_secret_response import WebhookRotateSecretResponse
@@ -230,9 +231,9 @@ class WebhooksResource(SyncAPIResource):
     def list(
         self,
         *,
-        page: int,
-        page_size: int,
         is_active: Optional[bool] | Omit = omit,
+        page: int | Omit = omit,
+        page_size: int | Omit = omit,
         search: Optional[str] | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -241,7 +242,7 @@ class WebhooksResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WebhookListResponse:
+    ) -> SyncWebhooksPage[WebhookResponse]:
         """
         Retrieves a paginated list of webhooks for the authenticated customer.
 
@@ -255,8 +256,9 @@ class WebhooksResource(SyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
-        return self._get(
+        return self._get_api_list(
             "/v3/webhooks",
+            page=SyncWebhooksPage[WebhookResponse],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -264,15 +266,15 @@ class WebhooksResource(SyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform(
                     {
+                        "is_active": is_active,
                         "page": page,
                         "page_size": page_size,
-                        "is_active": is_active,
                         "search": search,
                     },
                     webhook_list_params.WebhookListParams,
                 ),
             ),
-            cast_to=WebhookListResponse,
+            model=WebhookResponse,
         )
 
     def delete(
@@ -347,8 +349,8 @@ class WebhooksResource(SyncAPIResource):
         self,
         id: str,
         *,
-        page: int,
-        page_size: int,
+        page: int | Omit = omit,
+        page_size: int | Omit = omit,
         search: Optional[str] | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -357,7 +359,7 @@ class WebhooksResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WebhookListEventsResponse:
+    ) -> SyncWebhookEventsPage[WebhookListEventsResponse]:
         """
         Retrieves a paginated list of delivery events for the specified webhook.
 
@@ -373,8 +375,9 @@ class WebhooksResource(SyncAPIResource):
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
-        return self._get(
+        return self._get_api_list(
             path_template("/v3/webhooks/{id}/events", id=id),
+            page=SyncWebhookEventsPage[WebhookListEventsResponse],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -389,7 +392,7 @@ class WebhooksResource(SyncAPIResource):
                     webhook_list_events_params.WebhookListEventsParams,
                 ),
             ),
-            cast_to=WebhookListEventsResponse,
+            model=WebhookListEventsResponse,
         )
 
     def rotate_secret(
@@ -747,12 +750,12 @@ class AsyncWebhooksResource(AsyncAPIResource):
             cast_to=APIResponseWebhook,
         )
 
-    async def list(
+    def list(
         self,
         *,
-        page: int,
-        page_size: int,
         is_active: Optional[bool] | Omit = omit,
+        page: int | Omit = omit,
+        page_size: int | Omit = omit,
         search: Optional[str] | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -761,7 +764,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WebhookListResponse:
+    ) -> AsyncPaginator[WebhookResponse, AsyncWebhooksPage[WebhookResponse]]:
         """
         Retrieves a paginated list of webhooks for the authenticated customer.
 
@@ -775,24 +778,25 @@ class AsyncWebhooksResource(AsyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
-        return await self._get(
+        return self._get_api_list(
             "/v3/webhooks",
+            page=AsyncWebhooksPage[WebhookResponse],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=await async_maybe_transform(
+                query=maybe_transform(
                     {
+                        "is_active": is_active,
                         "page": page,
                         "page_size": page_size,
-                        "is_active": is_active,
                         "search": search,
                     },
                     webhook_list_params.WebhookListParams,
                 ),
             ),
-            cast_to=WebhookListResponse,
+            model=WebhookResponse,
         )
 
     async def delete(
@@ -863,12 +867,12 @@ class AsyncWebhooksResource(AsyncAPIResource):
             cast_to=WebhookListEventTypesResponse,
         )
 
-    async def list_events(
+    def list_events(
         self,
         id: str,
         *,
-        page: int,
-        page_size: int,
+        page: int | Omit = omit,
+        page_size: int | Omit = omit,
         search: Optional[str] | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -877,7 +881,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WebhookListEventsResponse:
+    ) -> AsyncPaginator[WebhookListEventsResponse, AsyncWebhookEventsPage[WebhookListEventsResponse]]:
         """
         Retrieves a paginated list of delivery events for the specified webhook.
 
@@ -893,14 +897,15 @@ class AsyncWebhooksResource(AsyncAPIResource):
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
-        return await self._get(
+        return self._get_api_list(
             path_template("/v3/webhooks/{id}/events", id=id),
+            page=AsyncWebhookEventsPage[WebhookListEventsResponse],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=await async_maybe_transform(
+                query=maybe_transform(
                     {
                         "page": page,
                         "page_size": page_size,
@@ -909,7 +914,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
                     webhook_list_events_params.WebhookListEventsParams,
                 ),
             ),
-            cast_to=WebhookListEventsResponse,
+            model=WebhookListEventsResponse,
         )
 
     async def rotate_secret(

@@ -18,8 +18,9 @@ from .._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from .._base_client import make_request_options
-from ..types.contact_list_response import ContactListResponse
+from ..pagination import SyncContactsPage, AsyncContactsPage
+from .._base_client import AsyncPaginator, make_request_options
+from ..types.contact_response import ContactResponse
 from ..types.api_response_of_contact import APIResponseOfContact
 from ..types.api_response_of_contact_message_summary import APIResponseOfContactMessageSummary
 
@@ -213,9 +214,9 @@ class ContactsResource(SyncAPIResource):
     def list(
         self,
         *,
-        page: int,
-        page_size: int,
         channel: Optional[str] | Omit = omit,
+        page: int | Omit = omit,
+        page_size: int | Omit = omit,
         phone: Optional[str] | Omit = omit,
         search: Optional[str] | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -225,18 +226,18 @@ class ContactsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ContactListResponse:
+    ) -> SyncContactsPage[ContactResponse]:
         """Retrieves a paginated list of contacts for the authenticated customer.
 
         Supports
         filtering by search term, channel, or phone number.
 
         Args:
+          channel: Optional channel filter (sms, whatsapp)
+
           page: Page number (1-indexed)
 
           page_size: Number of items per page
-
-          channel: Optional channel filter (sms, whatsapp)
 
           phone: Optional phone number filter (alternative to list view)
 
@@ -251,8 +252,9 @@ class ContactsResource(SyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
-        return self._get(
+        return self._get_api_list(
             "/v3/contacts",
+            page=SyncContactsPage[ContactResponse],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -260,16 +262,16 @@ class ContactsResource(SyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform(
                     {
+                        "channel": channel,
                         "page": page,
                         "page_size": page_size,
-                        "channel": channel,
                         "phone": phone,
                         "search": search,
                     },
                     contact_list_params.ContactListParams,
                 ),
             ),
-            cast_to=ContactListResponse,
+            model=ContactResponse,
         )
 
     @typing_extensions.deprecated("deprecated")
@@ -546,12 +548,12 @@ class AsyncContactsResource(AsyncAPIResource):
             cast_to=APIResponseOfContact,
         )
 
-    async def list(
+    def list(
         self,
         *,
-        page: int,
-        page_size: int,
         channel: Optional[str] | Omit = omit,
+        page: int | Omit = omit,
+        page_size: int | Omit = omit,
         phone: Optional[str] | Omit = omit,
         search: Optional[str] | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -561,18 +563,18 @@ class AsyncContactsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ContactListResponse:
+    ) -> AsyncPaginator[ContactResponse, AsyncContactsPage[ContactResponse]]:
         """Retrieves a paginated list of contacts for the authenticated customer.
 
         Supports
         filtering by search term, channel, or phone number.
 
         Args:
+          channel: Optional channel filter (sms, whatsapp)
+
           page: Page number (1-indexed)
 
           page_size: Number of items per page
-
-          channel: Optional channel filter (sms, whatsapp)
 
           phone: Optional phone number filter (alternative to list view)
 
@@ -587,25 +589,26 @@ class AsyncContactsResource(AsyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
-        return await self._get(
+        return self._get_api_list(
             "/v3/contacts",
+            page=AsyncContactsPage[ContactResponse],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=await async_maybe_transform(
+                query=maybe_transform(
                     {
+                        "channel": channel,
                         "page": page,
                         "page_size": page_size,
-                        "channel": channel,
                         "phone": phone,
                         "search": search,
                     },
                     contact_list_params.ContactListParams,
                 ),
             ),
-            cast_to=ContactListResponse,
+            model=ContactResponse,
         )
 
     @typing_extensions.deprecated("deprecated")

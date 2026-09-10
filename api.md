@@ -17,7 +17,6 @@ from sent_dm.types import (
     TemplateEventPayload,
     WebhookEventType,
     WebhookResponse,
-    WebhookListResponse,
     WebhookListEventTypesResponse,
     WebhookListEventsResponse,
     WebhookRotateSecretResponse,
@@ -30,10 +29,10 @@ Methods:
 - <code title="post /v3/webhooks">client.webhooks.<a href="./src/sent_dm/resources/webhooks.py">create</a>(\*\*<a href="src/sent_dm/types/webhook_create_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_webhook.py">APIResponseWebhook</a></code>
 - <code title="get /v3/webhooks/{id}">client.webhooks.<a href="./src/sent_dm/resources/webhooks.py">retrieve</a>(id) -> <a href="./src/sent_dm/types/api_response_webhook.py">APIResponseWebhook</a></code>
 - <code title="put /v3/webhooks/{id}">client.webhooks.<a href="./src/sent_dm/resources/webhooks.py">update</a>(id, \*\*<a href="src/sent_dm/types/webhook_update_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_webhook.py">APIResponseWebhook</a></code>
-- <code title="get /v3/webhooks">client.webhooks.<a href="./src/sent_dm/resources/webhooks.py">list</a>(\*\*<a href="src/sent_dm/types/webhook_list_params.py">params</a>) -> <a href="./src/sent_dm/types/webhook_list_response.py">WebhookListResponse</a></code>
+- <code title="get /v3/webhooks">client.webhooks.<a href="./src/sent_dm/resources/webhooks.py">list</a>(\*\*<a href="src/sent_dm/types/webhook_list_params.py">params</a>) -> <a href="./src/sent_dm/types/webhook_response.py">SyncWebhooksPage[WebhookResponse]</a></code>
 - <code title="delete /v3/webhooks/{id}">client.webhooks.<a href="./src/sent_dm/resources/webhooks.py">delete</a>(id) -> None</code>
 - <code title="get /v3/webhooks/event-types">client.webhooks.<a href="./src/sent_dm/resources/webhooks.py">list_event_types</a>() -> <a href="./src/sent_dm/types/webhook_list_event_types_response.py">WebhookListEventTypesResponse</a></code>
-- <code title="get /v3/webhooks/{id}/events">client.webhooks.<a href="./src/sent_dm/resources/webhooks.py">list_events</a>(id, \*\*<a href="src/sent_dm/types/webhook_list_events_params.py">params</a>) -> <a href="./src/sent_dm/types/webhook_list_events_response.py">WebhookListEventsResponse</a></code>
+- <code title="get /v3/webhooks/{id}/events">client.webhooks.<a href="./src/sent_dm/resources/webhooks.py">list_events</a>(id, \*\*<a href="src/sent_dm/types/webhook_list_events_params.py">params</a>) -> <a href="./src/sent_dm/types/webhook_list_events_response.py">SyncWebhookEventsPage[WebhookListEventsResponse]</a></code>
 - <code title="post /v3/webhooks/{id}/rotate-secret">client.webhooks.<a href="./src/sent_dm/resources/webhooks.py">rotate_secret</a>(id, \*\*<a href="src/sent_dm/types/webhook_rotate_secret_params.py">params</a>) -> <a href="./src/sent_dm/types/webhook_rotate_secret_response.py">WebhookRotateSecretResponse</a></code>
 - <code title="post /v3/webhooks/{id}/test">client.webhooks.<a href="./src/sent_dm/resources/webhooks.py">test</a>(id, \*\*<a href="src/sent_dm/types/webhook_test_params.py">params</a>) -> <a href="./src/sent_dm/types/webhook_test_response.py">WebhookTestResponse</a></code>
 - <code title="patch /v3/webhooks/{id}/toggle-status">client.webhooks.<a href="./src/sent_dm/resources/webhooks.py">toggle_status</a>(id, \*\*<a href="src/sent_dm/types/webhook_toggle_status_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_webhook.py">APIResponseWebhook</a></code>
@@ -71,7 +70,6 @@ from sent_dm.types import (
     TemplateFooter,
     TemplateHeader,
     TemplateVariable,
-    TemplateListResponse,
 )
 ```
 
@@ -80,7 +78,7 @@ Methods:
 - <code title="post /v3/templates">client.templates.<a href="./src/sent_dm/resources/templates.py">create</a>(\*\*<a href="src/sent_dm/types/template_create_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_template.py">APIResponseTemplate</a></code>
 - <code title="get /v3/templates/{id}">client.templates.<a href="./src/sent_dm/resources/templates.py">retrieve</a>(id) -> <a href="./src/sent_dm/types/api_response_template.py">APIResponseTemplate</a></code>
 - <code title="put /v3/templates/{id}">client.templates.<a href="./src/sent_dm/resources/templates.py">update</a>(id, \*\*<a href="src/sent_dm/types/template_update_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_template.py">APIResponseTemplate</a></code>
-- <code title="get /v3/templates">client.templates.<a href="./src/sent_dm/resources/templates.py">list</a>(\*\*<a href="src/sent_dm/types/template_list_params.py">params</a>) -> <a href="./src/sent_dm/types/template_list_response.py">TemplateListResponse</a></code>
+- <code title="get /v3/templates">client.templates.<a href="./src/sent_dm/resources/templates.py">list</a>(\*\*<a href="src/sent_dm/types/template_list_params.py">params</a>) -> <a href="./src/sent_dm/types/template.py">SyncTemplatesPage[Template]</a></code>
 - <code title="delete /v3/templates/{id}">client.templates.<a href="./src/sent_dm/resources/templates.py">delete</a>(id, \*\*<a href="src/sent_dm/types/template_delete_params.py">params</a>) -> None</code>
 
 # Profiles
@@ -177,7 +175,6 @@ from sent_dm.types import (
     APIResponseOfContactMessageSummary,
     ContactMessageSummary,
     ContactResponse,
-    ContactListResponse,
 )
 ```
 
@@ -186,7 +183,7 @@ Methods:
 - <code title="post /v3/contacts">client.contacts.<a href="./src/sent_dm/resources/contacts.py">create</a>(\*\*<a href="src/sent_dm/types/contact_create_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_of_contact.py">APIResponseOfContact</a></code>
 - <code title="get /v3/contacts/{id}">client.contacts.<a href="./src/sent_dm/resources/contacts.py">retrieve</a>(id) -> <a href="./src/sent_dm/types/api_response_of_contact.py">APIResponseOfContact</a></code>
 - <code title="patch /v3/contacts/{id}">client.contacts.<a href="./src/sent_dm/resources/contacts.py">update</a>(id, \*\*<a href="src/sent_dm/types/contact_update_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_of_contact.py">APIResponseOfContact</a></code>
-- <code title="get /v3/contacts">client.contacts.<a href="./src/sent_dm/resources/contacts.py">list</a>(\*\*<a href="src/sent_dm/types/contact_list_params.py">params</a>) -> <a href="./src/sent_dm/types/contact_list_response.py">ContactListResponse</a></code>
+- <code title="get /v3/contacts">client.contacts.<a href="./src/sent_dm/resources/contacts.py">list</a>(\*\*<a href="src/sent_dm/types/contact_list_params.py">params</a>) -> <a href="./src/sent_dm/types/contact_response.py">SyncContactsPage[ContactResponse]</a></code>
 - <code title="delete /v3/contacts/{id}">client.contacts.<a href="./src/sent_dm/resources/contacts.py">delete</a>(id, \*\*<a href="src/sent_dm/types/contact_delete_params.py">params</a>) -> None</code>
 - <code title="get /v3/contacts/{contactId}/message-summary">client.contacts.<a href="./src/sent_dm/resources/contacts.py">retrieve_message_summary</a>(contact_id) -> <a href="./src/sent_dm/types/api_response_of_contact_message_summary.py">APIResponseOfContactMessageSummary</a></code>
 
@@ -200,8 +197,8 @@ from sent_dm.types import APIResponseOfConversationMessagesList, ConversationMes
 
 Methods:
 
-- <code title="get /v3/conversations">client.conversations.<a href="./src/sent_dm/resources/conversations.py">list</a>(\*\*<a href="src/sent_dm/types/conversation_list_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_of_conversation_messages_list.py">APIResponseOfConversationMessagesList</a></code>
-- <code title="get /v3/conversations/{id}">client.conversations.<a href="./src/sent_dm/resources/conversations.py">list_messages</a>(id, \*\*<a href="src/sent_dm/types/conversation_list_messages_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_of_conversation_messages_list.py">APIResponseOfConversationMessagesList</a></code>
+- <code title="get /v3/conversations">client.conversations.<a href="./src/sent_dm/resources/conversations.py">list</a>(\*\*<a href="src/sent_dm/types/conversation_list_params.py">params</a>) -> SyncConversationsPage[Message]</code>
+- <code title="get /v3/conversations/{id}">client.conversations.<a href="./src/sent_dm/resources/conversations.py">list_messages</a>(id, \*\*<a href="src/sent_dm/types/conversation_list_messages_params.py">params</a>) -> SyncConversationsPage[Message]</code>
 
 # Me
 
