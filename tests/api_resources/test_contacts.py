@@ -178,19 +178,16 @@ class TestContacts:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_list(self, client: Sent) -> None:
-        contact = client.contacts.list(
-            page=0,
-            page_size=0,
-        )
+        contact = client.contacts.list()
         assert_matches_type(SyncContactsPage[ContactResponse], contact, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_list_with_all_params(self, client: Sent) -> None:
         contact = client.contacts.list(
+            channel="channel",
             page=0,
             page_size=0,
-            channel="channel",
             phone="phone",
             search="search",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -200,10 +197,7 @@ class TestContacts:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_list(self, client: Sent) -> None:
-        response = client.contacts.with_raw_response.list(
-            page=0,
-            page_size=0,
-        )
+        response = client.contacts.with_raw_response.list()
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -213,10 +207,7 @@ class TestContacts:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_list(self, client: Sent) -> None:
-        with client.contacts.with_streaming_response.list(
-            page=0,
-            page_size=0,
-        ) as response:
+        with client.contacts.with_streaming_response.list() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -495,19 +486,16 @@ class TestAsyncContacts:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_list(self, async_client: AsyncSent) -> None:
-        contact = await async_client.contacts.list(
-            page=0,
-            page_size=0,
-        )
+        contact = await async_client.contacts.list()
         assert_matches_type(AsyncContactsPage[ContactResponse], contact, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_list_with_all_params(self, async_client: AsyncSent) -> None:
         contact = await async_client.contacts.list(
+            channel="channel",
             page=0,
             page_size=0,
-            channel="channel",
             phone="phone",
             search="search",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -517,10 +505,7 @@ class TestAsyncContacts:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_list(self, async_client: AsyncSent) -> None:
-        response = await async_client.contacts.with_raw_response.list(
-            page=0,
-            page_size=0,
-        )
+        response = await async_client.contacts.with_raw_response.list()
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -530,10 +515,7 @@ class TestAsyncContacts:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_list(self, async_client: AsyncSent) -> None:
-        async with async_client.contacts.with_streaming_response.list(
-            page=0,
-            page_size=0,
-        ) as response:
+        async with async_client.contacts.with_streaming_response.list() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 

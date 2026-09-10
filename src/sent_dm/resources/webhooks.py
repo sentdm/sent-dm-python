@@ -231,9 +231,9 @@ class WebhooksResource(SyncAPIResource):
     def list(
         self,
         *,
-        page: int,
-        page_size: int,
         is_active: Optional[bool] | Omit = omit,
+        page: int | Omit = omit,
+        page_size: int | Omit = omit,
         search: Optional[str] | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -266,9 +266,9 @@ class WebhooksResource(SyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform(
                     {
+                        "is_active": is_active,
                         "page": page,
                         "page_size": page_size,
-                        "is_active": is_active,
                         "search": search,
                     },
                     webhook_list_params.WebhookListParams,
@@ -349,8 +349,8 @@ class WebhooksResource(SyncAPIResource):
         self,
         id: str,
         *,
-        page: int,
-        page_size: int,
+        page: int | Omit = omit,
+        page_size: int | Omit = omit,
         search: Optional[str] | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -753,9 +753,9 @@ class AsyncWebhooksResource(AsyncAPIResource):
     def list(
         self,
         *,
-        page: int,
-        page_size: int,
         is_active: Optional[bool] | Omit = omit,
+        page: int | Omit = omit,
+        page_size: int | Omit = omit,
         search: Optional[str] | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -788,9 +788,9 @@ class AsyncWebhooksResource(AsyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform(
                     {
+                        "is_active": is_active,
                         "page": page,
                         "page_size": page_size,
-                        "is_active": is_active,
                         "search": search,
                     },
                     webhook_list_params.WebhookListParams,
@@ -871,8 +871,8 @@ class AsyncWebhooksResource(AsyncAPIResource):
         self,
         id: str,
         *,
-        page: int,
-        page_size: int,
+        page: int | Omit = omit,
+        page_size: int | Omit = omit,
         search: Optional[str] | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.

@@ -214,9 +214,9 @@ class ContactsResource(SyncAPIResource):
     def list(
         self,
         *,
-        page: int,
-        page_size: int,
         channel: Optional[str] | Omit = omit,
+        page: int | Omit = omit,
+        page_size: int | Omit = omit,
         phone: Optional[str] | Omit = omit,
         search: Optional[str] | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -233,11 +233,11 @@ class ContactsResource(SyncAPIResource):
         filtering by search term, channel, or phone number.
 
         Args:
+          channel: Optional channel filter (sms, whatsapp)
+
           page: Page number (1-indexed)
 
           page_size: Number of items per page
-
-          channel: Optional channel filter (sms, whatsapp)
 
           phone: Optional phone number filter (alternative to list view)
 
@@ -262,9 +262,9 @@ class ContactsResource(SyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform(
                     {
+                        "channel": channel,
                         "page": page,
                         "page_size": page_size,
-                        "channel": channel,
                         "phone": phone,
                         "search": search,
                     },
@@ -551,9 +551,9 @@ class AsyncContactsResource(AsyncAPIResource):
     def list(
         self,
         *,
-        page: int,
-        page_size: int,
         channel: Optional[str] | Omit = omit,
+        page: int | Omit = omit,
+        page_size: int | Omit = omit,
         phone: Optional[str] | Omit = omit,
         search: Optional[str] | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -570,11 +570,11 @@ class AsyncContactsResource(AsyncAPIResource):
         filtering by search term, channel, or phone number.
 
         Args:
+          channel: Optional channel filter (sms, whatsapp)
+
           page: Page number (1-indexed)
 
           page_size: Number of items per page
-
-          channel: Optional channel filter (sms, whatsapp)
 
           phone: Optional phone number filter (alternative to list view)
 
@@ -599,9 +599,9 @@ class AsyncContactsResource(AsyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform(
                     {
+                        "channel": channel,
                         "page": page,
                         "page_size": page_size,
-                        "channel": channel,
                         "phone": phone,
                         "search": search,
                     },

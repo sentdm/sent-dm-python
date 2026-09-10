@@ -52,8 +52,8 @@ class ConversationsResource(SyncAPIResource):
     def list(
         self,
         *,
-        page: int,
-        page_size: int,
+        page: int | Omit = omit,
+        page_size: int | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -99,8 +99,8 @@ class ConversationsResource(SyncAPIResource):
         self,
         id: str,
         *,
-        page: int,
-        page_size: int,
+        page: int | Omit = omit,
+        page_size: int | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -175,8 +175,8 @@ class AsyncConversationsResource(AsyncAPIResource):
     def list(
         self,
         *,
-        page: int,
-        page_size: int,
+        page: int | Omit = omit,
+        page_size: int | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -222,8 +222,8 @@ class AsyncConversationsResource(AsyncAPIResource):
         self,
         id: str,
         *,
-        page: int,
-        page_size: int,
+        page: int | Omit = omit,
+        page_size: int | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.

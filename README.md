@@ -152,10 +152,7 @@ client = Sent()
 
 all_webhooks = []
 # Automatically fetches more pages as needed.
-for webhook in client.webhooks.list(
-    page=0,
-    page_size=0,
-):
+for webhook in client.webhooks.list():
     # Do something with webhook here
     all_webhooks.append(webhook)
 print(all_webhooks)
@@ -173,10 +170,7 @@ client = AsyncSent()
 async def main() -> None:
     all_webhooks = []
     # Iterate through items across all pages, issuing requests as needed.
-    async for webhook in client.webhooks.list(
-        page=0,
-        page_size=0,
-    ):
+    async for webhook in client.webhooks.list():
         all_webhooks.append(webhook)
     print(all_webhooks)
 
@@ -187,10 +181,7 @@ asyncio.run(main())
 Alternatively, you can use the `.has_next_page()`, `.next_page_info()`, or `.get_next_page()` methods for more granular control working with pages:
 
 ```python
-first_page = await client.webhooks.list(
-    page=0,
-    page_size=0,
-)
+first_page = await client.webhooks.list()
 if first_page.has_next_page():
     print(f"will fetch next page using these details: {first_page.next_page_info()}")
     next_page = await first_page.get_next_page()
@@ -202,10 +193,7 @@ if first_page.has_next_page():
 Or just work directly with the returned data:
 
 ```python
-first_page = await client.webhooks.list(
-    page=0,
-    page_size=0,
-)
+first_page = await client.webhooks.list()
 for webhook in first_page.data.webhooks:
     print(webhook.id)
 

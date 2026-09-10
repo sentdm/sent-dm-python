@@ -182,19 +182,16 @@ class TestWebhooks:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_list(self, client: Sent) -> None:
-        webhook = client.webhooks.list(
-            page=0,
-            page_size=0,
-        )
+        webhook = client.webhooks.list()
         assert_matches_type(SyncWebhooksPage[WebhookResponse], webhook, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_list_with_all_params(self, client: Sent) -> None:
         webhook = client.webhooks.list(
+            is_active=True,
             page=0,
             page_size=0,
-            is_active=True,
             search="search",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
@@ -203,10 +200,7 @@ class TestWebhooks:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_list(self, client: Sent) -> None:
-        response = client.webhooks.with_raw_response.list(
-            page=0,
-            page_size=0,
-        )
+        response = client.webhooks.with_raw_response.list()
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -216,10 +210,7 @@ class TestWebhooks:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_list(self, client: Sent) -> None:
-        with client.webhooks.with_streaming_response.list(
-            page=0,
-            page_size=0,
-        ) as response:
+        with client.webhooks.with_streaming_response.list() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -320,8 +311,6 @@ class TestWebhooks:
     def test_method_list_events(self, client: Sent) -> None:
         webhook = client.webhooks.list_events(
             id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
-            page=0,
-            page_size=0,
         )
         assert_matches_type(SyncWebhookEventsPage[WebhookListEventsResponse], webhook, path=["response"])
 
@@ -342,8 +331,6 @@ class TestWebhooks:
     def test_raw_response_list_events(self, client: Sent) -> None:
         response = client.webhooks.with_raw_response.list_events(
             id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
-            page=0,
-            page_size=0,
         )
 
         assert response.is_closed is True
@@ -356,8 +343,6 @@ class TestWebhooks:
     def test_streaming_response_list_events(self, client: Sent) -> None:
         with client.webhooks.with_streaming_response.list_events(
             id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
-            page=0,
-            page_size=0,
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -373,8 +358,6 @@ class TestWebhooks:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             client.webhooks.with_raw_response.list_events(
                 id="",
-                page=0,
-                page_size=0,
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
@@ -701,19 +684,16 @@ class TestAsyncWebhooks:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_list(self, async_client: AsyncSent) -> None:
-        webhook = await async_client.webhooks.list(
-            page=0,
-            page_size=0,
-        )
+        webhook = await async_client.webhooks.list()
         assert_matches_type(AsyncWebhooksPage[WebhookResponse], webhook, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_list_with_all_params(self, async_client: AsyncSent) -> None:
         webhook = await async_client.webhooks.list(
+            is_active=True,
             page=0,
             page_size=0,
-            is_active=True,
             search="search",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
@@ -722,10 +702,7 @@ class TestAsyncWebhooks:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_list(self, async_client: AsyncSent) -> None:
-        response = await async_client.webhooks.with_raw_response.list(
-            page=0,
-            page_size=0,
-        )
+        response = await async_client.webhooks.with_raw_response.list()
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -735,10 +712,7 @@ class TestAsyncWebhooks:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_list(self, async_client: AsyncSent) -> None:
-        async with async_client.webhooks.with_streaming_response.list(
-            page=0,
-            page_size=0,
-        ) as response:
+        async with async_client.webhooks.with_streaming_response.list() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -839,8 +813,6 @@ class TestAsyncWebhooks:
     async def test_method_list_events(self, async_client: AsyncSent) -> None:
         webhook = await async_client.webhooks.list_events(
             id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
-            page=0,
-            page_size=0,
         )
         assert_matches_type(AsyncWebhookEventsPage[WebhookListEventsResponse], webhook, path=["response"])
 
@@ -861,8 +833,6 @@ class TestAsyncWebhooks:
     async def test_raw_response_list_events(self, async_client: AsyncSent) -> None:
         response = await async_client.webhooks.with_raw_response.list_events(
             id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
-            page=0,
-            page_size=0,
         )
 
         assert response.is_closed is True
@@ -875,8 +845,6 @@ class TestAsyncWebhooks:
     async def test_streaming_response_list_events(self, async_client: AsyncSent) -> None:
         async with async_client.webhooks.with_streaming_response.list_events(
             id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
-            page=0,
-            page_size=0,
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -892,8 +860,6 @@ class TestAsyncWebhooks:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             await async_client.webhooks.with_raw_response.list_events(
                 id="",
-                page=0,
-                page_size=0,
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")

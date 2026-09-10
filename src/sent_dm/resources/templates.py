@@ -248,10 +248,10 @@ class TemplatesResource(SyncAPIResource):
     def list(
         self,
         *,
-        page: int,
-        page_size: int,
         category: Optional[str] | Omit = omit,
         is_welcome_playground: Optional[bool] | Omit = omit,
+        page: int | Omit = omit,
+        page_size: int | Omit = omit,
         search: Optional[str] | Omit = omit,
         status: Optional[str] | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -267,10 +267,6 @@ class TemplatesResource(SyncAPIResource):
         Supports filtering by status, category, and search term.
 
         Args:
-          page: Page number (1-indexed)
-
-          page_size: Number of items per page
-
           category: Optional category filter: MARKETING, UTILITY, AUTHENTICATION
 
           is_welcome_playground: Accepted and ignored. It used to filter on the welcome-playground marker inside
@@ -278,6 +274,10 @@ class TemplatesResource(SyncAPIResource):
               sending it neither narrows nor widens the result. Retained only so a client
               still passing is_welcome_playground keeps binding instead of the request shape
               changing under it.
+
+          page: Page number (1-indexed)
+
+          page_size: Number of items per page
 
           search: Optional search term for filtering templates
 
@@ -302,10 +302,10 @@ class TemplatesResource(SyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform(
                     {
-                        "page": page,
-                        "page_size": page_size,
                         "category": category,
                         "is_welcome_playground": is_welcome_playground,
+                        "page": page,
+                        "page_size": page_size,
                         "search": search,
                         "status": status,
                     },
@@ -586,10 +586,10 @@ class AsyncTemplatesResource(AsyncAPIResource):
     def list(
         self,
         *,
-        page: int,
-        page_size: int,
         category: Optional[str] | Omit = omit,
         is_welcome_playground: Optional[bool] | Omit = omit,
+        page: int | Omit = omit,
+        page_size: int | Omit = omit,
         search: Optional[str] | Omit = omit,
         status: Optional[str] | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -605,10 +605,6 @@ class AsyncTemplatesResource(AsyncAPIResource):
         Supports filtering by status, category, and search term.
 
         Args:
-          page: Page number (1-indexed)
-
-          page_size: Number of items per page
-
           category: Optional category filter: MARKETING, UTILITY, AUTHENTICATION
 
           is_welcome_playground: Accepted and ignored. It used to filter on the welcome-playground marker inside
@@ -616,6 +612,10 @@ class AsyncTemplatesResource(AsyncAPIResource):
               sending it neither narrows nor widens the result. Retained only so a client
               still passing is_welcome_playground keeps binding instead of the request shape
               changing under it.
+
+          page: Page number (1-indexed)
+
+          page_size: Number of items per page
 
           search: Optional search term for filtering templates
 
@@ -640,10 +640,10 @@ class AsyncTemplatesResource(AsyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform(
                     {
-                        "page": page,
-                        "page_size": page_size,
                         "category": category,
                         "is_welcome_playground": is_welcome_playground,
+                        "page": page,
+                        "page_size": page_size,
                         "search": search,
                         "status": status,
                     },
