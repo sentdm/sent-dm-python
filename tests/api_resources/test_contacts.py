@@ -10,10 +10,11 @@ import pytest
 from sent_dm import Sent, AsyncSent
 from tests.utils import assert_matches_type
 from sent_dm.types import (
-    ContactListResponse,
+    ContactResponse,
     APIResponseOfContact,
     APIResponseOfContactMessageSummary,
 )
+from sent_dm.pagination import SyncContactsPage, AsyncContactsPage
 
 # pyright: reportDeprecated=false
 
@@ -181,7 +182,7 @@ class TestContacts:
             page=0,
             page_size=0,
         )
-        assert_matches_type(ContactListResponse, contact, path=["response"])
+        assert_matches_type(SyncContactsPage[ContactResponse], contact, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -194,7 +195,7 @@ class TestContacts:
             search="search",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(ContactListResponse, contact, path=["response"])
+        assert_matches_type(SyncContactsPage[ContactResponse], contact, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -207,7 +208,7 @@ class TestContacts:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         contact = response.parse()
-        assert_matches_type(ContactListResponse, contact, path=["response"])
+        assert_matches_type(SyncContactsPage[ContactResponse], contact, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -220,7 +221,7 @@ class TestContacts:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             contact = response.parse()
-            assert_matches_type(ContactListResponse, contact, path=["response"])
+            assert_matches_type(SyncContactsPage[ContactResponse], contact, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -498,7 +499,7 @@ class TestAsyncContacts:
             page=0,
             page_size=0,
         )
-        assert_matches_type(ContactListResponse, contact, path=["response"])
+        assert_matches_type(AsyncContactsPage[ContactResponse], contact, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -511,7 +512,7 @@ class TestAsyncContacts:
             search="search",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(ContactListResponse, contact, path=["response"])
+        assert_matches_type(AsyncContactsPage[ContactResponse], contact, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -524,7 +525,7 @@ class TestAsyncContacts:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         contact = await response.parse()
-        assert_matches_type(ContactListResponse, contact, path=["response"])
+        assert_matches_type(AsyncContactsPage[ContactResponse], contact, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -537,7 +538,7 @@ class TestAsyncContacts:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             contact = await response.parse()
-            assert_matches_type(ContactListResponse, contact, path=["response"])
+            assert_matches_type(AsyncContactsPage[ContactResponse], contact, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

@@ -22,9 +22,10 @@ from .._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from .._base_client import make_request_options
+from ..pagination import SyncTemplatesPage, AsyncTemplatesPage
+from .._base_client import AsyncPaginator, make_request_options
+from ..types.template import Template
 from ..types.api_response_template import APIResponseTemplate
-from ..types.template_list_response import TemplateListResponse
 from ..types.template_definition_param import TemplateDefinitionParam
 
 __all__ = ["TemplatesResource", "AsyncTemplatesResource"]
@@ -260,7 +261,7 @@ class TemplatesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> TemplateListResponse:
+    ) -> SyncTemplatesPage[Template]:
         """
         Retrieves a paginated list of message templates for the authenticated customer.
         Supports filtering by status, category, and search term.
@@ -291,8 +292,9 @@ class TemplatesResource(SyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
-        return self._get(
+        return self._get_api_list(
             "/v3/templates",
+            page=SyncTemplatesPage[Template],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -310,7 +312,7 @@ class TemplatesResource(SyncAPIResource):
                     template_list_params.TemplateListParams,
                 ),
             ),
-            cast_to=TemplateListResponse,
+            model=Template,
         )
 
     def delete(
@@ -581,7 +583,7 @@ class AsyncTemplatesResource(AsyncAPIResource):
             cast_to=APIResponseTemplate,
         )
 
-    async def list(
+    def list(
         self,
         *,
         page: int,
@@ -597,7 +599,7 @@ class AsyncTemplatesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> TemplateListResponse:
+    ) -> AsyncPaginator[Template, AsyncTemplatesPage[Template]]:
         """
         Retrieves a paginated list of message templates for the authenticated customer.
         Supports filtering by status, category, and search term.
@@ -628,14 +630,15 @@ class AsyncTemplatesResource(AsyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
-        return await self._get(
+        return self._get_api_list(
             "/v3/templates",
+            page=AsyncTemplatesPage[Template],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=await async_maybe_transform(
+                query=maybe_transform(
                     {
                         "page": page,
                         "page_size": page_size,
@@ -647,7 +650,7 @@ class AsyncTemplatesResource(AsyncAPIResource):
                     template_list_params.TemplateListParams,
                 ),
             ),
-            cast_to=TemplateListResponse,
+            model=Template,
         )
 
     async def delete(
