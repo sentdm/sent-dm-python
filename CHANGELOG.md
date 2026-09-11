@@ -1,5 +1,30 @@
 # Changelog
 
+## [0.38.0](https://github.com/sentdm/sent-dm-python/compare/v0.37.0...v0.38.0) (2026-09-10)
+
+
+### Highlights
+
+The contacts, templates, webhooks, webhook events, conversations, and conversation messages list methods now return a page you can iterate instead of a single response body. Iterate the result and the SDK fetches each page as it goes. This changes those methods' return type, so code that read the response body directly needs to iterate the page, or read its items, instead.
+
+`page` and `page_size` are now optional on those calls. You don't have to pass them to list anything.
+
+### Features
+
+* **api:** configure page_number pagination for the v3 list endpoints ([a5aed1a](https://github.com/sentdm/sent-dm-python/commit/a5aed1a7f415c8c1aa273c2fc872b84b87bb092b))
+* **api:** sync generated SDKs from the committed spec ([2fdafb6](https://github.com/sentdm/sent-dm-python/commit/2fdafb69e231f683f38561e1adecdcd5c37e5802))
+
+## [0.37.0](https://github.com/sentdm/sent-dm-python/compare/v0.36.0...v0.37.0) (2026-09-09)
+
+
+### Highlights
+
+This release is breaking for the webhook endpoints. Webhook responses now use one shared model instead of a separate type per operation: the create, retrieve, update and toggle-status response types are gone, and all four now return the shared webhook API response model (`ApiResponseWebhook`, in this language's casing). If your code references one of the removed types, or its nested data, error or meta members, point it at the shared model. The list, list-event-types, list-events, rotate-secret and test responses are unchanged, because each returns a different envelope.
+
+### Features
+
+* **api:** repoint dangling model refs at current v3 schema names ([f99df44](https://github.com/sentdm/sent-dm-python/commit/f99df4488a15d18f8abcba0c0619d2760eb058ff))
+
 ## [0.36.0](https://github.com/sentdm/sent-dm-python/compare/v0.35.0...v0.36.0) (2026-09-06)
 
 

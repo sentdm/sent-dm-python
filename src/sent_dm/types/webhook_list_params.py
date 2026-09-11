@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from typing import Optional
-from typing_extensions import Required, Annotated, TypedDict
+from typing_extensions import Annotated, TypedDict
 
 from .._utils import PropertyInfo
 
@@ -11,11 +11,11 @@ __all__ = ["WebhookListParams"]
 
 
 class WebhookListParams(TypedDict, total=False):
-    page: Required[int]
-
-    page_size: Required[int]
-
     is_active: Optional[bool]
+
+    page: int
+
+    page_size: int
 
     search: Optional[str]
 

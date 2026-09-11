@@ -6,7 +6,7 @@ import httpx
 
 from ..types import conversation_list_params, conversation_list_messages_params
 from .._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
-from .._utils import path_template, maybe_transform, strip_not_given, async_maybe_transform
+from .._utils import path_template, maybe_transform, strip_not_given
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
 from .._response import (
@@ -15,9 +15,9 @@ from .._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from .._base_client import make_request_options
-from ..types.conversation_list_response import ConversationListResponse
-from ..types.conversation_list_messages_response import ConversationListMessagesResponse
+from ..pagination import SyncConversationsPage, AsyncConversationsPage
+from .._base_client import AsyncPaginator, make_request_options
+from ..types.conversation_messages_list import Message
 
 __all__ = ["ConversationsResource", "AsyncConversationsResource"]
 
@@ -52,8 +52,8 @@ class ConversationsResource(SyncAPIResource):
     def list(
         self,
         *,
-        page: int,
-        page_size: int,
+        page: int | Omit = omit,
+        page_size: int | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -61,7 +61,7 @@ class ConversationsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ConversationListResponse:
+    ) -> SyncConversationsPage[Message]:
         """
         Retrieves a paginated list of the authenticated customer's messages across all
         conversations, ordered by created date (most recent first).
@@ -76,8 +76,9 @@ class ConversationsResource(SyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
-        return self._get(
+        return self._get_api_list(
             "/v3/conversations",
+            page=SyncConversationsPage[Message],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -91,15 +92,15 @@ class ConversationsResource(SyncAPIResource):
                     conversation_list_params.ConversationListParams,
                 ),
             ),
-            cast_to=ConversationListResponse,
+            model=Message,
         )
 
     def list_messages(
         self,
         id: str,
         *,
-        page: int,
-        page_size: int,
+        page: int | Omit = omit,
+        page_size: int | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -107,7 +108,7 @@ class ConversationsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ConversationListMessagesResponse:
+    ) -> SyncConversationsPage[Message]:
         """
         Retrieves a paginated list of the messages in a single conversation (scoped to
         the authenticated customer), ordered by created date (most recent first).
@@ -124,8 +125,9 @@ class ConversationsResource(SyncAPIResource):
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
-        return self._get(
+        return self._get_api_list(
             path_template("/v3/conversations/{id}", id=id),
+            page=SyncConversationsPage[Message],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -139,7 +141,7 @@ class ConversationsResource(SyncAPIResource):
                     conversation_list_messages_params.ConversationListMessagesParams,
                 ),
             ),
-            cast_to=ConversationListMessagesResponse,
+            model=Message,
         )
 
 
@@ -170,11 +172,11 @@ class AsyncConversationsResource(AsyncAPIResource):
         """
         return AsyncConversationsResourceWithStreamingResponse(self)
 
-    async def list(
+    def list(
         self,
         *,
-        page: int,
-        page_size: int,
+        page: int | Omit = omit,
+        page_size: int | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -182,7 +184,7 @@ class AsyncConversationsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ConversationListResponse:
+    ) -> AsyncPaginator[Message, AsyncConversationsPage[Message]]:
         """
         Retrieves a paginated list of the authenticated customer's messages across all
         conversations, ordered by created date (most recent first).
@@ -197,14 +199,15 @@ class AsyncConversationsResource(AsyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
-        return await self._get(
+        return self._get_api_list(
             "/v3/conversations",
+            page=AsyncConversationsPage[Message],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=await async_maybe_transform(
+                query=maybe_transform(
                     {
                         "page": page,
                         "page_size": page_size,
@@ -212,15 +215,15 @@ class AsyncConversationsResource(AsyncAPIResource):
                     conversation_list_params.ConversationListParams,
                 ),
             ),
-            cast_to=ConversationListResponse,
+            model=Message,
         )
 
-    async def list_messages(
+    def list_messages(
         self,
         id: str,
         *,
-        page: int,
-        page_size: int,
+        page: int | Omit = omit,
+        page_size: int | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -228,7 +231,7 @@ class AsyncConversationsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ConversationListMessagesResponse:
+    ) -> AsyncPaginator[Message, AsyncConversationsPage[Message]]:
         """
         Retrieves a paginated list of the messages in a single conversation (scoped to
         the authenticated customer), ordered by created date (most recent first).
@@ -245,14 +248,15 @@ class AsyncConversationsResource(AsyncAPIResource):
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
-        return await self._get(
+        return self._get_api_list(
             path_template("/v3/conversations/{id}", id=id),
+            page=AsyncConversationsPage[Message],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=await async_maybe_transform(
+                query=maybe_transform(
                     {
                         "page": page,
                         "page_size": page_size,
@@ -260,7 +264,7 @@ class AsyncConversationsResource(AsyncAPIResource):
                     conversation_list_messages_params.ConversationListMessagesParams,
                 ),
             ),
-            cast_to=ConversationListMessagesResponse,
+            model=Message,
         )
 
 

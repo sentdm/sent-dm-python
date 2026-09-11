@@ -22,12 +22,11 @@ from .._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from .._base_client import make_request_options
-from ..types.template_list_response import TemplateListResponse
-from ..types.template_create_response import TemplateCreateResponse
-from ..types.template_update_response import TemplateUpdateResponse
+from ..pagination import SyncTemplatesPage, AsyncTemplatesPage
+from .._base_client import AsyncPaginator, make_request_options
+from ..types.template import Template
+from ..types.api_response_template import APIResponseTemplate
 from ..types.template_definition_param import TemplateDefinitionParam
-from ..types.template_retrieve_response import TemplateRetrieveResponse
 
 __all__ = ["TemplatesResource", "AsyncTemplatesResource"]
 
@@ -74,7 +73,7 @@ class TemplatesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> TemplateCreateResponse:
+    ) -> APIResponseTemplate:
         """Creates a new message template with header, body, footer, and buttons.
 
         The
@@ -130,7 +129,7 @@ class TemplatesResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=TemplateCreateResponse,
+            cast_to=APIResponseTemplate,
         )
 
     def retrieve(
@@ -144,7 +143,7 @@ class TemplatesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> TemplateRetrieveResponse:
+    ) -> APIResponseTemplate:
         """Retrieves a specific template by its ID.
 
         Returns template details including
@@ -167,7 +166,7 @@ class TemplatesResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=TemplateRetrieveResponse,
+            cast_to=APIResponseTemplate,
         )
 
     def update(
@@ -188,7 +187,7 @@ class TemplatesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> TemplateUpdateResponse:
+    ) -> APIResponseTemplate:
         """
         Updates an existing template's name, category, language, definition, or submits
         it for review.
@@ -243,16 +242,16 @@ class TemplatesResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=TemplateUpdateResponse,
+            cast_to=APIResponseTemplate,
         )
 
     def list(
         self,
         *,
-        page: int,
-        page_size: int,
         category: Optional[str] | Omit = omit,
         is_welcome_playground: Optional[bool] | Omit = omit,
+        page: int | Omit = omit,
+        page_size: int | Omit = omit,
         search: Optional[str] | Omit = omit,
         status: Optional[str] | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -262,16 +261,12 @@ class TemplatesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> TemplateListResponse:
+    ) -> SyncTemplatesPage[Template]:
         """
         Retrieves a paginated list of message templates for the authenticated customer.
         Supports filtering by status, category, and search term.
 
         Args:
-          page: Page number (1-indexed)
-
-          page_size: Number of items per page
-
           category: Optional category filter: MARKETING, UTILITY, AUTHENTICATION
 
           is_welcome_playground: Accepted and ignored. It used to filter on the welcome-playground marker inside
@@ -279,6 +274,10 @@ class TemplatesResource(SyncAPIResource):
               sending it neither narrows nor widens the result. Retained only so a client
               still passing is_welcome_playground keeps binding instead of the request shape
               changing under it.
+
+          page: Page number (1-indexed)
+
+          page_size: Number of items per page
 
           search: Optional search term for filtering templates
 
@@ -293,8 +292,9 @@ class TemplatesResource(SyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
-        return self._get(
+        return self._get_api_list(
             "/v3/templates",
+            page=SyncTemplatesPage[Template],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -302,17 +302,17 @@ class TemplatesResource(SyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform(
                     {
-                        "page": page,
-                        "page_size": page_size,
                         "category": category,
                         "is_welcome_playground": is_welcome_playground,
+                        "page": page,
+                        "page_size": page_size,
                         "search": search,
                         "status": status,
                     },
                     template_list_params.TemplateListParams,
                 ),
             ),
-            cast_to=TemplateListResponse,
+            model=Template,
         )
 
     def delete(
@@ -411,7 +411,7 @@ class AsyncTemplatesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> TemplateCreateResponse:
+    ) -> APIResponseTemplate:
         """Creates a new message template with header, body, footer, and buttons.
 
         The
@@ -467,7 +467,7 @@ class AsyncTemplatesResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=TemplateCreateResponse,
+            cast_to=APIResponseTemplate,
         )
 
     async def retrieve(
@@ -481,7 +481,7 @@ class AsyncTemplatesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> TemplateRetrieveResponse:
+    ) -> APIResponseTemplate:
         """Retrieves a specific template by its ID.
 
         Returns template details including
@@ -504,7 +504,7 @@ class AsyncTemplatesResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=TemplateRetrieveResponse,
+            cast_to=APIResponseTemplate,
         )
 
     async def update(
@@ -525,7 +525,7 @@ class AsyncTemplatesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> TemplateUpdateResponse:
+    ) -> APIResponseTemplate:
         """
         Updates an existing template's name, category, language, definition, or submits
         it for review.
@@ -580,16 +580,16 @@ class AsyncTemplatesResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=TemplateUpdateResponse,
+            cast_to=APIResponseTemplate,
         )
 
-    async def list(
+    def list(
         self,
         *,
-        page: int,
-        page_size: int,
         category: Optional[str] | Omit = omit,
         is_welcome_playground: Optional[bool] | Omit = omit,
+        page: int | Omit = omit,
+        page_size: int | Omit = omit,
         search: Optional[str] | Omit = omit,
         status: Optional[str] | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -599,16 +599,12 @@ class AsyncTemplatesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> TemplateListResponse:
+    ) -> AsyncPaginator[Template, AsyncTemplatesPage[Template]]:
         """
         Retrieves a paginated list of message templates for the authenticated customer.
         Supports filtering by status, category, and search term.
 
         Args:
-          page: Page number (1-indexed)
-
-          page_size: Number of items per page
-
           category: Optional category filter: MARKETING, UTILITY, AUTHENTICATION
 
           is_welcome_playground: Accepted and ignored. It used to filter on the welcome-playground marker inside
@@ -616,6 +612,10 @@ class AsyncTemplatesResource(AsyncAPIResource):
               sending it neither narrows nor widens the result. Retained only so a client
               still passing is_welcome_playground keeps binding instead of the request shape
               changing under it.
+
+          page: Page number (1-indexed)
+
+          page_size: Number of items per page
 
           search: Optional search term for filtering templates
 
@@ -630,26 +630,27 @@ class AsyncTemplatesResource(AsyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
-        return await self._get(
+        return self._get_api_list(
             "/v3/templates",
+            page=AsyncTemplatesPage[Template],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=await async_maybe_transform(
+                query=maybe_transform(
                     {
-                        "page": page,
-                        "page_size": page_size,
                         "category": category,
                         "is_welcome_playground": is_welcome_playground,
+                        "page": page,
+                        "page_size": page_size,
                         "search": search,
                         "status": status,
                     },
                     template_list_params.TemplateListParams,
                 ),
             ),
-            cast_to=TemplateListResponse,
+            model=Template,
         )
 
     async def delete(
