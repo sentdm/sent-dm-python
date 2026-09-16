@@ -36,8 +36,8 @@ class TestTemplates:
             definition={
                 "body": {
                     "multi_channel": {
-                        "template": "Hello {{0:variable}}! Welcome to {{1:variable}}.",
-                        "type": "type",
+                        "template": "Hello {{0:variable}}! Welcome to {{1:variable}}. We are glad to have you on board.",
+                        "type": "text",
                         "variables": [
                             {
                                 "name": "name",
@@ -631,8 +631,8 @@ class TestAsyncTemplates:
             definition={
                 "body": {
                     "multi_channel": {
-                        "template": "Hello {{0:variable}}! Welcome to {{1:variable}}.",
-                        "type": "type",
+                        "template": "Hello {{0:variable}}! Welcome to {{1:variable}}. We are glad to have you on board.",
+                        "type": "text",
                         "variables": [
                             {
                                 "name": "name",
