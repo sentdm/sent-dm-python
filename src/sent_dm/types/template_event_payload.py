@@ -30,7 +30,15 @@ class TemplateEventPayload(BaseModel):
     """The template's category, for example UTILITY, MARKETING, or AUTHENTICATION."""
 
     channel: Optional[str] = None
-    """The channel the template applies to."""
+    """
+    The channel leg this decision is about, for example whatsapp, sms, or rcs. A
+    template is reviewed per channel and the legs come back independently, so each
+    one reports separately.
+
+    Omitted when the decision applies to the template as a whole rather than to one
+    leg. That event is the broader news: a template-wide rejection blocks every
+    channel, whatever the individual legs say.
+    """
 
     language: Optional[str] = None
     """The template's language code, for example en_US."""
