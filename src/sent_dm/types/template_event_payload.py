@@ -26,6 +26,24 @@ class TemplateEventPayload(BaseModel):
     account_id: Optional[str] = None
     """The account the template belongs to."""
 
+    auto_reply_action: Optional[str] = None
+    """
+    Which consent keyword this template answers, when it is one of Sent's
+    auto-replies: OPT_IN, OPT_OUT, HELP, or OTHER for a customer-defined keyword.
+
+    Omitted for an ordinary template, so its presence is the answer to "is this an
+    auto-reply". Sent creates the three compliance auto-replies at signup and they
+    go through review like any other template, so their events arrive mixed in with
+    the customer's own with nothing else to tell them apart.
+
+    Named for the reader rather than after Template.OptAction, which it is mapped
+    from. The MCP tool result deliberately keeps OptAction, OptKeywords and IsOpt:
+    it mirrors the internal shape on purpose and publishes the keywords too, so
+    renaming one of the three there would leave a surface half in each vocabulary.
+    Two names for one concept, each consistent within its own surface, chosen over a
+    rename that breaks MCP clients silently.
+    """
+
     category: Optional[str] = None
     """The template's category, for example UTILITY, MARKETING, or AUTHENTICATION."""
 
