@@ -5,13 +5,15 @@ from datetime import datetime
 from typing_extensions import TypeAlias
 
 from .._models import BaseModel
+from .channel_event import ChannelEvent
+from .contact_event import ContactEvent
 from .message_event import MessageEvent
 from .template_event import TemplateEvent
 from .inbound_message_event import InboundMessageEvent
 
 __all__ = ["WebhookListEventsResponse", "EventData"]
 
-EventData: TypeAlias = Union[MessageEvent, InboundMessageEvent, TemplateEvent]
+EventData: TypeAlias = Union[MessageEvent, InboundMessageEvent, TemplateEvent, ChannelEvent, ContactEvent]
 
 
 class WebhookListEventsResponse(BaseModel):
@@ -28,9 +30,9 @@ class WebhookListEventsResponse(BaseModel):
     event_data: Optional[EventData] = None
     """The exact event body that was delivered, or attempted, for this record.
 
-    One of the three webhook envelopes: a message status change, an inbound message,
-    or a template status change. Read field and event to tell which, the same way
-    your endpoint does.
+    One of the four webhook envelopes: a message status change, an inbound message,
+    a template status change, or a contact consent signal. Read field and event to
+    tell which, the same way your endpoint does.
     """
 
     event_type: Optional[str] = None

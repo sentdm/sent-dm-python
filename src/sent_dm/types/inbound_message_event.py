@@ -17,13 +17,13 @@ class InboundMessageEvent(BaseModel):
 
     event: Optional[str] = None
     """
-    The specific event within the family, for example message.delivered or
-    message.received. Absent on events that have no subtype, so treat it as
-    optional.
+    The specific event within the family, for example message.delivered,
+    message.received or contact.opt_out. Absent on events that have no subtype, so
+    treat it as optional.
     """
 
     field: Optional[str] = None
-    """The event family, for example message or templates.
+    """The event family, for example message, templates or contact.
 
     Route on this first, then on event for the specific change.
     """
@@ -33,6 +33,9 @@ class InboundMessageEvent(BaseModel):
 
     Delivered when a contact messages one of your numbers.
     """
+
+    request_id: Optional[str] = None
+    """The event-specific body."""
 
     timestamp: Optional[str] = None
     """When Sent emitted the event, in UTC (yyyy-MM-ddTHH:mm:ssZ).
