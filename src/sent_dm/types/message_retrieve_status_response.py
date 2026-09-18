@@ -9,7 +9,14 @@ from .._models import BaseModel
 from .api_meta import APIMeta
 from .error_detail import ErrorDetail
 
-__all__ = ["MessageRetrieveStatusResponse", "Data", "DataEvent", "DataMessageBody", "DataMessageBodyButton"]
+__all__ = [
+    "MessageRetrieveStatusResponse",
+    "Data",
+    "DataEvent",
+    "DataMessageBody",
+    "DataMessageBodyButton",
+    "DataMessageBodyHeaderMedia",
+]
 
 
 class DataEvent(BaseModel):
@@ -32,6 +39,20 @@ class DataMessageBodyButton(BaseModel):
     value: Optional[str] = None
 
 
+class DataMessageBodyHeaderMedia(BaseModel):
+    """The media asset that rode a message's header, recorded as sent."""
+
+    type: Optional[str] = None
+    """\"image", "video" or "document" — taken from the header's media variable."""
+
+    url: Optional[str] = None
+    """The https URL the caller supplied for this send.
+
+    Never the template's stored props.sample, which is Meta's expiring header_handle
+    rather than what was delivered.
+    """
+
+
 class DataMessageBody(BaseModel):
     """
     Structured message body format for database storage.
@@ -45,6 +66,9 @@ class DataMessageBody(BaseModel):
     footer: Optional[str] = None
 
     header: Optional[str] = None
+
+    header_media: Optional[DataMessageBodyHeaderMedia] = FieldInfo(alias="headerMedia", default=None)
+    """The media asset that rode a message's header, recorded as sent."""
 
 
 class Data(BaseModel):
