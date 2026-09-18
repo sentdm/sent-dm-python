@@ -8,6 +8,8 @@ from .api_meta import APIMeta as APIMeta
 from .template import Template as Template
 from .error_detail import ErrorDetail as ErrorDetail
 from .tcr_vertical import TcrVertical as TcrVertical
+from .channel_event import ChannelEvent as ChannelEvent
+from .contact_event import ContactEvent as ContactEvent
 from .message_event import MessageEvent as MessageEvent
 from .user_response import UserResponse as UserResponse
 from .profile_detail import ProfileDetail as ProfileDetail
@@ -31,8 +33,10 @@ from .api_response_webhook import APIResponseWebhook as APIResponseWebhook
 from .me_retrieve_response import MeRetrieveResponse as MeRetrieveResponse
 from .template_list_params import TemplateListParams as TemplateListParams
 from .api_response_template import APIResponseTemplate as APIResponseTemplate
+from .channel_event_payload import ChannelEventPayload as ChannelEventPayload
 from .contact_create_params import ContactCreateParams as ContactCreateParams
 from .contact_delete_params import ContactDeleteParams as ContactDeleteParams
+from .contact_event_payload import ContactEventPayload as ContactEventPayload
 from .contact_update_params import ContactUpdateParams as ContactUpdateParams
 from .inbound_message_event import InboundMessageEvent as InboundMessageEvent
 from .message_event_payload import MessageEventPayload as MessageEventPayload
