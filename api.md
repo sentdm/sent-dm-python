@@ -6,6 +6,10 @@ Types:
 from sent_dm.types import (
     APIMeta,
     APIResponseWebhook,
+    ChannelEvent,
+    ChannelEventPayload,
+    ContactEvent,
+    ContactEventPayload,
     ErrorDetail,
     InboundMessageEvent,
     InboundMessageEventPayload,
