@@ -36,8 +36,8 @@ class TestTemplates:
             definition={
                 "body": {
                     "multi_channel": {
-                        "template": "Hello {{0:variable}}! Welcome to {{1:variable}}.",
-                        "type": None,
+                        "template": "Hello {{0:variable}}! Welcome to {{1:variable}}. We are glad to have you on board.",
+                        "type": "text",
                         "variables": [
                             {
                                 "name": "name",
@@ -46,9 +46,9 @@ class TestTemplates:
                                     "sample": "John",
                                     "url": "x",
                                     "variable_type": "text",
-                                    "alt": None,
-                                    "regex": None,
-                                    "short_url": None,
+                                    "alt": "alt",
+                                    "regex": "regex",
+                                    "short_url": "shortUrl",
                                 },
                                 "type": "variable",
                                 "id": 0,
@@ -60,9 +60,9 @@ class TestTemplates:
                                     "sample": "SentDM",
                                     "url": "x",
                                     "variable_type": "text",
-                                    "alt": None,
-                                    "regex": None,
-                                    "short_url": None,
+                                    "alt": "alt",
+                                    "regex": "regex",
+                                    "short_url": "shortUrl",
                                 },
                                 "type": "variable",
                                 "id": 1,
@@ -631,8 +631,8 @@ class TestAsyncTemplates:
             definition={
                 "body": {
                     "multi_channel": {
-                        "template": "Hello {{0:variable}}! Welcome to {{1:variable}}.",
-                        "type": None,
+                        "template": "Hello {{0:variable}}! Welcome to {{1:variable}}. We are glad to have you on board.",
+                        "type": "text",
                         "variables": [
                             {
                                 "name": "name",
@@ -641,9 +641,9 @@ class TestAsyncTemplates:
                                     "sample": "John",
                                     "url": "x",
                                     "variable_type": "text",
-                                    "alt": None,
-                                    "regex": None,
-                                    "short_url": None,
+                                    "alt": "alt",
+                                    "regex": "regex",
+                                    "short_url": "shortUrl",
                                 },
                                 "type": "variable",
                                 "id": 0,
@@ -655,9 +655,9 @@ class TestAsyncTemplates:
                                     "sample": "SentDM",
                                     "url": "x",
                                     "variable_type": "text",
-                                    "alt": None,
-                                    "regex": None,
-                                    "short_url": None,
+                                    "alt": "alt",
+                                    "regex": "regex",
+                                    "short_url": "shortUrl",
                                 },
                                 "type": "variable",
                                 "id": 1,

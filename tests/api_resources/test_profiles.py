@@ -56,7 +56,7 @@ class TestProfiles:
                             }
                         ],
                         "is_tcr_application": True,
-                        "notes": None,
+                        "notes": "notes",
                         "phone_number_prefix": "+1",
                     },
                     "contact": {
@@ -226,7 +226,7 @@ class TestProfiles:
                             }
                         ],
                         "is_tcr_application": True,
-                        "notes": None,
+                        "notes": "notes",
                         "phone_number_prefix": "+1",
                     },
                     "contact": {
@@ -518,7 +518,7 @@ class TestAsyncProfiles:
                             }
                         ],
                         "is_tcr_application": True,
-                        "notes": None,
+                        "notes": "notes",
                         "phone_number_prefix": "+1",
                     },
                     "contact": {
@@ -688,7 +688,7 @@ class TestAsyncProfiles:
                             }
                         ],
                         "is_tcr_application": True,
-                        "notes": None,
+                        "notes": "notes",
                         "phone_number_prefix": "+1",
                     },
                     "contact": {

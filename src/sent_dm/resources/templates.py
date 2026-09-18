@@ -78,7 +78,9 @@ class TemplatesResource(SyncAPIResource):
 
         The
         template can be submitted for review immediately or saved as draft for later
-        submission.
+        submission. There is no `name` field on create — the display name is derived
+        from the template's content and can be changed afterwards with
+        `PUT /v3/templates/{id}`.
 
         Args:
           category: Template category: MARKETING, UTILITY, AUTHENTICATION (optional, auto-detected
@@ -190,7 +192,31 @@ class TemplatesResource(SyncAPIResource):
     ) -> APIResponseTemplate:
         """
         Updates an existing template's name, category, language, definition, or submits
-        it for review.
+        it for review. While the template is in review (status PENDING, or any channel
+        awaiting a verdict) its definition, category and language are frozen and a
+        resubmission is refused — those requests answer 409 CONFLICT_006. The display
+        name stays editable throughout.
+
+        `definition`, `category` and `language` are editable only from status DRAFT,
+        REJECTED or APPROVED. An edit to any of them on a template in another state
+        (PAUSED, DISABLED or REVOKED) is refused with 400 VALIDATION_001 and the detail
+        "Template (except display name) cannot be updated unless it is in draft or
+        rejected status"; `name` stays editable in every state. `submit_for_review` on a
+        PAUSED, DISABLED or REVOKED template is accepted and answers 200, but opens no
+        review and does not move the status — only the reviewer can reinstate it.
+
+        Editing an APPROVED template is a live edit: the new content is stored
+        immediately, and sending `submit_for_review: true` re-opens review, which
+        returns the affected channels to PENDING so they stop sending until they are
+        approved again. The previously approved content is never sent during re-review.
+        Watch the per-channel `templates` webhook events rather than assuming the
+        template-level status.
+
+        Templates provisioned by Sent (light-onboarding templates, whose names carry the
+        reserved `sent_` prefix) are read-only: every field is refused with 400
+        VALIDATION*001 and the detail "This template is read-only. Only 'submit for
+        review' is allowed.", and only `submit_for_review` is accepted. A `name`
+        starting with `sent*` is refused for the same reason — the prefix is reserved.
 
         Args:
           category: Template category: MARKETING, UTILITY, AUTHENTICATION
@@ -416,7 +442,9 @@ class AsyncTemplatesResource(AsyncAPIResource):
 
         The
         template can be submitted for review immediately or saved as draft for later
-        submission.
+        submission. There is no `name` field on create — the display name is derived
+        from the template's content and can be changed afterwards with
+        `PUT /v3/templates/{id}`.
 
         Args:
           category: Template category: MARKETING, UTILITY, AUTHENTICATION (optional, auto-detected
@@ -528,7 +556,31 @@ class AsyncTemplatesResource(AsyncAPIResource):
     ) -> APIResponseTemplate:
         """
         Updates an existing template's name, category, language, definition, or submits
-        it for review.
+        it for review. While the template is in review (status PENDING, or any channel
+        awaiting a verdict) its definition, category and language are frozen and a
+        resubmission is refused — those requests answer 409 CONFLICT_006. The display
+        name stays editable throughout.
+
+        `definition`, `category` and `language` are editable only from status DRAFT,
+        REJECTED or APPROVED. An edit to any of them on a template in another state
+        (PAUSED, DISABLED or REVOKED) is refused with 400 VALIDATION_001 and the detail
+        "Template (except display name) cannot be updated unless it is in draft or
+        rejected status"; `name` stays editable in every state. `submit_for_review` on a
+        PAUSED, DISABLED or REVOKED template is accepted and answers 200, but opens no
+        review and does not move the status — only the reviewer can reinstate it.
+
+        Editing an APPROVED template is a live edit: the new content is stored
+        immediately, and sending `submit_for_review: true` re-opens review, which
+        returns the affected channels to PENDING so they stop sending until they are
+        approved again. The previously approved content is never sent during re-review.
+        Watch the per-channel `templates` webhook events rather than assuming the
+        template-level status.
+
+        Templates provisioned by Sent (light-onboarding templates, whose names carry the
+        reserved `sent_` prefix) are read-only: every field is refused with 400
+        VALIDATION*001 and the detail "This template is read-only. Only 'submit for
+        review' is allowed.", and only `submit_for_review` is accepted. A `name`
+        starting with `sent*` is refused for the same reason — the prefix is reserved.
 
         Args:
           category: Template category: MARKETING, UTILITY, AUTHENTICATION

@@ -27,6 +27,14 @@ class MessageEventPayload(BaseModel):
     agent_id: Optional[str] = None
     """The agent attributed to the send, when the send was attributed to one."""
 
+    body: Optional[str] = None
+    """The rendered message body, as plain text.
+
+    Sent as null when we aren't asserting a body for this event. The field is always
+    present, so read it and check for null rather than checking whether the key
+    exists. Truncated to 3072 characters.
+    """
+
     channel: Optional[str] = None
     """The channel the message went out on, for example sms or whatsapp.
 
