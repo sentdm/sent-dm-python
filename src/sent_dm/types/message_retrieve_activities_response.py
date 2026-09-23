@@ -14,7 +14,12 @@ __all__ = ["MessageRetrieveActivitiesResponse", "Data", "DataActivity"]
 
 
 class DataActivity(BaseModel):
-    """A single message activity event for v3 API"""
+    """
+    A single message activity event for v3 API.
+
+    The activity list mixes statuses, so unlike a message it is one shape rather than two: a SCHEDULED
+    entry carries scheduled_at, and every other entry has no such key.
+    """
 
     active_contact_price: Optional[str] = None
     """
@@ -38,11 +43,19 @@ class DataActivity(BaseModel):
     4 decimal places.
     """
 
+    scheduled_at: Optional[datetime] = None
+    """
+    SCHEDULED activities only: when the held message will be released for delivery,
+    in UTC. Same wire name as on the send response, the message and the webhook.
+    Omitted on every other activity. A message that quiet hours moved at release has
+    two SCHEDULED entries, each carrying the instant as it stood at that moment.
+    """
+
     status: Optional[str] = None
     """Activity status.
 
-    Outbound: QUEUED, PROCESSED, ROUTED, SENT, DELIVERED, READ, FAILED. Inbound
-    (from contact): RECEIVED (terminal).
+    Outbound: QUEUED, PROCESSED, ROUTED, SCHEDULED, SENT, DELIVERED, READ, FAILED.
+    Inbound (from contact): RECEIVED (terminal).
     """
 
     timestamp: Optional[datetime] = None
