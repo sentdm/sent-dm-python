@@ -51,6 +51,19 @@ class MessageEventPayload(BaseModel):
     outbound_number: Optional[str] = None
     """The recipient's number in E.164 format."""
 
+    schedule_reason: Optional[str] = None
+    """
+    message.scheduled only: why the message is held, either because you scheduled it
+    or because the recipient is inside a protected quiet-hours window. Omitted on
+    every other event.
+    """
+
+    scheduled_at: Optional[str] = None
+    """
+    message.scheduled only: when the held message will be released for delivery, in
+    UTC (yyyy-MM-ddTHH:mm:ssZ). Omitted on every other event.
+    """
+
     template_id: Optional[str] = None
     """The template the message was sent from, when it was sent from one."""
 
