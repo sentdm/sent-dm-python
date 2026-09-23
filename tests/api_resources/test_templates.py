@@ -35,6 +35,33 @@ class TestTemplates:
             creation_source=None,
             definition={
                 "body": {
+                    "mms": {
+                        "template": "template",
+                        "type": "type",
+                        "variables": [
+                            {
+                                "name": "x",
+                                "props": {
+                                    "media_type": "x",
+                                    "sample": "x",
+                                    "url": "x",
+                                    "variable_type": "x",
+                                    "alt": "alt",
+                                    "regex": "regex",
+                                    "short_url": "shortUrl",
+                                },
+                                "type": "x",
+                                "id": 0,
+                            }
+                        ],
+                        "media": [
+                            {
+                                "media_type": "mediaType",
+                                "url": "url",
+                            }
+                        ],
+                        "subject": "subject",
+                    },
                     "multi_channel": {
                         "template": "Hello {{0:variable}}! Welcome to {{1:variable}}. We are glad to have you on board.",
                         "type": "text",
@@ -309,6 +336,33 @@ class TestTemplates:
             category="MARKETING",
             definition={
                 "body": {
+                    "mms": {
+                        "template": "template",
+                        "type": "type",
+                        "variables": [
+                            {
+                                "name": "x",
+                                "props": {
+                                    "media_type": "x",
+                                    "sample": "x",
+                                    "url": "x",
+                                    "variable_type": "x",
+                                    "alt": "alt",
+                                    "regex": "regex",
+                                    "short_url": "shortUrl",
+                                },
+                                "type": "x",
+                                "id": 0,
+                            }
+                        ],
+                        "media": [
+                            {
+                                "media_type": "mediaType",
+                                "url": "url",
+                            }
+                        ],
+                        "subject": "subject",
+                    },
                     "multi_channel": {
                         "template": "template",
                         "type": "type",
@@ -630,6 +684,33 @@ class TestAsyncTemplates:
             creation_source=None,
             definition={
                 "body": {
+                    "mms": {
+                        "template": "template",
+                        "type": "type",
+                        "variables": [
+                            {
+                                "name": "x",
+                                "props": {
+                                    "media_type": "x",
+                                    "sample": "x",
+                                    "url": "x",
+                                    "variable_type": "x",
+                                    "alt": "alt",
+                                    "regex": "regex",
+                                    "short_url": "shortUrl",
+                                },
+                                "type": "x",
+                                "id": 0,
+                            }
+                        ],
+                        "media": [
+                            {
+                                "media_type": "mediaType",
+                                "url": "url",
+                            }
+                        ],
+                        "subject": "subject",
+                    },
                     "multi_channel": {
                         "template": "Hello {{0:variable}}! Welcome to {{1:variable}}. We are glad to have you on board.",
                         "type": "text",
@@ -904,6 +985,33 @@ class TestAsyncTemplates:
             category="MARKETING",
             definition={
                 "body": {
+                    "mms": {
+                        "template": "template",
+                        "type": "type",
+                        "variables": [
+                            {
+                                "name": "x",
+                                "props": {
+                                    "media_type": "x",
+                                    "sample": "x",
+                                    "url": "x",
+                                    "variable_type": "x",
+                                    "alt": "alt",
+                                    "regex": "regex",
+                                    "short_url": "shortUrl",
+                                },
+                                "type": "x",
+                                "id": 0,
+                            }
+                        ],
+                        "media": [
+                            {
+                                "media_type": "mediaType",
+                                "url": "url",
+                            }
+                        ],
+                        "subject": "subject",
+                    },
                     "multi_channel": {
                         "template": "template",
                         "type": "type",
