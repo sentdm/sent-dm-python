@@ -220,6 +220,14 @@ class TestTemplates:
                 },
                 "header": {
                     "template": "template",
+                    "example_url": "example_url",
+                    "location": {
+                        "address": "x",
+                        "latitude": "x",
+                        "longitude": "x",
+                        "name": "x",
+                    },
+                    "static_resource": True,
                     "type": "type",
                     "variables": [
                         {
@@ -507,6 +515,14 @@ class TestTemplates:
                 },
                 "header": {
                     "template": "template",
+                    "example_url": "example_url",
+                    "location": {
+                        "address": "x",
+                        "latitude": "x",
+                        "longitude": "x",
+                        "name": "x",
+                    },
+                    "static_resource": True,
                     "type": "type",
                     "variables": [
                         {
@@ -869,6 +885,14 @@ class TestAsyncTemplates:
                 },
                 "header": {
                     "template": "template",
+                    "example_url": "example_url",
+                    "location": {
+                        "address": "x",
+                        "latitude": "x",
+                        "longitude": "x",
+                        "name": "x",
+                    },
+                    "static_resource": True,
                     "type": "type",
                     "variables": [
                         {
@@ -1156,6 +1180,14 @@ class TestAsyncTemplates:
                 },
                 "header": {
                     "template": "template",
+                    "example_url": "example_url",
+                    "location": {
+                        "address": "x",
+                        "latitude": "x",
+                        "longitude": "x",
+                        "name": "x",
+                    },
+                    "static_resource": True,
                     "type": "type",
                     "variables": [
                         {
