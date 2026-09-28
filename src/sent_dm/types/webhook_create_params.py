@@ -8,7 +8,7 @@ from typing_extensions import Annotated, TypedDict
 from .._types import SequenceNotStr
 from .._utils import PropertyInfo
 
-__all__ = ["WebhookCreateParams"]
+__all__ = ["WebhookCreateParams", "SenderProfile"]
 
 
 class WebhookCreateParams(TypedDict, total=False):
@@ -28,8 +28,25 @@ class WebhookCreateParams(TypedDict, total=False):
     for testing integrations without actual execution
     """
 
+    sender_profile: Optional[SenderProfile]
+    """
+    Request-only: the events an organization webhook's sender profile clones
+    receive, one clone per existing and future profile. Responses never return it.
+    """
+
     timeout_seconds: int
 
     idempotency_key: Annotated[str, PropertyInfo(alias="Idempotency-Key")]
 
     x_profile_id: Annotated[str, PropertyInfo(alias="x-profile-id")]
+
+
+class SenderProfile(TypedDict, total=False):
+    """
+    Request-only: the events an organization webhook's sender profile clones receive, one clone per existing
+    and future profile. Responses never return it.
+    """
+
+    event_filters: Optional[Dict[str, SequenceNotStr[str]]]
+
+    event_types: SequenceNotStr[str]
