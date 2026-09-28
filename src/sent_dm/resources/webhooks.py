@@ -73,6 +73,7 @@ class WebhooksResource(SyncAPIResource):
         event_types: SequenceNotStr[str] | Omit = omit,
         retry_count: int | Omit = omit,
         sandbox: bool | Omit = omit,
+        sender_profile: Optional[webhook_create_params.SenderProfile] | Omit = omit,
         timeout_seconds: int | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -89,6 +90,9 @@ class WebhooksResource(SyncAPIResource):
         Args:
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
+
+          sender_profile: Request-only: the events an organization webhook's sender profile clones
+              receive, one clone per existing and future profile. Responses never return it.
 
           extra_headers: Send extra headers
 
@@ -117,6 +121,7 @@ class WebhooksResource(SyncAPIResource):
                     "event_types": event_types,
                     "retry_count": retry_count,
                     "sandbox": sandbox,
+                    "sender_profile": sender_profile,
                     "timeout_seconds": timeout_seconds,
                 },
                 webhook_create_params.WebhookCreateParams,
@@ -172,6 +177,7 @@ class WebhooksResource(SyncAPIResource):
         event_types: SequenceNotStr[str] | Omit = omit,
         retry_count: int | Omit = omit,
         sandbox: bool | Omit = omit,
+        sender_profile: Optional[webhook_update_params.SenderProfile] | Omit = omit,
         timeout_seconds: int | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -188,6 +194,9 @@ class WebhooksResource(SyncAPIResource):
         Args:
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
+
+          sender_profile: Request-only: the events an organization webhook's sender profile clones
+              receive, one clone per existing and future profile. Responses never return it.
 
           extra_headers: Send extra headers
 
@@ -218,6 +227,7 @@ class WebhooksResource(SyncAPIResource):
                     "event_types": event_types,
                     "retry_count": retry_count,
                     "sandbox": sandbox,
+                    "sender_profile": sender_profile,
                     "timeout_seconds": timeout_seconds,
                 },
                 webhook_update_params.WebhookUpdateParams,
@@ -595,6 +605,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
         event_types: SequenceNotStr[str] | Omit = omit,
         retry_count: int | Omit = omit,
         sandbox: bool | Omit = omit,
+        sender_profile: Optional[webhook_create_params.SenderProfile] | Omit = omit,
         timeout_seconds: int | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -611,6 +622,9 @@ class AsyncWebhooksResource(AsyncAPIResource):
         Args:
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
+
+          sender_profile: Request-only: the events an organization webhook's sender profile clones
+              receive, one clone per existing and future profile. Responses never return it.
 
           extra_headers: Send extra headers
 
@@ -639,6 +653,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
                     "event_types": event_types,
                     "retry_count": retry_count,
                     "sandbox": sandbox,
+                    "sender_profile": sender_profile,
                     "timeout_seconds": timeout_seconds,
                 },
                 webhook_create_params.WebhookCreateParams,
@@ -694,6 +709,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
         event_types: SequenceNotStr[str] | Omit = omit,
         retry_count: int | Omit = omit,
         sandbox: bool | Omit = omit,
+        sender_profile: Optional[webhook_update_params.SenderProfile] | Omit = omit,
         timeout_seconds: int | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -710,6 +726,9 @@ class AsyncWebhooksResource(AsyncAPIResource):
         Args:
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
+
+          sender_profile: Request-only: the events an organization webhook's sender profile clones
+              receive, one clone per existing and future profile. Responses never return it.
 
           extra_headers: Send extra headers
 
@@ -740,6 +759,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
                     "event_types": event_types,
                     "retry_count": retry_count,
                     "sandbox": sandbox,
+                    "sender_profile": sender_profile,
                     "timeout_seconds": timeout_seconds,
                 },
                 webhook_update_params.WebhookUpdateParams,
