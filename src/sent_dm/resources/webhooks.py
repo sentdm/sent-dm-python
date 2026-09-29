@@ -370,8 +370,11 @@ class WebhooksResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> SyncWebhookEventsPage[WebhookListEventsResponse]:
-        """
-        Retrieves a paginated list of delivery events for the specified webhook.
+        """Retrieves a paginated list of delivery events for the specified webhook.
+
+        If the
+        webhook is cloned onto your sender profiles, the list includes what those clones
+        received; read payload.account_id to tell whose event it is.
 
         Args:
           extra_headers: Send extra headers
@@ -902,8 +905,11 @@ class AsyncWebhooksResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> AsyncPaginator[WebhookListEventsResponse, AsyncWebhookEventsPage[WebhookListEventsResponse]]:
-        """
-        Retrieves a paginated list of delivery events for the specified webhook.
+        """Retrieves a paginated list of delivery events for the specified webhook.
+
+        If the
+        webhook is cloned onto your sender profiles, the list includes what those clones
+        received; read payload.account_id to tell whose event it is.
 
         Args:
           extra_headers: Send extra headers
