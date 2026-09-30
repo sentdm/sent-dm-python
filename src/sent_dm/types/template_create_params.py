@@ -12,6 +12,13 @@ __all__ = ["TemplateCreateParams"]
 
 
 class TemplateCreateParams(TypedDict, total=False):
+    auto_create_for_sp: bool
+    """
+    Create this template automatically on every sender profile of the organization,
+    now and in future (default: false). Accepted only from an organization that has
+    been enabled for it, and only at creation — it cannot be changed afterwards.
+    """
+
     category: Optional[str]
     """
     Template category: MARKETING, UTILITY, AUTHENTICATION (optional, auto-detected

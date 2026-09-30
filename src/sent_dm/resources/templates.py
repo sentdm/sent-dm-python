@@ -59,6 +59,7 @@ class TemplatesResource(SyncAPIResource):
     def create(
         self,
         *,
+        auto_create_for_sp: bool | Omit = omit,
         category: Optional[str] | Omit = omit,
         creation_source: Optional[str] | Omit = omit,
         definition: TemplateDefinitionParam | Omit = omit,
@@ -83,6 +84,10 @@ class TemplatesResource(SyncAPIResource):
         `PUT /v3/templates/{id}`.
 
         Args:
+          auto_create_for_sp: Create this template automatically on every sender profile of the organization,
+              now and in future (default: false). Accepted only from an organization that has
+              been enabled for it, and only at creation — it cannot be changed afterwards.
+
           category: Template category: MARKETING, UTILITY, AUTHENTICATION (optional, auto-detected
               if not provided)
 
@@ -119,6 +124,7 @@ class TemplatesResource(SyncAPIResource):
             "/v3/templates",
             body=maybe_transform(
                 {
+                    "auto_create_for_sp": auto_create_for_sp,
                     "category": category,
                     "creation_source": creation_source,
                     "definition": definition,
@@ -423,6 +429,7 @@ class AsyncTemplatesResource(AsyncAPIResource):
     async def create(
         self,
         *,
+        auto_create_for_sp: bool | Omit = omit,
         category: Optional[str] | Omit = omit,
         creation_source: Optional[str] | Omit = omit,
         definition: TemplateDefinitionParam | Omit = omit,
@@ -447,6 +454,10 @@ class AsyncTemplatesResource(AsyncAPIResource):
         `PUT /v3/templates/{id}`.
 
         Args:
+          auto_create_for_sp: Create this template automatically on every sender profile of the organization,
+              now and in future (default: false). Accepted only from an organization that has
+              been enabled for it, and only at creation — it cannot be changed afterwards.
+
           category: Template category: MARKETING, UTILITY, AUTHENTICATION (optional, auto-detected
               if not provided)
 
@@ -483,6 +494,7 @@ class AsyncTemplatesResource(AsyncAPIResource):
             "/v3/templates",
             body=await async_maybe_transform(
                 {
+                    "auto_create_for_sp": auto_create_for_sp,
                     "category": category,
                     "creation_source": creation_source,
                     "definition": definition,

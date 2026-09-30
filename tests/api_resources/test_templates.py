@@ -31,6 +31,7 @@ class TestTemplates:
     @parametrize
     def test_method_create_with_all_params(self, client: Sent) -> None:
         template = client.templates.create(
+            auto_create_for_sp=False,
             category="MARKETING",
             creation_source=None,
             definition={
@@ -696,6 +697,7 @@ class TestAsyncTemplates:
     @parametrize
     async def test_method_create_with_all_params(self, async_client: AsyncSent) -> None:
         template = await async_client.templates.create(
+            auto_create_for_sp=False,
             category="MARKETING",
             creation_source=None,
             definition={
