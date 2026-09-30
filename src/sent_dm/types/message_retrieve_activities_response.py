@@ -43,6 +43,21 @@ class DataActivity(BaseModel):
     4 decimal places.
     """
 
+    reason: Optional[str] = None
+    """
+    A human-readable sentence for reason_code, for example "The recipient is not
+    registered on this channel" Omitted whenever reason_code is.
+    """
+
+    reason_code: Optional[str] = None
+    """
+    Why the message reached this status, as a stable platform code such as
+    DELIVERY_007 or BUSINESS_003. Present on FAILED, FILTERED and BLOCKED
+    activities; omitted on every status that needs no explanation. Switch on this
+    rather than on reason: the code is stable, the wording may be improved. Same
+    wire name and vocabulary as on the message and the webhook.
+    """
+
     scheduled_at: Optional[datetime] = None
     """
     SCHEDULED activities only: when the held message will be released for delivery,

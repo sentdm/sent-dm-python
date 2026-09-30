@@ -51,6 +51,22 @@ class MessageEventPayload(BaseModel):
     outbound_number: Optional[str] = None
     """The recipient's number in E.164 format."""
 
+    reason: Optional[str] = None
+    """
+    A human-readable sentence for ReasonCode, for example "The recipient is not
+    registered on this channel". Omitted whenever reason_code is.
+    """
+
+    reason_code: Optional[str] = None
+    """
+    Why the message reached this status, as a stable platform code such as
+    DELIVERY_007 or BUSINESS_003. Present on message.failed, message.filtered and
+    message.blocked; omitted on every status that needs no explanation. Switch on
+    this rather than on Reason: the code is stable, the wording may be improved. It
+    is the platform's classification of the outcome and never a carrier or vendor
+    code.
+    """
+
     schedule_reason: Optional[str] = None
     """
     message.scheduled only: why the message is held, either because you scheduled it
