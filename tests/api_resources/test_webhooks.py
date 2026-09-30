@@ -44,6 +44,10 @@ class TestWebhooks:
             event_types=["contact", "message", "templates"],
             retry_count=3,
             sandbox=False,
+            sender_profile={
+                "event_filters": {"foo": ["string"]},
+                "event_types": ["string"],
+            },
             timeout_seconds=30,
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -142,6 +146,10 @@ class TestWebhooks:
             event_types=["contact", "message", "templates"],
             retry_count=5,
             sandbox=False,
+            sender_profile={
+                "event_filters": {"foo": ["string"]},
+                "event_types": ["string"],
+            },
             timeout_seconds=60,
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -549,6 +557,10 @@ class TestAsyncWebhooks:
             event_types=["contact", "message", "templates"],
             retry_count=3,
             sandbox=False,
+            sender_profile={
+                "event_filters": {"foo": ["string"]},
+                "event_types": ["string"],
+            },
             timeout_seconds=30,
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -647,6 +659,10 @@ class TestAsyncWebhooks:
             event_types=["contact", "message", "templates"],
             retry_count=5,
             sandbox=False,
+            sender_profile={
+                "event_filters": {"foo": ["string"]},
+                "event_types": ["string"],
+            },
             timeout_seconds=60,
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
