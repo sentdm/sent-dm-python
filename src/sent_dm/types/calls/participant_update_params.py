@@ -1,0 +1,26 @@
+# File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+
+from __future__ import annotations
+
+from typing_extensions import Required, Annotated, TypedDict
+
+from ..._utils import PropertyInfo
+
+__all__ = ["ParticipantUpdateParams"]
+
+
+class ParticipantUpdateParams(TypedDict, total=False):
+    id: Required[str]
+
+    muted: bool
+    """true to mute the participant, false to unmute them"""
+
+    sandbox: bool
+    """
+    Sandbox flag - when true, the operation is simulated without side effects Useful
+    for testing integrations without actual execution
+    """
+
+    idempotency_key: Annotated[str, PropertyInfo(alias="Idempotency-Key")]
+
+    x_profile_id: Annotated[str, PropertyInfo(alias="x-profile-id")]
