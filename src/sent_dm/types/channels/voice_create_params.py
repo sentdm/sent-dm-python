@@ -21,14 +21,26 @@ class VoiceCreateParams(TypedDict, total=False):
     keeps the secret.
     """
 
-    number: Required[str]
-    """One of your phone numbers, in E.164 format."""
+    area_code: Optional[str]
+    """The US area code a new number should be in, as 212.
+
+    Only for a request that leaves number out — sending both says two different
+    things about which number to use, and is refused. Omit it too and the number
+    comes from anywhere in the country.
+    """
 
     default_for_app_calls: Optional[bool]
     """
     Make this the line app-originated calls are placed from when a voice token names
     no number. Omit it and your first voice number takes that role; a later one
     leaves it where it is.
+    """
+
+    number: Optional[str]
+    """One of your phone numbers, in E.164 format.
+
+    Leave the field out entirely to be given a new one instead; sending it empty is
+    a refused request rather than a request for a new number.
     """
 
     sandbox: bool

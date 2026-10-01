@@ -72,8 +72,9 @@ class VoiceResource(SyncAPIResource):
         self,
         *,
         callback_url: str,
-        number: str,
+        area_code: Optional[str] | Omit = omit,
         default_for_app_calls: Optional[bool] | Omit = omit,
+        number: Optional[str] | Omit = omit,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -84,11 +85,13 @@ class VoiceResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> APIResponseOfVoiceNumberCreated:
-        """Adds voice to one of the numbers you hold.
+        """Adds voice to one of the numbers you hold, or gives you a new one.
 
-        The number must already be yours (see
-        `GET /v3/channels`); this does not procure one, and nothing registers, so the
-        number can carry calls as soon as this returns.
+        Send `number`
+        for a number that is already yours (see `GET /v3/channels`); leave it out to be
+        given a new US number, optionally in a particular `area_code`. Sending both is
+        refused. Nothing registers, so the number can carry calls as soon as this
+        returns.
 
         What happens on a call is decided by your `callback_url`: when a call arrives on
         the number, or a caller presses a key on a menu, Sent POSTs a signed question
@@ -107,7 +110,7 @@ class VoiceResource(SyncAPIResource):
         `PATCH /v3/channels/voice/{number}`.
 
         With `sandbox: true` the request is validated and a simulated number reported
-        with `202`, and nothing is written.
+        with `202`; nothing is written and no number is bought.
 
         Args:
           callback_url: Where Sent asks what to do with each call on this number: an absolute HTTP or
@@ -117,11 +120,18 @@ class VoiceResource(SyncAPIResource):
               are signed. Turning the number on again with a different URL replaces it and
               keeps the secret.
 
-          number: One of your phone numbers, in E.164 format.
+          area_code: The US area code a new number should be in, as 212. Only for a request that
+              leaves number out — sending both says two different things about which number to
+              use, and is refused. Omit it too and the number comes from anywhere in the
+              country.
 
           default_for_app_calls: Make this the line app-originated calls are placed from when a voice token names
               no number. Omit it and your first voice number takes that role; a later one
               leaves it where it is.
+
+          number: One of your phone numbers, in E.164 format. Leave the field out entirely to be
+              given a new one instead; sending it empty is a refused request rather than a
+              request for a new number.
 
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
@@ -148,8 +158,9 @@ class VoiceResource(SyncAPIResource):
             body=maybe_transform(
                 {
                     "callback_url": callback_url,
-                    "number": number,
+                    "area_code": area_code,
                     "default_for_app_calls": default_for_app_calls,
+                    "number": number,
                     "sandbox": sandbox,
                 },
                 voice_create_params.VoiceCreateParams,
@@ -226,13 +237,13 @@ class VoiceResource(SyncAPIResource):
 
         ## What it changes
 
-        | Body                                          | Effect                                                                                            |
-        | --------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-        | `"status": "ACTIVE"`                          | turns calls on again for a number you turned off; the callback URL and the secret it had are kept |
-        | `"status": "INACTIVE"`                        | turns calls off; the callback URL and the secret stay on the number                               |
-        | `"default_for_app_calls": true`               | makes this the line app-originated calls are placed from when a voice token names no number       |
-        | `"callback_url": "https://example.com/voice"` | replaces where Sent asks what to do with each call on the number; the signing secret is kept      |
-        | key omitted                                   | left exactly as it is                                                                             |
+        | Body                                          | Effect                                                                                                                                                     |
+        | --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+        | `"status": "ACTIVE"`                          | turns calls on again for a number you turned off; the callback URL and the secret it had are kept                                                          |
+        | `"status": "INACTIVE"`                        | turns calls off; the callback URL and the secret stay on the number                                                                                        |
+        | `"default_for_app_calls": true`               | makes this the line app-originated calls are placed from when a voice token names no number                                                                |
+        | `"callback_url": "https://example.com/voice"` | replaces where Sent asks what to do with each call on the number; the signing secret is kept, and a number that was waiting for its first URL is turned on |
+        | key omitted                                   | left exactly as it is                                                                                                                                      |
 
         `status` is matched ignoring case. Any combination is accepted:
         `status: "ACTIVE"` with `default_for_app_calls: true` turns a number on as the
@@ -251,6 +262,11 @@ class VoiceResource(SyncAPIResource):
 
         **Making an inactive number the default is `400`.** Send `status: "ACTIVE"` in
         the same call.
+
+        A number added without a `callback_url` is `INACTIVE` for that one reason, so
+        sending it a `callback_url` turns it on by itself, and it becomes your default
+        line if you have no other active voice number. A number you turned off while it
+        had a URL stays off.
 
         **A number you never turned voice on for is `404`.** Add it with
         `POST /v3/channels/voice`.
@@ -579,8 +595,9 @@ class AsyncVoiceResource(AsyncAPIResource):
         self,
         *,
         callback_url: str,
-        number: str,
+        area_code: Optional[str] | Omit = omit,
         default_for_app_calls: Optional[bool] | Omit = omit,
+        number: Optional[str] | Omit = omit,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -591,11 +608,13 @@ class AsyncVoiceResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> APIResponseOfVoiceNumberCreated:
-        """Adds voice to one of the numbers you hold.
+        """Adds voice to one of the numbers you hold, or gives you a new one.
 
-        The number must already be yours (see
-        `GET /v3/channels`); this does not procure one, and nothing registers, so the
-        number can carry calls as soon as this returns.
+        Send `number`
+        for a number that is already yours (see `GET /v3/channels`); leave it out to be
+        given a new US number, optionally in a particular `area_code`. Sending both is
+        refused. Nothing registers, so the number can carry calls as soon as this
+        returns.
 
         What happens on a call is decided by your `callback_url`: when a call arrives on
         the number, or a caller presses a key on a menu, Sent POSTs a signed question
@@ -614,7 +633,7 @@ class AsyncVoiceResource(AsyncAPIResource):
         `PATCH /v3/channels/voice/{number}`.
 
         With `sandbox: true` the request is validated and a simulated number reported
-        with `202`, and nothing is written.
+        with `202`; nothing is written and no number is bought.
 
         Args:
           callback_url: Where Sent asks what to do with each call on this number: an absolute HTTP or
@@ -624,11 +643,18 @@ class AsyncVoiceResource(AsyncAPIResource):
               are signed. Turning the number on again with a different URL replaces it and
               keeps the secret.
 
-          number: One of your phone numbers, in E.164 format.
+          area_code: The US area code a new number should be in, as 212. Only for a request that
+              leaves number out — sending both says two different things about which number to
+              use, and is refused. Omit it too and the number comes from anywhere in the
+              country.
 
           default_for_app_calls: Make this the line app-originated calls are placed from when a voice token names
               no number. Omit it and your first voice number takes that role; a later one
               leaves it where it is.
+
+          number: One of your phone numbers, in E.164 format. Leave the field out entirely to be
+              given a new one instead; sending it empty is a refused request rather than a
+              request for a new number.
 
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
@@ -655,8 +681,9 @@ class AsyncVoiceResource(AsyncAPIResource):
             body=await async_maybe_transform(
                 {
                     "callback_url": callback_url,
-                    "number": number,
+                    "area_code": area_code,
                     "default_for_app_calls": default_for_app_calls,
+                    "number": number,
                     "sandbox": sandbox,
                 },
                 voice_create_params.VoiceCreateParams,
@@ -733,13 +760,13 @@ class AsyncVoiceResource(AsyncAPIResource):
 
         ## What it changes
 
-        | Body                                          | Effect                                                                                            |
-        | --------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-        | `"status": "ACTIVE"`                          | turns calls on again for a number you turned off; the callback URL and the secret it had are kept |
-        | `"status": "INACTIVE"`                        | turns calls off; the callback URL and the secret stay on the number                               |
-        | `"default_for_app_calls": true`               | makes this the line app-originated calls are placed from when a voice token names no number       |
-        | `"callback_url": "https://example.com/voice"` | replaces where Sent asks what to do with each call on the number; the signing secret is kept      |
-        | key omitted                                   | left exactly as it is                                                                             |
+        | Body                                          | Effect                                                                                                                                                     |
+        | --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+        | `"status": "ACTIVE"`                          | turns calls on again for a number you turned off; the callback URL and the secret it had are kept                                                          |
+        | `"status": "INACTIVE"`                        | turns calls off; the callback URL and the secret stay on the number                                                                                        |
+        | `"default_for_app_calls": true`               | makes this the line app-originated calls are placed from when a voice token names no number                                                                |
+        | `"callback_url": "https://example.com/voice"` | replaces where Sent asks what to do with each call on the number; the signing secret is kept, and a number that was waiting for its first URL is turned on |
+        | key omitted                                   | left exactly as it is                                                                                                                                      |
 
         `status` is matched ignoring case. Any combination is accepted:
         `status: "ACTIVE"` with `default_for_app_calls: true` turns a number on as the
@@ -758,6 +785,11 @@ class AsyncVoiceResource(AsyncAPIResource):
 
         **Making an inactive number the default is `400`.** Send `status: "ACTIVE"` in
         the same call.
+
+        A number added without a `callback_url` is `INACTIVE` for that one reason, so
+        sending it a `callback_url` turns it on by itself, and it becomes your default
+        line if you have no other active voice number. A number you turned off while it
+        had a URL stays off.
 
         **A number you never turned voice on for is `404`.** Add it with
         `POST /v3/channels/voice`.

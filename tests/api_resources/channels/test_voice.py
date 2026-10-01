@@ -29,7 +29,6 @@ class TestVoice:
     def test_method_create(self, client: Sent) -> None:
         voice = client.channels.voice.create(
             callback_url="https://example.com/voice",
-            number="+12125550100",
         )
         assert_matches_type(APIResponseOfVoiceNumberCreated, voice, path=["response"])
 
@@ -38,8 +37,9 @@ class TestVoice:
     def test_method_create_with_all_params(self, client: Sent) -> None:
         voice = client.channels.voice.create(
             callback_url="https://example.com/voice",
-            number="+12125550100",
+            area_code=None,
             default_for_app_calls=False,
+            number="+12125550100",
             sandbox=False,
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -51,7 +51,6 @@ class TestVoice:
     def test_raw_response_create(self, client: Sent) -> None:
         response = client.channels.voice.with_raw_response.create(
             callback_url="https://example.com/voice",
-            number="+12125550100",
         )
 
         assert response.is_closed is True
@@ -64,7 +63,6 @@ class TestVoice:
     def test_streaming_response_create(self, client: Sent) -> None:
         with client.channels.voice.with_streaming_response.create(
             callback_url="https://example.com/voice",
-            number="+12125550100",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -141,7 +139,7 @@ class TestVoice:
             callback_url="https://example.com/voice",
             default_for_app_calls=True,
             sandbox=False,
-            status=None,
+            status="ACTIVE",
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
@@ -375,7 +373,6 @@ class TestAsyncVoice:
     async def test_method_create(self, async_client: AsyncSent) -> None:
         voice = await async_client.channels.voice.create(
             callback_url="https://example.com/voice",
-            number="+12125550100",
         )
         assert_matches_type(APIResponseOfVoiceNumberCreated, voice, path=["response"])
 
@@ -384,8 +381,9 @@ class TestAsyncVoice:
     async def test_method_create_with_all_params(self, async_client: AsyncSent) -> None:
         voice = await async_client.channels.voice.create(
             callback_url="https://example.com/voice",
-            number="+12125550100",
+            area_code=None,
             default_for_app_calls=False,
+            number="+12125550100",
             sandbox=False,
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -397,7 +395,6 @@ class TestAsyncVoice:
     async def test_raw_response_create(self, async_client: AsyncSent) -> None:
         response = await async_client.channels.voice.with_raw_response.create(
             callback_url="https://example.com/voice",
-            number="+12125550100",
         )
 
         assert response.is_closed is True
@@ -410,7 +407,6 @@ class TestAsyncVoice:
     async def test_streaming_response_create(self, async_client: AsyncSent) -> None:
         async with async_client.channels.voice.with_streaming_response.create(
             callback_url="https://example.com/voice",
-            number="+12125550100",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -487,7 +483,7 @@ class TestAsyncVoice:
             callback_url="https://example.com/voice",
             default_for_app_calls=True,
             sandbox=False,
-            status=None,
+            status="ACTIVE",
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
