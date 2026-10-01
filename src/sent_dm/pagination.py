@@ -27,6 +27,10 @@ __all__ = [
     "WebhookEventsPagePagination",
     "SyncWebhookEventsPage",
     "AsyncWebhookEventsPage",
+    "CallsPageData",
+    "CallsPagePagination",
+    "SyncCallsPage",
+    "AsyncCallsPage",
 ]
 
 _T = TypeVar("_T")
@@ -382,6 +386,80 @@ class AsyncWebhookEventsPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
         if not events:
             return []
         return events
+
+    @override
+    def has_next_page(self) -> bool:
+        has_more = None
+        if self.data is not None:
+            if self.data.pagination is not None:
+                if self.data.pagination.has_more is not None:
+                    has_more = self.data.pagination.has_more
+        if has_more is not None and has_more is False:
+            return False
+
+        return super().has_next_page()
+
+    @override
+    def next_page_info(self) -> Optional[PageInfo]:
+        last_page = cast("int | None", self._options.params.get("page")) or 1
+
+        return PageInfo(params={"page": last_page + 1})
+
+
+class CallsPagePagination(BaseModel):
+    has_more: Optional[bool] = None
+
+
+class CallsPageData(GenericModel, Generic[_T]):
+    calls: Optional[List[_T]] = None
+
+    pagination: Optional[CallsPagePagination] = None
+
+
+class SyncCallsPage(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
+    data: Optional[CallsPageData[_T]] = None
+
+    @override
+    def _get_page_items(self) -> List[_T]:
+        calls = None
+        if self.data is not None:
+            if self.data.calls is not None:
+                calls = self.data.calls
+        if not calls:
+            return []
+        return calls
+
+    @override
+    def has_next_page(self) -> bool:
+        has_more = None
+        if self.data is not None:
+            if self.data.pagination is not None:
+                if self.data.pagination.has_more is not None:
+                    has_more = self.data.pagination.has_more
+        if has_more is not None and has_more is False:
+            return False
+
+        return super().has_next_page()
+
+    @override
+    def next_page_info(self) -> Optional[PageInfo]:
+        last_page = cast("int | None", self._options.params.get("page")) or 1
+
+        return PageInfo(params={"page": last_page + 1})
+
+
+class AsyncCallsPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
+    data: Optional[CallsPageData[_T]] = None
+
+    @override
+    def _get_page_items(self) -> List[_T]:
+        calls = None
+        if self.data is not None:
+            if self.data.calls is not None:
+                calls = self.data.calls
+        if not calls:
+            return []
+        return calls
 
     @override
     def has_next_page(self) -> bool:
