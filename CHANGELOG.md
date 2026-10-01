@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.42.0](https://github.com/sentdm/sent-dm-python/compare/v0.41.0...v0.42.0) (2026-10-01)
+
+
+### Features
+
+* **api:** add voice and calls endpoints to the SDKs ([aa82391](https://github.com/sentdm/sent-dm-python/commit/aa82391ace1a43c68175958c22f52b05b3ebd6d8))
+* **api:** sync generated SDKs from the committed spec ([1a37cfd](https://github.com/sentdm/sent-dm-python/commit/1a37cfd7b65ae17af122a9e2b31860fa3cc53705))
+
 ## [0.41.0](https://github.com/sentdm/sent-dm-python/compare/v0.40.0...v0.41.0) (2026-09-30)
 
 
