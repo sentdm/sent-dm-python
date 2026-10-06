@@ -201,10 +201,11 @@ class CallsResource(SyncAPIResource):
     ) -> None:
         """Ends one of your live calls.
 
-        The call then ends the way any other call does: its
-        status moves to completed and call.completed is sent once the disconnect is
-        reported. A call that has already ended answers 409, and so does a call with no
-        phone leg, such as one between two app users.
+        The call then ends the way any other call does once
+        the disconnect is reported: an answered call as COMPLETED with call.completed, a
+        call still ringing as NO_ANSWER, REJECTED or FAILED with call.failed. A call
+        that has already ended answers 409, and so does a call with no phone leg, such
+        as one between two app users.
 
         Args:
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
@@ -511,10 +512,11 @@ class AsyncCallsResource(AsyncAPIResource):
     ) -> None:
         """Ends one of your live calls.
 
-        The call then ends the way any other call does: its
-        status moves to completed and call.completed is sent once the disconnect is
-        reported. A call that has already ended answers 409, and so does a call with no
-        phone leg, such as one between two app users.
+        The call then ends the way any other call does once
+        the disconnect is reported: an answered call as COMPLETED with call.completed, a
+        call still ringing as NO_ANSWER, REJECTED or FAILED with call.failed. A call
+        that has already ended answers 409, and so does a call with no phone leg, such
+        as one between two app users.
 
         Args:
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
