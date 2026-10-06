@@ -42,8 +42,9 @@ class Call(BaseModel):
     failure_reason: Optional[str] = None
     """
     Why the call did not complete: callback_timeout, invalid_answer,
-    insufficient_balance, destination_blocked, rejected or no_answer. Null while the
-    call is live, when it completed, and when it failed without a recorded reason
+    insufficient_balance, destination_blocked, callback_not_configured, rejected or
+    no_answer. Null while the call is live, when it completed, and when it failed
+    without a recorded reason
     """
 
     from_: Optional[CallParty] = FieldInfo(alias="from", default=None)
@@ -65,7 +66,7 @@ class Call(BaseModel):
     """When the call was placed (UTC)"""
 
     status: Optional[str] = None
-    """initiated, ringing, answered, completed, failed, no_answer or rejected"""
+    """INITIATED, RINGING, ANSWERED, COMPLETED, FAILED, NO_ANSWER or REJECTED"""
 
     timeline: Optional[List[CallTimelineEntry]] = None
     """When the call entered each status, oldest first.

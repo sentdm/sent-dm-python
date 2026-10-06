@@ -12,7 +12,7 @@ class CallTimelineEntry(BaseModel):
     """When a call entered a status"""
 
     status: Optional[str] = None
-    """initiated, ringing, answered, completed, failed, no_answer or rejected"""
+    """INITIATED, RINGING, ANSWERED, COMPLETED, FAILED, NO_ANSWER or REJECTED"""
 
     timestamp: Optional[datetime] = None
     """When the call entered this status (UTC)"""
