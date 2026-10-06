@@ -60,10 +60,12 @@ class DataActivity(BaseModel):
 
     scheduled_at: Optional[datetime] = None
     """
-    SCHEDULED activities only: when the held message will be released for delivery,
-    in UTC. Same wire name as on the send response, the message and the webhook.
-    Omitted on every other activity. A message that quiet hours moved at release has
-    two SCHEDULED entries, each carrying the instant as it stood at that moment.
+    SCHEDULED and CANCELLED activities only, in UTC: on a SCHEDULED entry, when the
+    held message will be released for delivery; on a CANCELLED entry, the instant
+    that was called off. Same wire name as on the send response, the message and the
+    webhook. Omitted on every other activity. A message that quiet hours moved at
+    release has two SCHEDULED entries, each carrying the instant as it stood at that
+    moment.
     """
 
     status: Optional[str] = None

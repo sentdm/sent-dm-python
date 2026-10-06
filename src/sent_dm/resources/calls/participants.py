@@ -185,11 +185,11 @@ class ParticipantsResource(SyncAPIResource):
         conference room, and answers with the participant's own call record. The
         participant is a call of their own: it has its own id, can be looked up and hung
         up, and is billed and reported through call.completed and call.failed like any
-        other call. A phone participant is called from caller_id, which must be one of
-        your numbers, or from the call's owning number when omitted, and needs a
-        destination you may call and a positive balance. Only a call your answer
-        connected to a conference can take participants: a call connected to a user or a
-        number answers 409.
+        other call. Every participant needs a positive balance. A phone participant is
+        called from caller_id, which must be one of your numbers, or from the call's
+        owning number when omitted, and needs a destination you may call. Only a call
+        your answer connected to a conference can take participants: a call connected to
+        a user or a number answers 409.
 
         Args:
           caller_id: The number shown to a phone participant as the caller, in E.164 format. Must be
@@ -483,11 +483,11 @@ class AsyncParticipantsResource(AsyncAPIResource):
         conference room, and answers with the participant's own call record. The
         participant is a call of their own: it has its own id, can be looked up and hung
         up, and is billed and reported through call.completed and call.failed like any
-        other call. A phone participant is called from caller_id, which must be one of
-        your numbers, or from the call's owning number when omitted, and needs a
-        destination you may call and a positive balance. Only a call your answer
-        connected to a conference can take participants: a call connected to a user or a
-        number answers 409.
+        other call. Every participant needs a positive balance. A phone participant is
+        called from caller_id, which must be one of your numbers, or from the call's
+        owning number when omitted, and needs a destination you may call. Only a call
+        your answer connected to a conference can take participants: a call connected to
+        a user or a number answers 409.
 
         Args:
           caller_id: The number shown to a phone participant as the caller, in E.164 format. Must be
