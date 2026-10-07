@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.43.0](https://github.com/sentdm/sent-dm-python/compare/v0.42.0...v0.43.0) (2026-10-06)
+
+
+### Features
+
+* **api:** sync generated SDKs from the committed spec ([6512272](https://github.com/sentdm/sent-dm-python/commit/65122726c84da481e46397e7349af387432b8927))
+* **api:** sync generated SDKs from the committed spec ([6940b44](https://github.com/sentdm/sent-dm-python/commit/6940b44ef144fa4cd14c83ac4a623b26e26f4dae))
+* **api:** sync OpenAPI spec from production ([8a76b14](https://github.com/sentdm/sent-dm-python/commit/8a76b1441566f80fa9b0616fdcf77f89c332c2e7))
+
 ## [0.42.0](https://github.com/sentdm/sent-dm-python/compare/v0.41.0...v0.42.0) (2026-10-01)
 
 

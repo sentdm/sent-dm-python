@@ -37,6 +37,7 @@ class TestVoice:
     def test_method_create_with_all_params(self, client: Sent) -> None:
         voice = client.channels.voice.create(
             callback_url="https://example.com/voice",
+            api_key="sntdm_test_xxxxxxxxxxxx",
             area_code=None,
             default_for_app_calls=False,
             number="+12125550100",
@@ -136,6 +137,7 @@ class TestVoice:
     def test_method_update_with_all_params(self, client: Sent) -> None:
         voice = client.channels.voice.update(
             number="+12125550100",
+            api_key="sntdm_test_xxxxxxxxxxxx",
             callback_url="https://example.com/voice",
             default_for_app_calls=True,
             sandbox=False,
@@ -225,6 +227,7 @@ class TestVoice:
     @parametrize
     def test_method_create_token_with_all_params(self, client: Sent) -> None:
         voice = client.channels.voice.create_token(
+            api_key="sntdm_test_xxxxxxxxxxxx",
             identity="agent-42",
             number="+12025550123",
             sandbox=False,
@@ -269,6 +272,7 @@ class TestVoice:
     def test_method_rotate_secret_with_all_params(self, client: Sent) -> None:
         voice = client.channels.voice.rotate_secret(
             number="+12125550100",
+            api_key="sntdm_live_xxxxxxxxxxxx",
             sandbox=False,
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -322,6 +326,7 @@ class TestVoice:
     def test_method_test_with_all_params(self, client: Sent) -> None:
         voice = client.channels.voice.test(
             number="+12025550123",
+            api_key="sntdm_test_xxxxxxxxxxxx",
             sandbox=False,
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -381,6 +386,7 @@ class TestAsyncVoice:
     async def test_method_create_with_all_params(self, async_client: AsyncSent) -> None:
         voice = await async_client.channels.voice.create(
             callback_url="https://example.com/voice",
+            api_key="sntdm_test_xxxxxxxxxxxx",
             area_code=None,
             default_for_app_calls=False,
             number="+12125550100",
@@ -480,6 +486,7 @@ class TestAsyncVoice:
     async def test_method_update_with_all_params(self, async_client: AsyncSent) -> None:
         voice = await async_client.channels.voice.update(
             number="+12125550100",
+            api_key="sntdm_test_xxxxxxxxxxxx",
             callback_url="https://example.com/voice",
             default_for_app_calls=True,
             sandbox=False,
@@ -569,6 +576,7 @@ class TestAsyncVoice:
     @parametrize
     async def test_method_create_token_with_all_params(self, async_client: AsyncSent) -> None:
         voice = await async_client.channels.voice.create_token(
+            api_key="sntdm_test_xxxxxxxxxxxx",
             identity="agent-42",
             number="+12025550123",
             sandbox=False,
@@ -613,6 +621,7 @@ class TestAsyncVoice:
     async def test_method_rotate_secret_with_all_params(self, async_client: AsyncSent) -> None:
         voice = await async_client.channels.voice.rotate_secret(
             number="+12125550100",
+            api_key="sntdm_live_xxxxxxxxxxxx",
             sandbox=False,
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -666,6 +675,7 @@ class TestAsyncVoice:
     async def test_method_test_with_all_params(self, async_client: AsyncSent) -> None:
         voice = await async_client.channels.voice.test(
             number="+12025550123",
+            api_key="sntdm_test_xxxxxxxxxxxx",
             sandbox=False,
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",

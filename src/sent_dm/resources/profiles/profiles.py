@@ -85,6 +85,7 @@ class ProfilesResource(SyncAPIResource):
         *,
         allow_contact_sharing: Optional[bool] | Omit = omit,
         allow_template_sharing: Optional[bool] | Omit = omit,
+        api_key: str | Omit = omit,
         billing_contact: Optional[BillingContactInfoParam] | Omit = omit,
         billing_model: Optional[str] | Omit = omit,
         brand: Optional[BrandsBrandDataParam] | Omit = omit,
@@ -161,6 +162,14 @@ class ProfilesResource(SyncAPIResource):
               one are logged, so we can tell when nobody sends them any more and the fields
               can go for real.
 
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
+
           billing_contact: Billing contact information for a profile. Required when billing_model is
               "profile" or "profile_and_organization".
 
@@ -226,6 +235,7 @@ class ProfilesResource(SyncAPIResource):
                 {
                     "allow_contact_sharing": allow_contact_sharing,
                     "allow_template_sharing": allow_template_sharing,
+                    "api_key": api_key,
                     "billing_contact": billing_contact,
                     "billing_model": billing_model,
                     "brand": brand,
@@ -301,6 +311,7 @@ class ProfilesResource(SyncAPIResource):
         allow_contact_sharing: Optional[bool] | Omit = omit,
         allow_number_change_during_onboarding: Optional[bool] | Omit = omit,
         allow_template_sharing: Optional[bool] | Omit = omit,
+        api_key: str | Omit = omit,
         billing_contact: Optional[BillingContactInfoParam] | Omit = omit,
         billing_model: Optional[str] | Omit = omit,
         brand: Optional[BrandsBrandDataParam] | Omit = omit,
@@ -380,6 +391,14 @@ class ProfilesResource(SyncAPIResource):
               can see it did not take.
 
           allow_number_change_during_onboarding: Whether number changes are allowed during onboarding (optional)
+
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
 
           billing_contact: Billing contact information for a profile. Required when billing_model is
               "profile" or "profile_and_organization".
@@ -465,6 +484,7 @@ class ProfilesResource(SyncAPIResource):
                     "allow_contact_sharing": allow_contact_sharing,
                     "allow_number_change_during_onboarding": allow_number_change_during_onboarding,
                     "allow_template_sharing": allow_template_sharing,
+                    "api_key": api_key,
                     "billing_contact": billing_contact,
                     "billing_model": billing_model,
                     "brand": brand,
@@ -538,6 +558,7 @@ class ProfilesResource(SyncAPIResource):
         self,
         profile_id: str,
         *,
+        api_key: str | Omit = omit,
         sandbox: bool | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -561,6 +582,14 @@ class ProfilesResource(SyncAPIResource):
         organization.
 
         Args:
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
+
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
 
@@ -578,7 +607,13 @@ class ProfilesResource(SyncAPIResource):
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._delete(
             path_template("/v3/profiles/{profile_id}", profile_id=profile_id),
-            body=maybe_transform({"sandbox": sandbox}, profile_delete_params.ProfileDeleteParams),
+            body=maybe_transform(
+                {
+                    "api_key": api_key,
+                    "sandbox": sandbox,
+                },
+                profile_delete_params.ProfileDeleteParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -591,6 +626,7 @@ class ProfilesResource(SyncAPIResource):
         profile_id: str,
         *,
         web_hook_url: str,
+        api_key: str | Omit = omit,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -649,6 +685,14 @@ class ProfilesResource(SyncAPIResource):
         Args:
           web_hook_url: Webhook URL to call when profile completion finishes (success or failure)
 
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
+
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
 
@@ -676,6 +720,7 @@ class ProfilesResource(SyncAPIResource):
             body=maybe_transform(
                 {
                     "web_hook_url": web_hook_url,
+                    "api_key": api_key,
                     "sandbox": sandbox,
                 },
                 profile_complete_params.ProfileCompleteParams,
@@ -730,6 +775,7 @@ class AsyncProfilesResource(AsyncAPIResource):
         *,
         allow_contact_sharing: Optional[bool] | Omit = omit,
         allow_template_sharing: Optional[bool] | Omit = omit,
+        api_key: str | Omit = omit,
         billing_contact: Optional[BillingContactInfoParam] | Omit = omit,
         billing_model: Optional[str] | Omit = omit,
         brand: Optional[BrandsBrandDataParam] | Omit = omit,
@@ -806,6 +852,14 @@ class AsyncProfilesResource(AsyncAPIResource):
               one are logged, so we can tell when nobody sends them any more and the fields
               can go for real.
 
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
+
           billing_contact: Billing contact information for a profile. Required when billing_model is
               "profile" or "profile_and_organization".
 
@@ -871,6 +925,7 @@ class AsyncProfilesResource(AsyncAPIResource):
                 {
                     "allow_contact_sharing": allow_contact_sharing,
                     "allow_template_sharing": allow_template_sharing,
+                    "api_key": api_key,
                     "billing_contact": billing_contact,
                     "billing_model": billing_model,
                     "brand": brand,
@@ -946,6 +1001,7 @@ class AsyncProfilesResource(AsyncAPIResource):
         allow_contact_sharing: Optional[bool] | Omit = omit,
         allow_number_change_during_onboarding: Optional[bool] | Omit = omit,
         allow_template_sharing: Optional[bool] | Omit = omit,
+        api_key: str | Omit = omit,
         billing_contact: Optional[BillingContactInfoParam] | Omit = omit,
         billing_model: Optional[str] | Omit = omit,
         brand: Optional[BrandsBrandDataParam] | Omit = omit,
@@ -1025,6 +1081,14 @@ class AsyncProfilesResource(AsyncAPIResource):
               can see it did not take.
 
           allow_number_change_during_onboarding: Whether number changes are allowed during onboarding (optional)
+
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
 
           billing_contact: Billing contact information for a profile. Required when billing_model is
               "profile" or "profile_and_organization".
@@ -1110,6 +1174,7 @@ class AsyncProfilesResource(AsyncAPIResource):
                     "allow_contact_sharing": allow_contact_sharing,
                     "allow_number_change_during_onboarding": allow_number_change_during_onboarding,
                     "allow_template_sharing": allow_template_sharing,
+                    "api_key": api_key,
                     "billing_contact": billing_contact,
                     "billing_model": billing_model,
                     "brand": brand,
@@ -1183,6 +1248,7 @@ class AsyncProfilesResource(AsyncAPIResource):
         self,
         profile_id: str,
         *,
+        api_key: str | Omit = omit,
         sandbox: bool | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -1206,6 +1272,14 @@ class AsyncProfilesResource(AsyncAPIResource):
         organization.
 
         Args:
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
+
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
 
@@ -1223,7 +1297,13 @@ class AsyncProfilesResource(AsyncAPIResource):
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._delete(
             path_template("/v3/profiles/{profile_id}", profile_id=profile_id),
-            body=await async_maybe_transform({"sandbox": sandbox}, profile_delete_params.ProfileDeleteParams),
+            body=await async_maybe_transform(
+                {
+                    "api_key": api_key,
+                    "sandbox": sandbox,
+                },
+                profile_delete_params.ProfileDeleteParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -1236,6 +1316,7 @@ class AsyncProfilesResource(AsyncAPIResource):
         profile_id: str,
         *,
         web_hook_url: str,
+        api_key: str | Omit = omit,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -1294,6 +1375,14 @@ class AsyncProfilesResource(AsyncAPIResource):
         Args:
           web_hook_url: Webhook URL to call when profile completion finishes (success or failure)
 
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
+
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
 
@@ -1321,6 +1410,7 @@ class AsyncProfilesResource(AsyncAPIResource):
             body=await async_maybe_transform(
                 {
                     "web_hook_url": web_hook_url,
+                    "api_key": api_key,
                     "sandbox": sandbox,
                 },
                 profile_complete_params.ProfileCompleteParams,

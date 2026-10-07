@@ -120,6 +120,7 @@ class UsersResource(SyncAPIResource):
     def invite(
         self,
         *,
+        api_key: str | Omit = omit,
         email: str | Omit = omit,
         name: str | Omit = omit,
         role: str | Omit = omit,
@@ -139,6 +140,14 @@ class UsersResource(SyncAPIResource):
         with a token to accept. Invitation tokens expire after 7 days.
 
         Args:
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
+
           email: User email address (required)
 
           name: User full name (required)
@@ -169,6 +178,7 @@ class UsersResource(SyncAPIResource):
             "/v3/users",
             body=maybe_transform(
                 {
+                    "api_key": api_key,
                     "email": email,
                     "name": name,
                     "role": role,
@@ -186,6 +196,7 @@ class UsersResource(SyncAPIResource):
         self,
         user_id: str,
         *,
+        api_key: str | Omit = omit,
         sandbox: bool | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -201,6 +212,14 @@ class UsersResource(SyncAPIResource):
         cannot remove yourself or remove the last admin.
 
         Args:
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
+
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
 
@@ -218,7 +237,13 @@ class UsersResource(SyncAPIResource):
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._delete(
             path_template("/v3/users/{user_id}", user_id=user_id),
-            body=maybe_transform({"sandbox": sandbox}, user_remove_params.UserRemoveParams),
+            body=maybe_transform(
+                {
+                    "api_key": api_key,
+                    "sandbox": sandbox,
+                },
+                user_remove_params.UserRemoveParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -229,6 +254,7 @@ class UsersResource(SyncAPIResource):
         self,
         user_id: str,
         *,
+        api_key: str | Omit = omit,
         role: str | Omit = omit,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
@@ -246,6 +272,14 @@ class UsersResource(SyncAPIResource):
         cannot change your own role or demote the last admin.
 
         Args:
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
+
           role: User role: admin, billing, or developer (required)
 
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
@@ -274,6 +308,7 @@ class UsersResource(SyncAPIResource):
             path_template("/v3/users/{user_id}", user_id=user_id),
             body=maybe_transform(
                 {
+                    "api_key": api_key,
                     "role": role,
                     "sandbox": sandbox,
                 },
@@ -384,6 +419,7 @@ class AsyncUsersResource(AsyncAPIResource):
     async def invite(
         self,
         *,
+        api_key: str | Omit = omit,
         email: str | Omit = omit,
         name: str | Omit = omit,
         role: str | Omit = omit,
@@ -403,6 +439,14 @@ class AsyncUsersResource(AsyncAPIResource):
         with a token to accept. Invitation tokens expire after 7 days.
 
         Args:
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
+
           email: User email address (required)
 
           name: User full name (required)
@@ -433,6 +477,7 @@ class AsyncUsersResource(AsyncAPIResource):
             "/v3/users",
             body=await async_maybe_transform(
                 {
+                    "api_key": api_key,
                     "email": email,
                     "name": name,
                     "role": role,
@@ -450,6 +495,7 @@ class AsyncUsersResource(AsyncAPIResource):
         self,
         user_id: str,
         *,
+        api_key: str | Omit = omit,
         sandbox: bool | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -465,6 +511,14 @@ class AsyncUsersResource(AsyncAPIResource):
         cannot remove yourself or remove the last admin.
 
         Args:
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
+
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
 
@@ -482,7 +536,13 @@ class AsyncUsersResource(AsyncAPIResource):
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._delete(
             path_template("/v3/users/{user_id}", user_id=user_id),
-            body=await async_maybe_transform({"sandbox": sandbox}, user_remove_params.UserRemoveParams),
+            body=await async_maybe_transform(
+                {
+                    "api_key": api_key,
+                    "sandbox": sandbox,
+                },
+                user_remove_params.UserRemoveParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -493,6 +553,7 @@ class AsyncUsersResource(AsyncAPIResource):
         self,
         user_id: str,
         *,
+        api_key: str | Omit = omit,
         role: str | Omit = omit,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
@@ -510,6 +571,14 @@ class AsyncUsersResource(AsyncAPIResource):
         cannot change your own role or demote the last admin.
 
         Args:
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
+
           role: User role: admin, billing, or developer (required)
 
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
@@ -538,6 +607,7 @@ class AsyncUsersResource(AsyncAPIResource):
             path_template("/v3/users/{user_id}", user_id=user_id),
             body=await async_maybe_transform(
                 {
+                    "api_key": api_key,
                     "role": role,
                     "sandbox": sandbox,
                 },

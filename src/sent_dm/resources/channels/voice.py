@@ -72,6 +72,7 @@ class VoiceResource(SyncAPIResource):
         self,
         *,
         callback_url: str,
+        api_key: str | Omit = omit,
         area_code: Optional[str] | Omit = omit,
         default_for_app_calls: Optional[bool] | Omit = omit,
         number: Optional[str] | Omit = omit,
@@ -120,6 +121,14 @@ class VoiceResource(SyncAPIResource):
               are signed. Turning the number on again with a different URL replaces it and
               keeps the secret.
 
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
+
           area_code: The US area code a new number should be in, as 212. Only for a request that
               leaves number out — sending both says two different things about which number to
               use, and is refused. Omit it too and the number comes from anywhere in the
@@ -158,6 +167,7 @@ class VoiceResource(SyncAPIResource):
             body=maybe_transform(
                 {
                     "callback_url": callback_url,
+                    "api_key": api_key,
                     "area_code": area_code,
                     "default_for_app_calls": default_for_app_calls,
                     "number": number,
@@ -218,6 +228,7 @@ class VoiceResource(SyncAPIResource):
         self,
         number: str,
         *,
+        api_key: str | Omit = omit,
         callback_url: Optional[str] | Omit = omit,
         default_for_app_calls: Optional[bool] | Omit = omit,
         sandbox: bool | Omit = omit,
@@ -279,6 +290,14 @@ class VoiceResource(SyncAPIResource):
         change.
 
         Args:
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
+
           callback_url: A new callback URL for the number, active or not: an absolute HTTP or HTTPS URL
               on a public host, where Sent asks what to do with each call. The signing secret
               is kept.
@@ -317,6 +336,7 @@ class VoiceResource(SyncAPIResource):
             path_template("/v3/channels/voice/{number}", number=number),
             body=maybe_transform(
                 {
+                    "api_key": api_key,
                     "callback_url": callback_url,
                     "default_for_app_calls": default_for_app_calls,
                     "sandbox": sandbox,
@@ -373,6 +393,7 @@ class VoiceResource(SyncAPIResource):
     def create_token(
         self,
         *,
+        api_key: str | Omit = omit,
         identity: str | Omit = omit,
         number: Optional[str] | Omit = omit,
         sandbox: bool | Omit = omit,
@@ -396,6 +417,14 @@ class VoiceResource(SyncAPIResource):
         between numbers.
 
         Args:
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
+
           identity: Your identifier for the app user, such as an agent or account id. Letters,
               digits, hyphens and underscores only, up to 200 characters.
 
@@ -429,6 +458,7 @@ class VoiceResource(SyncAPIResource):
             "/v3/channels/voice/tokens",
             body=maybe_transform(
                 {
+                    "api_key": api_key,
                     "identity": identity,
                     "number": number,
                     "sandbox": sandbox,
@@ -446,6 +476,7 @@ class VoiceResource(SyncAPIResource):
         self,
         number: str,
         *,
+        api_key: str | Omit = omit,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -466,6 +497,14 @@ class VoiceResource(SyncAPIResource):
         is written.
 
         Args:
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
+
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
 
@@ -490,7 +529,13 @@ class VoiceResource(SyncAPIResource):
         }
         return self._post(
             path_template("/v3/channels/voice/{number}/rotate-secret", number=number),
-            body=maybe_transform({"sandbox": sandbox}, voice_rotate_secret_params.VoiceRotateSecretParams),
+            body=maybe_transform(
+                {
+                    "api_key": api_key,
+                    "sandbox": sandbox,
+                },
+                voice_rotate_secret_params.VoiceRotateSecretParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -501,6 +546,7 @@ class VoiceResource(SyncAPIResource):
         self,
         number: str,
         *,
+        api_key: str | Omit = omit,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -526,6 +572,14 @@ class VoiceResource(SyncAPIResource):
         no request or response in it.
 
         Args:
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
+
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
 
@@ -550,7 +604,13 @@ class VoiceResource(SyncAPIResource):
         }
         return self._post(
             path_template("/v3/channels/voice/{number}/test", number=number),
-            body=maybe_transform({"sandbox": sandbox}, voice_test_params.VoiceTestParams),
+            body=maybe_transform(
+                {
+                    "api_key": api_key,
+                    "sandbox": sandbox,
+                },
+                voice_test_params.VoiceTestParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -595,6 +655,7 @@ class AsyncVoiceResource(AsyncAPIResource):
         self,
         *,
         callback_url: str,
+        api_key: str | Omit = omit,
         area_code: Optional[str] | Omit = omit,
         default_for_app_calls: Optional[bool] | Omit = omit,
         number: Optional[str] | Omit = omit,
@@ -643,6 +704,14 @@ class AsyncVoiceResource(AsyncAPIResource):
               are signed. Turning the number on again with a different URL replaces it and
               keeps the secret.
 
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
+
           area_code: The US area code a new number should be in, as 212. Only for a request that
               leaves number out — sending both says two different things about which number to
               use, and is refused. Omit it too and the number comes from anywhere in the
@@ -681,6 +750,7 @@ class AsyncVoiceResource(AsyncAPIResource):
             body=await async_maybe_transform(
                 {
                     "callback_url": callback_url,
+                    "api_key": api_key,
                     "area_code": area_code,
                     "default_for_app_calls": default_for_app_calls,
                     "number": number,
@@ -741,6 +811,7 @@ class AsyncVoiceResource(AsyncAPIResource):
         self,
         number: str,
         *,
+        api_key: str | Omit = omit,
         callback_url: Optional[str] | Omit = omit,
         default_for_app_calls: Optional[bool] | Omit = omit,
         sandbox: bool | Omit = omit,
@@ -802,6 +873,14 @@ class AsyncVoiceResource(AsyncAPIResource):
         change.
 
         Args:
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
+
           callback_url: A new callback URL for the number, active or not: an absolute HTTP or HTTPS URL
               on a public host, where Sent asks what to do with each call. The signing secret
               is kept.
@@ -840,6 +919,7 @@ class AsyncVoiceResource(AsyncAPIResource):
             path_template("/v3/channels/voice/{number}", number=number),
             body=await async_maybe_transform(
                 {
+                    "api_key": api_key,
                     "callback_url": callback_url,
                     "default_for_app_calls": default_for_app_calls,
                     "sandbox": sandbox,
@@ -896,6 +976,7 @@ class AsyncVoiceResource(AsyncAPIResource):
     async def create_token(
         self,
         *,
+        api_key: str | Omit = omit,
         identity: str | Omit = omit,
         number: Optional[str] | Omit = omit,
         sandbox: bool | Omit = omit,
@@ -919,6 +1000,14 @@ class AsyncVoiceResource(AsyncAPIResource):
         between numbers.
 
         Args:
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
+
           identity: Your identifier for the app user, such as an agent or account id. Letters,
               digits, hyphens and underscores only, up to 200 characters.
 
@@ -952,6 +1041,7 @@ class AsyncVoiceResource(AsyncAPIResource):
             "/v3/channels/voice/tokens",
             body=await async_maybe_transform(
                 {
+                    "api_key": api_key,
                     "identity": identity,
                     "number": number,
                     "sandbox": sandbox,
@@ -969,6 +1059,7 @@ class AsyncVoiceResource(AsyncAPIResource):
         self,
         number: str,
         *,
+        api_key: str | Omit = omit,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -989,6 +1080,14 @@ class AsyncVoiceResource(AsyncAPIResource):
         is written.
 
         Args:
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
+
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
 
@@ -1013,7 +1112,13 @@ class AsyncVoiceResource(AsyncAPIResource):
         }
         return await self._post(
             path_template("/v3/channels/voice/{number}/rotate-secret", number=number),
-            body=await async_maybe_transform({"sandbox": sandbox}, voice_rotate_secret_params.VoiceRotateSecretParams),
+            body=await async_maybe_transform(
+                {
+                    "api_key": api_key,
+                    "sandbox": sandbox,
+                },
+                voice_rotate_secret_params.VoiceRotateSecretParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -1024,6 +1129,7 @@ class AsyncVoiceResource(AsyncAPIResource):
         self,
         number: str,
         *,
+        api_key: str | Omit = omit,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -1049,6 +1155,14 @@ class AsyncVoiceResource(AsyncAPIResource):
         no request or response in it.
 
         Args:
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
+
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
 
@@ -1073,7 +1187,13 @@ class AsyncVoiceResource(AsyncAPIResource):
         }
         return await self._post(
             path_template("/v3/channels/voice/{number}/test", number=number),
-            body=await async_maybe_transform({"sandbox": sandbox}, voice_test_params.VoiceTestParams),
+            body=await async_maybe_transform(
+                {
+                    "api_key": api_key,
+                    "sandbox": sandbox,
+                },
+                voice_test_params.VoiceTestParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
