@@ -76,6 +76,7 @@ class TestCampaigns:
                     "terms_and_conditions_link": "https://acmecorp.com/terms",
                     "volume": "volume",
                 },
+                api_key="sntdm_test_xxxxxxxxxxxx",
                 sandbox=False,
                 idempotency_key="req_abc123_retry1",
                 x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -218,6 +219,7 @@ class TestCampaigns:
                     "terms_and_conditions_link": "https://example.com",
                     "volume": "volume",
                 },
+                api_key="sntdm_test_xxxxxxxxxxxx",
                 sandbox=False,
                 idempotency_key="req_abc123_retry1",
                 x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -403,6 +405,7 @@ class TestCampaigns:
             campaign = client.profiles.campaigns.delete(
                 campaign_id="b2c3d4e5-f6a7-8901-bcde-f12345678901",
                 profile_id="770e8400-e29b-41d4-a716-446655440002",
+                api_key="sntdm_test_xxxxxxxxxxxx",
                 sandbox=False,
                 x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             )
@@ -515,6 +518,7 @@ class TestAsyncCampaigns:
                     "terms_and_conditions_link": "https://acmecorp.com/terms",
                     "volume": "volume",
                 },
+                api_key="sntdm_test_xxxxxxxxxxxx",
                 sandbox=False,
                 idempotency_key="req_abc123_retry1",
                 x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -657,6 +661,7 @@ class TestAsyncCampaigns:
                     "terms_and_conditions_link": "https://example.com",
                     "volume": "volume",
                 },
+                api_key="sntdm_test_xxxxxxxxxxxx",
                 sandbox=False,
                 idempotency_key="req_abc123_retry1",
                 x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -842,6 +847,7 @@ class TestAsyncCampaigns:
             campaign = await async_client.profiles.campaigns.delete(
                 campaign_id="b2c3d4e5-f6a7-8901-bcde-f12345678901",
                 profile_id="770e8400-e29b-41d4-a716-446655440002",
+                api_key="sntdm_test_xxxxxxxxxxxx",
                 sandbox=False,
                 x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             )

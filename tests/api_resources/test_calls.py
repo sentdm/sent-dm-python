@@ -130,6 +130,7 @@ class TestCalls:
     def test_method_hangup_with_all_params(self, client: Sent) -> None:
         call = client.calls.hangup(
             id="call_9f2ab000-0000-4000-8000-000000000001",
+            api_key="sntdm_test_xxxxxxxxxxxx",
             sandbox=False,
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -235,6 +236,7 @@ class TestCalls:
         call = client.calls.record(
             id="call_9f2ab000-0000-4000-8000-000000000001",
             action="start",
+            api_key="sntdm_test_xxxxxxxxxxxx",
             sandbox=False,
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -388,6 +390,7 @@ class TestAsyncCalls:
     async def test_method_hangup_with_all_params(self, async_client: AsyncSent) -> None:
         call = await async_client.calls.hangup(
             id="call_9f2ab000-0000-4000-8000-000000000001",
+            api_key="sntdm_test_xxxxxxxxxxxx",
             sandbox=False,
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -493,6 +496,7 @@ class TestAsyncCalls:
         call = await async_client.calls.record(
             id="call_9f2ab000-0000-4000-8000-000000000001",
             action="start",
+            api_key="sntdm_test_xxxxxxxxxxxx",
             sandbox=False,
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",

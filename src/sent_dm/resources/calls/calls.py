@@ -189,6 +189,7 @@ class CallsResource(SyncAPIResource):
         self,
         id: str,
         *,
+        api_key: str | Omit = omit,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -208,6 +209,14 @@ class CallsResource(SyncAPIResource):
         as one between two app users.
 
         Args:
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
+
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
 
@@ -233,7 +242,13 @@ class CallsResource(SyncAPIResource):
         }
         return self._post(
             path_template("/v3/calls/{id}/hangup", id=id),
-            body=maybe_transform({"sandbox": sandbox}, call_hangup_params.CallHangupParams),
+            body=maybe_transform(
+                {
+                    "api_key": api_key,
+                    "sandbox": sandbox,
+                },
+                call_hangup_params.CallHangupParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -286,6 +301,7 @@ class CallsResource(SyncAPIResource):
         id: str,
         *,
         action: str | Omit = omit,
+        api_key: str | Omit = omit,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -306,6 +322,14 @@ class CallsResource(SyncAPIResource):
 
         Args:
           action: start to begin recording, stop to end it
+
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
 
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
@@ -335,6 +359,7 @@ class CallsResource(SyncAPIResource):
             body=maybe_transform(
                 {
                     "action": action,
+                    "api_key": api_key,
                     "sandbox": sandbox,
                 },
                 call_record_params.CallRecordParams,
@@ -500,6 +525,7 @@ class AsyncCallsResource(AsyncAPIResource):
         self,
         id: str,
         *,
+        api_key: str | Omit = omit,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -519,6 +545,14 @@ class AsyncCallsResource(AsyncAPIResource):
         as one between two app users.
 
         Args:
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
+
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
 
@@ -544,7 +578,13 @@ class AsyncCallsResource(AsyncAPIResource):
         }
         return await self._post(
             path_template("/v3/calls/{id}/hangup", id=id),
-            body=await async_maybe_transform({"sandbox": sandbox}, call_hangup_params.CallHangupParams),
+            body=await async_maybe_transform(
+                {
+                    "api_key": api_key,
+                    "sandbox": sandbox,
+                },
+                call_hangup_params.CallHangupParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -597,6 +637,7 @@ class AsyncCallsResource(AsyncAPIResource):
         id: str,
         *,
         action: str | Omit = omit,
+        api_key: str | Omit = omit,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -617,6 +658,14 @@ class AsyncCallsResource(AsyncAPIResource):
 
         Args:
           action: start to begin recording, stop to end it
+
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
 
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
@@ -646,6 +695,7 @@ class AsyncCallsResource(AsyncAPIResource):
             body=await async_maybe_transform(
                 {
                     "action": action,
+                    "api_key": api_key,
                     "sandbox": sandbox,
                 },
                 call_record_params.CallRecordParams,

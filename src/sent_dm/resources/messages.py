@@ -141,6 +141,7 @@ class MessagesResource(SyncAPIResource):
     def send(
         self,
         *,
+        api_key: str | Omit = omit,
         channel: Optional[SequenceNotStr[str]] | Omit = omit,
         media_urls: Optional[SequenceNotStr[str]] | Omit = omit,
         sandbox: bool | Omit = omit,
@@ -182,6 +183,14 @@ class MessagesResource(SyncAPIResource):
         hold at most 1,000,000 scheduled messages at once (429 LIMIT_001).
 
         Args:
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
+
           channel: Channels to broadcast on, e.g. ["whatsapp", "sms"]. Each channel produces a
               separate message per recipient. "sent" = auto-detect. Defaults to ["sent"]
               (auto-detect) if omitted.
@@ -247,6 +256,7 @@ class MessagesResource(SyncAPIResource):
             "/v3/messages",
             body=maybe_transform(
                 {
+                    "api_key": api_key,
                     "channel": channel,
                     "media_urls": media_urls,
                     "sandbox": sandbox,
@@ -380,6 +390,7 @@ class AsyncMessagesResource(AsyncAPIResource):
     async def send(
         self,
         *,
+        api_key: str | Omit = omit,
         channel: Optional[SequenceNotStr[str]] | Omit = omit,
         media_urls: Optional[SequenceNotStr[str]] | Omit = omit,
         sandbox: bool | Omit = omit,
@@ -421,6 +432,14 @@ class AsyncMessagesResource(AsyncAPIResource):
         hold at most 1,000,000 scheduled messages at once (429 LIMIT_001).
 
         Args:
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
+
           channel: Channels to broadcast on, e.g. ["whatsapp", "sms"]. Each channel produces a
               separate message per recipient. "sent" = auto-detect. Defaults to ["sent"]
               (auto-detect) if omitted.
@@ -486,6 +505,7 @@ class AsyncMessagesResource(AsyncAPIResource):
             "/v3/messages",
             body=await async_maybe_transform(
                 {
+                    "api_key": api_key,
                     "channel": channel,
                     "media_urls": media_urls,
                     "sandbox": sandbox,

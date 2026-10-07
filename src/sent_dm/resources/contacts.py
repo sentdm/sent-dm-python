@@ -58,6 +58,7 @@ class ContactsResource(SyncAPIResource):
         self,
         *,
         phone_number: str,
+        api_key: str | Omit = omit,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -74,6 +75,14 @@ class ContactsResource(SyncAPIResource):
 
         Args:
           phone_number: Phone number of the contact to create
+
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
 
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
@@ -100,6 +109,7 @@ class ContactsResource(SyncAPIResource):
             body=maybe_transform(
                 {
                     "phone_number": phone_number,
+                    "api_key": api_key,
                     "sandbox": sandbox,
                 },
                 contact_create_params.ContactCreateParams,
@@ -152,6 +162,7 @@ class ContactsResource(SyncAPIResource):
         self,
         id: str,
         *,
+        api_key: str | Omit = omit,
         default_channel: Optional[str] | Omit = omit,
         opt_out: Optional[bool] | Omit = omit,
         sandbox: bool | Omit = omit,
@@ -168,6 +179,14 @@ class ContactsResource(SyncAPIResource):
         Updates a contact's default channel and/or opt-out status.
 
         Args:
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
+
           default_channel: Default messaging channel: "sms" or "whatsapp"
 
           opt_out: Whether the contact has opted out of messaging. Single source of truth — opt-out
@@ -199,6 +218,7 @@ class ContactsResource(SyncAPIResource):
             path_template("/v3/contacts/{id}", id=id),
             body=maybe_transform(
                 {
+                    "api_key": api_key,
                     "default_channel": default_channel,
                     "opt_out": opt_out,
                     "sandbox": sandbox,
@@ -279,6 +299,7 @@ class ContactsResource(SyncAPIResource):
         self,
         id: str,
         *,
+        api_key: str | Omit = omit,
         sandbox: bool | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -301,6 +322,14 @@ class ContactsResource(SyncAPIResource):
         Dissociates a contact from the authenticated customer.
 
         Args:
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
+
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
 
@@ -318,7 +347,13 @@ class ContactsResource(SyncAPIResource):
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._delete(
             path_template("/v3/contacts/{id}", id=id),
-            body=maybe_transform({"sandbox": sandbox}, contact_delete_params.ContactDeleteParams),
+            body=maybe_transform(
+                {
+                    "api_key": api_key,
+                    "sandbox": sandbox,
+                },
+                contact_delete_params.ContactDeleteParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -395,6 +430,7 @@ class AsyncContactsResource(AsyncAPIResource):
         self,
         *,
         phone_number: str,
+        api_key: str | Omit = omit,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -411,6 +447,14 @@ class AsyncContactsResource(AsyncAPIResource):
 
         Args:
           phone_number: Phone number of the contact to create
+
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
 
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
@@ -437,6 +481,7 @@ class AsyncContactsResource(AsyncAPIResource):
             body=await async_maybe_transform(
                 {
                     "phone_number": phone_number,
+                    "api_key": api_key,
                     "sandbox": sandbox,
                 },
                 contact_create_params.ContactCreateParams,
@@ -489,6 +534,7 @@ class AsyncContactsResource(AsyncAPIResource):
         self,
         id: str,
         *,
+        api_key: str | Omit = omit,
         default_channel: Optional[str] | Omit = omit,
         opt_out: Optional[bool] | Omit = omit,
         sandbox: bool | Omit = omit,
@@ -505,6 +551,14 @@ class AsyncContactsResource(AsyncAPIResource):
         Updates a contact's default channel and/or opt-out status.
 
         Args:
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
+
           default_channel: Default messaging channel: "sms" or "whatsapp"
 
           opt_out: Whether the contact has opted out of messaging. Single source of truth — opt-out
@@ -536,6 +590,7 @@ class AsyncContactsResource(AsyncAPIResource):
             path_template("/v3/contacts/{id}", id=id),
             body=await async_maybe_transform(
                 {
+                    "api_key": api_key,
                     "default_channel": default_channel,
                     "opt_out": opt_out,
                     "sandbox": sandbox,
@@ -616,6 +671,7 @@ class AsyncContactsResource(AsyncAPIResource):
         self,
         id: str,
         *,
+        api_key: str | Omit = omit,
         sandbox: bool | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -638,6 +694,14 @@ class AsyncContactsResource(AsyncAPIResource):
         Dissociates a contact from the authenticated customer.
 
         Args:
+          api_key: API key from the x-api-key header, or empty when the caller sent it as
+              Authorization: Bearer instead.
+
+              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
+              header, and [FromHeader] is required by default, so a Bearer-only request would
+              authenticate and then be refused with a 400 for a header it never needed.
+              Endpoints read the customer from the CustomerId claim, not from this value.
+
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
 
@@ -655,7 +719,13 @@ class AsyncContactsResource(AsyncAPIResource):
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._delete(
             path_template("/v3/contacts/{id}", id=id),
-            body=await async_maybe_transform({"sandbox": sandbox}, contact_delete_params.ContactDeleteParams),
+            body=await async_maybe_transform(
+                {
+                    "api_key": api_key,
+                    "sandbox": sandbox,
+                },
+                contact_delete_params.ContactDeleteParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
