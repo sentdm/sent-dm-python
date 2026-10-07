@@ -117,7 +117,6 @@ class TestUsers:
     @parametrize
     def test_method_invite_with_all_params(self, client: Sent) -> None:
         user = client.users.invite(
-            api_key="sntdm_test_xxxxxxxxxxxx",
             email="newuser@example.com",
             name="New User",
             role="developer",
@@ -162,7 +161,6 @@ class TestUsers:
     def test_method_remove_with_all_params(self, client: Sent) -> None:
         user = client.users.remove(
             user_id="aa0e8400-e29b-41d4-a716-446655440005",
-            api_key="sntdm_test_xxxxxxxxxxxx",
             sandbox=False,
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
@@ -215,7 +213,6 @@ class TestUsers:
     def test_method_update_role_with_all_params(self, client: Sent) -> None:
         user = client.users.update_role(
             user_id="aa0e8400-e29b-41d4-a716-446655440005",
-            api_key="sntdm_test_xxxxxxxxxxxx",
             role="billing",
             sandbox=False,
             idempotency_key="req_abc123_retry1",
@@ -360,7 +357,6 @@ class TestAsyncUsers:
     @parametrize
     async def test_method_invite_with_all_params(self, async_client: AsyncSent) -> None:
         user = await async_client.users.invite(
-            api_key="sntdm_test_xxxxxxxxxxxx",
             email="newuser@example.com",
             name="New User",
             role="developer",
@@ -405,7 +401,6 @@ class TestAsyncUsers:
     async def test_method_remove_with_all_params(self, async_client: AsyncSent) -> None:
         user = await async_client.users.remove(
             user_id="aa0e8400-e29b-41d4-a716-446655440005",
-            api_key="sntdm_test_xxxxxxxxxxxx",
             sandbox=False,
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
@@ -458,7 +453,6 @@ class TestAsyncUsers:
     async def test_method_update_role_with_all_params(self, async_client: AsyncSent) -> None:
         user = await async_client.users.update_role(
             user_id="aa0e8400-e29b-41d4-a716-446655440005",
-            api_key="sntdm_test_xxxxxxxxxxxx",
             role="billing",
             sandbox=False,
             idempotency_key="req_abc123_retry1",

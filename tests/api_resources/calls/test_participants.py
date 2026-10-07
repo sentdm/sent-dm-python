@@ -35,7 +35,6 @@ class TestParticipants:
         participant = client.calls.participants.update(
             participant_id="call_9f2ab000-0000-4000-8000-000000000002",
             id="call_9f2ab000-0000-4000-8000-000000000001",
-            api_key="sntdm_test_xxxxxxxxxxxx",
             muted=True,
             sandbox=False,
             idempotency_key="req_abc123_retry1",
@@ -150,7 +149,6 @@ class TestParticipants:
     def test_method_add_with_all_params(self, client: Sent) -> None:
         participant = client.calls.participants.add(
             id="call_9f2ab000-0000-4000-8000-000000000001",
-            api_key="sntdm_test_xxxxxxxxxxxx",
             caller_id="+12025550123",
             sandbox=False,
             to={
@@ -211,7 +209,6 @@ class TestParticipants:
         participant = client.calls.participants.remove(
             participant_id="call_9f2ab000-0000-4000-8000-000000000002",
             id="call_9f2ab000-0000-4000-8000-000000000001",
-            api_key="sntdm_test_xxxxxxxxxxxx",
             sandbox=False,
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
@@ -273,7 +270,6 @@ class TestParticipants:
     def test_method_remove_all_with_all_params(self, client: Sent) -> None:
         participant = client.calls.participants.remove_all(
             id="call_9f2ab000-0000-4000-8000-000000000001",
-            api_key="sntdm_test_xxxxxxxxxxxx",
             sandbox=False,
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
@@ -334,7 +330,6 @@ class TestAsyncParticipants:
         participant = await async_client.calls.participants.update(
             participant_id="call_9f2ab000-0000-4000-8000-000000000002",
             id="call_9f2ab000-0000-4000-8000-000000000001",
-            api_key="sntdm_test_xxxxxxxxxxxx",
             muted=True,
             sandbox=False,
             idempotency_key="req_abc123_retry1",
@@ -449,7 +444,6 @@ class TestAsyncParticipants:
     async def test_method_add_with_all_params(self, async_client: AsyncSent) -> None:
         participant = await async_client.calls.participants.add(
             id="call_9f2ab000-0000-4000-8000-000000000001",
-            api_key="sntdm_test_xxxxxxxxxxxx",
             caller_id="+12025550123",
             sandbox=False,
             to={
@@ -510,7 +504,6 @@ class TestAsyncParticipants:
         participant = await async_client.calls.participants.remove(
             participant_id="call_9f2ab000-0000-4000-8000-000000000002",
             id="call_9f2ab000-0000-4000-8000-000000000001",
-            api_key="sntdm_test_xxxxxxxxxxxx",
             sandbox=False,
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
@@ -572,7 +565,6 @@ class TestAsyncParticipants:
     async def test_method_remove_all_with_all_params(self, async_client: AsyncSent) -> None:
         participant = await async_client.calls.participants.remove_all(
             id="call_9f2ab000-0000-4000-8000-000000000001",
-            api_key="sntdm_test_xxxxxxxxxxxx",
             sandbox=False,
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )

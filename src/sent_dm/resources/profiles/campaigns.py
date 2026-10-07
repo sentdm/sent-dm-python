@@ -58,7 +58,6 @@ class CampaignsResource(SyncAPIResource):
         profile_id: str,
         *,
         campaign: CampaignDataParam,
-        api_key: str | Omit = omit,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -81,14 +80,6 @@ class CampaignsResource(SyncAPIResource):
 
         Args:
           campaign: Campaign data for create or update operation
-
-          api_key: API key from the x-api-key header, or empty when the caller sent it as
-              Authorization: Bearer instead.
-
-              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
-              header, and [FromHeader] is required by default, so a Bearer-only request would
-              authenticate and then be refused with a 400 for a header it never needed.
-              Endpoints read the customer from the CustomerId claim, not from this value.
 
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
@@ -117,7 +108,6 @@ class CampaignsResource(SyncAPIResource):
             body=maybe_transform(
                 {
                     "campaign": campaign,
-                    "api_key": api_key,
                     "sandbox": sandbox,
                 },
                 campaign_create_params.CampaignCreateParams,
@@ -135,7 +125,6 @@ class CampaignsResource(SyncAPIResource):
         *,
         profile_id: str,
         campaign: CampaignDataParam,
-        api_key: str | Omit = omit,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -158,14 +147,6 @@ class CampaignsResource(SyncAPIResource):
 
         Args:
           campaign: Campaign data for create or update operation
-
-          api_key: API key from the x-api-key header, or empty when the caller sent it as
-              Authorization: Bearer instead.
-
-              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
-              header, and [FromHeader] is required by default, so a Bearer-only request would
-              authenticate and then be refused with a 400 for a header it never needed.
-              Endpoints read the customer from the CustomerId claim, not from this value.
 
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
@@ -198,7 +179,6 @@ class CampaignsResource(SyncAPIResource):
             body=maybe_transform(
                 {
                     "campaign": campaign,
-                    "api_key": api_key,
                     "sandbox": sandbox,
                 },
                 campaign_update_params.CampaignUpdateParams,
@@ -258,7 +238,6 @@ class CampaignsResource(SyncAPIResource):
         campaign_id: str,
         *,
         profile_id: str,
-        api_key: str | Omit = omit,
         sandbox: bool | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -279,14 +258,6 @@ class CampaignsResource(SyncAPIResource):
         must belong to the authenticated organization.
 
         Args:
-          api_key: API key from the x-api-key header, or empty when the caller sent it as
-              Authorization: Bearer instead.
-
-              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
-              header, and [FromHeader] is required by default, so a Bearer-only request would
-              authenticate and then be refused with a 400 for a header it never needed.
-              Endpoints read the customer from the CustomerId claim, not from this value.
-
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
 
@@ -308,13 +279,7 @@ class CampaignsResource(SyncAPIResource):
             path_template(
                 "/v3/profiles/{profile_id}/campaigns/{campaign_id}", profile_id=profile_id, campaign_id=campaign_id
             ),
-            body=maybe_transform(
-                {
-                    "api_key": api_key,
-                    "sandbox": sandbox,
-                },
-                campaign_delete_params.CampaignDeleteParams,
-            ),
+            body=maybe_transform({"sandbox": sandbox}, campaign_delete_params.CampaignDeleteParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -355,7 +320,6 @@ class AsyncCampaignsResource(AsyncAPIResource):
         profile_id: str,
         *,
         campaign: CampaignDataParam,
-        api_key: str | Omit = omit,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -378,14 +342,6 @@ class AsyncCampaignsResource(AsyncAPIResource):
 
         Args:
           campaign: Campaign data for create or update operation
-
-          api_key: API key from the x-api-key header, or empty when the caller sent it as
-              Authorization: Bearer instead.
-
-              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
-              header, and [FromHeader] is required by default, so a Bearer-only request would
-              authenticate and then be refused with a 400 for a header it never needed.
-              Endpoints read the customer from the CustomerId claim, not from this value.
 
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
@@ -414,7 +370,6 @@ class AsyncCampaignsResource(AsyncAPIResource):
             body=await async_maybe_transform(
                 {
                     "campaign": campaign,
-                    "api_key": api_key,
                     "sandbox": sandbox,
                 },
                 campaign_create_params.CampaignCreateParams,
@@ -432,7 +387,6 @@ class AsyncCampaignsResource(AsyncAPIResource):
         *,
         profile_id: str,
         campaign: CampaignDataParam,
-        api_key: str | Omit = omit,
         sandbox: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -455,14 +409,6 @@ class AsyncCampaignsResource(AsyncAPIResource):
 
         Args:
           campaign: Campaign data for create or update operation
-
-          api_key: API key from the x-api-key header, or empty when the caller sent it as
-              Authorization: Bearer instead.
-
-              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
-              header, and [FromHeader] is required by default, so a Bearer-only request would
-              authenticate and then be refused with a 400 for a header it never needed.
-              Endpoints read the customer from the CustomerId claim, not from this value.
 
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
@@ -495,7 +441,6 @@ class AsyncCampaignsResource(AsyncAPIResource):
             body=await async_maybe_transform(
                 {
                     "campaign": campaign,
-                    "api_key": api_key,
                     "sandbox": sandbox,
                 },
                 campaign_update_params.CampaignUpdateParams,
@@ -555,7 +500,6 @@ class AsyncCampaignsResource(AsyncAPIResource):
         campaign_id: str,
         *,
         profile_id: str,
-        api_key: str | Omit = omit,
         sandbox: bool | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -576,14 +520,6 @@ class AsyncCampaignsResource(AsyncAPIResource):
         must belong to the authenticated organization.
 
         Args:
-          api_key: API key from the x-api-key header, or empty when the caller sent it as
-              Authorization: Bearer instead.
-
-              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
-              header, and [FromHeader] is required by default, so a Bearer-only request would
-              authenticate and then be refused with a 400 for a header it never needed.
-              Endpoints read the customer from the CustomerId claim, not from this value.
-
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
 
@@ -605,13 +541,7 @@ class AsyncCampaignsResource(AsyncAPIResource):
             path_template(
                 "/v3/profiles/{profile_id}/campaigns/{campaign_id}", profile_id=profile_id, campaign_id=campaign_id
             ),
-            body=await async_maybe_transform(
-                {
-                    "api_key": api_key,
-                    "sandbox": sandbox,
-                },
-                campaign_delete_params.CampaignDeleteParams,
-            ),
+            body=await async_maybe_transform({"sandbox": sandbox}, campaign_delete_params.CampaignDeleteParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),

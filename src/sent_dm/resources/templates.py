@@ -59,7 +59,6 @@ class TemplatesResource(SyncAPIResource):
     def create(
         self,
         *,
-        api_key: str | Omit = omit,
         auto_create_for_sp: bool | Omit = omit,
         category: Optional[str] | Omit = omit,
         creation_source: Optional[str] | Omit = omit,
@@ -85,14 +84,6 @@ class TemplatesResource(SyncAPIResource):
         `PUT /v3/templates/{id}`.
 
         Args:
-          api_key: API key from the x-api-key header, or empty when the caller sent it as
-              Authorization: Bearer instead.
-
-              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
-              header, and [FromHeader] is required by default, so a Bearer-only request would
-              authenticate and then be refused with a 400 for a header it never needed.
-              Endpoints read the customer from the CustomerId claim, not from this value.
-
           auto_create_for_sp: Create this template automatically on every sender profile of the organization,
               now and in future (default: false). Accepted only from an organization that has
               been enabled for it, and only at creation — it cannot be changed afterwards.
@@ -133,7 +124,6 @@ class TemplatesResource(SyncAPIResource):
             "/v3/templates",
             body=maybe_transform(
                 {
-                    "api_key": api_key,
                     "auto_create_for_sp": auto_create_for_sp,
                     "category": category,
                     "creation_source": creation_source,
@@ -191,7 +181,6 @@ class TemplatesResource(SyncAPIResource):
         self,
         id: str,
         *,
-        api_key: str | Omit = omit,
         category: Optional[str] | Omit = omit,
         definition: Optional[TemplateDefinitionParam] | Omit = omit,
         language: Optional[str] | Omit = omit,
@@ -236,14 +225,6 @@ class TemplatesResource(SyncAPIResource):
         starting with `sent*` is refused for the same reason — the prefix is reserved.
 
         Args:
-          api_key: API key from the x-api-key header, or empty when the caller sent it as
-              Authorization: Bearer instead.
-
-              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
-              header, and [FromHeader] is required by default, so a Bearer-only request would
-              authenticate and then be refused with a 400 for a header it never needed.
-              Endpoints read the customer from the CustomerId claim, not from this value.
-
           category: Template category: MARKETING, UTILITY, AUTHENTICATION
 
           definition: Complete definition of a message template including header, body, footer, and
@@ -281,7 +262,6 @@ class TemplatesResource(SyncAPIResource):
             path_template("/v3/templates/{id}", id=id),
             body=maybe_transform(
                 {
-                    "api_key": api_key,
                     "category": category,
                     "definition": definition,
                     "language": language,
@@ -371,7 +351,6 @@ class TemplatesResource(SyncAPIResource):
         self,
         id: str,
         *,
-        api_key: str | Omit = omit,
         delete_from_meta: Optional[bool] | Omit = omit,
         sandbox: bool | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -388,14 +367,6 @@ class TemplatesResource(SyncAPIResource):
         WhatsApp/Meta by setting delete_from_meta=true.
 
         Args:
-          api_key: API key from the x-api-key header, or empty when the caller sent it as
-              Authorization: Bearer instead.
-
-              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
-              header, and [FromHeader] is required by default, so a Bearer-only request would
-              authenticate and then be refused with a 400 for a header it never needed.
-              Endpoints read the customer from the CustomerId claim, not from this value.
-
           delete_from_meta: Whether to also delete the template from WhatsApp/Meta (optional, defaults to
               false)
 
@@ -418,7 +389,6 @@ class TemplatesResource(SyncAPIResource):
             path_template("/v3/templates/{id}", id=id),
             body=maybe_transform(
                 {
-                    "api_key": api_key,
                     "delete_from_meta": delete_from_meta,
                     "sandbox": sandbox,
                 },
@@ -459,7 +429,6 @@ class AsyncTemplatesResource(AsyncAPIResource):
     async def create(
         self,
         *,
-        api_key: str | Omit = omit,
         auto_create_for_sp: bool | Omit = omit,
         category: Optional[str] | Omit = omit,
         creation_source: Optional[str] | Omit = omit,
@@ -485,14 +454,6 @@ class AsyncTemplatesResource(AsyncAPIResource):
         `PUT /v3/templates/{id}`.
 
         Args:
-          api_key: API key from the x-api-key header, or empty when the caller sent it as
-              Authorization: Bearer instead.
-
-              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
-              header, and [FromHeader] is required by default, so a Bearer-only request would
-              authenticate and then be refused with a 400 for a header it never needed.
-              Endpoints read the customer from the CustomerId claim, not from this value.
-
           auto_create_for_sp: Create this template automatically on every sender profile of the organization,
               now and in future (default: false). Accepted only from an organization that has
               been enabled for it, and only at creation — it cannot be changed afterwards.
@@ -533,7 +494,6 @@ class AsyncTemplatesResource(AsyncAPIResource):
             "/v3/templates",
             body=await async_maybe_transform(
                 {
-                    "api_key": api_key,
                     "auto_create_for_sp": auto_create_for_sp,
                     "category": category,
                     "creation_source": creation_source,
@@ -591,7 +551,6 @@ class AsyncTemplatesResource(AsyncAPIResource):
         self,
         id: str,
         *,
-        api_key: str | Omit = omit,
         category: Optional[str] | Omit = omit,
         definition: Optional[TemplateDefinitionParam] | Omit = omit,
         language: Optional[str] | Omit = omit,
@@ -636,14 +595,6 @@ class AsyncTemplatesResource(AsyncAPIResource):
         starting with `sent*` is refused for the same reason — the prefix is reserved.
 
         Args:
-          api_key: API key from the x-api-key header, or empty when the caller sent it as
-              Authorization: Bearer instead.
-
-              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
-              header, and [FromHeader] is required by default, so a Bearer-only request would
-              authenticate and then be refused with a 400 for a header it never needed.
-              Endpoints read the customer from the CustomerId claim, not from this value.
-
           category: Template category: MARKETING, UTILITY, AUTHENTICATION
 
           definition: Complete definition of a message template including header, body, footer, and
@@ -681,7 +632,6 @@ class AsyncTemplatesResource(AsyncAPIResource):
             path_template("/v3/templates/{id}", id=id),
             body=await async_maybe_transform(
                 {
-                    "api_key": api_key,
                     "category": category,
                     "definition": definition,
                     "language": language,
@@ -771,7 +721,6 @@ class AsyncTemplatesResource(AsyncAPIResource):
         self,
         id: str,
         *,
-        api_key: str | Omit = omit,
         delete_from_meta: Optional[bool] | Omit = omit,
         sandbox: bool | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -788,14 +737,6 @@ class AsyncTemplatesResource(AsyncAPIResource):
         WhatsApp/Meta by setting delete_from_meta=true.
 
         Args:
-          api_key: API key from the x-api-key header, or empty when the caller sent it as
-              Authorization: Bearer instead.
-
-              Optional on purpose. CustomerV3AuthenticationHandler accepts the key in either
-              header, and [FromHeader] is required by default, so a Bearer-only request would
-              authenticate and then be refused with a 400 for a header it never needed.
-              Endpoints read the customer from the CustomerId claim, not from this value.
-
           delete_from_meta: Whether to also delete the template from WhatsApp/Meta (optional, defaults to
               false)
 
@@ -818,7 +759,6 @@ class AsyncTemplatesResource(AsyncAPIResource):
             path_template("/v3/templates/{id}", id=id),
             body=await async_maybe_transform(
                 {
-                    "api_key": api_key,
                     "delete_from_meta": delete_from_meta,
                     "sandbox": sandbox,
                 },

@@ -35,7 +35,6 @@ class TestWebhooks:
     @parametrize
     def test_method_create_with_all_params(self, client: Sent) -> None:
         webhook = client.webhooks.create(
-            api_key="sntdm_test_xxxxxxxxxxxx",
             display_name="Order Notifications",
             endpoint_url="https://example.com/webhooks/orders",
             event_filters={
@@ -141,7 +140,6 @@ class TestWebhooks:
     def test_method_update_with_all_params(self, client: Sent) -> None:
         webhook = client.webhooks.update(
             id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
-            api_key="sntdm_test_xxxxxxxxxxxx",
             display_name="Updated Order Notifications",
             endpoint_url="https://example.com/webhooks/orders-v2",
             event_filters={"message": ["delivered", "failed"]},
@@ -245,7 +243,6 @@ class TestWebhooks:
     def test_method_delete_with_all_params(self, client: Sent) -> None:
         webhook = client.webhooks.delete(
             id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
-            api_key="sntdm_test_xxxxxxxxxxxx",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert webhook is None
@@ -387,7 +384,6 @@ class TestWebhooks:
     def test_method_rotate_secret_with_all_params(self, client: Sent) -> None:
         webhook = client.webhooks.rotate_secret(
             id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
-            api_key="sntdm_test_xxxxxxxxxxxx",
             sandbox=False,
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -441,7 +437,6 @@ class TestWebhooks:
     def test_method_test_with_all_params(self, client: Sent) -> None:
         webhook = client.webhooks.test(
             id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
-            api_key="sntdm_test_xxxxxxxxxxxx",
             event_type="message.sent",
             sandbox=False,
             idempotency_key="req_abc123_retry1",
@@ -496,7 +491,6 @@ class TestWebhooks:
     def test_method_toggle_status_with_all_params(self, client: Sent) -> None:
         webhook = client.webhooks.toggle_status(
             id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
-            api_key="sntdm_test_xxxxxxxxxxxx",
             is_active=False,
             sandbox=False,
             idempotency_key="req_abc123_retry1",
@@ -554,7 +548,6 @@ class TestAsyncWebhooks:
     @parametrize
     async def test_method_create_with_all_params(self, async_client: AsyncSent) -> None:
         webhook = await async_client.webhooks.create(
-            api_key="sntdm_test_xxxxxxxxxxxx",
             display_name="Order Notifications",
             endpoint_url="https://example.com/webhooks/orders",
             event_filters={
@@ -660,7 +653,6 @@ class TestAsyncWebhooks:
     async def test_method_update_with_all_params(self, async_client: AsyncSent) -> None:
         webhook = await async_client.webhooks.update(
             id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
-            api_key="sntdm_test_xxxxxxxxxxxx",
             display_name="Updated Order Notifications",
             endpoint_url="https://example.com/webhooks/orders-v2",
             event_filters={"message": ["delivered", "failed"]},
@@ -764,7 +756,6 @@ class TestAsyncWebhooks:
     async def test_method_delete_with_all_params(self, async_client: AsyncSent) -> None:
         webhook = await async_client.webhooks.delete(
             id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
-            api_key="sntdm_test_xxxxxxxxxxxx",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert webhook is None
@@ -906,7 +897,6 @@ class TestAsyncWebhooks:
     async def test_method_rotate_secret_with_all_params(self, async_client: AsyncSent) -> None:
         webhook = await async_client.webhooks.rotate_secret(
             id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
-            api_key="sntdm_test_xxxxxxxxxxxx",
             sandbox=False,
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -960,7 +950,6 @@ class TestAsyncWebhooks:
     async def test_method_test_with_all_params(self, async_client: AsyncSent) -> None:
         webhook = await async_client.webhooks.test(
             id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
-            api_key="sntdm_test_xxxxxxxxxxxx",
             event_type="message.sent",
             sandbox=False,
             idempotency_key="req_abc123_retry1",
@@ -1015,7 +1004,6 @@ class TestAsyncWebhooks:
     async def test_method_toggle_status_with_all_params(self, async_client: AsyncSent) -> None:
         webhook = await async_client.webhooks.toggle_status(
             id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
-            api_key="sntdm_test_xxxxxxxxxxxx",
             is_active=False,
             sandbox=False,
             idempotency_key="req_abc123_retry1",

@@ -37,7 +37,6 @@ class TestContacts:
     def test_method_create_with_all_params(self, client: Sent) -> None:
         contact = client.contacts.create(
             phone_number="+1234567890",
-            api_key="sntdm_test_xxxxxxxxxxxx",
             sandbox=False,
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -134,7 +133,6 @@ class TestContacts:
     def test_method_update_with_all_params(self, client: Sent) -> None:
         contact = client.contacts.update(
             id="6ba7b810-9dad-11d1-80b4-00c04fd430c8",
-            api_key="sntdm_test_xxxxxxxxxxxx",
             default_channel="whatsapp",
             opt_out=False,
             sandbox=False,
@@ -234,7 +232,6 @@ class TestContacts:
         with pytest.warns(DeprecationWarning):
             contact = client.contacts.delete(
                 id="6ba7b810-9dad-11d1-80b4-00c04fd430c8",
-                api_key="sntdm_test_xxxxxxxxxxxx",
                 sandbox=False,
                 x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             )
@@ -348,7 +345,6 @@ class TestAsyncContacts:
     async def test_method_create_with_all_params(self, async_client: AsyncSent) -> None:
         contact = await async_client.contacts.create(
             phone_number="+1234567890",
-            api_key="sntdm_test_xxxxxxxxxxxx",
             sandbox=False,
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -445,7 +441,6 @@ class TestAsyncContacts:
     async def test_method_update_with_all_params(self, async_client: AsyncSent) -> None:
         contact = await async_client.contacts.update(
             id="6ba7b810-9dad-11d1-80b4-00c04fd430c8",
-            api_key="sntdm_test_xxxxxxxxxxxx",
             default_channel="whatsapp",
             opt_out=False,
             sandbox=False,
@@ -545,7 +540,6 @@ class TestAsyncContacts:
         with pytest.warns(DeprecationWarning):
             contact = await async_client.contacts.delete(
                 id="6ba7b810-9dad-11d1-80b4-00c04fd430c8",
-                api_key="sntdm_test_xxxxxxxxxxxx",
                 sandbox=False,
                 x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             )

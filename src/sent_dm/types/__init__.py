@@ -62,7 +62,6 @@ from .template_button_param import TemplateButtonParam as TemplateButtonParam
 from .template_footer_param import TemplateFooterParam as TemplateFooterParam
 from .template_header_param import TemplateHeaderParam as TemplateHeaderParam
 from .webhook_create_params import WebhookCreateParams as WebhookCreateParams
-from .webhook_delete_params import WebhookDeleteParams as WebhookDeleteParams
 from .webhook_test_response import WebhookTestResponse as WebhookTestResponse
 from .webhook_update_params import WebhookUpdateParams as WebhookUpdateParams
 from .number_lookup_response import NumberLookupResponse as NumberLookupResponse

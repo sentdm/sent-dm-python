@@ -31,7 +31,6 @@ class TestTemplates:
     @parametrize
     def test_method_create_with_all_params(self, client: Sent) -> None:
         template = client.templates.create(
-            api_key="sntdm_test_xxxxxxxxxxxx",
             auto_create_for_sp=False,
             category="MARKETING",
             creation_source=None,
@@ -343,7 +342,6 @@ class TestTemplates:
     def test_method_update_with_all_params(self, client: Sent) -> None:
         template = client.templates.update(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
-            api_key="sntdm_test_xxxxxxxxxxxx",
             category="MARKETING",
             definition={
                 "body": {
@@ -643,7 +641,6 @@ class TestTemplates:
     def test_method_delete_with_all_params(self, client: Sent) -> None:
         template = client.templates.delete(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
-            api_key="sntdm_test_xxxxxxxxxxxx",
             delete_from_meta=False,
             sandbox=False,
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -700,7 +697,6 @@ class TestAsyncTemplates:
     @parametrize
     async def test_method_create_with_all_params(self, async_client: AsyncSent) -> None:
         template = await async_client.templates.create(
-            api_key="sntdm_test_xxxxxxxxxxxx",
             auto_create_for_sp=False,
             category="MARKETING",
             creation_source=None,
@@ -1012,7 +1008,6 @@ class TestAsyncTemplates:
     async def test_method_update_with_all_params(self, async_client: AsyncSent) -> None:
         template = await async_client.templates.update(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
-            api_key="sntdm_test_xxxxxxxxxxxx",
             category="MARKETING",
             definition={
                 "body": {
@@ -1312,7 +1307,6 @@ class TestAsyncTemplates:
     async def test_method_delete_with_all_params(self, async_client: AsyncSent) -> None:
         template = await async_client.templates.delete(
             id="7ba7b820-9dad-11d1-80b4-00c04fd430c8",
-            api_key="sntdm_test_xxxxxxxxxxxx",
             delete_from_meta=False,
             sandbox=False,
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",

@@ -133,7 +133,6 @@ class TestMessages:
     @parametrize
     def test_method_send_with_all_params(self, client: Sent) -> None:
         message = client.messages.send(
-            api_key="sntdm_test_xxxxxxxxxxxx",
             channel=["sms", "whatsapp"],
             media_urls=["string"],
             sandbox=False,
@@ -294,7 +293,6 @@ class TestAsyncMessages:
     @parametrize
     async def test_method_send_with_all_params(self, async_client: AsyncSent) -> None:
         message = await async_client.messages.send(
-            api_key="sntdm_test_xxxxxxxxxxxx",
             channel=["sms", "whatsapp"],
             media_urls=["string"],
             sandbox=False,

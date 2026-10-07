@@ -38,7 +38,6 @@ class TestProfiles:
             profile = client.profiles.create(
                 allow_contact_sharing=None,
                 allow_template_sharing=None,
-                api_key="sntdm_test_xxxxxxxxxxxx",
                 billing_contact={
                     "email": "billing@acmecorp.com",
                     "name": "Acme Corp",
@@ -209,7 +208,6 @@ class TestProfiles:
                 allow_contact_sharing=None,
                 allow_number_change_during_onboarding=None,
                 allow_template_sharing=None,
-                api_key="sntdm_test_xxxxxxxxxxxx",
                 billing_contact={
                     "email": "dev@stainless.com",
                     "name": "x",
@@ -373,7 +371,6 @@ class TestProfiles:
         with pytest.warns(DeprecationWarning):
             profile = client.profiles.delete(
                 profile_id="770e8400-e29b-41d4-a716-446655440002",
-                api_key="sntdm_test_xxxxxxxxxxxx",
                 sandbox=False,
                 x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             )
@@ -435,7 +432,6 @@ class TestProfiles:
             profile = client.profiles.complete(
                 profile_id="660e8400-e29b-41d4-a716-446655440000",
                 web_hook_url="https://your-app.com/webhook/profile-complete",
-                api_key="sntdm_test_xxxxxxxxxxxx",
                 sandbox=False,
                 idempotency_key="req_abc123_retry1",
                 x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -504,7 +500,6 @@ class TestAsyncProfiles:
             profile = await async_client.profiles.create(
                 allow_contact_sharing=None,
                 allow_template_sharing=None,
-                api_key="sntdm_test_xxxxxxxxxxxx",
                 billing_contact={
                     "email": "billing@acmecorp.com",
                     "name": "Acme Corp",
@@ -675,7 +670,6 @@ class TestAsyncProfiles:
                 allow_contact_sharing=None,
                 allow_number_change_during_onboarding=None,
                 allow_template_sharing=None,
-                api_key="sntdm_test_xxxxxxxxxxxx",
                 billing_contact={
                     "email": "dev@stainless.com",
                     "name": "x",
@@ -839,7 +833,6 @@ class TestAsyncProfiles:
         with pytest.warns(DeprecationWarning):
             profile = await async_client.profiles.delete(
                 profile_id="770e8400-e29b-41d4-a716-446655440002",
-                api_key="sntdm_test_xxxxxxxxxxxx",
                 sandbox=False,
                 x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             )
@@ -901,7 +894,6 @@ class TestAsyncProfiles:
             profile = await async_client.profiles.complete(
                 profile_id="660e8400-e29b-41d4-a716-446655440000",
                 web_hook_url="https://your-app.com/webhook/profile-complete",
-                api_key="sntdm_test_xxxxxxxxxxxx",
                 sandbox=False,
                 idempotency_key="req_abc123_retry1",
                 x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
