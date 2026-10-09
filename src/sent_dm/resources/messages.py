@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Union, Optional
+from typing import Dict, Union, Iterable, Optional
 from datetime import datetime
 
 import httpx
@@ -142,6 +142,7 @@ class MessagesResource(SyncAPIResource):
         self,
         *,
         channel: Optional[SequenceNotStr[str]] | Omit = omit,
+        channels: Optional[Dict[str, Iterable[message_send_params.Channel]]] | Omit = omit,
         media_urls: Optional[SequenceNotStr[str]] | Omit = omit,
         sandbox: bool | Omit = omit,
         scheduled_at: Union[str, datetime, None] | Omit = omit,
@@ -163,13 +164,27 @@ class MessagesResource(SyncAPIResource):
         Supports
         multi-channel broadcast — when multiple channels are specified (e.g. ["sms",
         "whatsapp"]), a separate message is created for each (recipient, channel) pair.
-        Returns immediately with per-recipient message IDs for async tracking via
-        webhooks or the GET /messages/{id} endpoint. Sends gated before any delivery
-        attempt do not reject the request — an account-level precondition such as
-        insufficient balance, a template not approved for sending, or free-form content
-        with no open conversation with the contact. The send is accepted with 202 and
-        the affected messages are reported as BLOCKED on GET /messages/{id} and the
-        message.blocked webhook. To send later, set scheduled_at (ISO-8601 with an
+        To choose which of your own numbers a send goes out from, use 'channels':
+        {"sms": [{"from": ["+12125550000", "+14155550000"]}]}. Each channel holds a list
+        of entries, each with 'from' and optionally 'country' and 'strategy'; 'country'
+        and 'strategy' are stored but not acted on yet, so every entry's numbers apply
+        to every recipient on that channel. Every number listed must be an active sender
+        on your account. Like the other account-level preconditions below, that is
+        checked per message rather than when the request is received: the request is
+        still accepted with 202, and each affected message is reported as BLOCKED with
+        error code BUSINESS_029 on GET /messages/{id} and the message.blocked webhook.
+        Each channel's numbers restrict which numbers that channel may use; it does not
+        choose channels — 'channel' does, and the two can be combined. With 'channel'
+        left at auto-detect, a recipient best served by a channel you listed no numbers
+        for still goes out on it. Where several of the listed numbers could serve a
+        recipient, routing prefers the one whose area code matches theirs. Keys: sms,
+        whatsapp, rcs, mms. Returns immediately with per-recipient message IDs for async
+        tracking via webhooks or the GET /messages/{id} endpoint. Sends gated before any
+        delivery attempt do not reject the request — an account-level precondition such
+        as insufficient balance, a template not approved for sending, or free-form
+        content with no open conversation with the contact. The send is accepted with
+        202 and the affected messages are reported as BLOCKED on GET /messages/{id} and
+        the message.blocked webhook. To send later, set scheduled_at (ISO-8601 with an
         explicit UTC offset; a value without one is rejected) between 1 minute and 30
         days ahead: the response is a ScheduledSendMessageResponse (the same fields plus
         scheduled_at; status is still QUEUED), each message then moves to SCHEDULED, is
@@ -185,6 +200,25 @@ class MessagesResource(SyncAPIResource):
           channel: Channels to broadcast on, e.g. ["whatsapp", "sms"]. Each channel produces a
               separate message per recipient. "sent" = auto-detect. Defaults to ["sent"]
               (auto-detect) if omitted.
+
+          channels: Which of your own numbers to send from, keyed by channel, each channel holding a
+              list of entries: {"sms": [{"country": "US", "from": ["+12125550000",
+              "+14155550000"]}, {"from": ["+447700800001"]}]}. Any real channel may be a key;
+              sent, which is auto-detect rather than a channel, is rejected. country and
+              strategy are accepted and stored but not acted on yet: every entry's numbers
+              apply to every recipient on that channel.
+
+              This does not choose channels — Channel does, and the two combine: "channel":
+              ["sms"] with an sms list sends on SMS from those numbers. Each list only narrows
+              which of its own channel's routes may win, so with Channel left at auto-detect a
+              recipient best served by a channel with no list still goes out on it. Routing
+              itself is unchanged: the same rules are scored and ranked the same way, with
+              routes pinned to numbers you did not list removed from the running.
+
+              Every number must be an active sender on your account. The request itself is
+              still accepted (202) if one is not — like every other send-time rule, that is
+              decided per message, so each affected message is recorded BLOCKED with error
+              code BUSINESS_029 and reported on GET /v3/messages and the status webhook.
 
           media_urls: Attachments for this send, as publicly fetchable https URLs. Used by the MMS
               channel and ignored by every other one.
@@ -248,6 +282,7 @@ class MessagesResource(SyncAPIResource):
             body=maybe_transform(
                 {
                     "channel": channel,
+                    "channels": channels,
                     "media_urls": media_urls,
                     "sandbox": sandbox,
                     "scheduled_at": scheduled_at,
@@ -381,6 +416,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         self,
         *,
         channel: Optional[SequenceNotStr[str]] | Omit = omit,
+        channels: Optional[Dict[str, Iterable[message_send_params.Channel]]] | Omit = omit,
         media_urls: Optional[SequenceNotStr[str]] | Omit = omit,
         sandbox: bool | Omit = omit,
         scheduled_at: Union[str, datetime, None] | Omit = omit,
@@ -402,13 +438,27 @@ class AsyncMessagesResource(AsyncAPIResource):
         Supports
         multi-channel broadcast — when multiple channels are specified (e.g. ["sms",
         "whatsapp"]), a separate message is created for each (recipient, channel) pair.
-        Returns immediately with per-recipient message IDs for async tracking via
-        webhooks or the GET /messages/{id} endpoint. Sends gated before any delivery
-        attempt do not reject the request — an account-level precondition such as
-        insufficient balance, a template not approved for sending, or free-form content
-        with no open conversation with the contact. The send is accepted with 202 and
-        the affected messages are reported as BLOCKED on GET /messages/{id} and the
-        message.blocked webhook. To send later, set scheduled_at (ISO-8601 with an
+        To choose which of your own numbers a send goes out from, use 'channels':
+        {"sms": [{"from": ["+12125550000", "+14155550000"]}]}. Each channel holds a list
+        of entries, each with 'from' and optionally 'country' and 'strategy'; 'country'
+        and 'strategy' are stored but not acted on yet, so every entry's numbers apply
+        to every recipient on that channel. Every number listed must be an active sender
+        on your account. Like the other account-level preconditions below, that is
+        checked per message rather than when the request is received: the request is
+        still accepted with 202, and each affected message is reported as BLOCKED with
+        error code BUSINESS_029 on GET /messages/{id} and the message.blocked webhook.
+        Each channel's numbers restrict which numbers that channel may use; it does not
+        choose channels — 'channel' does, and the two can be combined. With 'channel'
+        left at auto-detect, a recipient best served by a channel you listed no numbers
+        for still goes out on it. Where several of the listed numbers could serve a
+        recipient, routing prefers the one whose area code matches theirs. Keys: sms,
+        whatsapp, rcs, mms. Returns immediately with per-recipient message IDs for async
+        tracking via webhooks or the GET /messages/{id} endpoint. Sends gated before any
+        delivery attempt do not reject the request — an account-level precondition such
+        as insufficient balance, a template not approved for sending, or free-form
+        content with no open conversation with the contact. The send is accepted with
+        202 and the affected messages are reported as BLOCKED on GET /messages/{id} and
+        the message.blocked webhook. To send later, set scheduled_at (ISO-8601 with an
         explicit UTC offset; a value without one is rejected) between 1 minute and 30
         days ahead: the response is a ScheduledSendMessageResponse (the same fields plus
         scheduled_at; status is still QUEUED), each message then moves to SCHEDULED, is
@@ -424,6 +474,25 @@ class AsyncMessagesResource(AsyncAPIResource):
           channel: Channels to broadcast on, e.g. ["whatsapp", "sms"]. Each channel produces a
               separate message per recipient. "sent" = auto-detect. Defaults to ["sent"]
               (auto-detect) if omitted.
+
+          channels: Which of your own numbers to send from, keyed by channel, each channel holding a
+              list of entries: {"sms": [{"country": "US", "from": ["+12125550000",
+              "+14155550000"]}, {"from": ["+447700800001"]}]}. Any real channel may be a key;
+              sent, which is auto-detect rather than a channel, is rejected. country and
+              strategy are accepted and stored but not acted on yet: every entry's numbers
+              apply to every recipient on that channel.
+
+              This does not choose channels — Channel does, and the two combine: "channel":
+              ["sms"] with an sms list sends on SMS from those numbers. Each list only narrows
+              which of its own channel's routes may win, so with Channel left at auto-detect a
+              recipient best served by a channel with no list still goes out on it. Routing
+              itself is unchanged: the same rules are scored and ranked the same way, with
+              routes pinned to numbers you did not list removed from the running.
+
+              Every number must be an active sender on your account. The request itself is
+              still accepted (202) if one is not — like every other send-time rule, that is
+              decided per message, so each affected message is recorded BLOCKED with error
+              code BUSINESS_029 and reported on GET /v3/messages and the status webhook.
 
           media_urls: Attachments for this send, as publicly fetchable https URLs. Used by the MMS
               channel and ignored by every other one.
@@ -487,6 +556,7 @@ class AsyncMessagesResource(AsyncAPIResource):
             body=await async_maybe_transform(
                 {
                     "channel": channel,
+                    "channels": channels,
                     "media_urls": media_urls,
                     "sandbox": sandbox,
                     "scheduled_at": scheduled_at,
