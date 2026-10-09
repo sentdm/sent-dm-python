@@ -134,6 +134,15 @@ class TestMessages:
     def test_method_send_with_all_params(self, client: Sent) -> None:
         message = client.messages.send(
             channel=["sms", "whatsapp"],
+            channels={
+                "foo": [
+                    {
+                        "country": "country",
+                        "from": ["string"],
+                        "strategy": "strategy",
+                    }
+                ]
+            },
             media_urls=["string"],
             sandbox=False,
             scheduled_at=None,
@@ -294,6 +303,15 @@ class TestAsyncMessages:
     async def test_method_send_with_all_params(self, async_client: AsyncSent) -> None:
         message = await async_client.messages.send(
             channel=["sms", "whatsapp"],
+            channels={
+                "foo": [
+                    {
+                        "country": "country",
+                        "from": ["string"],
+                        "strategy": "strategy",
+                    }
+                ]
+            },
             media_urls=["string"],
             sandbox=False,
             scheduled_at=None,
