@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.45.1](https://github.com/sentdm/sent-dm-python/compare/v0.45.0...v0.45.1) (2026-10-20)
+
+
+### Chores
+
+* **ci:** merge the seal-back PR directly when auto-merge is refused ([bd1c408](https://github.com/sentdm/sent-dm-python/commit/bd1c40828ffbb0abdc0f8c69f56c793f196eae15))
+
 ## [0.45.0](https://github.com/sentdm/sent-dm-python/compare/v0.44.0...v0.45.0) (2026-10-20)
 
 
