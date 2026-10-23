@@ -6,14 +6,19 @@ from typing_extensions import Annotated, TypedDict
 
 from ..._utils import PropertyInfo
 
-__all__ = ["ParticipantRemoveAllParams"]
+__all__ = ["CallRecordParams"]
 
 
-class ParticipantRemoveAllParams(TypedDict, total=False):
+class CallRecordParams(TypedDict, total=False):
+    action: str
+    """start to begin recording, stop to end it"""
+
     sandbox: bool
     """
     Sandbox flag - when true, the operation is simulated without side effects Useful
     for testing integrations without actual execution
     """
+
+    idempotency_key: Annotated[str, PropertyInfo(alias="Idempotency-Key")]
 
     x_profile_id: Annotated[str, PropertyInfo(alias="x-profile-id")]

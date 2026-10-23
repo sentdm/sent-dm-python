@@ -206,12 +206,14 @@ Methods:
 - <code title="get /v3/conversations">client.conversations.<a href="./src/sent_dm/resources/conversations.py">list</a>(\*\*<a href="src/sent_dm/types/conversation_list_params.py">params</a>) -> SyncConversationsPage[Message]</code>
 - <code title="get /v3/conversations/{id}">client.conversations.<a href="./src/sent_dm/resources/conversations.py">list_messages</a>(id, \*\*<a href="src/sent_dm/types/conversation_list_messages_params.py">params</a>) -> SyncConversationsPage[Message]</code>
 
-# Calls
+# Voice
+
+## Calls
 
 Types:
 
 ```python
-from sent_dm.types import (
+from sent_dm.types.voice import (
     APIResponseOfCall,
     APIResponseOfCallRecordings,
     APIResponseOfCallsList,
@@ -226,18 +228,18 @@ from sent_dm.types import (
 
 Methods:
 
-- <code title="get /v3/calls/{id}">client.calls.<a href="./src/sent_dm/resources/calls/calls.py">retrieve</a>(id) -> <a href="./src/sent_dm/types/api_response_of_call.py">APIResponseOfCall</a></code>
-- <code title="get /v3/calls">client.calls.<a href="./src/sent_dm/resources/calls/calls.py">list</a>(\*\*<a href="src/sent_dm/types/call_list_params.py">params</a>) -> <a href="./src/sent_dm/types/call.py">SyncCallsPage[Call]</a></code>
-- <code title="post /v3/calls/{id}/hangup">client.calls.<a href="./src/sent_dm/resources/calls/calls.py">hangup</a>(id, \*\*<a href="src/sent_dm/types/call_hangup_params.py">params</a>) -> None</code>
-- <code title="get /v3/calls/{id}/recordings">client.calls.<a href="./src/sent_dm/resources/calls/calls.py">list_recordings</a>(id) -> <a href="./src/sent_dm/types/api_response_of_call_recordings.py">APIResponseOfCallRecordings</a></code>
-- <code title="post /v3/calls/{id}/recordings">client.calls.<a href="./src/sent_dm/resources/calls/calls.py">record</a>(id, \*\*<a href="src/sent_dm/types/call_record_params.py">params</a>) -> None</code>
+- <code title="get /v3/voice/calls/{id}">client.voice.calls.<a href="./src/sent_dm/resources/voice/calls/calls.py">retrieve</a>(id) -> <a href="./src/sent_dm/types/voice/api_response_of_call.py">APIResponseOfCall</a></code>
+- <code title="get /v3/voice/calls">client.voice.calls.<a href="./src/sent_dm/resources/voice/calls/calls.py">list</a>(\*\*<a href="src/sent_dm/types/voice/call_list_params.py">params</a>) -> <a href="./src/sent_dm/types/voice/call.py">SyncCallsPage[Call]</a></code>
+- <code title="post /v3/voice/calls/{id}/hangup">client.voice.calls.<a href="./src/sent_dm/resources/voice/calls/calls.py">hangup</a>(id, \*\*<a href="src/sent_dm/types/voice/call_hangup_params.py">params</a>) -> None</code>
+- <code title="get /v3/voice/calls/{id}/recordings">client.voice.calls.<a href="./src/sent_dm/resources/voice/calls/calls.py">list_recordings</a>(id) -> <a href="./src/sent_dm/types/voice/api_response_of_call_recordings.py">APIResponseOfCallRecordings</a></code>
+- <code title="post /v3/voice/calls/{id}/recordings">client.voice.calls.<a href="./src/sent_dm/resources/voice/calls/calls.py">record</a>(id, \*\*<a href="src/sent_dm/types/voice/call_record_params.py">params</a>) -> None</code>
 
-## Participants
+### Participants
 
 Types:
 
 ```python
-from sent_dm.types.calls import (
+from sent_dm.types.voice.calls import (
     APIResponseOfListOfCallParticipant,
     CallParticipant,
     CallParticipantTarget,
@@ -246,11 +248,23 @@ from sent_dm.types.calls import (
 
 Methods:
 
-- <code title="patch /v3/calls/{id}/participants/{participantId}">client.calls.participants.<a href="./src/sent_dm/resources/calls/participants.py">update</a>(participant_id, \*, id, \*\*<a href="src/sent_dm/types/calls/participant_update_params.py">params</a>) -> None</code>
-- <code title="get /v3/calls/{id}/participants">client.calls.participants.<a href="./src/sent_dm/resources/calls/participants.py">list</a>(id) -> <a href="./src/sent_dm/types/calls/api_response_of_list_of_call_participant.py">APIResponseOfListOfCallParticipant</a></code>
-- <code title="post /v3/calls/{id}/participants">client.calls.participants.<a href="./src/sent_dm/resources/calls/participants.py">add</a>(id, \*\*<a href="src/sent_dm/types/calls/participant_add_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_of_call.py">APIResponseOfCall</a></code>
-- <code title="delete /v3/calls/{id}/participants/{participantId}">client.calls.participants.<a href="./src/sent_dm/resources/calls/participants.py">remove</a>(participant_id, \*, id, \*\*<a href="src/sent_dm/types/calls/participant_remove_params.py">params</a>) -> None</code>
-- <code title="delete /v3/calls/{id}/participants">client.calls.participants.<a href="./src/sent_dm/resources/calls/participants.py">remove_all</a>(id, \*\*<a href="src/sent_dm/types/calls/participant_remove_all_params.py">params</a>) -> None</code>
+- <code title="patch /v3/voice/calls/{id}/participants/{participantId}">client.voice.calls.participants.<a href="./src/sent_dm/resources/voice/calls/participants.py">update</a>(participant_id, \*, id, \*\*<a href="src/sent_dm/types/voice/calls/participant_update_params.py">params</a>) -> None</code>
+- <code title="get /v3/voice/calls/{id}/participants">client.voice.calls.participants.<a href="./src/sent_dm/resources/voice/calls/participants.py">list</a>(id) -> <a href="./src/sent_dm/types/voice/calls/api_response_of_list_of_call_participant.py">APIResponseOfListOfCallParticipant</a></code>
+- <code title="post /v3/voice/calls/{id}/participants">client.voice.calls.participants.<a href="./src/sent_dm/resources/voice/calls/participants.py">add</a>(id, \*\*<a href="src/sent_dm/types/voice/calls/participant_add_params.py">params</a>) -> <a href="./src/sent_dm/types/voice/api_response_of_call.py">APIResponseOfCall</a></code>
+- <code title="delete /v3/voice/calls/{id}/participants/{participantId}">client.voice.calls.participants.<a href="./src/sent_dm/resources/voice/calls/participants.py">remove</a>(participant_id, \*, id, \*\*<a href="src/sent_dm/types/voice/calls/participant_remove_params.py">params</a>) -> None</code>
+- <code title="delete /v3/voice/calls/{id}/participants">client.voice.calls.participants.<a href="./src/sent_dm/resources/voice/calls/participants.py">remove_all</a>(id, \*\*<a href="src/sent_dm/types/voice/calls/participant_remove_all_params.py">params</a>) -> None</code>
+
+## Tokens
+
+Types:
+
+```python
+from sent_dm.types.voice import APIResponseOfVoiceToken, VoiceToken
+```
+
+Methods:
+
+- <code title="post /v3/voice/tokens">client.voice.tokens.<a href="./src/sent_dm/resources/voice/tokens.py">create</a>(\*\*<a href="src/sent_dm/types/voice/token_create_params.py">params</a>) -> <a href="./src/sent_dm/types/voice/api_response_of_voice_token.py">APIResponseOfVoiceToken</a></code>
 
 # Channels
 
@@ -265,7 +279,6 @@ from sent_dm.types.channels import (
     APIResponseOfVoiceNumber,
     APIResponseOfVoiceNumberCreated,
     APIResponseOfVoiceSecret,
-    APIResponseOfVoiceToken,
     VoiceCallbackTest,
     VoiceCallbackTestErrorInfo,
     VoiceCallbackTestRequestInfo,
@@ -273,7 +286,6 @@ from sent_dm.types.channels import (
     VoiceNumber,
     VoiceNumberCreated,
     VoiceSecret,
-    VoiceToken,
 )
 ```
 
@@ -283,7 +295,6 @@ Methods:
 - <code title="get /v3/channels/voice/{number}">client.channels.voice.<a href="./src/sent_dm/resources/channels/voice.py">retrieve</a>(number) -> <a href="./src/sent_dm/types/channels/api_response_of_voice_number.py">APIResponseOfVoiceNumber</a></code>
 - <code title="patch /v3/channels/voice/{number}">client.channels.voice.<a href="./src/sent_dm/resources/channels/voice.py">update</a>(number, \*\*<a href="src/sent_dm/types/channels/voice_update_params.py">params</a>) -> <a href="./src/sent_dm/types/channels/api_response_of_voice_number.py">APIResponseOfVoiceNumber</a></code>
 - <code title="get /v3/channels/voice">client.channels.voice.<a href="./src/sent_dm/resources/channels/voice.py">list</a>() -> <a href="./src/sent_dm/types/channels/api_response_of_list_of_voice_number.py">APIResponseOfListOfVoiceNumber</a></code>
-- <code title="post /v3/channels/voice/tokens">client.channels.voice.<a href="./src/sent_dm/resources/channels/voice.py">create_token</a>(\*\*<a href="src/sent_dm/types/channels/voice_create_token_params.py">params</a>) -> <a href="./src/sent_dm/types/channels/api_response_of_voice_token.py">APIResponseOfVoiceToken</a></code>
 - <code title="post /v3/channels/voice/{number}/rotate-secret">client.channels.voice.<a href="./src/sent_dm/resources/channels/voice.py">rotate_secret</a>(number, \*\*<a href="src/sent_dm/types/channels/voice_rotate_secret_params.py">params</a>) -> <a href="./src/sent_dm/types/channels/api_response_of_voice_secret.py">APIResponseOfVoiceSecret</a></code>
 - <code title="post /v3/channels/voice/{number}/test">client.channels.voice.<a href="./src/sent_dm/resources/channels/voice.py">test</a>(number, \*\*<a href="src/sent_dm/types/channels/voice_test_params.py">params</a>) -> <a href="./src/sent_dm/types/channels/api_response_of_voice_callback_test.py">APIResponseOfVoiceCallbackTest</a></code>
 

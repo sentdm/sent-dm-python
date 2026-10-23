@@ -4,18 +4,16 @@ from __future__ import annotations
 
 from typing_extensions import Annotated, TypedDict
 
-from .._utils import PropertyInfo
+from ...._utils import PropertyInfo
 
-__all__ = ["CallHangupParams"]
+__all__ = ["ParticipantRemoveAllParams"]
 
 
-class CallHangupParams(TypedDict, total=False):
+class ParticipantRemoveAllParams(TypedDict, total=False):
     sandbox: bool
     """
     Sandbox flag - when true, the operation is simulated without side effects Useful
     for testing integrations without actual execution
     """
-
-    idempotency_key: Annotated[str, PropertyInfo(alias="Idempotency-Key")]
 
     x_profile_id: Annotated[str, PropertyInfo(alias="x-profile-id")]

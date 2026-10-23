@@ -9,13 +9,13 @@ import pytest
 
 from sent_dm import Sent, AsyncSent
 from tests.utils import assert_matches_type
-from sent_dm.types import (
+from sent_dm._utils import parse_datetime
+from sent_dm.pagination import SyncCallsPage, AsyncCallsPage
+from sent_dm.types.voice import (
     Call,
     APIResponseOfCall,
     APIResponseOfCallRecordings,
 )
-from sent_dm._utils import parse_datetime
-from sent_dm.pagination import SyncCallsPage, AsyncCallsPage
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -26,7 +26,7 @@ class TestCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_retrieve(self, client: Sent) -> None:
-        call = client.calls.retrieve(
+        call = client.voice.calls.retrieve(
             id="call_9f2ab000-0000-4000-8000-000000000001",
         )
         assert_matches_type(APIResponseOfCall, call, path=["response"])
@@ -34,7 +34,7 @@ class TestCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_retrieve_with_all_params(self, client: Sent) -> None:
-        call = client.calls.retrieve(
+        call = client.voice.calls.retrieve(
             id="call_9f2ab000-0000-4000-8000-000000000001",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
@@ -43,7 +43,7 @@ class TestCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_retrieve(self, client: Sent) -> None:
-        response = client.calls.with_raw_response.retrieve(
+        response = client.voice.calls.with_raw_response.retrieve(
             id="call_9f2ab000-0000-4000-8000-000000000001",
         )
 
@@ -55,7 +55,7 @@ class TestCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_retrieve(self, client: Sent) -> None:
-        with client.calls.with_streaming_response.retrieve(
+        with client.voice.calls.with_streaming_response.retrieve(
             id="call_9f2ab000-0000-4000-8000-000000000001",
         ) as response:
             assert not response.is_closed
@@ -70,20 +70,20 @@ class TestCalls:
     @parametrize
     def test_path_params_retrieve(self, client: Sent) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
-            client.calls.with_raw_response.retrieve(
+            client.voice.calls.with_raw_response.retrieve(
                 id="",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_list(self, client: Sent) -> None:
-        call = client.calls.list()
+        call = client.voice.calls.list()
         assert_matches_type(SyncCallsPage[Call], call, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_list_with_all_params(self, client: Sent) -> None:
-        call = client.calls.list(
+        call = client.voice.calls.list(
             direction="direction",
             from_=parse_datetime("2019-12-27T18:11:19.117Z"),
             number="number",
@@ -98,7 +98,7 @@ class TestCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_list(self, client: Sent) -> None:
-        response = client.calls.with_raw_response.list()
+        response = client.voice.calls.with_raw_response.list()
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -108,7 +108,7 @@ class TestCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_list(self, client: Sent) -> None:
-        with client.calls.with_streaming_response.list() as response:
+        with client.voice.calls.with_streaming_response.list() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -120,7 +120,7 @@ class TestCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_hangup(self, client: Sent) -> None:
-        call = client.calls.hangup(
+        call = client.voice.calls.hangup(
             id="call_9f2ab000-0000-4000-8000-000000000001",
         )
         assert call is None
@@ -128,7 +128,7 @@ class TestCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_hangup_with_all_params(self, client: Sent) -> None:
-        call = client.calls.hangup(
+        call = client.voice.calls.hangup(
             id="call_9f2ab000-0000-4000-8000-000000000001",
             sandbox=False,
             idempotency_key="req_abc123_retry1",
@@ -139,7 +139,7 @@ class TestCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_hangup(self, client: Sent) -> None:
-        response = client.calls.with_raw_response.hangup(
+        response = client.voice.calls.with_raw_response.hangup(
             id="call_9f2ab000-0000-4000-8000-000000000001",
         )
 
@@ -151,7 +151,7 @@ class TestCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_hangup(self, client: Sent) -> None:
-        with client.calls.with_streaming_response.hangup(
+        with client.voice.calls.with_streaming_response.hangup(
             id="call_9f2ab000-0000-4000-8000-000000000001",
         ) as response:
             assert not response.is_closed
@@ -166,14 +166,14 @@ class TestCalls:
     @parametrize
     def test_path_params_hangup(self, client: Sent) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
-            client.calls.with_raw_response.hangup(
+            client.voice.calls.with_raw_response.hangup(
                 id="",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_list_recordings(self, client: Sent) -> None:
-        call = client.calls.list_recordings(
+        call = client.voice.calls.list_recordings(
             id="call_9f2ab000-0000-4000-8000-000000000001",
         )
         assert_matches_type(APIResponseOfCallRecordings, call, path=["response"])
@@ -181,7 +181,7 @@ class TestCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_list_recordings_with_all_params(self, client: Sent) -> None:
-        call = client.calls.list_recordings(
+        call = client.voice.calls.list_recordings(
             id="call_9f2ab000-0000-4000-8000-000000000001",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
@@ -190,7 +190,7 @@ class TestCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_list_recordings(self, client: Sent) -> None:
-        response = client.calls.with_raw_response.list_recordings(
+        response = client.voice.calls.with_raw_response.list_recordings(
             id="call_9f2ab000-0000-4000-8000-000000000001",
         )
 
@@ -202,7 +202,7 @@ class TestCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_list_recordings(self, client: Sent) -> None:
-        with client.calls.with_streaming_response.list_recordings(
+        with client.voice.calls.with_streaming_response.list_recordings(
             id="call_9f2ab000-0000-4000-8000-000000000001",
         ) as response:
             assert not response.is_closed
@@ -217,14 +217,14 @@ class TestCalls:
     @parametrize
     def test_path_params_list_recordings(self, client: Sent) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
-            client.calls.with_raw_response.list_recordings(
+            client.voice.calls.with_raw_response.list_recordings(
                 id="",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_record(self, client: Sent) -> None:
-        call = client.calls.record(
+        call = client.voice.calls.record(
             id="call_9f2ab000-0000-4000-8000-000000000001",
         )
         assert call is None
@@ -232,7 +232,7 @@ class TestCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_record_with_all_params(self, client: Sent) -> None:
-        call = client.calls.record(
+        call = client.voice.calls.record(
             id="call_9f2ab000-0000-4000-8000-000000000001",
             action="start",
             sandbox=False,
@@ -244,7 +244,7 @@ class TestCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_record(self, client: Sent) -> None:
-        response = client.calls.with_raw_response.record(
+        response = client.voice.calls.with_raw_response.record(
             id="call_9f2ab000-0000-4000-8000-000000000001",
         )
 
@@ -256,7 +256,7 @@ class TestCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_record(self, client: Sent) -> None:
-        with client.calls.with_streaming_response.record(
+        with client.voice.calls.with_streaming_response.record(
             id="call_9f2ab000-0000-4000-8000-000000000001",
         ) as response:
             assert not response.is_closed
@@ -271,7 +271,7 @@ class TestCalls:
     @parametrize
     def test_path_params_record(self, client: Sent) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
-            client.calls.with_raw_response.record(
+            client.voice.calls.with_raw_response.record(
                 id="",
             )
 
@@ -284,7 +284,7 @@ class TestAsyncCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_retrieve(self, async_client: AsyncSent) -> None:
-        call = await async_client.calls.retrieve(
+        call = await async_client.voice.calls.retrieve(
             id="call_9f2ab000-0000-4000-8000-000000000001",
         )
         assert_matches_type(APIResponseOfCall, call, path=["response"])
@@ -292,7 +292,7 @@ class TestAsyncCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_retrieve_with_all_params(self, async_client: AsyncSent) -> None:
-        call = await async_client.calls.retrieve(
+        call = await async_client.voice.calls.retrieve(
             id="call_9f2ab000-0000-4000-8000-000000000001",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
@@ -301,7 +301,7 @@ class TestAsyncCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_retrieve(self, async_client: AsyncSent) -> None:
-        response = await async_client.calls.with_raw_response.retrieve(
+        response = await async_client.voice.calls.with_raw_response.retrieve(
             id="call_9f2ab000-0000-4000-8000-000000000001",
         )
 
@@ -313,7 +313,7 @@ class TestAsyncCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_retrieve(self, async_client: AsyncSent) -> None:
-        async with async_client.calls.with_streaming_response.retrieve(
+        async with async_client.voice.calls.with_streaming_response.retrieve(
             id="call_9f2ab000-0000-4000-8000-000000000001",
         ) as response:
             assert not response.is_closed
@@ -328,20 +328,20 @@ class TestAsyncCalls:
     @parametrize
     async def test_path_params_retrieve(self, async_client: AsyncSent) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
-            await async_client.calls.with_raw_response.retrieve(
+            await async_client.voice.calls.with_raw_response.retrieve(
                 id="",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_list(self, async_client: AsyncSent) -> None:
-        call = await async_client.calls.list()
+        call = await async_client.voice.calls.list()
         assert_matches_type(AsyncCallsPage[Call], call, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_list_with_all_params(self, async_client: AsyncSent) -> None:
-        call = await async_client.calls.list(
+        call = await async_client.voice.calls.list(
             direction="direction",
             from_=parse_datetime("2019-12-27T18:11:19.117Z"),
             number="number",
@@ -356,7 +356,7 @@ class TestAsyncCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_list(self, async_client: AsyncSent) -> None:
-        response = await async_client.calls.with_raw_response.list()
+        response = await async_client.voice.calls.with_raw_response.list()
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -366,7 +366,7 @@ class TestAsyncCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_list(self, async_client: AsyncSent) -> None:
-        async with async_client.calls.with_streaming_response.list() as response:
+        async with async_client.voice.calls.with_streaming_response.list() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -378,7 +378,7 @@ class TestAsyncCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_hangup(self, async_client: AsyncSent) -> None:
-        call = await async_client.calls.hangup(
+        call = await async_client.voice.calls.hangup(
             id="call_9f2ab000-0000-4000-8000-000000000001",
         )
         assert call is None
@@ -386,7 +386,7 @@ class TestAsyncCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_hangup_with_all_params(self, async_client: AsyncSent) -> None:
-        call = await async_client.calls.hangup(
+        call = await async_client.voice.calls.hangup(
             id="call_9f2ab000-0000-4000-8000-000000000001",
             sandbox=False,
             idempotency_key="req_abc123_retry1",
@@ -397,7 +397,7 @@ class TestAsyncCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_hangup(self, async_client: AsyncSent) -> None:
-        response = await async_client.calls.with_raw_response.hangup(
+        response = await async_client.voice.calls.with_raw_response.hangup(
             id="call_9f2ab000-0000-4000-8000-000000000001",
         )
 
@@ -409,7 +409,7 @@ class TestAsyncCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_hangup(self, async_client: AsyncSent) -> None:
-        async with async_client.calls.with_streaming_response.hangup(
+        async with async_client.voice.calls.with_streaming_response.hangup(
             id="call_9f2ab000-0000-4000-8000-000000000001",
         ) as response:
             assert not response.is_closed
@@ -424,14 +424,14 @@ class TestAsyncCalls:
     @parametrize
     async def test_path_params_hangup(self, async_client: AsyncSent) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
-            await async_client.calls.with_raw_response.hangup(
+            await async_client.voice.calls.with_raw_response.hangup(
                 id="",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_list_recordings(self, async_client: AsyncSent) -> None:
-        call = await async_client.calls.list_recordings(
+        call = await async_client.voice.calls.list_recordings(
             id="call_9f2ab000-0000-4000-8000-000000000001",
         )
         assert_matches_type(APIResponseOfCallRecordings, call, path=["response"])
@@ -439,7 +439,7 @@ class TestAsyncCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_list_recordings_with_all_params(self, async_client: AsyncSent) -> None:
-        call = await async_client.calls.list_recordings(
+        call = await async_client.voice.calls.list_recordings(
             id="call_9f2ab000-0000-4000-8000-000000000001",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
@@ -448,7 +448,7 @@ class TestAsyncCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_list_recordings(self, async_client: AsyncSent) -> None:
-        response = await async_client.calls.with_raw_response.list_recordings(
+        response = await async_client.voice.calls.with_raw_response.list_recordings(
             id="call_9f2ab000-0000-4000-8000-000000000001",
         )
 
@@ -460,7 +460,7 @@ class TestAsyncCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_list_recordings(self, async_client: AsyncSent) -> None:
-        async with async_client.calls.with_streaming_response.list_recordings(
+        async with async_client.voice.calls.with_streaming_response.list_recordings(
             id="call_9f2ab000-0000-4000-8000-000000000001",
         ) as response:
             assert not response.is_closed
@@ -475,14 +475,14 @@ class TestAsyncCalls:
     @parametrize
     async def test_path_params_list_recordings(self, async_client: AsyncSent) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
-            await async_client.calls.with_raw_response.list_recordings(
+            await async_client.voice.calls.with_raw_response.list_recordings(
                 id="",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_record(self, async_client: AsyncSent) -> None:
-        call = await async_client.calls.record(
+        call = await async_client.voice.calls.record(
             id="call_9f2ab000-0000-4000-8000-000000000001",
         )
         assert call is None
@@ -490,7 +490,7 @@ class TestAsyncCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_record_with_all_params(self, async_client: AsyncSent) -> None:
-        call = await async_client.calls.record(
+        call = await async_client.voice.calls.record(
             id="call_9f2ab000-0000-4000-8000-000000000001",
             action="start",
             sandbox=False,
@@ -502,7 +502,7 @@ class TestAsyncCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_record(self, async_client: AsyncSent) -> None:
-        response = await async_client.calls.with_raw_response.record(
+        response = await async_client.voice.calls.with_raw_response.record(
             id="call_9f2ab000-0000-4000-8000-000000000001",
         )
 
@@ -514,7 +514,7 @@ class TestAsyncCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_record(self, async_client: AsyncSent) -> None:
-        async with async_client.calls.with_streaming_response.record(
+        async with async_client.voice.calls.with_streaming_response.record(
             id="call_9f2ab000-0000-4000-8000-000000000001",
         ) as response:
             assert not response.is_closed
@@ -529,6 +529,6 @@ class TestAsyncCalls:
     @parametrize
     async def test_path_params_record(self, async_client: AsyncSent) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
-            await async_client.calls.with_raw_response.record(
+            await async_client.voice.calls.with_raw_response.record(
                 id="",
             )

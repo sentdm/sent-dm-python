@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Optional
 from typing_extensions import Annotated, TypedDict
 
-from ..._utils import PropertyInfo
+from ...._utils import PropertyInfo
 from .call_participant_target_param import CallParticipantTargetParam
 
 __all__ = ["ParticipantAddParams"]

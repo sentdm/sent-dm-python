@@ -38,8 +38,8 @@ from ._base_client import (
 if TYPE_CHECKING:
     from .resources import (
         me,
-        calls,
         users,
+        voice,
         numbers,
         channels,
         contacts,
@@ -56,7 +56,7 @@ if TYPE_CHECKING:
     from .resources.messages import MessagesResource, AsyncMessagesResource
     from .resources.webhooks import WebhooksResource, AsyncWebhooksResource
     from .resources.templates import TemplatesResource, AsyncTemplatesResource
-    from .resources.calls.calls import CallsResource, AsyncCallsResource
+    from .resources.voice.voice import VoiceResource, AsyncVoiceResource
     from .resources.conversations import ConversationsResource, AsyncConversationsResource
     from .resources.channels.channels import ChannelsResource, AsyncChannelsResource
     from .resources.profiles.profiles import ProfilesResource, AsyncProfilesResource
@@ -223,16 +223,10 @@ class Sent(SyncAPIClient):
         return ConversationsResource(self)
 
     @cached_property
-    def calls(self) -> CallsResource:
-        """Phone calls from the numbers you hold, driven by your own callback URL.
+    def voice(self) -> VoiceResource:
+        from .resources.voice import VoiceResource
 
-        `POST /v3/channels/voice` enables a number for calls, with the callback URL Sent asks what to do with each call on it, and `POST /v3/channels/voice/tokens` mints a short-lived token that lets a user of your app place and receive calls as that number. When a call arrives or a caller presses a key, a signed question is POSTed to the callback URL and the answer decides the call; `POST /v3/channels/voice/{number}/test` checks the URL answers the way we need before a real call reaches it, and `POST /v3/channels/voice/{number}/rotate-secret` replaces the signing secret. The call events themselves (`call.completed` and the rest) arrive through your webhooks.
-
-        Every call is a record under `/v3/calls`: read it, list its recordings once one is ready, hang it up, start or stop recording, and add, mute or remove conference participants while it is live. A leg to a phone number runs for at most what your balance affords at the destination's rate.
-        """
-        from .resources.calls import CallsResource
-
-        return CallsResource(self)
+        return VoiceResource(self)
 
     @cached_property
     def channels(self) -> ChannelsResource:
@@ -529,16 +523,10 @@ class AsyncSent(AsyncAPIClient):
         return AsyncConversationsResource(self)
 
     @cached_property
-    def calls(self) -> AsyncCallsResource:
-        """Phone calls from the numbers you hold, driven by your own callback URL.
+    def voice(self) -> AsyncVoiceResource:
+        from .resources.voice import AsyncVoiceResource
 
-        `POST /v3/channels/voice` enables a number for calls, with the callback URL Sent asks what to do with each call on it, and `POST /v3/channels/voice/tokens` mints a short-lived token that lets a user of your app place and receive calls as that number. When a call arrives or a caller presses a key, a signed question is POSTed to the callback URL and the answer decides the call; `POST /v3/channels/voice/{number}/test` checks the URL answers the way we need before a real call reaches it, and `POST /v3/channels/voice/{number}/rotate-secret` replaces the signing secret. The call events themselves (`call.completed` and the rest) arrive through your webhooks.
-
-        Every call is a record under `/v3/calls`: read it, list its recordings once one is ready, hang it up, start or stop recording, and add, mute or remove conference participants while it is live. A leg to a phone number runs for at most what your balance affords at the destination's rate.
-        """
-        from .resources.calls import AsyncCallsResource
-
-        return AsyncCallsResource(self)
+        return AsyncVoiceResource(self)
 
     @cached_property
     def channels(self) -> AsyncChannelsResource:
@@ -777,16 +765,10 @@ class SentWithRawResponse:
         return ConversationsResourceWithRawResponse(self._client.conversations)
 
     @cached_property
-    def calls(self) -> calls.CallsResourceWithRawResponse:
-        """Phone calls from the numbers you hold, driven by your own callback URL.
+    def voice(self) -> voice.VoiceResourceWithRawResponse:
+        from .resources.voice import VoiceResourceWithRawResponse
 
-        `POST /v3/channels/voice` enables a number for calls, with the callback URL Sent asks what to do with each call on it, and `POST /v3/channels/voice/tokens` mints a short-lived token that lets a user of your app place and receive calls as that number. When a call arrives or a caller presses a key, a signed question is POSTed to the callback URL and the answer decides the call; `POST /v3/channels/voice/{number}/test` checks the URL answers the way we need before a real call reaches it, and `POST /v3/channels/voice/{number}/rotate-secret` replaces the signing secret. The call events themselves (`call.completed` and the rest) arrive through your webhooks.
-
-        Every call is a record under `/v3/calls`: read it, list its recordings once one is ready, hang it up, start or stop recording, and add, mute or remove conference participants while it is live. A leg to a phone number runs for at most what your balance affords at the destination's rate.
-        """
-        from .resources.calls import CallsResourceWithRawResponse
-
-        return CallsResourceWithRawResponse(self._client.calls)
+        return VoiceResourceWithRawResponse(self._client.voice)
 
     @cached_property
     def channels(self) -> channels.ChannelsResourceWithRawResponse:
@@ -906,16 +888,10 @@ class AsyncSentWithRawResponse:
         return AsyncConversationsResourceWithRawResponse(self._client.conversations)
 
     @cached_property
-    def calls(self) -> calls.AsyncCallsResourceWithRawResponse:
-        """Phone calls from the numbers you hold, driven by your own callback URL.
+    def voice(self) -> voice.AsyncVoiceResourceWithRawResponse:
+        from .resources.voice import AsyncVoiceResourceWithRawResponse
 
-        `POST /v3/channels/voice` enables a number for calls, with the callback URL Sent asks what to do with each call on it, and `POST /v3/channels/voice/tokens` mints a short-lived token that lets a user of your app place and receive calls as that number. When a call arrives or a caller presses a key, a signed question is POSTed to the callback URL and the answer decides the call; `POST /v3/channels/voice/{number}/test` checks the URL answers the way we need before a real call reaches it, and `POST /v3/channels/voice/{number}/rotate-secret` replaces the signing secret. The call events themselves (`call.completed` and the rest) arrive through your webhooks.
-
-        Every call is a record under `/v3/calls`: read it, list its recordings once one is ready, hang it up, start or stop recording, and add, mute or remove conference participants while it is live. A leg to a phone number runs for at most what your balance affords at the destination's rate.
-        """
-        from .resources.calls import AsyncCallsResourceWithRawResponse
-
-        return AsyncCallsResourceWithRawResponse(self._client.calls)
+        return AsyncVoiceResourceWithRawResponse(self._client.voice)
 
     @cached_property
     def channels(self) -> channels.AsyncChannelsResourceWithRawResponse:
@@ -1035,16 +1011,10 @@ class SentWithStreamedResponse:
         return ConversationsResourceWithStreamingResponse(self._client.conversations)
 
     @cached_property
-    def calls(self) -> calls.CallsResourceWithStreamingResponse:
-        """Phone calls from the numbers you hold, driven by your own callback URL.
+    def voice(self) -> voice.VoiceResourceWithStreamingResponse:
+        from .resources.voice import VoiceResourceWithStreamingResponse
 
-        `POST /v3/channels/voice` enables a number for calls, with the callback URL Sent asks what to do with each call on it, and `POST /v3/channels/voice/tokens` mints a short-lived token that lets a user of your app place and receive calls as that number. When a call arrives or a caller presses a key, a signed question is POSTed to the callback URL and the answer decides the call; `POST /v3/channels/voice/{number}/test` checks the URL answers the way we need before a real call reaches it, and `POST /v3/channels/voice/{number}/rotate-secret` replaces the signing secret. The call events themselves (`call.completed` and the rest) arrive through your webhooks.
-
-        Every call is a record under `/v3/calls`: read it, list its recordings once one is ready, hang it up, start or stop recording, and add, mute or remove conference participants while it is live. A leg to a phone number runs for at most what your balance affords at the destination's rate.
-        """
-        from .resources.calls import CallsResourceWithStreamingResponse
-
-        return CallsResourceWithStreamingResponse(self._client.calls)
+        return VoiceResourceWithStreamingResponse(self._client.voice)
 
     @cached_property
     def channels(self) -> channels.ChannelsResourceWithStreamingResponse:
@@ -1164,16 +1134,10 @@ class AsyncSentWithStreamedResponse:
         return AsyncConversationsResourceWithStreamingResponse(self._client.conversations)
 
     @cached_property
-    def calls(self) -> calls.AsyncCallsResourceWithStreamingResponse:
-        """Phone calls from the numbers you hold, driven by your own callback URL.
+    def voice(self) -> voice.AsyncVoiceResourceWithStreamingResponse:
+        from .resources.voice import AsyncVoiceResourceWithStreamingResponse
 
-        `POST /v3/channels/voice` enables a number for calls, with the callback URL Sent asks what to do with each call on it, and `POST /v3/channels/voice/tokens` mints a short-lived token that lets a user of your app place and receive calls as that number. When a call arrives or a caller presses a key, a signed question is POSTed to the callback URL and the answer decides the call; `POST /v3/channels/voice/{number}/test` checks the URL answers the way we need before a real call reaches it, and `POST /v3/channels/voice/{number}/rotate-secret` replaces the signing secret. The call events themselves (`call.completed` and the rest) arrive through your webhooks.
-
-        Every call is a record under `/v3/calls`: read it, list its recordings once one is ready, hang it up, start or stop recording, and add, mute or remove conference participants while it is live. A leg to a phone number runs for at most what your balance affords at the destination's rate.
-        """
-        from .resources.calls import AsyncCallsResourceWithStreamingResponse
-
-        return AsyncCallsResourceWithStreamingResponse(self._client.calls)
+        return AsyncVoiceResourceWithStreamingResponse(self._client.voice)
 
     @cached_property
     def channels(self) -> channels.AsyncChannelsResourceWithStreamingResponse:
