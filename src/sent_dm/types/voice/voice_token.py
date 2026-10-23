@@ -12,7 +12,11 @@ class VoiceToken(BaseModel):
     """A short-lived token your app passes to the voice client SDK to register"""
 
     token: Optional[str] = None
-    """The signed token. Hand it to the client SDK unchanged."""
+    """The signed token.
+
+    Hand it to the client SDK unchanged. Treat it as opaque: read the identity,
+    number, and expiry from this response, not from the token.
+    """
 
     expires_at: Optional[datetime] = None
     """When the token expires (UTC)"""

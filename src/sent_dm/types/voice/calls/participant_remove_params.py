@@ -2,23 +2,20 @@
 
 from __future__ import annotations
 
-from typing_extensions import Annotated, TypedDict
+from typing_extensions import Required, Annotated, TypedDict
 
-from .._utils import PropertyInfo
+from ...._utils import PropertyInfo
 
-__all__ = ["CallRecordParams"]
+__all__ = ["ParticipantRemoveParams"]
 
 
-class CallRecordParams(TypedDict, total=False):
-    action: str
-    """start to begin recording, stop to end it"""
+class ParticipantRemoveParams(TypedDict, total=False):
+    id: Required[str]
 
     sandbox: bool
     """
     Sandbox flag - when true, the operation is simulated without side effects Useful
     for testing integrations without actual execution
     """
-
-    idempotency_key: Annotated[str, PropertyInfo(alias="Idempotency-Key")]
 
     x_profile_id: Annotated[str, PropertyInfo(alias="x-profile-id")]

@@ -6,26 +6,26 @@ from typing import Optional
 
 import httpx
 
-from ..._types import Body, Omit, Query, Headers, NoneType, NotGiven, omit, not_given
-from ..._utils import path_template, maybe_transform, strip_not_given, async_maybe_transform
-from ..._compat import cached_property
-from ..._resource import SyncAPIResource, AsyncAPIResource
-from ..._response import (
+from ...._types import Body, Omit, Query, Headers, NoneType, NotGiven, omit, not_given
+from ...._utils import path_template, maybe_transform, strip_not_given, async_maybe_transform
+from ...._compat import cached_property
+from ...._resource import SyncAPIResource, AsyncAPIResource
+from ...._response import (
     to_raw_response_wrapper,
     to_streamed_response_wrapper,
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ...types.calls import (
+from ...._base_client import make_request_options
+from ....types.voice.calls import (
     participant_add_params,
     participant_remove_params,
     participant_update_params,
     participant_remove_all_params,
 )
-from ..._base_client import make_request_options
-from ...types.api_response_of_call import APIResponseOfCall
-from ...types.calls.call_participant_target_param import CallParticipantTargetParam
-from ...types.calls.api_response_of_list_of_call_participant import APIResponseOfListOfCallParticipant
+from ....types.voice.api_response_of_call import APIResponseOfCall
+from ....types.voice.calls.call_participant_target_param import CallParticipantTargetParam
+from ....types.voice.calls.api_response_of_list_of_call_participant import APIResponseOfListOfCallParticipant
 
 __all__ = ["ParticipantsResource", "AsyncParticipantsResource"]
 
@@ -33,9 +33,9 @@ __all__ = ["ParticipantsResource", "AsyncParticipantsResource"]
 class ParticipantsResource(SyncAPIResource):
     """Phone calls from the numbers you hold, driven by your own callback URL.
 
-    `POST /v3/channels/voice` enables a number for calls, with the callback URL Sent asks what to do with each call on it, and `POST /v3/channels/voice/tokens` mints a short-lived token that lets a user of your app place and receive calls as that number. When a call arrives or a caller presses a key, a signed question is POSTed to the callback URL and the answer decides the call; `POST /v3/channels/voice/{number}/test` checks the URL answers the way we need before a real call reaches it, and `POST /v3/channels/voice/{number}/rotate-secret` replaces the signing secret. The call events themselves (`call.completed` and the rest) arrive through your webhooks.
+    `POST /v3/channels/voice` enables a number for calls, with the callback URL Sent asks what to do with each call on it, and `POST /v3/voice/tokens` mints a short-lived token that lets a user of your app place and receive calls as that number. When a call arrives or a caller presses a key, a signed question is POSTed to the callback URL and the answer decides the call; `POST /v3/channels/voice/{number}/test` checks the URL answers the way we need before a real call reaches it, and `POST /v3/channels/voice/{number}/rotate-secret` replaces the signing secret. The call events themselves (`call.completed` and the rest) arrive through your webhooks.
 
-    Every call is a record under `/v3/calls`: read it, list its recordings once one is ready, hang it up, start or stop recording, and add, mute or remove conference participants while it is live. A leg to a phone number runs for at most what your balance affords at the destination's rate.
+    Every call is a record under `/v3/voice/calls`: read it, list its recordings once one is ready, hang it up, start or stop recording, and add, mute or remove conference participants while it is live. A leg to a phone number runs for at most what your balance affords at the destination's rate.
     """
 
     @cached_property
@@ -110,7 +110,7 @@ class ParticipantsResource(SyncAPIResource):
             **(extra_headers or {}),
         }
         return self._patch(
-            path_template("/v3/calls/{id}/participants/{participant_id}", id=id, participant_id=participant_id),
+            path_template("/v3/voice/calls/{id}/participants/{participant_id}", id=id, participant_id=participant_id),
             body=maybe_transform(
                 {
                     "muted": muted,
@@ -141,8 +141,8 @@ class ParticipantsResource(SyncAPIResource):
         participant's own call id, who they are, whether the room mutes them, and how
         long they have been connected. The call itself is one of the participants. Use a
         participant's id to mute or remove them; it is also a call id, so GET
-        /v3/calls/{id} accepts it. A call that has ended answers 409, as does a call
-        that is not in a conference.
+        /v3/voice/calls/{id} accepts it. A call that has ended answers 409, as does a
+        call that is not in a conference.
 
         Args:
           extra_headers: Send extra headers
@@ -157,7 +157,7 @@ class ParticipantsResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._get(
-            path_template("/v3/calls/{id}/participants", id=id),
+            path_template("/v3/voice/calls/{id}/participants", id=id),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -220,7 +220,7 @@ class ParticipantsResource(SyncAPIResource):
             **(extra_headers or {}),
         }
         return self._post(
-            path_template("/v3/calls/{id}/participants", id=id),
+            path_template("/v3/voice/calls/{id}/participants", id=id),
             body=maybe_transform(
                 {
                     "caller_id": caller_id,
@@ -275,7 +275,7 @@ class ParticipantsResource(SyncAPIResource):
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._delete(
-            path_template("/v3/calls/{id}/participants/{participant_id}", id=id, participant_id=participant_id),
+            path_template("/v3/voice/calls/{id}/participants/{participant_id}", id=id, participant_id=participant_id),
             body=maybe_transform({"sandbox": sandbox}, participant_remove_params.ParticipantRemoveParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -319,7 +319,7 @@ class ParticipantsResource(SyncAPIResource):
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._delete(
-            path_template("/v3/calls/{id}/participants", id=id),
+            path_template("/v3/voice/calls/{id}/participants", id=id),
             body=maybe_transform({"sandbox": sandbox}, participant_remove_all_params.ParticipantRemoveAllParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -331,9 +331,9 @@ class ParticipantsResource(SyncAPIResource):
 class AsyncParticipantsResource(AsyncAPIResource):
     """Phone calls from the numbers you hold, driven by your own callback URL.
 
-    `POST /v3/channels/voice` enables a number for calls, with the callback URL Sent asks what to do with each call on it, and `POST /v3/channels/voice/tokens` mints a short-lived token that lets a user of your app place and receive calls as that number. When a call arrives or a caller presses a key, a signed question is POSTed to the callback URL and the answer decides the call; `POST /v3/channels/voice/{number}/test` checks the URL answers the way we need before a real call reaches it, and `POST /v3/channels/voice/{number}/rotate-secret` replaces the signing secret. The call events themselves (`call.completed` and the rest) arrive through your webhooks.
+    `POST /v3/channels/voice` enables a number for calls, with the callback URL Sent asks what to do with each call on it, and `POST /v3/voice/tokens` mints a short-lived token that lets a user of your app place and receive calls as that number. When a call arrives or a caller presses a key, a signed question is POSTed to the callback URL and the answer decides the call; `POST /v3/channels/voice/{number}/test` checks the URL answers the way we need before a real call reaches it, and `POST /v3/channels/voice/{number}/rotate-secret` replaces the signing secret. The call events themselves (`call.completed` and the rest) arrive through your webhooks.
 
-    Every call is a record under `/v3/calls`: read it, list its recordings once one is ready, hang it up, start or stop recording, and add, mute or remove conference participants while it is live. A leg to a phone number runs for at most what your balance affords at the destination's rate.
+    Every call is a record under `/v3/voice/calls`: read it, list its recordings once one is ready, hang it up, start or stop recording, and add, mute or remove conference participants while it is live. A leg to a phone number runs for at most what your balance affords at the destination's rate.
     """
 
     @cached_property
@@ -408,7 +408,7 @@ class AsyncParticipantsResource(AsyncAPIResource):
             **(extra_headers or {}),
         }
         return await self._patch(
-            path_template("/v3/calls/{id}/participants/{participant_id}", id=id, participant_id=participant_id),
+            path_template("/v3/voice/calls/{id}/participants/{participant_id}", id=id, participant_id=participant_id),
             body=await async_maybe_transform(
                 {
                     "muted": muted,
@@ -439,8 +439,8 @@ class AsyncParticipantsResource(AsyncAPIResource):
         participant's own call id, who they are, whether the room mutes them, and how
         long they have been connected. The call itself is one of the participants. Use a
         participant's id to mute or remove them; it is also a call id, so GET
-        /v3/calls/{id} accepts it. A call that has ended answers 409, as does a call
-        that is not in a conference.
+        /v3/voice/calls/{id} accepts it. A call that has ended answers 409, as does a
+        call that is not in a conference.
 
         Args:
           extra_headers: Send extra headers
@@ -455,7 +455,7 @@ class AsyncParticipantsResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._get(
-            path_template("/v3/calls/{id}/participants", id=id),
+            path_template("/v3/voice/calls/{id}/participants", id=id),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -518,7 +518,7 @@ class AsyncParticipantsResource(AsyncAPIResource):
             **(extra_headers or {}),
         }
         return await self._post(
-            path_template("/v3/calls/{id}/participants", id=id),
+            path_template("/v3/voice/calls/{id}/participants", id=id),
             body=await async_maybe_transform(
                 {
                     "caller_id": caller_id,
@@ -573,7 +573,7 @@ class AsyncParticipantsResource(AsyncAPIResource):
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._delete(
-            path_template("/v3/calls/{id}/participants/{participant_id}", id=id, participant_id=participant_id),
+            path_template("/v3/voice/calls/{id}/participants/{participant_id}", id=id, participant_id=participant_id),
             body=await async_maybe_transform({"sandbox": sandbox}, participant_remove_params.ParticipantRemoveParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -617,7 +617,7 @@ class AsyncParticipantsResource(AsyncAPIResource):
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return await self._delete(
-            path_template("/v3/calls/{id}/participants", id=id),
+            path_template("/v3/voice/calls/{id}/participants", id=id),
             body=await async_maybe_transform(
                 {"sandbox": sandbox}, participant_remove_all_params.ParticipantRemoveAllParams
             ),
