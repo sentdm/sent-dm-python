@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.45.1](https://github.com/sentdm/sent-dm-python/compare/v0.45.0...v0.45.1) (2026-10-20)
+
+
+### Chores
+
+* **ci:** merge the seal-back PR directly when auto-merge is refused ([bd1c408](https://github.com/sentdm/sent-dm-python/commit/bd1c40828ffbb0abdc0f8c69f56c793f196eae15))
+
+## [0.45.0](https://github.com/sentdm/sent-dm-python/compare/v0.44.0...v0.45.0) (2026-10-20)
+
+
+### Features
+
+* **api:** sync generated SDKs from the committed spec ([f3a283b](https://github.com/sentdm/sent-dm-python/commit/f3a283b47482921ae2193bec9f367831ffe0ec9a))
+* **api:** sync generated SDKs from the committed spec ([0ccc934](https://github.com/sentdm/sent-dm-python/commit/0ccc9344f17120bd2cf5eb81ef6d8328ffbe79e3))
+* **api:** sync OpenAPI spec from production ([5426b69](https://github.com/sentdm/sent-dm-python/commit/5426b69d63475307ec02ad3728491ebc37c437f6))
+
 ## [0.44.0](https://github.com/sentdm/sent-dm-python/compare/v0.43.0...v0.44.0) (2026-10-09)
 
 

@@ -8,14 +8,6 @@ from .me import (
     MeResourceWithStreamingResponse,
     AsyncMeResourceWithStreamingResponse,
 )
-from .calls import (
-    CallsResource,
-    AsyncCallsResource,
-    CallsResourceWithRawResponse,
-    AsyncCallsResourceWithRawResponse,
-    CallsResourceWithStreamingResponse,
-    AsyncCallsResourceWithStreamingResponse,
-)
 from .users import (
     UsersResource,
     AsyncUsersResource,
@@ -138,12 +130,6 @@ __all__ = [
     "AsyncConversationsResourceWithRawResponse",
     "ConversationsResourceWithStreamingResponse",
     "AsyncConversationsResourceWithStreamingResponse",
-    "CallsResource",
-    "AsyncCallsResource",
-    "CallsResourceWithRawResponse",
-    "AsyncCallsResourceWithRawResponse",
-    "CallsResourceWithStreamingResponse",
-    "AsyncCallsResourceWithStreamingResponse",
     "ChannelsResource",
     "AsyncChannelsResource",
     "ChannelsResourceWithRawResponse",
