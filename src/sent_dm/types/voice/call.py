@@ -5,7 +5,7 @@ from datetime import datetime
 
 from pydantic import Field as FieldInfo
 
-from .._models import BaseModel
+from ..._models import BaseModel
 from .call_party import CallParty
 from .call_timeline_entry import CallTimelineEntry
 
@@ -49,6 +49,12 @@ class Call(BaseModel):
 
     from_: Optional[CallParty] = FieldInfo(alias="from", default=None)
     """One end of a call"""
+
+    mode: Optional[str] = None
+    """
+    The calling mode: inapp for a call between people in your app and phone numbers,
+    routed by your number's callback URL
+    """
 
     number: Optional[str] = None
     """

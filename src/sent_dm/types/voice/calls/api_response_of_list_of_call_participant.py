@@ -2,9 +2,9 @@
 
 from typing import List, Optional
 
-from ..._models import BaseModel
-from ..api_meta import APIMeta
-from ..error_detail import ErrorDetail
+from ...._models import BaseModel
+from ...api_meta import APIMeta
+from ...error_detail import ErrorDetail
 from .call_participant import CallParticipant
 
 __all__ = ["APIResponseOfListOfCallParticipant"]

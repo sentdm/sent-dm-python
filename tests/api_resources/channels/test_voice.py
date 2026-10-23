@@ -10,7 +10,6 @@ import pytest
 from sent_dm import Sent, AsyncSent
 from tests.utils import assert_matches_type
 from sent_dm.types.channels import (
-    APIResponseOfVoiceToken,
     APIResponseOfVoiceNumber,
     APIResponseOfVoiceSecret,
     APIResponseOfListOfVoiceNumber,
@@ -212,47 +211,6 @@ class TestVoice:
 
             voice = response.parse()
             assert_matches_type(APIResponseOfListOfVoiceNumber, voice, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_method_create_token(self, client: Sent) -> None:
-        voice = client.channels.voice.create_token()
-        assert_matches_type(APIResponseOfVoiceToken, voice, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_method_create_token_with_all_params(self, client: Sent) -> None:
-        voice = client.channels.voice.create_token(
-            identity="agent-42",
-            number="+12025550123",
-            sandbox=False,
-            ttl=600,
-            idempotency_key="req_abc123_retry1",
-            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        )
-        assert_matches_type(APIResponseOfVoiceToken, voice, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_raw_response_create_token(self, client: Sent) -> None:
-        response = client.channels.voice.with_raw_response.create_token()
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        voice = response.parse()
-        assert_matches_type(APIResponseOfVoiceToken, voice, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_streaming_response_create_token(self, client: Sent) -> None:
-        with client.channels.voice.with_streaming_response.create_token() as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            voice = response.parse()
-            assert_matches_type(APIResponseOfVoiceToken, voice, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -556,47 +514,6 @@ class TestAsyncVoice:
 
             voice = await response.parse()
             assert_matches_type(APIResponseOfListOfVoiceNumber, voice, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_method_create_token(self, async_client: AsyncSent) -> None:
-        voice = await async_client.channels.voice.create_token()
-        assert_matches_type(APIResponseOfVoiceToken, voice, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_method_create_token_with_all_params(self, async_client: AsyncSent) -> None:
-        voice = await async_client.channels.voice.create_token(
-            identity="agent-42",
-            number="+12025550123",
-            sandbox=False,
-            ttl=600,
-            idempotency_key="req_abc123_retry1",
-            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        )
-        assert_matches_type(APIResponseOfVoiceToken, voice, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_raw_response_create_token(self, async_client: AsyncSent) -> None:
-        response = await async_client.channels.voice.with_raw_response.create_token()
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        voice = await response.parse()
-        assert_matches_type(APIResponseOfVoiceToken, voice, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_streaming_response_create_token(self, async_client: AsyncSent) -> None:
-        async with async_client.channels.voice.with_streaming_response.create_token() as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            voice = await response.parse()
-            assert_matches_type(APIResponseOfVoiceToken, voice, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
