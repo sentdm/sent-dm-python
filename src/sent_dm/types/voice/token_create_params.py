@@ -7,10 +7,10 @@ from typing_extensions import Annotated, TypedDict
 
 from ..._utils import PropertyInfo
 
-__all__ = ["VoiceCreateTokenParams"]
+__all__ = ["TokenCreateParams"]
 
 
-class VoiceCreateTokenParams(TypedDict, total=False):
+class TokenCreateParams(TypedDict, total=False):
     identity: str
     """Your identifier for the app user, such as an agent or account id.
 

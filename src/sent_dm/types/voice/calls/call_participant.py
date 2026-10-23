@@ -2,7 +2,7 @@
 
 from typing import Optional
 
-from ..._models import BaseModel
+from ...._models import BaseModel
 
 __all__ = ["CallParticipant"]
 
@@ -13,7 +13,7 @@ class CallParticipant(BaseModel):
     id: Optional[str] = None
     """
     The participant's own call id: what the mute and remove endpoints take, and what
-    GET /v3/calls/{id} accepts
+    GET /v3/voice/calls/{id} accepts
     """
 
     duration_seconds: Optional[int] = None

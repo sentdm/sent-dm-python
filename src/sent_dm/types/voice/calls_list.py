@@ -3,8 +3,8 @@
 from typing import List, Optional
 
 from .call import Call
-from .._models import BaseModel
-from .pagination_meta import PaginationMeta
+from ..._models import BaseModel
+from ..pagination_meta import PaginationMeta
 
 __all__ = ["CallsList"]
 

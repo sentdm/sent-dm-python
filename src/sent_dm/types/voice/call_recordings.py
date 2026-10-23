@@ -2,7 +2,7 @@
 
 from typing import List, Optional
 
-from .._models import BaseModel
+from ..._models import BaseModel
 from .call_recording import CallRecording
 
 __all__ = ["CallRecordings"]

@@ -2,19 +2,19 @@
 
 from typing import Optional
 
-from .call import Call
-from .._models import BaseModel
-from .api_meta import APIMeta
-from .error_detail import ErrorDetail
+from ..._models import BaseModel
+from ..api_meta import APIMeta
+from .calls_list import CallsList
+from ..error_detail import ErrorDetail
 
-__all__ = ["APIResponseOfCall"]
+__all__ = ["APIResponseOfCallsList"]
 
 
-class APIResponseOfCall(BaseModel):
+class APIResponseOfCallsList(BaseModel):
     """Standard API response envelope for all v3 endpoints"""
 
-    data: Optional[Call] = None
-    """A call record"""
+    data: Optional[CallsList] = None
+    """Paginated list of calls"""
 
     error: Optional[ErrorDetail] = None
     """Error information"""

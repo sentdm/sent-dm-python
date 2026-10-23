@@ -18,14 +18,7 @@ from ..._response import (
     async_to_streamed_response_wrapper,
 )
 from ..._base_client import make_request_options
-from ...types.channels import (
-    voice_test_params,
-    voice_create_params,
-    voice_update_params,
-    voice_create_token_params,
-    voice_rotate_secret_params,
-)
-from ...types.channels.api_response_of_voice_token import APIResponseOfVoiceToken
+from ...types.channels import voice_test_params, voice_create_params, voice_update_params, voice_rotate_secret_params
 from ...types.channels.api_response_of_voice_number import APIResponseOfVoiceNumber
 from ...types.channels.api_response_of_voice_secret import APIResponseOfVoiceSecret
 from ...types.channels.api_response_of_voice_callback_test import APIResponseOfVoiceCallbackTest
@@ -38,7 +31,7 @@ __all__ = ["VoiceResource", "AsyncVoiceResource"]
 class VoiceResource(SyncAPIResource):
     """The senders you send from, one per channel.
 
-    **SMS is a list of markets**, each keyed by `(country, number_type)` — a customer can hold `us/10dlc` and `gb/alphanumeric` at once, so a market is addressed by the pair rather than by country alone. **WhatsApp and RCS are single**: a customer has one business account and one agent. **Voice is per number**: each number you hold can carry phone calls on its own (`POST /v3/channels/voice`), each with the callback URL Sent asks what to do with its calls, one of them is the default line for calls placed from your app, and voice tokens are minted under `POST /v3/channels/voice/tokens`. Read your voice numbers with `GET /v3/channels/voice` and change one with `PATCH /v3/channels/voice/{number}`.
+    **SMS is a list of markets**, each keyed by `(country, number_type)` — a customer can hold `us/10dlc` and `gb/alphanumeric` at once, so a market is addressed by the pair rather than by country alone. **WhatsApp and RCS are single**: a customer has one business account and one agent. **Voice is per number**: each number you hold can carry phone calls on its own (`POST /v3/channels/voice`), each with the callback URL Sent asks what to do with its calls, one of them is the default line for calls placed from your app, and voice tokens are minted with `POST /v3/voice/tokens`. Read your voice numbers with `GET /v3/channels/voice` and change one with `PATCH /v3/channels/voice/{number}`.
 
     ## Compliance lives on the market
 
@@ -237,18 +230,22 @@ class VoiceResource(SyncAPIResource):
 
         ## What it changes
 
-        | Body                                          | Effect                                                                                                                                                     |
-        | --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-        | `"status": "ACTIVE"`                          | turns calls on again for a number you turned off; the callback URL and the secret it had are kept                                                          |
-        | `"status": "INACTIVE"`                        | turns calls off; the callback URL and the secret stay on the number                                                                                        |
-        | `"default_for_app_calls": true`               | makes this the line app-originated calls are placed from when a voice token names no number                                                                |
-        | `"callback_url": "https://example.com/voice"` | replaces where Sent asks what to do with each call on the number; the signing secret is kept, and a number that was waiting for its first URL is turned on |
-        | key omitted                                   | left exactly as it is                                                                                                                                      |
+        | Body                                          | Effect                                                                                                       |
+        | --------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+        | `"status": "ACTIVE"`                          | turns calls on again for a number you turned off; the callback URL and the secret it had are kept            |
+        | `"status": "INACTIVE"`                        | turns calls off; the callback URL and the secret stay on the number                                          |
+        | `"default_for_app_calls": true`               | makes this the line app-originated calls are placed from when a voice token names no number                  |
+        | `"callback_url": "https://example.com/voice"` | replaces where Sent asks what to do with each call on the number; the signing secret and the status are kept |
+        | key omitted                                   | left exactly as it is                                                                                        |
 
         `status` is matched ignoring case. Any combination is accepted:
         `status: "ACTIVE"` with `default_for_app_calls: true` turns a number on as the
         new default, and a `callback_url` sent with either status is written too. A body
         that names none of the three is refused.
+
+        A number can be on without a callback URL: calls placed from your app then
+        connect straight to the number or user they dial, and calls to the number are
+        declined.
 
         ## What it will refuse
 
@@ -262,11 +259,6 @@ class VoiceResource(SyncAPIResource):
 
         **Making an inactive number the default is `400`.** Send `status: "ACTIVE"` in
         the same call.
-
-        A number added without a `callback_url` is `INACTIVE` for that one reason, so
-        sending it a `callback_url` turns it on by itself, and it becomes your default
-        line if you have no other active voice number. A number you turned off while it
-        had a URL stays off.
 
         **A number you never turned voice on for is `404`.** Add it with
         `POST /v3/channels/voice`.
@@ -368,78 +360,6 @@ class VoiceResource(SyncAPIResource):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=APIResponseOfListOfVoiceNumber,
-        )
-
-    def create_token(
-        self,
-        *,
-        identity: str | Omit = omit,
-        number: Optional[str] | Omit = omit,
-        sandbox: bool | Omit = omit,
-        ttl: Optional[int] | Omit = omit,
-        idempotency_key: str | Omit = omit,
-        x_profile_id: str | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfVoiceToken:
-        """Mints a short-lived token for one of your app users.
-
-        Call this from your backend
-        and return the token to your app, which passes it to the voice client SDK to
-        register. The identity is bound to the given number, or to your default app-call
-        number when omitted, and calls placed by that identity are routed through the
-        bound number. Minting again re-binds the identity, so an identity can move
-        between numbers.
-
-        Args:
-          identity: Your identifier for the app user, such as an agent or account id. Letters,
-              digits, hyphens and underscores only, up to 200 characters.
-
-          number: One of your voice-enabled phone numbers in E.164 format. Calls placed by this
-              identity are routed through that number. Omit to use your default app-call
-              number.
-
-          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
-              for testing integrations without actual execution
-
-          ttl: Token lifetime in seconds. Defaults to 600 and cannot exceed 3600.
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        extra_headers = {
-            **strip_not_given(
-                {
-                    "Idempotency-Key": idempotency_key,
-                    "x-profile-id": x_profile_id,
-                }
-            ),
-            **(extra_headers or {}),
-        }
-        return self._post(
-            "/v3/channels/voice/tokens",
-            body=maybe_transform(
-                {
-                    "identity": identity,
-                    "number": number,
-                    "sandbox": sandbox,
-                    "ttl": ttl,
-                },
-                voice_create_token_params.VoiceCreateTokenParams,
-            ),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=APIResponseOfVoiceToken,
         )
 
     def rotate_secret(
@@ -561,7 +481,7 @@ class VoiceResource(SyncAPIResource):
 class AsyncVoiceResource(AsyncAPIResource):
     """The senders you send from, one per channel.
 
-    **SMS is a list of markets**, each keyed by `(country, number_type)` — a customer can hold `us/10dlc` and `gb/alphanumeric` at once, so a market is addressed by the pair rather than by country alone. **WhatsApp and RCS are single**: a customer has one business account and one agent. **Voice is per number**: each number you hold can carry phone calls on its own (`POST /v3/channels/voice`), each with the callback URL Sent asks what to do with its calls, one of them is the default line for calls placed from your app, and voice tokens are minted under `POST /v3/channels/voice/tokens`. Read your voice numbers with `GET /v3/channels/voice` and change one with `PATCH /v3/channels/voice/{number}`.
+    **SMS is a list of markets**, each keyed by `(country, number_type)` — a customer can hold `us/10dlc` and `gb/alphanumeric` at once, so a market is addressed by the pair rather than by country alone. **WhatsApp and RCS are single**: a customer has one business account and one agent. **Voice is per number**: each number you hold can carry phone calls on its own (`POST /v3/channels/voice`), each with the callback URL Sent asks what to do with its calls, one of them is the default line for calls placed from your app, and voice tokens are minted with `POST /v3/voice/tokens`. Read your voice numbers with `GET /v3/channels/voice` and change one with `PATCH /v3/channels/voice/{number}`.
 
     ## Compliance lives on the market
 
@@ -760,18 +680,22 @@ class AsyncVoiceResource(AsyncAPIResource):
 
         ## What it changes
 
-        | Body                                          | Effect                                                                                                                                                     |
-        | --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-        | `"status": "ACTIVE"`                          | turns calls on again for a number you turned off; the callback URL and the secret it had are kept                                                          |
-        | `"status": "INACTIVE"`                        | turns calls off; the callback URL and the secret stay on the number                                                                                        |
-        | `"default_for_app_calls": true`               | makes this the line app-originated calls are placed from when a voice token names no number                                                                |
-        | `"callback_url": "https://example.com/voice"` | replaces where Sent asks what to do with each call on the number; the signing secret is kept, and a number that was waiting for its first URL is turned on |
-        | key omitted                                   | left exactly as it is                                                                                                                                      |
+        | Body                                          | Effect                                                                                                       |
+        | --------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+        | `"status": "ACTIVE"`                          | turns calls on again for a number you turned off; the callback URL and the secret it had are kept            |
+        | `"status": "INACTIVE"`                        | turns calls off; the callback URL and the secret stay on the number                                          |
+        | `"default_for_app_calls": true`               | makes this the line app-originated calls are placed from when a voice token names no number                  |
+        | `"callback_url": "https://example.com/voice"` | replaces where Sent asks what to do with each call on the number; the signing secret and the status are kept |
+        | key omitted                                   | left exactly as it is                                                                                        |
 
         `status` is matched ignoring case. Any combination is accepted:
         `status: "ACTIVE"` with `default_for_app_calls: true` turns a number on as the
         new default, and a `callback_url` sent with either status is written too. A body
         that names none of the three is refused.
+
+        A number can be on without a callback URL: calls placed from your app then
+        connect straight to the number or user they dial, and calls to the number are
+        declined.
 
         ## What it will refuse
 
@@ -785,11 +709,6 @@ class AsyncVoiceResource(AsyncAPIResource):
 
         **Making an inactive number the default is `400`.** Send `status: "ACTIVE"` in
         the same call.
-
-        A number added without a `callback_url` is `INACTIVE` for that one reason, so
-        sending it a `callback_url` turns it on by itself, and it becomes your default
-        line if you have no other active voice number. A number you turned off while it
-        had a URL stays off.
 
         **A number you never turned voice on for is `404`.** Add it with
         `POST /v3/channels/voice`.
@@ -891,78 +810,6 @@ class AsyncVoiceResource(AsyncAPIResource):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=APIResponseOfListOfVoiceNumber,
-        )
-
-    async def create_token(
-        self,
-        *,
-        identity: str | Omit = omit,
-        number: Optional[str] | Omit = omit,
-        sandbox: bool | Omit = omit,
-        ttl: Optional[int] | Omit = omit,
-        idempotency_key: str | Omit = omit,
-        x_profile_id: str | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIResponseOfVoiceToken:
-        """Mints a short-lived token for one of your app users.
-
-        Call this from your backend
-        and return the token to your app, which passes it to the voice client SDK to
-        register. The identity is bound to the given number, or to your default app-call
-        number when omitted, and calls placed by that identity are routed through the
-        bound number. Minting again re-binds the identity, so an identity can move
-        between numbers.
-
-        Args:
-          identity: Your identifier for the app user, such as an agent or account id. Letters,
-              digits, hyphens and underscores only, up to 200 characters.
-
-          number: One of your voice-enabled phone numbers in E.164 format. Calls placed by this
-              identity are routed through that number. Omit to use your default app-call
-              number.
-
-          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
-              for testing integrations without actual execution
-
-          ttl: Token lifetime in seconds. Defaults to 600 and cannot exceed 3600.
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        extra_headers = {
-            **strip_not_given(
-                {
-                    "Idempotency-Key": idempotency_key,
-                    "x-profile-id": x_profile_id,
-                }
-            ),
-            **(extra_headers or {}),
-        }
-        return await self._post(
-            "/v3/channels/voice/tokens",
-            body=await async_maybe_transform(
-                {
-                    "identity": identity,
-                    "number": number,
-                    "sandbox": sandbox,
-                    "ttl": ttl,
-                },
-                voice_create_token_params.VoiceCreateTokenParams,
-            ),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=APIResponseOfVoiceToken,
         )
 
     async def rotate_secret(
@@ -1097,9 +944,6 @@ class VoiceResourceWithRawResponse:
         self.list = to_raw_response_wrapper(
             voice.list,
         )
-        self.create_token = to_raw_response_wrapper(
-            voice.create_token,
-        )
         self.rotate_secret = to_raw_response_wrapper(
             voice.rotate_secret,
         )
@@ -1123,9 +967,6 @@ class AsyncVoiceResourceWithRawResponse:
         )
         self.list = async_to_raw_response_wrapper(
             voice.list,
-        )
-        self.create_token = async_to_raw_response_wrapper(
-            voice.create_token,
         )
         self.rotate_secret = async_to_raw_response_wrapper(
             voice.rotate_secret,
@@ -1151,9 +992,6 @@ class VoiceResourceWithStreamingResponse:
         self.list = to_streamed_response_wrapper(
             voice.list,
         )
-        self.create_token = to_streamed_response_wrapper(
-            voice.create_token,
-        )
         self.rotate_secret = to_streamed_response_wrapper(
             voice.rotate_secret,
         )
@@ -1177,9 +1015,6 @@ class AsyncVoiceResourceWithStreamingResponse:
         )
         self.list = async_to_streamed_response_wrapper(
             voice.list,
-        )
-        self.create_token = async_to_streamed_response_wrapper(
-            voice.create_token,
         )
         self.rotate_secret = async_to_streamed_response_wrapper(
             voice.rotate_secret,

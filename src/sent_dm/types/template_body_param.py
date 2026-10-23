@@ -37,9 +37,9 @@ class Mms(TemplateBodyContentParam, total=False):
 
     Like Rcs, an override that cannot stand on its own: a template still needs a
     MultiChannel body or the Sms + Whatsapp pair to be
-    deliverable at all. Unlike Rcs, it has no fallback at send time — MMS with no
-    media is a more expensive SMS, so a template without this slot is deliberately not MMS-capable
-    and never produces an MMS route candidate.
+    deliverable at all. Without this slot MMS renders the shared or SMS body, so it is only needed for
+    MMS-specific copy, a subject or attachments. When present it replaces that body on MMS rather than
+    adding to it.
     """
 
     media: Optional[Iterable[MmsMedia]]
@@ -80,10 +80,10 @@ class TemplateBodyParam(TypedDict, total=False):
     """MMS-specific content — subject, text and attachments.
 
     Like Rcs, an override that cannot stand on its own: a template still needs a
-    MultiChannel body or the Sms + Whatsapp pair to be deliverable at all. Unlike
-    Rcs, it has no fallback at send time — MMS with no media is a more expensive
-    SMS, so a template without this slot is deliberately not MMS-capable and never
-    produces an MMS route candidate.
+    MultiChannel body or the Sms + Whatsapp pair to be deliverable at all. Without
+    this slot MMS renders the shared or SMS body, so it is only needed for
+    MMS-specific copy, a subject or attachments. When present it replaces that body
+    on MMS rather than adding to it.
     """
 
     multi_channel: Annotated[Optional[TemplateBodyContentParam], PropertyInfo(alias="multiChannel")]
