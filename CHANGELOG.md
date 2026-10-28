@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.47.0](https://github.com/sentdm/sent-dm-python/compare/v0.46.0...v0.47.0) (2026-10-28)
+
+
+### Features
+
+* **api:** add voice agents, the voice catalogue and agent_id ([e8d00cf](https://github.com/sentdm/sent-dm-python/commit/e8d00cfc1204894a2fdaa0bf6b182dccf44bd855))
+* **api:** sync generated SDKs from the committed spec ([20a8be5](https://github.com/sentdm/sent-dm-python/commit/20a8be5b06534c7f63f95b2d3bcd31ae582b71ad))
+* **api:** sync OpenAPI spec from production ([ad51f64](https://github.com/sentdm/sent-dm-python/commit/ad51f6427c621ce65fe5dea81ed53af2afb8520c))
+
 ## [0.46.0](https://github.com/sentdm/sent-dm-python/compare/v0.45.1...v0.46.0) (2026-10-23)
 
 
