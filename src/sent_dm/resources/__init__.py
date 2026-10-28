@@ -16,6 +16,14 @@ from .users import (
     UsersResourceWithStreamingResponse,
     AsyncUsersResourceWithStreamingResponse,
 )
+from .voice import (
+    VoiceResource,
+    AsyncVoiceResource,
+    VoiceResourceWithRawResponse,
+    AsyncVoiceResourceWithRawResponse,
+    VoiceResourceWithStreamingResponse,
+    AsyncVoiceResourceWithStreamingResponse,
+)
 from .numbers import (
     NumbersResource,
     AsyncNumbersResource,
@@ -130,6 +138,12 @@ __all__ = [
     "AsyncConversationsResourceWithRawResponse",
     "ConversationsResourceWithStreamingResponse",
     "AsyncConversationsResourceWithStreamingResponse",
+    "VoiceResource",
+    "AsyncVoiceResource",
+    "VoiceResourceWithRawResponse",
+    "AsyncVoiceResourceWithRawResponse",
+    "VoiceResourceWithStreamingResponse",
+    "AsyncVoiceResourceWithStreamingResponse",
     "ChannelsResource",
     "AsyncChannelsResource",
     "ChannelsResourceWithRawResponse",

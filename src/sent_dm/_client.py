@@ -39,6 +39,7 @@ if TYPE_CHECKING:
     from .resources import (
         me,
         users,
+        voice,
         numbers,
         channels,
         contacts,
@@ -55,6 +56,7 @@ if TYPE_CHECKING:
     from .resources.messages import MessagesResource, AsyncMessagesResource
     from .resources.webhooks import WebhooksResource, AsyncWebhooksResource
     from .resources.templates import TemplatesResource, AsyncTemplatesResource
+    from .resources.voice.voice import VoiceResource, AsyncVoiceResource
     from .resources.conversations import ConversationsResource, AsyncConversationsResource
     from .resources.channels.channels import ChannelsResource, AsyncChannelsResource
     from .resources.profiles.profiles import ProfilesResource, AsyncProfilesResource
@@ -219,6 +221,12 @@ class Sent(SyncAPIClient):
         from .resources.conversations import ConversationsResource
 
         return ConversationsResource(self)
+
+    @cached_property
+    def voice(self) -> VoiceResource:
+        from .resources.voice import VoiceResource
+
+        return VoiceResource(self)
 
     @cached_property
     def channels(self) -> ChannelsResource:
@@ -515,6 +523,12 @@ class AsyncSent(AsyncAPIClient):
         return AsyncConversationsResource(self)
 
     @cached_property
+    def voice(self) -> AsyncVoiceResource:
+        from .resources.voice import AsyncVoiceResource
+
+        return AsyncVoiceResource(self)
+
+    @cached_property
     def channels(self) -> AsyncChannelsResource:
         from .resources.channels import AsyncChannelsResource
 
@@ -751,6 +765,12 @@ class SentWithRawResponse:
         return ConversationsResourceWithRawResponse(self._client.conversations)
 
     @cached_property
+    def voice(self) -> voice.VoiceResourceWithRawResponse:
+        from .resources.voice import VoiceResourceWithRawResponse
+
+        return VoiceResourceWithRawResponse(self._client.voice)
+
+    @cached_property
     def channels(self) -> channels.ChannelsResourceWithRawResponse:
         from .resources.channels import ChannelsResourceWithRawResponse
 
@@ -866,6 +886,12 @@ class AsyncSentWithRawResponse:
         from .resources.conversations import AsyncConversationsResourceWithRawResponse
 
         return AsyncConversationsResourceWithRawResponse(self._client.conversations)
+
+    @cached_property
+    def voice(self) -> voice.AsyncVoiceResourceWithRawResponse:
+        from .resources.voice import AsyncVoiceResourceWithRawResponse
+
+        return AsyncVoiceResourceWithRawResponse(self._client.voice)
 
     @cached_property
     def channels(self) -> channels.AsyncChannelsResourceWithRawResponse:
@@ -985,6 +1011,12 @@ class SentWithStreamedResponse:
         return ConversationsResourceWithStreamingResponse(self._client.conversations)
 
     @cached_property
+    def voice(self) -> voice.VoiceResourceWithStreamingResponse:
+        from .resources.voice import VoiceResourceWithStreamingResponse
+
+        return VoiceResourceWithStreamingResponse(self._client.voice)
+
+    @cached_property
     def channels(self) -> channels.ChannelsResourceWithStreamingResponse:
         from .resources.channels import ChannelsResourceWithStreamingResponse
 
@@ -1100,6 +1132,12 @@ class AsyncSentWithStreamedResponse:
         from .resources.conversations import AsyncConversationsResourceWithStreamingResponse
 
         return AsyncConversationsResourceWithStreamingResponse(self._client.conversations)
+
+    @cached_property
+    def voice(self) -> voice.AsyncVoiceResourceWithStreamingResponse:
+        from .resources.voice import AsyncVoiceResourceWithStreamingResponse
+
+        return AsyncVoiceResourceWithStreamingResponse(self._client.voice)
 
     @cached_property
     def channels(self) -> channels.AsyncChannelsResourceWithStreamingResponse:

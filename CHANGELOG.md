@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.46.0](https://github.com/sentdm/sent-dm-python/compare/v0.45.1...v0.46.0) (2026-10-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* **api:** move calls and voice tokens under the voice resource
+
+### Features
+
+* **api:** move calls and voice tokens under the voice resource ([9995315](https://github.com/sentdm/sent-dm-python/commit/9995315b391575b778c837b09c1bfa802ef102dd))
+* **api:** sync generated SDKs from the committed spec ([4786812](https://github.com/sentdm/sent-dm-python/commit/47868126d5a91693c95b23dfe2144fa41e2c94ca))
+
 ## [0.45.1](https://github.com/sentdm/sent-dm-python/compare/v0.45.0...v0.45.1) (2026-10-20)
 
 
