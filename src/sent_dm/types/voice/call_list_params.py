@@ -12,6 +12,12 @@ __all__ = ["CallListParams"]
 
 
 class CallListParams(TypedDict, total=False):
+    agent_id: Optional[str]
+    """
+    Optional filter on the voice agent that answered the call, such as
+    agent_9f2ab000-0000-4000-8000-000000000001
+    """
+
     direction: Optional[str]
     """
     Optional direction filter: outbound for calls placed from your app, inbound for
@@ -20,6 +26,12 @@ class CallListParams(TypedDict, total=False):
 
     from_: Annotated[Union[str, datetime, None], PropertyInfo(alias="from", format="iso8601")]
     """Only calls started at or after this time (ISO 8601)"""
+
+    mode: Optional[str]
+    """
+    Optional mode filter: inapp for calls routed by your number's callback URL,
+    agent for calls one of your voice agents answered
+    """
 
     number: Optional[str]
     """

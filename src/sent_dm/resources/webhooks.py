@@ -71,10 +71,12 @@ class WebhooksResource(SyncAPIResource):
         endpoint_url: str | Omit = omit,
         event_filters: Optional[Dict[str, SequenceNotStr[str]]] | Omit = omit,
         event_types: SequenceNotStr[str] | Omit = omit,
+        is_inheritable: bool | Omit = omit,
         retry_count: int | Omit = omit,
         sandbox: bool | Omit = omit,
         sender_profile: Optional[webhook_create_params.SenderProfile] | Omit = omit,
         timeout_seconds: int | Omit = omit,
+        webhook_version: Optional[int] | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -84,15 +86,39 @@ class WebhooksResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> APIResponseWebhook:
-        """
-        Creates a new webhook endpoint for the authenticated customer.
+        """Creates a new webhook endpoint for the authenticated customer.
+
+        A webhook is
+        version 2 unless the request sets webhook_version to 1: Svix delivers it, signed
+        with the webhook-id, webhook-timestamp and webhook-signature headers, and
+        retries it on its own schedule, so retry_count and timeout_seconds apply to
+        version 1 only. sender_profile applies to version 1 only and is ignored on
+        version 2; is_inheritable applies to version 2 only. A version 1 webhook's
+        response returns its sender_profile selection, with an empty event_types when it
+        is not cloned onto sender profiles; a version 2 webhook's response leaves
+        sender_profile out.
 
         Args:
+          is_inheritable: Also delivers every sender profile's events to this webhook, at the same URL and
+              with the same signing secret, and lets each profile see the webhook and read the
+              events about itself. Off by default: the organization's own events only. Only an
+              organization's version 2 webhook can set it.
+
+          retry_count: Delivery retries. Applies to version 1 only: Svix retries a version 2 webhook on
+              its own schedule.
+
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
 
           sender_profile: Request-only: the events an organization webhook's sender profile clones
-              receive, one clone per existing and future profile. Responses never return it.
+              receive, one clone per existing and future profile. A version 1 webhook's
+              responses report it as WebhookSenderProfileV3Response.
+
+          timeout_seconds: Delivery timeout. Applies to version 1 only.
+
+          webhook_version: Who delivers the webhook: 2, the default, is delivered by Svix and signed with
+              the webhook-id, webhook-timestamp and webhook-signature headers; 1 is the older
+              delivery, signed with the X-Webhook-\\** headers, which will be retired.
 
           extra_headers: Send extra headers
 
@@ -119,10 +145,12 @@ class WebhooksResource(SyncAPIResource):
                     "endpoint_url": endpoint_url,
                     "event_filters": event_filters,
                     "event_types": event_types,
+                    "is_inheritable": is_inheritable,
                     "retry_count": retry_count,
                     "sandbox": sandbox,
                     "sender_profile": sender_profile,
                     "timeout_seconds": timeout_seconds,
+                    "webhook_version": webhook_version,
                 },
                 webhook_create_params.WebhookCreateParams,
             ),
@@ -144,8 +172,10 @@ class WebhooksResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> APIResponseWebhook:
-        """
-        Retrieves a single webhook by ID for the authenticated customer.
+        """Retrieves a single webhook by ID for the authenticated customer.
+
+        A version 1
+        webhook includes its sender_profile selection.
 
         Args:
           extra_headers: Send extra headers
@@ -175,6 +205,7 @@ class WebhooksResource(SyncAPIResource):
         endpoint_url: str | Omit = omit,
         event_filters: Optional[Dict[str, SequenceNotStr[str]]] | Omit = omit,
         event_types: SequenceNotStr[str] | Omit = omit,
+        is_inheritable: Optional[bool] | Omit = omit,
         retry_count: int | Omit = omit,
         sandbox: bool | Omit = omit,
         sender_profile: Optional[webhook_update_params.SenderProfile] | Omit = omit,
@@ -188,15 +219,25 @@ class WebhooksResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> APIResponseWebhook:
-        """
-        Updates an existing webhook for the authenticated customer.
+        """Updates an existing webhook for the authenticated customer.
+
+        Its version does not
+        change. sender_profile applies to a version 1 webhook and is_inheritable to a
+        version 2 one; retry_count and timeout_seconds apply to version 1 only. A
+        version 1 webhook's response returns its sender_profile selection as saved; a
+        version 2 webhook's response leaves sender_profile out.
 
         Args:
+          is_inheritable: Makes this webhook inheritable by the organization's sender profiles (see
+              create), or stops it being inheritable. Omit or pass null to keep it as it is.
+              Only a version 2 webhook can be inheritable.
+
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
 
           sender_profile: Request-only: the events an organization webhook's sender profile clones
-              receive, one clone per existing and future profile. Responses never return it.
+              receive, one clone per existing and future profile. A version 1 webhook's
+              responses report it as WebhookSenderProfileV3Response.
 
           extra_headers: Send extra headers
 
@@ -225,6 +266,7 @@ class WebhooksResource(SyncAPIResource):
                     "endpoint_url": endpoint_url,
                     "event_filters": event_filters,
                     "event_types": event_types,
+                    "is_inheritable": is_inheritable,
                     "retry_count": retry_count,
                     "sandbox": sandbox,
                     "sender_profile": sender_profile,
@@ -253,8 +295,10 @@ class WebhooksResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> SyncWebhooksPage[WebhookResponse]:
-        """
-        Retrieves a paginated list of webhooks for the authenticated customer.
+        """Retrieves a paginated list of webhooks for the authenticated customer.
+
+        Each
+        version 1 webhook includes its sender_profile selection.
 
         Args:
           extra_headers: Send extra headers
@@ -370,11 +414,12 @@ class WebhooksResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> SyncWebhookEventsPage[WebhookListEventsResponse]:
-        """Retrieves a paginated list of delivery events for the specified webhook.
-
-        If the
-        webhook is cloned onto your sender profiles, the list includes what those clones
-        received; read payload.account_id to tell whose event it is.
+        """
+        Retrieves a paginated list of delivery events for the specified webhook, newest
+        first. If the webhook is cloned onto your sender profiles (version 1) or
+        inheritable by them (version 2, is_inheritable), the list includes their events;
+        read payload.account_id to tell whose event it is. A sender profile may read its
+        organization's inheritable webhook too, and gets the events about itself.
 
         Args:
           extra_headers: Send extra headers
@@ -424,8 +469,11 @@ class WebhooksResource(SyncAPIResource):
     ) -> WebhookRotateSecretResponse:
         """Generates a new signing secret for the specified webhook.
 
-        The old secret is
-        immediately invalidated.
+        A version 1 webhook's
+        old secret stops verifying at once. A version 2 webhook's deliveries are signed
+        with the new secret at once, and with the old one as well for the next 24 hours,
+        so a receiver can switch over without rejecting any; after that the old secret
+        no longer verifies.
 
         Args:
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
@@ -474,8 +522,12 @@ class WebhooksResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> WebhookTestResponse:
-        """
-        Sends a test event to the specified webhook endpoint to verify connectivity.
+        """Sends a test event to the specified webhook endpoint to verify connectivity.
+
+        A
+        version 1 webhook is tested at once and the answer says whether it was
+        delivered; a version 2 webhook's test is queued with Svix, which delivers it
+        right after, and the answer says it was queued.
 
         Args:
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
@@ -606,10 +658,12 @@ class AsyncWebhooksResource(AsyncAPIResource):
         endpoint_url: str | Omit = omit,
         event_filters: Optional[Dict[str, SequenceNotStr[str]]] | Omit = omit,
         event_types: SequenceNotStr[str] | Omit = omit,
+        is_inheritable: bool | Omit = omit,
         retry_count: int | Omit = omit,
         sandbox: bool | Omit = omit,
         sender_profile: Optional[webhook_create_params.SenderProfile] | Omit = omit,
         timeout_seconds: int | Omit = omit,
+        webhook_version: Optional[int] | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -619,15 +673,39 @@ class AsyncWebhooksResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> APIResponseWebhook:
-        """
-        Creates a new webhook endpoint for the authenticated customer.
+        """Creates a new webhook endpoint for the authenticated customer.
+
+        A webhook is
+        version 2 unless the request sets webhook_version to 1: Svix delivers it, signed
+        with the webhook-id, webhook-timestamp and webhook-signature headers, and
+        retries it on its own schedule, so retry_count and timeout_seconds apply to
+        version 1 only. sender_profile applies to version 1 only and is ignored on
+        version 2; is_inheritable applies to version 2 only. A version 1 webhook's
+        response returns its sender_profile selection, with an empty event_types when it
+        is not cloned onto sender profiles; a version 2 webhook's response leaves
+        sender_profile out.
 
         Args:
+          is_inheritable: Also delivers every sender profile's events to this webhook, at the same URL and
+              with the same signing secret, and lets each profile see the webhook and read the
+              events about itself. Off by default: the organization's own events only. Only an
+              organization's version 2 webhook can set it.
+
+          retry_count: Delivery retries. Applies to version 1 only: Svix retries a version 2 webhook on
+              its own schedule.
+
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
 
           sender_profile: Request-only: the events an organization webhook's sender profile clones
-              receive, one clone per existing and future profile. Responses never return it.
+              receive, one clone per existing and future profile. A version 1 webhook's
+              responses report it as WebhookSenderProfileV3Response.
+
+          timeout_seconds: Delivery timeout. Applies to version 1 only.
+
+          webhook_version: Who delivers the webhook: 2, the default, is delivered by Svix and signed with
+              the webhook-id, webhook-timestamp and webhook-signature headers; 1 is the older
+              delivery, signed with the X-Webhook-\\** headers, which will be retired.
 
           extra_headers: Send extra headers
 
@@ -654,10 +732,12 @@ class AsyncWebhooksResource(AsyncAPIResource):
                     "endpoint_url": endpoint_url,
                     "event_filters": event_filters,
                     "event_types": event_types,
+                    "is_inheritable": is_inheritable,
                     "retry_count": retry_count,
                     "sandbox": sandbox,
                     "sender_profile": sender_profile,
                     "timeout_seconds": timeout_seconds,
+                    "webhook_version": webhook_version,
                 },
                 webhook_create_params.WebhookCreateParams,
             ),
@@ -679,8 +759,10 @@ class AsyncWebhooksResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> APIResponseWebhook:
-        """
-        Retrieves a single webhook by ID for the authenticated customer.
+        """Retrieves a single webhook by ID for the authenticated customer.
+
+        A version 1
+        webhook includes its sender_profile selection.
 
         Args:
           extra_headers: Send extra headers
@@ -710,6 +792,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
         endpoint_url: str | Omit = omit,
         event_filters: Optional[Dict[str, SequenceNotStr[str]]] | Omit = omit,
         event_types: SequenceNotStr[str] | Omit = omit,
+        is_inheritable: Optional[bool] | Omit = omit,
         retry_count: int | Omit = omit,
         sandbox: bool | Omit = omit,
         sender_profile: Optional[webhook_update_params.SenderProfile] | Omit = omit,
@@ -723,15 +806,25 @@ class AsyncWebhooksResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> APIResponseWebhook:
-        """
-        Updates an existing webhook for the authenticated customer.
+        """Updates an existing webhook for the authenticated customer.
+
+        Its version does not
+        change. sender_profile applies to a version 1 webhook and is_inheritable to a
+        version 2 one; retry_count and timeout_seconds apply to version 1 only. A
+        version 1 webhook's response returns its sender_profile selection as saved; a
+        version 2 webhook's response leaves sender_profile out.
 
         Args:
+          is_inheritable: Makes this webhook inheritable by the organization's sender profiles (see
+              create), or stops it being inheritable. Omit or pass null to keep it as it is.
+              Only a version 2 webhook can be inheritable.
+
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
 
           sender_profile: Request-only: the events an organization webhook's sender profile clones
-              receive, one clone per existing and future profile. Responses never return it.
+              receive, one clone per existing and future profile. A version 1 webhook's
+              responses report it as WebhookSenderProfileV3Response.
 
           extra_headers: Send extra headers
 
@@ -760,6 +853,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
                     "endpoint_url": endpoint_url,
                     "event_filters": event_filters,
                     "event_types": event_types,
+                    "is_inheritable": is_inheritable,
                     "retry_count": retry_count,
                     "sandbox": sandbox,
                     "sender_profile": sender_profile,
@@ -788,8 +882,10 @@ class AsyncWebhooksResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> AsyncPaginator[WebhookResponse, AsyncWebhooksPage[WebhookResponse]]:
-        """
-        Retrieves a paginated list of webhooks for the authenticated customer.
+        """Retrieves a paginated list of webhooks for the authenticated customer.
+
+        Each
+        version 1 webhook includes its sender_profile selection.
 
         Args:
           extra_headers: Send extra headers
@@ -905,11 +1001,12 @@ class AsyncWebhooksResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> AsyncPaginator[WebhookListEventsResponse, AsyncWebhookEventsPage[WebhookListEventsResponse]]:
-        """Retrieves a paginated list of delivery events for the specified webhook.
-
-        If the
-        webhook is cloned onto your sender profiles, the list includes what those clones
-        received; read payload.account_id to tell whose event it is.
+        """
+        Retrieves a paginated list of delivery events for the specified webhook, newest
+        first. If the webhook is cloned onto your sender profiles (version 1) or
+        inheritable by them (version 2, is_inheritable), the list includes their events;
+        read payload.account_id to tell whose event it is. A sender profile may read its
+        organization's inheritable webhook too, and gets the events about itself.
 
         Args:
           extra_headers: Send extra headers
@@ -959,8 +1056,11 @@ class AsyncWebhooksResource(AsyncAPIResource):
     ) -> WebhookRotateSecretResponse:
         """Generates a new signing secret for the specified webhook.
 
-        The old secret is
-        immediately invalidated.
+        A version 1 webhook's
+        old secret stops verifying at once. A version 2 webhook's deliveries are signed
+        with the new secret at once, and with the old one as well for the next 24 hours,
+        so a receiver can switch over without rejecting any; after that the old secret
+        no longer verifies.
 
         Args:
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
@@ -1011,8 +1111,12 @@ class AsyncWebhooksResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> WebhookTestResponse:
-        """
-        Sends a test event to the specified webhook endpoint to verify connectivity.
+        """Sends a test event to the specified webhook endpoint to verify connectivity.
+
+        A
+        version 1 webhook is tested at once and the answer says whether it was
+        delivered; a version 2 webhook's test is queued with Svix, which delivers it
+        right after, and the answer says it was queued.
 
         Args:
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful

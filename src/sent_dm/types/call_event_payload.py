@@ -9,12 +9,14 @@ __all__ = ["CallEventPayload"]
 
 class CallEventPayload(BaseModel):
     """
-    Body of a call.initiated, call.answered, call.completed, call.failed
-    or call.recording_ready event. Which of them occurred is the envelope's event.
+    Body of a call.initiated, call.answered, call.agent_connected, call.completed,
+    call.failed or call.recording_ready event. Which of them occurred is the envelope's
+    event.
 
     Shaped like the message, inbound, template and channel payloads: account_id names the
     account the event is about, channel names the channel, and updated_at is when the change
-    happened on the call, in the same yyyy-MM-ddTHH:mm:ssZ form. duration_seconds and
+    happened on the call, in the same yyyy-MM-ddTHH:mm:ssZ form. Every event says how the call is
+    handled in mode, and an agent call names its agent in agent_id. duration_seconds and
     price are added on call.completed, reason on call.failed and
     recording_id on call.recording_ready; each is omitted rather than sent as null when it
     does not apply.
@@ -33,11 +35,20 @@ class CallEventPayload(BaseModel):
     it acted as.
     """
 
+    agent_id: Optional[str] = None
+    """The voice agent that answers the call, agent\\__…. Only on an agent call."""
+
     channel: Optional[str] = None
     """Always voice."""
 
     duration_seconds: Optional[int] = None
     """How long the call lasted. Only on call.completed."""
+
+    mode: Optional[str] = None
+    """
+    inapp, a call routed by the number's callback URL, or agent, a call one of the
+    account's voice agents answers. The same value GET /v3/voice/calls returns.
+    """
 
     number: Optional[str] = None
     """The customer number that owns the call, in E.164 format."""
