@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from typing import Optional
-from typing_extensions import Required, Annotated, TypedDict
+from typing_extensions import Annotated, TypedDict
 
 from ..._utils import PropertyInfo
 
@@ -11,14 +11,13 @@ __all__ = ["VoiceCreateParams"]
 
 
 class VoiceCreateParams(TypedDict, total=False):
-    callback_url: Required[str]
+    agent_id: Optional[str]
     """
-    Where Sent asks what to do with each call on this number: an absolute HTTP or
-    HTTPS URL on a public host. A signed question is POSTed here when a call arrives
-    or a caller presses a key, and the answer decides the call. Every question is
-    signed with the callback_secret the response returns, the same way your webhooks
-    are signed. Turning the number on again with a different URL replaces it and
-    keeps the secret.
+    One of your voice agents (GET /v3/voice/agents), such as
+    agent_9f2ab000-0000-4000-8000-000000000001, to answer calls to this number. It
+    wins over callback_url for calls to the number, and both may be sent; calls your
+    app places from the number still follow your app. Send it instead of
+    callback_url for a number only an agent answers.
     """
 
     area_code: Optional[str]
@@ -27,6 +26,16 @@ class VoiceCreateParams(TypedDict, total=False):
     Only for a request that leaves number out — sending both says two different
     things about which number to use, and is refused. Omit it too and the number
     comes from anywhere in the country.
+    """
+
+    callback_url: Optional[str]
+    """
+    Where Sent asks what to do with each call on this number: an absolute HTTP or
+    HTTPS URL on a public host. A signed question is POSTed here when a call arrives
+    or a caller presses a key, and the answer decides the call. Every question is
+    signed with the callback_secret the response returns, the same way your webhooks
+    are signed. Turning the number on again with a different URL replaces it and
+    keeps the secret. Required unless agent_id is sent.
     """
 
     default_for_app_calls: Optional[bool]

@@ -41,6 +41,8 @@ class CallsResource(SyncAPIResource):
     `POST /v3/channels/voice` enables a number for calls, with the callback URL Sent asks what to do with each call on it, and `POST /v3/voice/tokens` mints a short-lived token that lets a user of your app place and receive calls as that number. When a call arrives or a caller presses a key, a signed question is POSTed to the callback URL and the answer decides the call; `POST /v3/channels/voice/{number}/test` checks the URL answers the way we need before a real call reaches it, and `POST /v3/channels/voice/{number}/rotate-secret` replaces the signing secret. The call events themselves (`call.completed` and the rest) arrive through your webhooks.
 
     Every call is a record under `/v3/voice/calls`: read it, list its recordings once one is ready, hang it up, start or stop recording, and add, mute or remove conference participants while it is live. A leg to a phone number runs for at most what your balance affords at the destination's rate.
+
+    **Voice agents.** `POST /v3/voice/agents` creates an agent that answers calls through the Sent Voice Gateway: `session_type` says whether Sent carries the call as text (speech recognised and spoken for the agent) or as audio, `websocket_url` is where the gateway dials the agent for each call (leave it out and the agent dials in with your API key), and `tools`, `transfer_targets`, `fallback` and `limits` say what it may do on a call. The agent's `signing_secret` is shown on create and on `POST /v3/voice/agents/{id}/rotate-secret` only. Voices and languages for text sessions come from `GET /v3/voice/voices`. A number takes calls to an agent once it is bound to it on `/v3/channels/voice`.
     """
 
     @cached_property
@@ -50,6 +52,8 @@ class CallsResource(SyncAPIResource):
         `POST /v3/channels/voice` enables a number for calls, with the callback URL Sent asks what to do with each call on it, and `POST /v3/voice/tokens` mints a short-lived token that lets a user of your app place and receive calls as that number. When a call arrives or a caller presses a key, a signed question is POSTed to the callback URL and the answer decides the call; `POST /v3/channels/voice/{number}/test` checks the URL answers the way we need before a real call reaches it, and `POST /v3/channels/voice/{number}/rotate-secret` replaces the signing secret. The call events themselves (`call.completed` and the rest) arrive through your webhooks.
 
         Every call is a record under `/v3/voice/calls`: read it, list its recordings once one is ready, hang it up, start or stop recording, and add, mute or remove conference participants while it is live. A leg to a phone number runs for at most what your balance affords at the destination's rate.
+
+        **Voice agents.** `POST /v3/voice/agents` creates an agent that answers calls through the Sent Voice Gateway: `session_type` says whether Sent carries the call as text (speech recognised and spoken for the agent) or as audio, `websocket_url` is where the gateway dials the agent for each call (leave it out and the agent dials in with your API key), and `tools`, `transfer_targets`, `fallback` and `limits` say what it may do on a call. The agent's `signing_secret` is shown on create and on `POST /v3/voice/agents/{id}/rotate-secret` only. Voices and languages for text sessions come from `GET /v3/voice/voices`. A number takes calls to an agent once it is bound to it on `/v3/channels/voice`.
         """
         return ParticipantsResource(self._client)
 
@@ -85,9 +89,11 @@ class CallsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> APIResponseOfCall:
         """
-        Retrieves one of your calls by id: the parties, the owning number, the current
-        status with its failure reason, duration, price, recording availability, and a
-        timeline of when the call entered each status.
+        Retrieves one of your calls by id: the parties, the owning number, the phone
+        number the call was connected to and the caller id it showed, the current status
+        with its failure reason, duration, price with the billed legs and what each
+        cost, recording availability, and a timeline of when the call entered each
+        status.
 
         Args:
           extra_headers: Send extra headers
@@ -112,8 +118,10 @@ class CallsResource(SyncAPIResource):
     def list(
         self,
         *,
+        agent_id: Optional[str] | Omit = omit,
         direction: Optional[str] | Omit = omit,
         from_: Union[str, datetime, None] | Omit = omit,
+        mode: Optional[str] | Omit = omit,
         number: Optional[str] | Omit = omit,
         page: int | Omit = omit,
         page_size: int | Omit = omit,
@@ -130,15 +138,24 @@ class CallsResource(SyncAPIResource):
         """Retrieves a paginated list of your calls, most recent first.
 
         Filter by
-        direction, status, the owning number, and the time the call started (from and to
-        are inclusive). Use the call webhooks for real-time updates; this list is for
-        looking calls up afterwards.
+        direction, status, the owning number, the mode (inapp, or agent for calls your
+        voice agents answered), the agent that answered, and the time the call started
+        (from and to are inclusive). Each call carries the phone number it was connected
+        to, the caller id it showed, and the billed legs with what each cost. Use the
+        call webhooks for real-time updates; this list is for looking calls up
+        afterwards.
 
         Args:
+          agent_id: Optional filter on the voice agent that answered the call, such as
+              agent_9f2ab000-0000-4000-8000-000000000001
+
           direction: Optional direction filter: outbound for calls placed from your app, inbound for
               calls to one of your numbers
 
           from_: Only calls started at or after this time (ISO 8601)
+
+          mode: Optional mode filter: inapp for calls routed by your number's callback URL,
+              agent for calls one of your voice agents answered
 
           number: Optional filter on the number that owns the call, one of your voice-enabled
               numbers in E.164 format
@@ -171,8 +188,10 @@ class CallsResource(SyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform(
                     {
+                        "agent_id": agent_id,
                         "direction": direction,
                         "from_": from_,
+                        "mode": mode,
                         "number": number,
                         "page": page,
                         "page_size": page_size,
@@ -204,8 +223,8 @@ class CallsResource(SyncAPIResource):
         The call then ends the way any other call does once
         the disconnect is reported: an answered call as COMPLETED with call.completed, a
         call still ringing as NO_ANSWER, REJECTED or FAILED with call.failed. A call
-        that has already ended answers 409, and so does a call with no phone leg, such
-        as one between two app users.
+        that has already ended answers 409, as do a call with no phone leg, such as one
+        between two app users, and a call one of your voice agents answers.
 
         Args:
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
@@ -300,9 +319,9 @@ class CallsResource(SyncAPIResource):
 
         Use start to begin recording
         mid-call, or stop to end a recording, whether it was started here or by a
-        connect answer with record set. A call that has already ended answers 409, and
-        so does a call with no phone leg, such as one between two app users, which can't
-        be recorded.
+        connect answer with record set. A call that has already ended answers 409, as do
+        a call with no phone leg, such as one between two app users, and a call one of
+        your voice agents answers, neither of which can be recorded this way.
 
         Args:
           action: start to begin recording, stop to end it
@@ -352,6 +371,8 @@ class AsyncCallsResource(AsyncAPIResource):
     `POST /v3/channels/voice` enables a number for calls, with the callback URL Sent asks what to do with each call on it, and `POST /v3/voice/tokens` mints a short-lived token that lets a user of your app place and receive calls as that number. When a call arrives or a caller presses a key, a signed question is POSTed to the callback URL and the answer decides the call; `POST /v3/channels/voice/{number}/test` checks the URL answers the way we need before a real call reaches it, and `POST /v3/channels/voice/{number}/rotate-secret` replaces the signing secret. The call events themselves (`call.completed` and the rest) arrive through your webhooks.
 
     Every call is a record under `/v3/voice/calls`: read it, list its recordings once one is ready, hang it up, start or stop recording, and add, mute or remove conference participants while it is live. A leg to a phone number runs for at most what your balance affords at the destination's rate.
+
+    **Voice agents.** `POST /v3/voice/agents` creates an agent that answers calls through the Sent Voice Gateway: `session_type` says whether Sent carries the call as text (speech recognised and spoken for the agent) or as audio, `websocket_url` is where the gateway dials the agent for each call (leave it out and the agent dials in with your API key), and `tools`, `transfer_targets`, `fallback` and `limits` say what it may do on a call. The agent's `signing_secret` is shown on create and on `POST /v3/voice/agents/{id}/rotate-secret` only. Voices and languages for text sessions come from `GET /v3/voice/voices`. A number takes calls to an agent once it is bound to it on `/v3/channels/voice`.
     """
 
     @cached_property
@@ -361,6 +382,8 @@ class AsyncCallsResource(AsyncAPIResource):
         `POST /v3/channels/voice` enables a number for calls, with the callback URL Sent asks what to do with each call on it, and `POST /v3/voice/tokens` mints a short-lived token that lets a user of your app place and receive calls as that number. When a call arrives or a caller presses a key, a signed question is POSTed to the callback URL and the answer decides the call; `POST /v3/channels/voice/{number}/test` checks the URL answers the way we need before a real call reaches it, and `POST /v3/channels/voice/{number}/rotate-secret` replaces the signing secret. The call events themselves (`call.completed` and the rest) arrive through your webhooks.
 
         Every call is a record under `/v3/voice/calls`: read it, list its recordings once one is ready, hang it up, start or stop recording, and add, mute or remove conference participants while it is live. A leg to a phone number runs for at most what your balance affords at the destination's rate.
+
+        **Voice agents.** `POST /v3/voice/agents` creates an agent that answers calls through the Sent Voice Gateway: `session_type` says whether Sent carries the call as text (speech recognised and spoken for the agent) or as audio, `websocket_url` is where the gateway dials the agent for each call (leave it out and the agent dials in with your API key), and `tools`, `transfer_targets`, `fallback` and `limits` say what it may do on a call. The agent's `signing_secret` is shown on create and on `POST /v3/voice/agents/{id}/rotate-secret` only. Voices and languages for text sessions come from `GET /v3/voice/voices`. A number takes calls to an agent once it is bound to it on `/v3/channels/voice`.
         """
         return AsyncParticipantsResource(self._client)
 
@@ -396,9 +419,11 @@ class AsyncCallsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> APIResponseOfCall:
         """
-        Retrieves one of your calls by id: the parties, the owning number, the current
-        status with its failure reason, duration, price, recording availability, and a
-        timeline of when the call entered each status.
+        Retrieves one of your calls by id: the parties, the owning number, the phone
+        number the call was connected to and the caller id it showed, the current status
+        with its failure reason, duration, price with the billed legs and what each
+        cost, recording availability, and a timeline of when the call entered each
+        status.
 
         Args:
           extra_headers: Send extra headers
@@ -423,8 +448,10 @@ class AsyncCallsResource(AsyncAPIResource):
     def list(
         self,
         *,
+        agent_id: Optional[str] | Omit = omit,
         direction: Optional[str] | Omit = omit,
         from_: Union[str, datetime, None] | Omit = omit,
+        mode: Optional[str] | Omit = omit,
         number: Optional[str] | Omit = omit,
         page: int | Omit = omit,
         page_size: int | Omit = omit,
@@ -441,15 +468,24 @@ class AsyncCallsResource(AsyncAPIResource):
         """Retrieves a paginated list of your calls, most recent first.
 
         Filter by
-        direction, status, the owning number, and the time the call started (from and to
-        are inclusive). Use the call webhooks for real-time updates; this list is for
-        looking calls up afterwards.
+        direction, status, the owning number, the mode (inapp, or agent for calls your
+        voice agents answered), the agent that answered, and the time the call started
+        (from and to are inclusive). Each call carries the phone number it was connected
+        to, the caller id it showed, and the billed legs with what each cost. Use the
+        call webhooks for real-time updates; this list is for looking calls up
+        afterwards.
 
         Args:
+          agent_id: Optional filter on the voice agent that answered the call, such as
+              agent_9f2ab000-0000-4000-8000-000000000001
+
           direction: Optional direction filter: outbound for calls placed from your app, inbound for
               calls to one of your numbers
 
           from_: Only calls started at or after this time (ISO 8601)
+
+          mode: Optional mode filter: inapp for calls routed by your number's callback URL,
+              agent for calls one of your voice agents answered
 
           number: Optional filter on the number that owns the call, one of your voice-enabled
               numbers in E.164 format
@@ -482,8 +518,10 @@ class AsyncCallsResource(AsyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform(
                     {
+                        "agent_id": agent_id,
                         "direction": direction,
                         "from_": from_,
+                        "mode": mode,
                         "number": number,
                         "page": page,
                         "page_size": page_size,
@@ -515,8 +553,8 @@ class AsyncCallsResource(AsyncAPIResource):
         The call then ends the way any other call does once
         the disconnect is reported: an answered call as COMPLETED with call.completed, a
         call still ringing as NO_ANSWER, REJECTED or FAILED with call.failed. A call
-        that has already ended answers 409, and so does a call with no phone leg, such
-        as one between two app users.
+        that has already ended answers 409, as do a call with no phone leg, such as one
+        between two app users, and a call one of your voice agents answers.
 
         Args:
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
@@ -611,9 +649,9 @@ class AsyncCallsResource(AsyncAPIResource):
 
         Use start to begin recording
         mid-call, or stop to end a recording, whether it was started here or by a
-        connect answer with record set. A call that has already ended answers 409, and
-        so does a call with no phone leg, such as one between two app users, which can't
-        be recorded.
+        connect answer with record set. A call that has already ended answers 409, as do
+        a call with no phone leg, such as one between two app users, and a call one of
+        your voice agents answers, neither of which can be recorded this way.
 
         Args:
           action: start to begin recording, stop to end it
@@ -684,6 +722,8 @@ class CallsResourceWithRawResponse:
         `POST /v3/channels/voice` enables a number for calls, with the callback URL Sent asks what to do with each call on it, and `POST /v3/voice/tokens` mints a short-lived token that lets a user of your app place and receive calls as that number. When a call arrives or a caller presses a key, a signed question is POSTed to the callback URL and the answer decides the call; `POST /v3/channels/voice/{number}/test` checks the URL answers the way we need before a real call reaches it, and `POST /v3/channels/voice/{number}/rotate-secret` replaces the signing secret. The call events themselves (`call.completed` and the rest) arrive through your webhooks.
 
         Every call is a record under `/v3/voice/calls`: read it, list its recordings once one is ready, hang it up, start or stop recording, and add, mute or remove conference participants while it is live. A leg to a phone number runs for at most what your balance affords at the destination's rate.
+
+        **Voice agents.** `POST /v3/voice/agents` creates an agent that answers calls through the Sent Voice Gateway: `session_type` says whether Sent carries the call as text (speech recognised and spoken for the agent) or as audio, `websocket_url` is where the gateway dials the agent for each call (leave it out and the agent dials in with your API key), and `tools`, `transfer_targets`, `fallback` and `limits` say what it may do on a call. The agent's `signing_secret` is shown on create and on `POST /v3/voice/agents/{id}/rotate-secret` only. Voices and languages for text sessions come from `GET /v3/voice/voices`. A number takes calls to an agent once it is bound to it on `/v3/channels/voice`.
         """
         return ParticipantsResourceWithRawResponse(self._calls.participants)
 
@@ -715,6 +755,8 @@ class AsyncCallsResourceWithRawResponse:
         `POST /v3/channels/voice` enables a number for calls, with the callback URL Sent asks what to do with each call on it, and `POST /v3/voice/tokens` mints a short-lived token that lets a user of your app place and receive calls as that number. When a call arrives or a caller presses a key, a signed question is POSTed to the callback URL and the answer decides the call; `POST /v3/channels/voice/{number}/test` checks the URL answers the way we need before a real call reaches it, and `POST /v3/channels/voice/{number}/rotate-secret` replaces the signing secret. The call events themselves (`call.completed` and the rest) arrive through your webhooks.
 
         Every call is a record under `/v3/voice/calls`: read it, list its recordings once one is ready, hang it up, start or stop recording, and add, mute or remove conference participants while it is live. A leg to a phone number runs for at most what your balance affords at the destination's rate.
+
+        **Voice agents.** `POST /v3/voice/agents` creates an agent that answers calls through the Sent Voice Gateway: `session_type` says whether Sent carries the call as text (speech recognised and spoken for the agent) or as audio, `websocket_url` is where the gateway dials the agent for each call (leave it out and the agent dials in with your API key), and `tools`, `transfer_targets`, `fallback` and `limits` say what it may do on a call. The agent's `signing_secret` is shown on create and on `POST /v3/voice/agents/{id}/rotate-secret` only. Voices and languages for text sessions come from `GET /v3/voice/voices`. A number takes calls to an agent once it is bound to it on `/v3/channels/voice`.
         """
         return AsyncParticipantsResourceWithRawResponse(self._calls.participants)
 
@@ -746,6 +788,8 @@ class CallsResourceWithStreamingResponse:
         `POST /v3/channels/voice` enables a number for calls, with the callback URL Sent asks what to do with each call on it, and `POST /v3/voice/tokens` mints a short-lived token that lets a user of your app place and receive calls as that number. When a call arrives or a caller presses a key, a signed question is POSTed to the callback URL and the answer decides the call; `POST /v3/channels/voice/{number}/test` checks the URL answers the way we need before a real call reaches it, and `POST /v3/channels/voice/{number}/rotate-secret` replaces the signing secret. The call events themselves (`call.completed` and the rest) arrive through your webhooks.
 
         Every call is a record under `/v3/voice/calls`: read it, list its recordings once one is ready, hang it up, start or stop recording, and add, mute or remove conference participants while it is live. A leg to a phone number runs for at most what your balance affords at the destination's rate.
+
+        **Voice agents.** `POST /v3/voice/agents` creates an agent that answers calls through the Sent Voice Gateway: `session_type` says whether Sent carries the call as text (speech recognised and spoken for the agent) or as audio, `websocket_url` is where the gateway dials the agent for each call (leave it out and the agent dials in with your API key), and `tools`, `transfer_targets`, `fallback` and `limits` say what it may do on a call. The agent's `signing_secret` is shown on create and on `POST /v3/voice/agents/{id}/rotate-secret` only. Voices and languages for text sessions come from `GET /v3/voice/voices`. A number takes calls to an agent once it is bound to it on `/v3/channels/voice`.
         """
         return ParticipantsResourceWithStreamingResponse(self._calls.participants)
 
@@ -777,5 +821,7 @@ class AsyncCallsResourceWithStreamingResponse:
         `POST /v3/channels/voice` enables a number for calls, with the callback URL Sent asks what to do with each call on it, and `POST /v3/voice/tokens` mints a short-lived token that lets a user of your app place and receive calls as that number. When a call arrives or a caller presses a key, a signed question is POSTed to the callback URL and the answer decides the call; `POST /v3/channels/voice/{number}/test` checks the URL answers the way we need before a real call reaches it, and `POST /v3/channels/voice/{number}/rotate-secret` replaces the signing secret. The call events themselves (`call.completed` and the rest) arrive through your webhooks.
 
         Every call is a record under `/v3/voice/calls`: read it, list its recordings once one is ready, hang it up, start or stop recording, and add, mute or remove conference participants while it is live. A leg to a phone number runs for at most what your balance affords at the destination's rate.
+
+        **Voice agents.** `POST /v3/voice/agents` creates an agent that answers calls through the Sent Voice Gateway: `session_type` says whether Sent carries the call as text (speech recognised and spoken for the agent) or as audio, `websocket_url` is where the gateway dials the agent for each call (leave it out and the agent dials in with your API key), and `tools`, `transfer_targets`, `fallback` and `limits` say what it may do on a call. The agent's `signing_secret` is shown on create and on `POST /v3/voice/agents/{id}/rotate-secret` only. Voices and languages for text sessions come from `GET /v3/voice/voices`. A number takes calls to an agent once it is bound to it on `/v3/channels/voice`.
         """
         return AsyncParticipantsResourceWithStreamingResponse(self._calls.participants)
