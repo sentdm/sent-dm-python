@@ -17,10 +17,10 @@ from ..._response import (
 from ..._base_client import make_request_options
 from ...types.voice.api_response_of_voice_catalogue import APIResponseOfVoiceCatalogue
 
-__all__ = ["VoicesResource", "AsyncVoicesResource"]
+__all__ = ["CatalogueResource", "AsyncCatalogueResource"]
 
 
-class VoicesResource(SyncAPIResource):
+class CatalogueResource(SyncAPIResource):
     """Phone calls from the numbers you hold, driven by your own callback URL.
 
     `POST /v3/channels/voice` enables a number for calls, with the callback URL Sent asks what to do with each call on it, and `POST /v3/voice/tokens` mints a short-lived token that lets a user of your app place and receive calls as that number. When a call arrives or a caller presses a key, a signed question is POSTed to the callback URL and the answer decides the call; `POST /v3/channels/voice/{number}/test` checks the URL answers the way we need before a real call reaches it, and `POST /v3/channels/voice/{number}/rotate-secret` replaces the signing secret. The call events themselves (`call.completed` and the rest) arrive through your webhooks.
@@ -31,23 +31,23 @@ class VoicesResource(SyncAPIResource):
     """
 
     @cached_property
-    def with_raw_response(self) -> VoicesResourceWithRawResponse:
+    def with_raw_response(self) -> CatalogueResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/sentdm/sent-dm-python#accessing-raw-response-data-eg-headers
         """
-        return VoicesResourceWithRawResponse(self)
+        return CatalogueResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> VoicesResourceWithStreamingResponse:
+    def with_streaming_response(self) -> CatalogueResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/sentdm/sent-dm-python#with_streaming_response
         """
-        return VoicesResourceWithStreamingResponse(self)
+        return CatalogueResourceWithStreamingResponse(self)
 
     def list(
         self,
@@ -84,7 +84,7 @@ class VoicesResource(SyncAPIResource):
         )
 
 
-class AsyncVoicesResource(AsyncAPIResource):
+class AsyncCatalogueResource(AsyncAPIResource):
     """Phone calls from the numbers you hold, driven by your own callback URL.
 
     `POST /v3/channels/voice` enables a number for calls, with the callback URL Sent asks what to do with each call on it, and `POST /v3/voice/tokens` mints a short-lived token that lets a user of your app place and receive calls as that number. When a call arrives or a caller presses a key, a signed question is POSTed to the callback URL and the answer decides the call; `POST /v3/channels/voice/{number}/test` checks the URL answers the way we need before a real call reaches it, and `POST /v3/channels/voice/{number}/rotate-secret` replaces the signing secret. The call events themselves (`call.completed` and the rest) arrive through your webhooks.
@@ -95,23 +95,23 @@ class AsyncVoicesResource(AsyncAPIResource):
     """
 
     @cached_property
-    def with_raw_response(self) -> AsyncVoicesResourceWithRawResponse:
+    def with_raw_response(self) -> AsyncCatalogueResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/sentdm/sent-dm-python#accessing-raw-response-data-eg-headers
         """
-        return AsyncVoicesResourceWithRawResponse(self)
+        return AsyncCatalogueResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> AsyncVoicesResourceWithStreamingResponse:
+    def with_streaming_response(self) -> AsyncCatalogueResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/sentdm/sent-dm-python#with_streaming_response
         """
-        return AsyncVoicesResourceWithStreamingResponse(self)
+        return AsyncCatalogueResourceWithStreamingResponse(self)
 
     async def list(
         self,
@@ -148,37 +148,37 @@ class AsyncVoicesResource(AsyncAPIResource):
         )
 
 
-class VoicesResourceWithRawResponse:
-    def __init__(self, voices: VoicesResource) -> None:
-        self._voices = voices
+class CatalogueResourceWithRawResponse:
+    def __init__(self, catalogue: CatalogueResource) -> None:
+        self._catalogue = catalogue
 
         self.list = to_raw_response_wrapper(
-            voices.list,
+            catalogue.list,
         )
 
 
-class AsyncVoicesResourceWithRawResponse:
-    def __init__(self, voices: AsyncVoicesResource) -> None:
-        self._voices = voices
+class AsyncCatalogueResourceWithRawResponse:
+    def __init__(self, catalogue: AsyncCatalogueResource) -> None:
+        self._catalogue = catalogue
 
         self.list = async_to_raw_response_wrapper(
-            voices.list,
+            catalogue.list,
         )
 
 
-class VoicesResourceWithStreamingResponse:
-    def __init__(self, voices: VoicesResource) -> None:
-        self._voices = voices
+class CatalogueResourceWithStreamingResponse:
+    def __init__(self, catalogue: CatalogueResource) -> None:
+        self._catalogue = catalogue
 
         self.list = to_streamed_response_wrapper(
-            voices.list,
+            catalogue.list,
         )
 
 
-class AsyncVoicesResourceWithStreamingResponse:
-    def __init__(self, voices: AsyncVoicesResource) -> None:
-        self._voices = voices
+class AsyncCatalogueResourceWithStreamingResponse:
+    def __init__(self, catalogue: AsyncCatalogueResource) -> None:
+        self._catalogue = catalogue
 
         self.list = async_to_streamed_response_wrapper(
-            voices.list,
+            catalogue.list,
         )

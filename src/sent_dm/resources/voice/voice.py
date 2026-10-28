@@ -18,15 +18,15 @@ from .tokens import (
     TokensResourceWithStreamingResponse,
     AsyncTokensResourceWithStreamingResponse,
 )
-from .voices import (
-    VoicesResource,
-    AsyncVoicesResource,
-    VoicesResourceWithRawResponse,
-    AsyncVoicesResourceWithRawResponse,
-    VoicesResourceWithStreamingResponse,
-    AsyncVoicesResourceWithStreamingResponse,
-)
 from ..._compat import cached_property
+from .catalogue import (
+    CatalogueResource,
+    AsyncCatalogueResource,
+    CatalogueResourceWithRawResponse,
+    AsyncCatalogueResourceWithRawResponse,
+    CatalogueResourceWithStreamingResponse,
+    AsyncCatalogueResourceWithStreamingResponse,
+)
 from ..._resource import SyncAPIResource, AsyncAPIResource
 from .calls.calls import (
     CallsResource,
@@ -78,7 +78,7 @@ class VoiceResource(SyncAPIResource):
         return AgentsResource(self._client)
 
     @cached_property
-    def voices(self) -> VoicesResource:
+    def catalogue(self) -> CatalogueResource:
         """Phone calls from the numbers you hold, driven by your own callback URL.
 
         `POST /v3/channels/voice` enables a number for calls, with the callback URL Sent asks what to do with each call on it, and `POST /v3/voice/tokens` mints a short-lived token that lets a user of your app place and receive calls as that number. When a call arrives or a caller presses a key, a signed question is POSTed to the callback URL and the answer decides the call; `POST /v3/channels/voice/{number}/test` checks the URL answers the way we need before a real call reaches it, and `POST /v3/channels/voice/{number}/rotate-secret` replaces the signing secret. The call events themselves (`call.completed` and the rest) arrive through your webhooks.
@@ -87,7 +87,7 @@ class VoiceResource(SyncAPIResource):
 
         **Voice agents.** `POST /v3/voice/agents` creates an agent that answers calls through the Sent Voice Gateway: `session_type` says whether Sent carries the call as text (speech recognised and spoken for the agent) or as audio, `websocket_url` is where the gateway dials the agent for each call (leave it out and the agent dials in with your API key), and `tools`, `transfer_targets`, `fallback` and `limits` say what it may do on a call. The agent's `signing_secret` is shown on create and on `POST /v3/voice/agents/{id}/rotate-secret` only. Voices and languages for text sessions come from `GET /v3/voice/voices`. A number takes calls to an agent once it is bound to it on `/v3/channels/voice`.
         """
-        return VoicesResource(self._client)
+        return CatalogueResource(self._client)
 
     @cached_property
     def with_raw_response(self) -> VoiceResourceWithRawResponse:
@@ -147,7 +147,7 @@ class AsyncVoiceResource(AsyncAPIResource):
         return AsyncAgentsResource(self._client)
 
     @cached_property
-    def voices(self) -> AsyncVoicesResource:
+    def catalogue(self) -> AsyncCatalogueResource:
         """Phone calls from the numbers you hold, driven by your own callback URL.
 
         `POST /v3/channels/voice` enables a number for calls, with the callback URL Sent asks what to do with each call on it, and `POST /v3/voice/tokens` mints a short-lived token that lets a user of your app place and receive calls as that number. When a call arrives or a caller presses a key, a signed question is POSTed to the callback URL and the answer decides the call; `POST /v3/channels/voice/{number}/test` checks the URL answers the way we need before a real call reaches it, and `POST /v3/channels/voice/{number}/rotate-secret` replaces the signing secret. The call events themselves (`call.completed` and the rest) arrive through your webhooks.
@@ -156,7 +156,7 @@ class AsyncVoiceResource(AsyncAPIResource):
 
         **Voice agents.** `POST /v3/voice/agents` creates an agent that answers calls through the Sent Voice Gateway: `session_type` says whether Sent carries the call as text (speech recognised and spoken for the agent) or as audio, `websocket_url` is where the gateway dials the agent for each call (leave it out and the agent dials in with your API key), and `tools`, `transfer_targets`, `fallback` and `limits` say what it may do on a call. The agent's `signing_secret` is shown on create and on `POST /v3/voice/agents/{id}/rotate-secret` only. Voices and languages for text sessions come from `GET /v3/voice/voices`. A number takes calls to an agent once it is bound to it on `/v3/channels/voice`.
         """
-        return AsyncVoicesResource(self._client)
+        return AsyncCatalogueResource(self._client)
 
     @cached_property
     def with_raw_response(self) -> AsyncVoiceResourceWithRawResponse:
@@ -219,7 +219,7 @@ class VoiceResourceWithRawResponse:
         return AgentsResourceWithRawResponse(self._voice.agents)
 
     @cached_property
-    def voices(self) -> VoicesResourceWithRawResponse:
+    def catalogue(self) -> CatalogueResourceWithRawResponse:
         """Phone calls from the numbers you hold, driven by your own callback URL.
 
         `POST /v3/channels/voice` enables a number for calls, with the callback URL Sent asks what to do with each call on it, and `POST /v3/voice/tokens` mints a short-lived token that lets a user of your app place and receive calls as that number. When a call arrives or a caller presses a key, a signed question is POSTed to the callback URL and the answer decides the call; `POST /v3/channels/voice/{number}/test` checks the URL answers the way we need before a real call reaches it, and `POST /v3/channels/voice/{number}/rotate-secret` replaces the signing secret. The call events themselves (`call.completed` and the rest) arrive through your webhooks.
@@ -228,7 +228,7 @@ class VoiceResourceWithRawResponse:
 
         **Voice agents.** `POST /v3/voice/agents` creates an agent that answers calls through the Sent Voice Gateway: `session_type` says whether Sent carries the call as text (speech recognised and spoken for the agent) or as audio, `websocket_url` is where the gateway dials the agent for each call (leave it out and the agent dials in with your API key), and `tools`, `transfer_targets`, `fallback` and `limits` say what it may do on a call. The agent's `signing_secret` is shown on create and on `POST /v3/voice/agents/{id}/rotate-secret` only. Voices and languages for text sessions come from `GET /v3/voice/voices`. A number takes calls to an agent once it is bound to it on `/v3/channels/voice`.
         """
-        return VoicesResourceWithRawResponse(self._voice.voices)
+        return CatalogueResourceWithRawResponse(self._voice.catalogue)
 
 
 class AsyncVoiceResourceWithRawResponse:
@@ -272,7 +272,7 @@ class AsyncVoiceResourceWithRawResponse:
         return AsyncAgentsResourceWithRawResponse(self._voice.agents)
 
     @cached_property
-    def voices(self) -> AsyncVoicesResourceWithRawResponse:
+    def catalogue(self) -> AsyncCatalogueResourceWithRawResponse:
         """Phone calls from the numbers you hold, driven by your own callback URL.
 
         `POST /v3/channels/voice` enables a number for calls, with the callback URL Sent asks what to do with each call on it, and `POST /v3/voice/tokens` mints a short-lived token that lets a user of your app place and receive calls as that number. When a call arrives or a caller presses a key, a signed question is POSTed to the callback URL and the answer decides the call; `POST /v3/channels/voice/{number}/test` checks the URL answers the way we need before a real call reaches it, and `POST /v3/channels/voice/{number}/rotate-secret` replaces the signing secret. The call events themselves (`call.completed` and the rest) arrive through your webhooks.
@@ -281,7 +281,7 @@ class AsyncVoiceResourceWithRawResponse:
 
         **Voice agents.** `POST /v3/voice/agents` creates an agent that answers calls through the Sent Voice Gateway: `session_type` says whether Sent carries the call as text (speech recognised and spoken for the agent) or as audio, `websocket_url` is where the gateway dials the agent for each call (leave it out and the agent dials in with your API key), and `tools`, `transfer_targets`, `fallback` and `limits` say what it may do on a call. The agent's `signing_secret` is shown on create and on `POST /v3/voice/agents/{id}/rotate-secret` only. Voices and languages for text sessions come from `GET /v3/voice/voices`. A number takes calls to an agent once it is bound to it on `/v3/channels/voice`.
         """
-        return AsyncVoicesResourceWithRawResponse(self._voice.voices)
+        return AsyncCatalogueResourceWithRawResponse(self._voice.catalogue)
 
 
 class VoiceResourceWithStreamingResponse:
@@ -325,7 +325,7 @@ class VoiceResourceWithStreamingResponse:
         return AgentsResourceWithStreamingResponse(self._voice.agents)
 
     @cached_property
-    def voices(self) -> VoicesResourceWithStreamingResponse:
+    def catalogue(self) -> CatalogueResourceWithStreamingResponse:
         """Phone calls from the numbers you hold, driven by your own callback URL.
 
         `POST /v3/channels/voice` enables a number for calls, with the callback URL Sent asks what to do with each call on it, and `POST /v3/voice/tokens` mints a short-lived token that lets a user of your app place and receive calls as that number. When a call arrives or a caller presses a key, a signed question is POSTed to the callback URL and the answer decides the call; `POST /v3/channels/voice/{number}/test` checks the URL answers the way we need before a real call reaches it, and `POST /v3/channels/voice/{number}/rotate-secret` replaces the signing secret. The call events themselves (`call.completed` and the rest) arrive through your webhooks.
@@ -334,7 +334,7 @@ class VoiceResourceWithStreamingResponse:
 
         **Voice agents.** `POST /v3/voice/agents` creates an agent that answers calls through the Sent Voice Gateway: `session_type` says whether Sent carries the call as text (speech recognised and spoken for the agent) or as audio, `websocket_url` is where the gateway dials the agent for each call (leave it out and the agent dials in with your API key), and `tools`, `transfer_targets`, `fallback` and `limits` say what it may do on a call. The agent's `signing_secret` is shown on create and on `POST /v3/voice/agents/{id}/rotate-secret` only. Voices and languages for text sessions come from `GET /v3/voice/voices`. A number takes calls to an agent once it is bound to it on `/v3/channels/voice`.
         """
-        return VoicesResourceWithStreamingResponse(self._voice.voices)
+        return CatalogueResourceWithStreamingResponse(self._voice.catalogue)
 
 
 class AsyncVoiceResourceWithStreamingResponse:
@@ -378,7 +378,7 @@ class AsyncVoiceResourceWithStreamingResponse:
         return AsyncAgentsResourceWithStreamingResponse(self._voice.agents)
 
     @cached_property
-    def voices(self) -> AsyncVoicesResourceWithStreamingResponse:
+    def catalogue(self) -> AsyncCatalogueResourceWithStreamingResponse:
         """Phone calls from the numbers you hold, driven by your own callback URL.
 
         `POST /v3/channels/voice` enables a number for calls, with the callback URL Sent asks what to do with each call on it, and `POST /v3/voice/tokens` mints a short-lived token that lets a user of your app place and receive calls as that number. When a call arrives or a caller presses a key, a signed question is POSTed to the callback URL and the answer decides the call; `POST /v3/channels/voice/{number}/test` checks the URL answers the way we need before a real call reaches it, and `POST /v3/channels/voice/{number}/rotate-secret` replaces the signing secret. The call events themselves (`call.completed` and the rest) arrive through your webhooks.
@@ -387,4 +387,4 @@ class AsyncVoiceResourceWithStreamingResponse:
 
         **Voice agents.** `POST /v3/voice/agents` creates an agent that answers calls through the Sent Voice Gateway: `session_type` says whether Sent carries the call as text (speech recognised and spoken for the agent) or as audio, `websocket_url` is where the gateway dials the agent for each call (leave it out and the agent dials in with your API key), and `tools`, `transfer_targets`, `fallback` and `limits` say what it may do on a call. The agent's `signing_secret` is shown on create and on `POST /v3/voice/agents/{id}/rotate-secret` only. Voices and languages for text sessions come from `GET /v3/voice/voices`. A number takes calls to an agent once it is bound to it on `/v3/channels/voice`.
         """
-        return AsyncVoicesResourceWithStreamingResponse(self._voice.voices)
+        return AsyncCatalogueResourceWithStreamingResponse(self._voice.catalogue)

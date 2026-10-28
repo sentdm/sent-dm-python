@@ -300,7 +300,7 @@ Methods:
 - <code title="delete /v3/voice/agents/{id}">client.voice.agents.<a href="./src/sent_dm/resources/voice/agents.py">delete</a>(id, \*\*<a href="src/sent_dm/types/voice/agent_delete_params.py">params</a>) -> None</code>
 - <code title="post /v3/voice/agents/{id}/rotate-secret">client.voice.agents.<a href="./src/sent_dm/resources/voice/agents.py">rotate_secret</a>(id, \*\*<a href="src/sent_dm/types/voice/agent_rotate_secret_params.py">params</a>) -> <a href="./src/sent_dm/types/voice/api_response_of_voice_agent_secret.py">APIResponseOfVoiceAgentSecret</a></code>
 
-## Voices
+## Catalogue
 
 Types:
 
@@ -310,7 +310,7 @@ from sent_dm.types.voice import APIResponseOfVoiceCatalogue, VoiceCatalogue, Voi
 
 Methods:
 
-- <code title="get /v3/voice/voices">client.voice.voices.<a href="./src/sent_dm/resources/voice/voices.py">list</a>() -> <a href="./src/sent_dm/types/voice/api_response_of_voice_catalogue.py">APIResponseOfVoiceCatalogue</a></code>
+- <code title="get /v3/voice/voices">client.voice.catalogue.<a href="./src/sent_dm/resources/voice/catalogue.py">list</a>() -> <a href="./src/sent_dm/types/voice/api_response_of_voice_catalogue.py">APIResponseOfVoiceCatalogue</a></code>
 
 # Channels
 
