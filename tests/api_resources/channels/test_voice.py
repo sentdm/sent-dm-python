@@ -26,17 +26,16 @@ class TestVoice:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_create(self, client: Sent) -> None:
-        voice = client.channels.voice.create(
-            callback_url="https://example.com/voice",
-        )
+        voice = client.channels.voice.create()
         assert_matches_type(APIResponseOfVoiceNumberCreated, voice, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_create_with_all_params(self, client: Sent) -> None:
         voice = client.channels.voice.create(
-            callback_url="https://example.com/voice",
+            agent_id=None,
             area_code=None,
+            callback_url="https://example.com/voice",
             default_for_app_calls=False,
             number="+12125550100",
             sandbox=False,
@@ -48,9 +47,7 @@ class TestVoice:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_create(self, client: Sent) -> None:
-        response = client.channels.voice.with_raw_response.create(
-            callback_url="https://example.com/voice",
-        )
+        response = client.channels.voice.with_raw_response.create()
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -60,9 +57,7 @@ class TestVoice:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_create(self, client: Sent) -> None:
-        with client.channels.voice.with_streaming_response.create(
-            callback_url="https://example.com/voice",
-        ) as response:
+        with client.channels.voice.with_streaming_response.create() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -126,7 +121,7 @@ class TestVoice:
     @parametrize
     def test_method_update(self, client: Sent) -> None:
         voice = client.channels.voice.update(
-            number="+12125550100",
+            number="number",
         )
         assert_matches_type(APIResponseOfVoiceNumber, voice, path=["response"])
 
@@ -134,8 +129,9 @@ class TestVoice:
     @parametrize
     def test_method_update_with_all_params(self, client: Sent) -> None:
         voice = client.channels.voice.update(
-            number="+12125550100",
-            callback_url="https://example.com/voice",
+            number="number",
+            agent_id="agent_id",
+            callback_url="callback_url",
             default_for_app_calls=True,
             sandbox=False,
             status="ACTIVE",
@@ -148,7 +144,7 @@ class TestVoice:
     @parametrize
     def test_raw_response_update(self, client: Sent) -> None:
         response = client.channels.voice.with_raw_response.update(
-            number="+12125550100",
+            number="number",
         )
 
         assert response.is_closed is True
@@ -160,7 +156,7 @@ class TestVoice:
     @parametrize
     def test_streaming_response_update(self, client: Sent) -> None:
         with client.channels.voice.with_streaming_response.update(
-            number="+12125550100",
+            number="number",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -329,17 +325,16 @@ class TestAsyncVoice:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_create(self, async_client: AsyncSent) -> None:
-        voice = await async_client.channels.voice.create(
-            callback_url="https://example.com/voice",
-        )
+        voice = await async_client.channels.voice.create()
         assert_matches_type(APIResponseOfVoiceNumberCreated, voice, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_create_with_all_params(self, async_client: AsyncSent) -> None:
         voice = await async_client.channels.voice.create(
-            callback_url="https://example.com/voice",
+            agent_id=None,
             area_code=None,
+            callback_url="https://example.com/voice",
             default_for_app_calls=False,
             number="+12125550100",
             sandbox=False,
@@ -351,9 +346,7 @@ class TestAsyncVoice:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_create(self, async_client: AsyncSent) -> None:
-        response = await async_client.channels.voice.with_raw_response.create(
-            callback_url="https://example.com/voice",
-        )
+        response = await async_client.channels.voice.with_raw_response.create()
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -363,9 +356,7 @@ class TestAsyncVoice:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_create(self, async_client: AsyncSent) -> None:
-        async with async_client.channels.voice.with_streaming_response.create(
-            callback_url="https://example.com/voice",
-        ) as response:
+        async with async_client.channels.voice.with_streaming_response.create() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -429,7 +420,7 @@ class TestAsyncVoice:
     @parametrize
     async def test_method_update(self, async_client: AsyncSent) -> None:
         voice = await async_client.channels.voice.update(
-            number="+12125550100",
+            number="number",
         )
         assert_matches_type(APIResponseOfVoiceNumber, voice, path=["response"])
 
@@ -437,8 +428,9 @@ class TestAsyncVoice:
     @parametrize
     async def test_method_update_with_all_params(self, async_client: AsyncSent) -> None:
         voice = await async_client.channels.voice.update(
-            number="+12125550100",
-            callback_url="https://example.com/voice",
+            number="number",
+            agent_id="agent_id",
+            callback_url="callback_url",
             default_for_app_calls=True,
             sandbox=False,
             status="ACTIVE",
@@ -451,7 +443,7 @@ class TestAsyncVoice:
     @parametrize
     async def test_raw_response_update(self, async_client: AsyncSent) -> None:
         response = await async_client.channels.voice.with_raw_response.update(
-            number="+12125550100",
+            number="number",
         )
 
         assert response.is_closed is True
@@ -463,7 +455,7 @@ class TestAsyncVoice:
     @parametrize
     async def test_streaming_response_update(self, async_client: AsyncSent) -> None:
         async with async_client.channels.voice.with_streaming_response.update(
-            number="+12125550100",
+            number="number",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"

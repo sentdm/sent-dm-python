@@ -42,6 +42,7 @@ class TestWebhooks:
                 "templates": ["approved", "rejected"],
             },
             event_types=["contact", "message", "templates"],
+            is_inheritable=False,
             retry_count=3,
             sandbox=False,
             sender_profile={
@@ -49,6 +50,7 @@ class TestWebhooks:
                 "event_types": ["string"],
             },
             timeout_seconds=30,
+            webhook_version=None,
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
@@ -144,6 +146,7 @@ class TestWebhooks:
             endpoint_url="https://example.com/webhooks/orders-v2",
             event_filters={"message": ["delivered", "failed"]},
             event_types=["contact", "message", "templates"],
+            is_inheritable=None,
             retry_count=5,
             sandbox=False,
             sender_profile={
@@ -555,6 +558,7 @@ class TestAsyncWebhooks:
                 "templates": ["approved", "rejected"],
             },
             event_types=["contact", "message", "templates"],
+            is_inheritable=False,
             retry_count=3,
             sandbox=False,
             sender_profile={
@@ -562,6 +566,7 @@ class TestAsyncWebhooks:
                 "event_types": ["string"],
             },
             timeout_seconds=30,
+            webhook_version=None,
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
@@ -657,6 +662,7 @@ class TestAsyncWebhooks:
             endpoint_url="https://example.com/webhooks/orders-v2",
             event_filters={"message": ["delivered", "failed"]},
             event_types=["contact", "message", "templates"],
+            is_inheritable=None,
             retry_count=5,
             sandbox=False,
             sender_profile={

@@ -20,6 +20,13 @@ class WebhookUpdateParams(TypedDict, total=False):
 
     event_types: SequenceNotStr[str]
 
+    is_inheritable: Optional[bool]
+    """
+    Makes this webhook inheritable by the organization's sender profiles (see
+    create), or stops it being inheritable. Omit or pass null to keep it as it is.
+    Only a version 2 webhook can be inheritable.
+    """
+
     retry_count: int
 
     sandbox: bool
@@ -31,7 +38,8 @@ class WebhookUpdateParams(TypedDict, total=False):
     sender_profile: Optional[SenderProfile]
     """
     Request-only: the events an organization webhook's sender profile clones
-    receive, one clone per existing and future profile. Responses never return it.
+    receive, one clone per existing and future profile. A version 1 webhook's
+    responses report it as WebhookSenderProfileV3Response.
     """
 
     timeout_seconds: int
@@ -44,7 +52,7 @@ class WebhookUpdateParams(TypedDict, total=False):
 class SenderProfile(TypedDict, total=False):
     """
     Request-only: the events an organization webhook's sender profile clones receive, one clone per existing
-    and future profile. Responses never return it.
+    and future profile. A version 1 webhook's responses report it as WebhookSenderProfileV3Response.
     """
 
     event_filters: Optional[Dict[str, SequenceNotStr[str]]]
