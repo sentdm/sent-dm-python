@@ -16,6 +16,14 @@ from .voice import (
     VoiceResourceWithStreamingResponse,
     AsyncVoiceResourceWithStreamingResponse,
 )
+from .agents import (
+    AgentsResource,
+    AsyncAgentsResource,
+    AgentsResourceWithRawResponse,
+    AsyncAgentsResourceWithRawResponse,
+    AgentsResourceWithStreamingResponse,
+    AsyncAgentsResourceWithStreamingResponse,
+)
 from .tokens import (
     TokensResource,
     AsyncTokensResource,
@@ -23,6 +31,14 @@ from .tokens import (
     AsyncTokensResourceWithRawResponse,
     TokensResourceWithStreamingResponse,
     AsyncTokensResourceWithStreamingResponse,
+)
+from .catalogue import (
+    CatalogueResource,
+    AsyncCatalogueResource,
+    CatalogueResourceWithRawResponse,
+    AsyncCatalogueResourceWithRawResponse,
+    CatalogueResourceWithStreamingResponse,
+    AsyncCatalogueResourceWithStreamingResponse,
 )
 
 __all__ = [
@@ -38,6 +54,18 @@ __all__ = [
     "AsyncTokensResourceWithRawResponse",
     "TokensResourceWithStreamingResponse",
     "AsyncTokensResourceWithStreamingResponse",
+    "AgentsResource",
+    "AsyncAgentsResource",
+    "AgentsResourceWithRawResponse",
+    "AsyncAgentsResourceWithRawResponse",
+    "AgentsResourceWithStreamingResponse",
+    "AsyncAgentsResourceWithStreamingResponse",
+    "CatalogueResource",
+    "AsyncCatalogueResource",
+    "CatalogueResourceWithRawResponse",
+    "AsyncCatalogueResourceWithRawResponse",
+    "CatalogueResourceWithStreamingResponse",
+    "AsyncCatalogueResourceWithStreamingResponse",
     "VoiceResource",
     "AsyncVoiceResource",
     "VoiceResourceWithRawResponse",
