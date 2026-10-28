@@ -84,8 +84,10 @@ class TestCalls:
     @parametrize
     def test_method_list_with_all_params(self, client: Sent) -> None:
         call = client.voice.calls.list(
+            agent_id="agent_id",
             direction="direction",
             from_=parse_datetime("2019-12-27T18:11:19.117Z"),
+            mode="mode",
             number="number",
             page=0,
             page_size=0,
@@ -342,8 +344,10 @@ class TestAsyncCalls:
     @parametrize
     async def test_method_list_with_all_params(self, async_client: AsyncSent) -> None:
         call = await async_client.voice.calls.list(
+            agent_id="agent_id",
             direction="direction",
             from_=parse_datetime("2019-12-27T18:11:19.117Z"),
+            mode="mode",
             number="number",
             page=0,
             page_size=0,
