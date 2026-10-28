@@ -11,6 +11,14 @@ __all__ = ["VoiceUpdateParams"]
 
 
 class VoiceUpdateParams(TypedDict, total=False):
+    agent_id: Optional[str]
+    """
+    One of your voice agents, such as agent_9f2ab000-0000-4000-8000-000000000001, to
+    answer calls to the number, or null to unbind it so the callback URL answers
+    them again. The agent wins over callback_url for calls to the number; calls your
+    app places from it still follow your app.
+    """
+
     callback_url: Optional[str]
     """
     A new callback URL for the number, active or not: an absolute HTTP or HTTPS URL

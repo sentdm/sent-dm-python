@@ -31,6 +31,10 @@ __all__ = [
     "CallsPagePagination",
     "SyncCallsPage",
     "AsyncCallsPage",
+    "VoiceAgentsPageData",
+    "VoiceAgentsPagePagination",
+    "SyncVoiceAgentsPage",
+    "AsyncVoiceAgentsPage",
 ]
 
 _T = TypeVar("_T")
@@ -460,6 +464,80 @@ class AsyncCallsPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
         if not calls:
             return []
         return calls
+
+    @override
+    def has_next_page(self) -> bool:
+        has_more = None
+        if self.data is not None:
+            if self.data.pagination is not None:
+                if self.data.pagination.has_more is not None:
+                    has_more = self.data.pagination.has_more
+        if has_more is not None and has_more is False:
+            return False
+
+        return super().has_next_page()
+
+    @override
+    def next_page_info(self) -> Optional[PageInfo]:
+        last_page = cast("int | None", self._options.params.get("page")) or 1
+
+        return PageInfo(params={"page": last_page + 1})
+
+
+class VoiceAgentsPagePagination(BaseModel):
+    has_more: Optional[bool] = None
+
+
+class VoiceAgentsPageData(GenericModel, Generic[_T]):
+    agents: Optional[List[_T]] = None
+
+    pagination: Optional[VoiceAgentsPagePagination] = None
+
+
+class SyncVoiceAgentsPage(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
+    data: Optional[VoiceAgentsPageData[_T]] = None
+
+    @override
+    def _get_page_items(self) -> List[_T]:
+        agents = None
+        if self.data is not None:
+            if self.data.agents is not None:
+                agents = self.data.agents
+        if not agents:
+            return []
+        return agents
+
+    @override
+    def has_next_page(self) -> bool:
+        has_more = None
+        if self.data is not None:
+            if self.data.pagination is not None:
+                if self.data.pagination.has_more is not None:
+                    has_more = self.data.pagination.has_more
+        if has_more is not None and has_more is False:
+            return False
+
+        return super().has_next_page()
+
+    @override
+    def next_page_info(self) -> Optional[PageInfo]:
+        last_page = cast("int | None", self._options.params.get("page")) or 1
+
+        return PageInfo(params={"page": last_page + 1})
+
+
+class AsyncVoiceAgentsPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
+    data: Optional[VoiceAgentsPageData[_T]] = None
+
+    @override
+    def _get_page_items(self) -> List[_T]:
+        agents = None
+        if self.data is not None:
+            if self.data.agents is not None:
+                agents = self.data.agents
+        if not agents:
+            return []
+        return agents
 
     @override
     def has_next_page(self) -> bool:
