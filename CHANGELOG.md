@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.48.0](https://github.com/sentdm/sent-dm-python/compare/v0.47.0...v0.48.0) (2026-10-29)
+
+
+### Features
+
+* **api:** sync generated SDKs from the committed spec ([5e9253f](https://github.com/sentdm/sent-dm-python/commit/5e9253f731d504d5437c650bc2152eff1d421024))
+* **api:** sync generated SDKs from the committed spec ([743d0d8](https://github.com/sentdm/sent-dm-python/commit/743d0d8719df7913bb854c25128ec6b62036940a))
+
+
+### Chores
+
+* **repo:** add the contributor contract and review rubric ([1e56604](https://github.com/sentdm/sent-dm-python/commit/1e566049b9142d7be4a54173fa568a1376d1f58b))
+* **repo:** add the contributor contract and the review workflow ([2dfafb2](https://github.com/sentdm/sent-dm-python/commit/2dfafb2f50d5c672008d3c29956bda5df42db2cb))
+* **repo:** rely on the managed Claude Code Review, drop the workflow ([e74bbe5](https://github.com/sentdm/sent-dm-python/commit/e74bbe52a2827f0cf1616b242103e7cdf87416f6))
+* **repo:** restore the contributor contract and review rubric ([35946c1](https://github.com/sentdm/sent-dm-python/commit/35946c195c507a70e96a4bf8d1598295c4013e72))
+* **repo:** restore the contributor contract and review rubric ([cae8c2d](https://github.com/sentdm/sent-dm-python/commit/cae8c2d584852eaf0c48786925ac72958a90c9e3))
+
 ## [0.47.0](https://github.com/sentdm/sent-dm-python/compare/v0.46.0...v0.47.0) (2026-10-28)
 
 
