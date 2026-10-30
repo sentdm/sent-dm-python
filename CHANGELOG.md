@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.49.0](https://github.com/sentdm/sent-dm-python/compare/v0.48.0...v0.49.0) (2026-10-30)
+
+
+### Features
+
+* **api:** sync generated SDKs from the committed spec ([5f13955](https://github.com/sentdm/sent-dm-python/commit/5f139558b459a76d7fd532ab4547461c9b1a280f))
+* **ci:** run every SDK on the one-repo topology ([ca4dccc](https://github.com/sentdm/sent-dm-python/commit/ca4dccc12deea022a456736820c559c81c81a068))
+
 ## [0.48.0](https://github.com/sentdm/sent-dm-python/compare/v0.47.0...v0.48.0) (2026-10-29)
 
 
