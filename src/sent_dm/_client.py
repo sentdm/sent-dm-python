@@ -36,22 +36,9 @@ from ._base_client import (
 )
 
 if TYPE_CHECKING:
-    from .resources import (
-        me,
-        users,
-        voice,
-        numbers,
-        channels,
-        contacts,
-        messages,
-        profiles,
-        webhooks,
-        templates,
-        conversations,
-    )
+    from .resources import me, users, voice, channels, contacts, messages, profiles, webhooks, templates, conversations
     from .resources.me import MeResource, AsyncMeResource
     from .resources.users import UsersResource, AsyncUsersResource
-    from .resources.numbers import NumbersResource, AsyncNumbersResource
     from .resources.contacts import ContactsResource, AsyncContactsResource
     from .resources.messages import MessagesResource, AsyncMessagesResource
     from .resources.webhooks import WebhooksResource, AsyncWebhooksResource
@@ -171,16 +158,6 @@ class Sent(SyncAPIClient):
         from .resources.profiles import ProfilesResource
 
         return ProfilesResource(self)
-
-    @cached_property
-    def numbers(self) -> NumbersResource:
-        """What a phone number actually is, before you send to it.
-
-        A lookup returns the number's country, line type and carrier, which is what decides whether it is reachable on a channel and what it costs. Worth doing on import rather than on send: a landline in a contact list is a message that can never be delivered.
-        """
-        from .resources.numbers import NumbersResource
-
-        return NumbersResource(self)
 
     @cached_property
     def messages(self) -> MessagesResource:
@@ -473,16 +450,6 @@ class AsyncSent(AsyncAPIClient):
         return AsyncProfilesResource(self)
 
     @cached_property
-    def numbers(self) -> AsyncNumbersResource:
-        """What a phone number actually is, before you send to it.
-
-        A lookup returns the number's country, line type and carrier, which is what decides whether it is reachable on a channel and what it costs. Worth doing on import rather than on send: a landline in a contact list is a message that can never be delivered.
-        """
-        from .resources.numbers import AsyncNumbersResource
-
-        return AsyncNumbersResource(self)
-
-    @cached_property
     def messages(self) -> AsyncMessagesResource:
         """Send a message and follow what happened to it.
 
@@ -715,16 +682,6 @@ class SentWithRawResponse:
         return ProfilesResourceWithRawResponse(self._client.profiles)
 
     @cached_property
-    def numbers(self) -> numbers.NumbersResourceWithRawResponse:
-        """What a phone number actually is, before you send to it.
-
-        A lookup returns the number's country, line type and carrier, which is what decides whether it is reachable on a channel and what it costs. Worth doing on import rather than on send: a landline in a contact list is a message that can never be delivered.
-        """
-        from .resources.numbers import NumbersResourceWithRawResponse
-
-        return NumbersResourceWithRawResponse(self._client.numbers)
-
-    @cached_property
     def messages(self) -> messages.MessagesResourceWithRawResponse:
         """Send a message and follow what happened to it.
 
@@ -836,16 +793,6 @@ class AsyncSentWithRawResponse:
         from .resources.profiles import AsyncProfilesResourceWithRawResponse
 
         return AsyncProfilesResourceWithRawResponse(self._client.profiles)
-
-    @cached_property
-    def numbers(self) -> numbers.AsyncNumbersResourceWithRawResponse:
-        """What a phone number actually is, before you send to it.
-
-        A lookup returns the number's country, line type and carrier, which is what decides whether it is reachable on a channel and what it costs. Worth doing on import rather than on send: a landline in a contact list is a message that can never be delivered.
-        """
-        from .resources.numbers import AsyncNumbersResourceWithRawResponse
-
-        return AsyncNumbersResourceWithRawResponse(self._client.numbers)
 
     @cached_property
     def messages(self) -> messages.AsyncMessagesResourceWithRawResponse:
@@ -961,16 +908,6 @@ class SentWithStreamedResponse:
         return ProfilesResourceWithStreamingResponse(self._client.profiles)
 
     @cached_property
-    def numbers(self) -> numbers.NumbersResourceWithStreamingResponse:
-        """What a phone number actually is, before you send to it.
-
-        A lookup returns the number's country, line type and carrier, which is what decides whether it is reachable on a channel and what it costs. Worth doing on import rather than on send: a landline in a contact list is a message that can never be delivered.
-        """
-        from .resources.numbers import NumbersResourceWithStreamingResponse
-
-        return NumbersResourceWithStreamingResponse(self._client.numbers)
-
-    @cached_property
     def messages(self) -> messages.MessagesResourceWithStreamingResponse:
         """Send a message and follow what happened to it.
 
@@ -1082,16 +1019,6 @@ class AsyncSentWithStreamedResponse:
         from .resources.profiles import AsyncProfilesResourceWithStreamingResponse
 
         return AsyncProfilesResourceWithStreamingResponse(self._client.profiles)
-
-    @cached_property
-    def numbers(self) -> numbers.AsyncNumbersResourceWithStreamingResponse:
-        """What a phone number actually is, before you send to it.
-
-        A lookup returns the number's country, line type and carrier, which is what decides whether it is reachable on a channel and what it costs. Worth doing on import rather than on send: a landline in a contact list is a message that can never be delivered.
-        """
-        from .resources.numbers import AsyncNumbersResourceWithStreamingResponse
-
-        return AsyncNumbersResourceWithStreamingResponse(self._client.numbers)
 
     @cached_property
     def messages(self) -> messages.AsyncMessagesResourceWithStreamingResponse:

@@ -24,14 +24,6 @@ from .voice import (
     VoiceResourceWithStreamingResponse,
     AsyncVoiceResourceWithStreamingResponse,
 )
-from .numbers import (
-    NumbersResource,
-    AsyncNumbersResource,
-    NumbersResourceWithRawResponse,
-    AsyncNumbersResourceWithRawResponse,
-    NumbersResourceWithStreamingResponse,
-    AsyncNumbersResourceWithStreamingResponse,
-)
 from .channels import (
     ChannelsResource,
     AsyncChannelsResource,
@@ -114,12 +106,6 @@ __all__ = [
     "AsyncProfilesResourceWithRawResponse",
     "ProfilesResourceWithStreamingResponse",
     "AsyncProfilesResourceWithStreamingResponse",
-    "NumbersResource",
-    "AsyncNumbersResource",
-    "NumbersResourceWithRawResponse",
-    "AsyncNumbersResourceWithRawResponse",
-    "NumbersResourceWithStreamingResponse",
-    "AsyncNumbersResourceWithStreamingResponse",
     "MessagesResource",
     "AsyncMessagesResource",
     "MessagesResourceWithRawResponse",
