@@ -37,11 +37,11 @@ class TemplateBodyContentParam(TypedDict, total=False):
     """
 
     type: Optional[str]
-    """The type of body content — send "text".
+    """The type of body content.
 
-    It is dropped from the stored definition when null, so a body posted without it
-    is saved with no type key at all and the template editor has nothing to render
-    the block from.
+    Defaults to "text" when omitted, which also fills it in when reading stored
+    bodies saved without it; the template editor refuses to load a body with no
+    type.
     """
 
     variables: Optional[Iterable[TemplateVariableParam]]
