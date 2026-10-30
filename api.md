@@ -141,18 +141,6 @@ Methods:
 - <code title="get /v3/profiles/{profileId}/campaigns">client.profiles.campaigns.<a href="./src/sent_dm/resources/profiles/campaigns.py">list</a>(profile_id) -> <a href="./src/sent_dm/types/profiles/api_response_of_list_of_brand_campaign.py">APIResponseOfListOfBrandCampaign</a></code>
 - <code title="delete /v3/profiles/{profileId}/campaigns/{campaignId}">client.profiles.campaigns.<a href="./src/sent_dm/resources/profiles/campaigns.py">delete</a>(campaign_id, \*, profile_id, \*\*<a href="src/sent_dm/types/profiles/campaign_delete_params.py">params</a>) -> None</code>
 
-# Numbers
-
-Types:
-
-```python
-from sent_dm.types import NumberLookupResponse
-```
-
-Methods:
-
-- <code title="get /v3/numbers/lookup/{phoneNumber}">client.numbers.<a href="./src/sent_dm/resources/numbers.py">lookup</a>(phone_number) -> <a href="./src/sent_dm/types/number_lookup_response.py">NumberLookupResponse</a></code>
-
 # Messages
 
 Types:
