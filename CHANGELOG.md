@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.49.1](https://github.com/sentdm/sent-dm-python/compare/v0.49.0...v0.49.1) (2026-10-30)
+
+
+### Documentation
+
+* **api:** describe the default body type on template bodies ([95e60f3](https://github.com/sentdm/sent-dm-python/commit/95e60f3d976bd7b3ca27f37f095a5d8c1d5ccc0d))
+
 ## [0.49.0](https://github.com/sentdm/sent-dm-python/compare/v0.48.0...v0.49.0) (2026-10-30)
 
 
