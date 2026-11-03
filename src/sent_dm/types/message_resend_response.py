@@ -1,67 +1,19 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import List, Optional
+from typing import Optional
 
 from .._models import BaseModel
 from .api_meta import APIMeta
 from .error_detail import ErrorDetail
+from .message_resend_response_data import MessageResendResponseData
 
-__all__ = ["MessageResendResponse", "Data", "DataRecipient"]
-
-
-class DataRecipient(BaseModel):
-    """What one recipient of a send got, as the API reports it."""
-
-    body: Optional[str] = None
-    """
-    Resolved template body for this recipient's channel, or null when the channel is
-    auto-detected.
-    """
-
-    channel: Optional[str] = None
-    """Channel this message will be sent on — sms, whatsapp — or null to auto-detect."""
-
-    message_id: Optional[str] = None
-    """Identifier for tracking this recipient's message."""
-
-    to: Optional[str] = None
-    """Phone number in E.164 format."""
-
-
-class Data(BaseModel):
-    """
-    The result of a multi-recipient send.
-
-    Declared here rather than in the service layer. POST /v3/messages used to publish
-    MessageSendResult — a type in Common.Services.Messaging.Contracts — so the public contract was
-    whatever the send service happened to return, and changing that service for an internal reason changed the
-    API. The service keeps its result; this is what a caller sees, and the mapping between them is a decision the
-    endpoint makes.
-
-    The shape of an immediate send: it never has a scheduled_at key. A send that carried
-    scheduled_at is a ScheduledSendMessageResponse, and the endpoint decides which of the two to
-    answer with. From always returns this type.
-    """
-
-    recipients: Optional[List[DataRecipient]] = None
-
-    status: Optional[str] = None
-    """QUEUED: the batch is accepted.
-
-    A request that carried scheduled_at is QUEUED here too; each message moves to
-    SCHEDULED once it is held, as GET /v3/messages/{id} and the message.scheduled
-    webhook report.
-    """
-
-    template_id: Optional[str] = None
-
-    template_name: Optional[str] = None
+__all__ = ["MessageResendResponse"]
 
 
 class MessageResendResponse(BaseModel):
     """Standard API response envelope for all v3 endpoints"""
 
-    data: Optional[Data] = None
+    data: Optional[MessageResendResponseData] = None
     """The result of a multi-recipient send.
 
     Declared here rather than in the service layer. POST /v3/messages used to
