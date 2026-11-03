@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.51.0](https://github.com/sentdm/sent-dm-python/compare/v0.50.0...v0.51.0) (2026-11-03)
+
+
+### Features
+
+* **api:** add messages.resend to resend a message on its id ([80368f0](https://github.com/sentdm/sent-dm-python/commit/80368f0dd961ec036591324ee2be23d665d39c8e))
+
 ## [0.50.0](https://github.com/sentdm/sent-dm-python/compare/v0.49.1...v0.50.0) (2026-11-03)
 
 
