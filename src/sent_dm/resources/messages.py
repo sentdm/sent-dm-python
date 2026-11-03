@@ -20,7 +20,6 @@ from .._response import (
 )
 from .._base_client import make_request_options
 from ..types.message_send_response import MessageSendResponse
-from ..types.message_resend_response import MessageResendResponse
 from ..types.message_retrieve_status_response import MessageRetrieveStatusResponse
 from ..types.message_retrieve_activities_response import MessageRetrieveActivitiesResponse
 
@@ -71,7 +70,7 @@ class MessagesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> MessageResendResponse:
+    ) -> MessageSendResponse:
         """
         Resends a message you already sent, on the same message id, without rebuilding
         the request. The typical use is recovering a BLOCKED message — for example one
@@ -132,7 +131,7 @@ class MessagesResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=MessageResendResponse,
+            cast_to=MessageSendResponse,
         )
 
     def retrieve_activities(
@@ -429,7 +428,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> MessageResendResponse:
+    ) -> MessageSendResponse:
         """
         Resends a message you already sent, on the same message id, without rebuilding
         the request. The typical use is recovering a BLOCKED message — for example one
@@ -490,7 +489,7 @@ class AsyncMessagesResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=MessageResendResponse,
+            cast_to=MessageSendResponse,
         )
 
     async def retrieve_activities(

@@ -64,7 +64,6 @@ from .template_update_params import TemplateUpdateParams as TemplateUpdateParams
 from .api_response_of_contact import APIResponseOfContact as APIResponseOfContact
 from .brands_brand_data_param import BrandsBrandDataParam as BrandsBrandDataParam
 from .contact_message_summary import ContactMessageSummary as ContactMessageSummary
-from .message_resend_response import MessageResendResponse as MessageResendResponse
 from .profile_complete_params import ProfileCompleteParams as ProfileCompleteParams
 from .template_variable_param import TemplateVariableParam as TemplateVariableParam
 from .user_update_role_params import UserUpdateRoleParams as UserUpdateRoleParams
