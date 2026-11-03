@@ -408,6 +408,13 @@ class TestSent:
         assert request.headers.get("Content-Type") is None
         assert request.content == b""
 
+    def test_no_content_type_header_with_explicit_empty_content(self, client: Sent) -> None:
+        # Same as above, but for a caller who passes an explicit zero-length
+        # body through `content` rather than leaving it unset.
+        request = client._build_request(FinalRequestOptions(method="delete", url="/foo", content=b""))
+        assert request.headers.get("Content-Type") is None
+        assert request.content == b""
+
     def test_default_query_option(self) -> None:
         client = Sent(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"query_param": "bar"}
