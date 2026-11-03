@@ -159,6 +159,7 @@ Types:
 
 ```python
 from sent_dm.types import (
+    MessageResendResponse,
     MessageRetrieveActivitiesResponse,
     MessageRetrieveStatusResponse,
     MessageSendResponse,
@@ -167,6 +168,7 @@ from sent_dm.types import (
 
 Methods:
 
+- <code title="post /v3/messages/{id}/resend">client.messages.<a href="./src/sent_dm/resources/messages.py">resend</a>(id, \*\*<a href="src/sent_dm/types/message_resend_params.py">params</a>) -> <a href="./src/sent_dm/types/message_resend_response.py">MessageResendResponse</a></code>
 - <code title="get /v3/messages/{id}/activities">client.messages.<a href="./src/sent_dm/resources/messages.py">retrieve_activities</a>(id) -> <a href="./src/sent_dm/types/message_retrieve_activities_response.py">MessageRetrieveActivitiesResponse</a></code>
 - <code title="get /v3/messages/{id}">client.messages.<a href="./src/sent_dm/resources/messages.py">retrieve_status</a>(id) -> <a href="./src/sent_dm/types/message_retrieve_status_response.py">MessageRetrieveStatusResponse</a></code>
 - <code title="post /v3/messages">client.messages.<a href="./src/sent_dm/resources/messages.py">send</a>(\*\*<a href="src/sent_dm/types/message_send_params.py">params</a>) -> <a href="./src/sent_dm/types/message_send_response.py">MessageSendResponse</a></code>
