@@ -42,6 +42,7 @@ from .contact_event_payload import ContactEventPayload as ContactEventPayload
 from .contact_update_params import ContactUpdateParams as ContactUpdateParams
 from .inbound_message_event import InboundMessageEvent as InboundMessageEvent
 from .message_event_payload import MessageEventPayload as MessageEventPayload
+from .message_resend_params import MessageResendParams as MessageResendParams
 from .message_send_response import MessageSendResponse as MessageSendResponse
 from .payment_details_param import PaymentDetailsParam as PaymentDetailsParam
 from .profile_create_params import ProfileCreateParams as ProfileCreateParams

@@ -32,7 +32,7 @@ client = Sent(
     api_key=os.environ.get("SENT_DM_API_KEY"),  # This is the default and can be omitted
 )
 
-response = client.messages.send(
+message_send_response = client.messages.send(
     channel=["sms", "whatsapp"],
     template={
         "id": "7ba7b820-9dad-11d1-80b4-00c04fd430c8",
@@ -44,7 +44,7 @@ response = client.messages.send(
     },
     to=["+14155551234", "+14155555678"],
 )
-print(response.data)
+print(message_send_response.data)
 ```
 
 While you can provide an `api_key` keyword argument,
@@ -67,7 +67,7 @@ client = AsyncSent(
 
 
 async def main() -> None:
-    response = await client.messages.send(
+    message_send_response = await client.messages.send(
         channel=["sms", "whatsapp"],
         template={
             "id": "7ba7b820-9dad-11d1-80b4-00c04fd430c8",
@@ -79,7 +79,7 @@ async def main() -> None:
         },
         to=["+14155551234", "+14155555678"],
     )
-    print(response.data)
+    print(message_send_response.data)
 
 
 asyncio.run(main())
@@ -112,7 +112,7 @@ async def main() -> None:
         api_key=os.environ.get("SENT_DM_API_KEY"),  # This is the default and can be omitted
         http_client=DefaultAioHttpClient(),
     ) as client:
-        response = await client.messages.send(
+        message_send_response = await client.messages.send(
             channel=["sms", "whatsapp"],
             template={
                 "id": "7ba7b820-9dad-11d1-80b4-00c04fd430c8",
@@ -124,7 +124,7 @@ async def main() -> None:
             },
             to=["+14155551234", "+14155555678"],
         )
-        print(response.data)
+        print(message_send_response.data)
 
 
 asyncio.run(main())
@@ -209,7 +209,7 @@ from sent_dm import Sent
 
 client = Sent()
 
-response = client.messages.send(
+message_send_response = client.messages.send(
     template={
         "id": "7ba7b820-9dad-11d1-80b4-00c04fd430c8",
         "name": "order_confirmation",
@@ -219,7 +219,7 @@ response = client.messages.send(
         },
     },
 )
-print(response.template)
+print(message_send_response.template)
 ```
 
 ## Handling errors
