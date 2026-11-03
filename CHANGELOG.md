@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.50.0](https://github.com/sentdm/sent-dm-python/compare/v0.49.1...v0.50.0) (2026-11-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* require Python 3.10 or later
+
+### Features
+
+* require Python 3.10 or later ([6aaec21](https://github.com/sentdm/sent-dm-python/commit/6aaec216d8f13a9bd7f5de174df1054727ba1698))
+
 ## [0.49.1](https://github.com/sentdm/sent-dm-python/compare/v0.49.0...v0.49.1) (2026-10-30)
 
 
