@@ -7,7 +7,7 @@ from datetime import datetime
 
 import httpx
 
-from ..types import message_send_params
+from ..types import message_send_params, message_resend_params
 from .._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
 from .._utils import path_template, maybe_transform, strip_not_given, async_maybe_transform
 from .._compat import cached_property
@@ -56,6 +56,83 @@ class MessagesResource(SyncAPIResource):
         For more information, see https://www.github.com/sentdm/sent-dm-python#with_streaming_response
         """
         return MessagesResourceWithStreamingResponse(self)
+
+    def resend(
+        self,
+        id: str,
+        *,
+        sandbox: bool | Omit = omit,
+        idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> MessageSendResponse:
+        """
+        Resends a message you already sent, on the same message id, without rebuilding
+        the request. The typical use is recovering a BLOCKED message — for example one
+        refused for insufficient balance — after the account has been topped up.
+
+        **A resend bills again.** Each accepted resend is a new delivery attempt and
+        records a new charge against the same message id; a client that resends on every
+        failure is charged on every loop.
+
+        **Every policy runs again.** The resend goes back through the full send pipeline
+        — consent, balance, KYC and channel quota, template approval, quiet hours and
+        channel health — so it can land on BLOCKED, FILTERED or SCHEDULED again rather
+        than being sent, exactly as a fresh send would. Status webhooks (message.sent,
+        message.blocked, message.filtered, message.failed) fire again for the same
+        message id, so consumers keyed on the id will see repeated transitions.
+
+        **What can be resent.** A message in a terminal state — DELIVERED, FAILED, READ
+        or BLOCKED — or one stuck at SENT for more than 15 minutes. A FILTERED message
+        can never be resent: the recipient opted out or a routing rule refused the send.
+        A message still in flight (QUEUED, PROCESSED, ROUTED), held for quiet hours
+        (SCHEDULED), or SENT less than 15 minutes ago returns 409. Two concurrent
+        resends of one id are serialised: one is accepted, the other gets 409.
+
+        The resend keeps the channel the message was originally requested on; the
+        channel cannot be changed on a resend — send a new message instead.
+        `Idempotency-Key` is honoured, so a retried request replays the first accepted
+        response instead of resending twice.
+
+        The response has the same shape as `POST /v3/messages`: `recipients` has a
+        single entry whose `message_id` is the id you resent.
+
+        Args:
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
+        return self._post(
+            path_template("/v3/messages/{id}/resend", id=id),
+            body=maybe_transform({"sandbox": sandbox}, message_resend_params.MessageResendParams),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=MessageSendResponse,
+        )
 
     def retrieve_activities(
         self,
@@ -338,6 +415,83 @@ class AsyncMessagesResource(AsyncAPIResource):
         """
         return AsyncMessagesResourceWithStreamingResponse(self)
 
+    async def resend(
+        self,
+        id: str,
+        *,
+        sandbox: bool | Omit = omit,
+        idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> MessageSendResponse:
+        """
+        Resends a message you already sent, on the same message id, without rebuilding
+        the request. The typical use is recovering a BLOCKED message — for example one
+        refused for insufficient balance — after the account has been topped up.
+
+        **A resend bills again.** Each accepted resend is a new delivery attempt and
+        records a new charge against the same message id; a client that resends on every
+        failure is charged on every loop.
+
+        **Every policy runs again.** The resend goes back through the full send pipeline
+        — consent, balance, KYC and channel quota, template approval, quiet hours and
+        channel health — so it can land on BLOCKED, FILTERED or SCHEDULED again rather
+        than being sent, exactly as a fresh send would. Status webhooks (message.sent,
+        message.blocked, message.filtered, message.failed) fire again for the same
+        message id, so consumers keyed on the id will see repeated transitions.
+
+        **What can be resent.** A message in a terminal state — DELIVERED, FAILED, READ
+        or BLOCKED — or one stuck at SENT for more than 15 minutes. A FILTERED message
+        can never be resent: the recipient opted out or a routing rule refused the send.
+        A message still in flight (QUEUED, PROCESSED, ROUTED), held for quiet hours
+        (SCHEDULED), or SENT less than 15 minutes ago returns 409. Two concurrent
+        resends of one id are serialised: one is accepted, the other gets 409.
+
+        The resend keeps the channel the message was originally requested on; the
+        channel cannot be changed on a resend — send a new message instead.
+        `Idempotency-Key` is honoured, so a retried request replays the first accepted
+        response instead of resending twice.
+
+        The response has the same shape as `POST /v3/messages`: `recipients` has a
+        single entry whose `message_id` is the id you resent.
+
+        Args:
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
+        return await self._post(
+            path_template("/v3/messages/{id}/resend", id=id),
+            body=await async_maybe_transform({"sandbox": sandbox}, message_resend_params.MessageResendParams),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=MessageSendResponse,
+        )
+
     async def retrieve_activities(
         self,
         id: str,
@@ -592,6 +746,9 @@ class MessagesResourceWithRawResponse:
     def __init__(self, messages: MessagesResource) -> None:
         self._messages = messages
 
+        self.resend = to_raw_response_wrapper(
+            messages.resend,
+        )
         self.retrieve_activities = to_raw_response_wrapper(
             messages.retrieve_activities,
         )
@@ -607,6 +764,9 @@ class AsyncMessagesResourceWithRawResponse:
     def __init__(self, messages: AsyncMessagesResource) -> None:
         self._messages = messages
 
+        self.resend = async_to_raw_response_wrapper(
+            messages.resend,
+        )
         self.retrieve_activities = async_to_raw_response_wrapper(
             messages.retrieve_activities,
         )
@@ -622,6 +782,9 @@ class MessagesResourceWithStreamingResponse:
     def __init__(self, messages: MessagesResource) -> None:
         self._messages = messages
 
+        self.resend = to_streamed_response_wrapper(
+            messages.resend,
+        )
         self.retrieve_activities = to_streamed_response_wrapper(
             messages.retrieve_activities,
         )
@@ -637,6 +800,9 @@ class AsyncMessagesResourceWithStreamingResponse:
     def __init__(self, messages: AsyncMessagesResource) -> None:
         self._messages = messages
 
+        self.resend = async_to_streamed_response_wrapper(
+            messages.resend,
+        )
         self.retrieve_activities = async_to_streamed_response_wrapper(
             messages.retrieve_activities,
         )
