@@ -401,6 +401,13 @@ class TestSent:
                 client2 = Sent(base_url=base_url, api_key=None, _strict_response_validation=True)
             _ = client2
 
+    def test_no_content_type_header_without_a_body(self, client: Sent) -> None:
+        # A DELETE with no body shouldn't claim one with Content-Type: the API
+        # rejects that combination outright.
+        request = client._build_request(FinalRequestOptions(method="delete", url="/foo"))
+        assert request.headers.get("Content-Type") is None
+        assert request.content == b""
+
     def test_default_query_option(self) -> None:
         client = Sent(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"query_param": "bar"}

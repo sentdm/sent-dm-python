@@ -582,6 +582,10 @@ class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
                 # since httpx's content param overrides other body arguments
                 kwargs["content"] = openapi_dumps(json_data) if is_given(json_data) and json_data is not None else None
             kwargs["files"] = files
+            if kwargs.get("content") is None and not files:
+                # No body is actually going on the wire, so a stale Content-Type
+                # from the default headers would describe content that isn't there.
+                headers.pop("Content-Type", None)
         else:
             headers.pop("Content-Type", None)
             kwargs.pop("data", None)
