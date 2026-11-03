@@ -42,6 +42,7 @@ from .contact_event_payload import ContactEventPayload as ContactEventPayload
 from .contact_update_params import ContactUpdateParams as ContactUpdateParams
 from .inbound_message_event import InboundMessageEvent as InboundMessageEvent
 from .message_event_payload import MessageEventPayload as MessageEventPayload
+from .message_resend_params import MessageResendParams as MessageResendParams
 from .message_send_response import MessageSendResponse as MessageSendResponse
 from .payment_details_param import PaymentDetailsParam as PaymentDetailsParam
 from .profile_create_params import ProfileCreateParams as ProfileCreateParams
@@ -63,6 +64,7 @@ from .template_update_params import TemplateUpdateParams as TemplateUpdateParams
 from .api_response_of_contact import APIResponseOfContact as APIResponseOfContact
 from .brands_brand_data_param import BrandsBrandDataParam as BrandsBrandDataParam
 from .contact_message_summary import ContactMessageSummary as ContactMessageSummary
+from .message_resend_response import MessageResendResponse as MessageResendResponse
 from .profile_complete_params import ProfileCompleteParams as ProfileCompleteParams
 from .template_variable_param import TemplateVariableParam as TemplateVariableParam
 from .user_update_role_params import UserUpdateRoleParams as UserUpdateRoleParams
@@ -79,6 +81,7 @@ from .authentication_config_param import AuthenticationConfigParam as Authentica
 from .brand_compliance_info_param import BrandComplianceInfoParam as BrandComplianceInfoParam
 from .template_body_content_param import TemplateBodyContentParam as TemplateBodyContentParam
 from .template_button_props_param import TemplateButtonPropsParam as TemplateButtonPropsParam
+from .message_resend_response_data import MessageResendResponseData as MessageResendResponseData
 from .webhook_list_events_response import WebhookListEventsResponse as WebhookListEventsResponse
 from .webhook_rotate_secret_params import WebhookRotateSecretParams as WebhookRotateSecretParams
 from .webhook_toggle_status_params import WebhookToggleStatusParams as WebhookToggleStatusParams
