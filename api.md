@@ -159,7 +159,6 @@ Types:
 
 ```python
 from sent_dm.types import (
-    MessageResendResponseData,
     MessageResendResponse,
     MessageRetrieveActivitiesResponse,
     MessageRetrieveStatusResponse,
