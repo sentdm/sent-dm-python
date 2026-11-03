@@ -3,7 +3,7 @@
 <!-- prettier-ignore -->
 [![PyPI version](https://img.shields.io/pypi/v/sentdm.svg?label=pypi%20(stable))](https://pypi.org/project/sentdm/)
 
-The Sent Python library provides convenient access to the Sent REST API from any Python 3.9+
+The Sent Python library provides convenient access to the Sent REST API from any Python 3.10+
 application. The library includes type definitions for all request params and response fields,
 and offers both synchronous and asynchronous clients powered by [httpx](https://github.com/encode/httpx).
 
@@ -528,7 +528,7 @@ print(sent_dm.__version__)
 
 ## Requirements
 
-Python 3.9 or higher.
+Python 3.10 or higher.
 
 ## Contributing
 
