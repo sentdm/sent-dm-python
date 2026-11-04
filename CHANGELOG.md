@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.52.0](https://github.com/sentdm/sent-dm-python/compare/v0.51.0...v0.52.0) (2026-11-04)
+
+
+### Features
+
+* **pagination:** expose page, page_size, total_count and total_pages on every page model ([eb7f6f5](https://github.com/sentdm/sent-dm-python/commit/eb7f6f51c70fec587619da2dd7e5ede2226e7a91))
+
 ## [0.51.0](https://github.com/sentdm/sent-dm-python/compare/v0.50.0...v0.51.0) (2026-11-03)
 
 
