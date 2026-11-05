@@ -64,6 +64,7 @@ class TemplatesResource(SyncAPIResource):
         creation_source: Optional[str] | Omit = omit,
         definition: TemplateDefinitionParam | Omit = omit,
         language: Optional[str] | Omit = omit,
+        name: Optional[str] | Omit = omit,
         sandbox: bool | Omit = omit,
         submit_for_review: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
@@ -79,8 +80,8 @@ class TemplatesResource(SyncAPIResource):
 
         The
         template can be submitted for review immediately or saved as draft for later
-        submission. There is no `name` field on create — the display name is derived
-        from the template's content and can be changed afterwards with
+        submission. `name` is optional: when omitted or blank, a name is generated from
+        the template's content. It can be changed afterwards with
         `PUT /v3/templates/{id}`.
 
         Args:
@@ -97,6 +98,10 @@ class TemplatesResource(SyncAPIResource):
               buttons
 
           language: Template language code (e.g., en_US) (optional, auto-detected if not provided)
+
+          name: Template display name (optional). When omitted or blank, a name is generated
+              from the template's content. It can be changed afterwards with PUT
+              /v3/templates/{id}.
 
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
@@ -129,6 +134,7 @@ class TemplatesResource(SyncAPIResource):
                     "creation_source": creation_source,
                     "definition": definition,
                     "language": language,
+                    "name": name,
                     "sandbox": sandbox,
                     "submit_for_review": submit_for_review,
                 },
@@ -434,6 +440,7 @@ class AsyncTemplatesResource(AsyncAPIResource):
         creation_source: Optional[str] | Omit = omit,
         definition: TemplateDefinitionParam | Omit = omit,
         language: Optional[str] | Omit = omit,
+        name: Optional[str] | Omit = omit,
         sandbox: bool | Omit = omit,
         submit_for_review: bool | Omit = omit,
         idempotency_key: str | Omit = omit,
@@ -449,8 +456,8 @@ class AsyncTemplatesResource(AsyncAPIResource):
 
         The
         template can be submitted for review immediately or saved as draft for later
-        submission. There is no `name` field on create — the display name is derived
-        from the template's content and can be changed afterwards with
+        submission. `name` is optional: when omitted or blank, a name is generated from
+        the template's content. It can be changed afterwards with
         `PUT /v3/templates/{id}`.
 
         Args:
@@ -467,6 +474,10 @@ class AsyncTemplatesResource(AsyncAPIResource):
               buttons
 
           language: Template language code (e.g., en_US) (optional, auto-detected if not provided)
+
+          name: Template display name (optional). When omitted or blank, a name is generated
+              from the template's content. It can be changed afterwards with PUT
+              /v3/templates/{id}.
 
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
@@ -499,6 +510,7 @@ class AsyncTemplatesResource(AsyncAPIResource):
                     "creation_source": creation_source,
                     "definition": definition,
                     "language": language,
+                    "name": name,
                     "sandbox": sandbox,
                     "submit_for_review": submit_for_review,
                 },
