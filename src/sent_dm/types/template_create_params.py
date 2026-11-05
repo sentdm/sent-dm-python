@@ -37,6 +37,13 @@ class TemplateCreateParams(TypedDict, total=False):
     language: Optional[str]
     """Template language code (e.g., en_US) (optional, auto-detected if not provided)"""
 
+    name: Optional[str]
+    """Template display name (optional).
+
+    When omitted or blank, a name is generated from the template's content. It can
+    be changed afterwards with PUT /v3/templates/{id}.
+    """
+
     sandbox: bool
     """
     Sandbox flag - when true, the operation is simulated without side effects Useful
