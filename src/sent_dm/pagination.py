@@ -43,6 +43,14 @@ _T = TypeVar("_T")
 class ContactsPagePagination(BaseModel):
     has_more: Optional[bool] = None
 
+    page: Optional[int] = None
+
+    page_size: Optional[int] = None
+
+    total_count: Optional[int] = None
+
+    total_pages: Optional[int] = None
+
 
 class ContactsPageData(GenericModel, Generic[_T]):
     contacts: Optional[List[_T]] = None
@@ -116,6 +124,14 @@ class AsyncContactsPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
 
 class ConversationsPagePagination(BaseModel):
     has_more: Optional[bool] = None
+
+    page: Optional[int] = None
+
+    page_size: Optional[int] = None
+
+    total_count: Optional[int] = None
+
+    total_pages: Optional[int] = None
 
 
 class ConversationsPageData(GenericModel, Generic[_T]):
@@ -191,6 +207,14 @@ class AsyncConversationsPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
 class TemplatesPagePagination(BaseModel):
     has_more: Optional[bool] = None
 
+    page: Optional[int] = None
+
+    page_size: Optional[int] = None
+
+    total_count: Optional[int] = None
+
+    total_pages: Optional[int] = None
+
 
 class TemplatesPageData(GenericModel, Generic[_T]):
     pagination: Optional[TemplatesPagePagination] = None
@@ -264,6 +288,14 @@ class AsyncTemplatesPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
 
 class WebhooksPagePagination(BaseModel):
     has_more: Optional[bool] = None
+
+    page: Optional[int] = None
+
+    page_size: Optional[int] = None
+
+    total_count: Optional[int] = None
+
+    total_pages: Optional[int] = None
 
 
 class WebhooksPageData(GenericModel, Generic[_T]):
@@ -339,6 +371,14 @@ class AsyncWebhooksPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
 class WebhookEventsPagePagination(BaseModel):
     has_more: Optional[bool] = None
 
+    page: Optional[int] = None
+
+    page_size: Optional[int] = None
+
+    total_count: Optional[int] = None
+
+    total_pages: Optional[int] = None
+
 
 class WebhookEventsPageData(GenericModel, Generic[_T]):
     events: Optional[List[_T]] = None
@@ -413,6 +453,14 @@ class AsyncWebhookEventsPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
 class CallsPagePagination(BaseModel):
     has_more: Optional[bool] = None
 
+    page: Optional[int] = None
+
+    page_size: Optional[int] = None
+
+    total_count: Optional[int] = None
+
+    total_pages: Optional[int] = None
+
 
 class CallsPageData(GenericModel, Generic[_T]):
     calls: Optional[List[_T]] = None
@@ -486,6 +534,14 @@ class AsyncCallsPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
 
 class VoiceAgentsPagePagination(BaseModel):
     has_more: Optional[bool] = None
+
+    page: Optional[int] = None
+
+    page_size: Optional[int] = None
+
+    total_count: Optional[int] = None
+
+    total_pages: Optional[int] = None
 
 
 class VoiceAgentsPageData(GenericModel, Generic[_T]):

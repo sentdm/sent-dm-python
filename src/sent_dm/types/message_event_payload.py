@@ -95,4 +95,4 @@ class MessageEventPayload(BaseModel):
     """
 
     updated_at: Optional[str] = None
-    """When the message reached MessageStatus, in UTC (yyyy-MM-ddTHH:mm:ssZ)."""
+    """When the message reached MessageStatusEnum, in UTC (yyyy-MM-ddTHH:mm:ssZ)."""
