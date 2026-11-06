@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.54.0](https://github.com/sentdm/sent-dm-python/compare/v0.53.0...v0.54.0) (2026-11-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* **api:** stable names for shared models; typed methods for sender profiles, channels, compliance requirements and message cancel
+
+### Features
+
+* **api:** stable names for shared models; typed methods for sender profiles, channels, compliance requirements and message cancel ([1be25d7](https://github.com/sentdm/sent-dm-python/commit/1be25d750830758f298dd58ae826948e5e69f853))
+
 ## [0.53.0](https://github.com/sentdm/sent-dm-python/compare/v0.52.0...v0.53.0) (2026-11-05)
 
 
