@@ -6,25 +6,9 @@ from typing import Iterable, Optional
 from typing_extensions import Required, TypedDict
 
 from .template_variable_param import TemplateVariableParam
+from .template_header_location_param import TemplateHeaderLocationParam
 
-__all__ = ["TemplateHeaderParam", "Location"]
-
-
-class Location(TypedDict, total=False):
-    """The map pin a location header drops.
-
-    Meta wants none of this at creation — the component is just
-    {"type":"header","format":"location"} — so these values exist for Sent: a preview, and the
-    default a StaticResource header falls back to at send.
-    """
-
-    address: Required[str]
-
-    latitude: Required[str]
-
-    longitude: Required[str]
-
-    name: Required[str]
+__all__ = ["TemplateHeaderParam"]
 
 
 class TemplateHeaderParam(TypedDict, total=False):
@@ -51,7 +35,7 @@ class TemplateHeaderParam(TypedDict, total=False):
     so must be ours. Do not "fix" one to match the other.
     """
 
-    location: Optional[Location]
+    location: Optional[TemplateHeaderLocationParam]
     """The map pin a location header drops.
 
     Meta wants none of this at creation — the component is just

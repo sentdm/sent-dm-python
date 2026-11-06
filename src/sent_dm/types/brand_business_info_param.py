@@ -3,9 +3,10 @@
 from __future__ import annotations
 
 from typing import Optional
-from typing_extensions import Literal, Annotated, TypedDict
+from typing_extensions import Annotated, TypedDict
 
 from .._utils import PropertyInfo
+from .entity_type import EntityType
 
 __all__ = ["BrandBusinessInfoParam"]
 
@@ -22,10 +23,7 @@ class BrandBusinessInfoParam(TypedDict, total=False):
     country_of_registration: Annotated[Optional[str], PropertyInfo(alias="countryOfRegistration")]
     """Country where the business is registered"""
 
-    entity_type: Annotated[
-        Optional[Literal["PRIVATE_PROFIT", "PUBLIC_PROFIT", "NON_PROFIT", "SOLE_PROPRIETOR", "GOVERNMENT"]],
-        PropertyInfo(alias="entityType"),
-    ]
+    entity_type: Annotated[Optional[EntityType], PropertyInfo(alias="entityType")]
 
     legal_name: Annotated[Optional[str], PropertyInfo(alias="legalName")]
     """Legal business name"""

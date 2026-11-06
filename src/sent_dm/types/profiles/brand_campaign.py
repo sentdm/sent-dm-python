@@ -2,12 +2,12 @@
 
 from typing import List, Optional
 from datetime import datetime
-from typing_extensions import Literal
 
 from pydantic import Field as FieldInfo
 
 from ..._models import BaseModel
 from .campaign_use_case import CampaignUseCase
+from ..tcr_campaign_status import TcrCampaignStatus
 
 __all__ = ["BrandCampaign"]
 
@@ -58,7 +58,7 @@ class BrandCampaign(BaseModel):
 
     privacy_policy_link: Optional[str] = FieldInfo(alias="privacyPolicyLink", default=None)
 
-    status: Optional[Literal["SENT_CREATED", "ACTIVE", "EXPIRED"]] = None
+    status: Optional[TcrCampaignStatus] = None
 
     submitted_at: Optional[datetime] = FieldInfo(alias="submittedAt", default=None)
 
