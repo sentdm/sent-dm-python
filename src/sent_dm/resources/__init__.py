@@ -80,6 +80,14 @@ from .templates import (
     TemplatesResourceWithStreamingResponse,
     AsyncTemplatesResourceWithStreamingResponse,
 )
+from .compliance import (
+    ComplianceResource,
+    AsyncComplianceResource,
+    ComplianceResourceWithRawResponse,
+    AsyncComplianceResourceWithRawResponse,
+    ComplianceResourceWithStreamingResponse,
+    AsyncComplianceResourceWithStreamingResponse,
+)
 from .conversations import (
     ConversationsResource,
     AsyncConversationsResource,
@@ -87,6 +95,14 @@ from .conversations import (
     AsyncConversationsResourceWithRawResponse,
     ConversationsResourceWithStreamingResponse,
     AsyncConversationsResourceWithStreamingResponse,
+)
+from .sender_profiles import (
+    SenderProfilesResource,
+    AsyncSenderProfilesResource,
+    SenderProfilesResourceWithRawResponse,
+    AsyncSenderProfilesResourceWithRawResponse,
+    SenderProfilesResourceWithStreamingResponse,
+    AsyncSenderProfilesResourceWithStreamingResponse,
 )
 
 __all__ = [
@@ -114,6 +130,12 @@ __all__ = [
     "AsyncProfilesResourceWithRawResponse",
     "ProfilesResourceWithStreamingResponse",
     "AsyncProfilesResourceWithStreamingResponse",
+    "SenderProfilesResource",
+    "AsyncSenderProfilesResource",
+    "SenderProfilesResourceWithRawResponse",
+    "AsyncSenderProfilesResourceWithRawResponse",
+    "SenderProfilesResourceWithStreamingResponse",
+    "AsyncSenderProfilesResourceWithStreamingResponse",
     "NumbersResource",
     "AsyncNumbersResource",
     "NumbersResourceWithRawResponse",
@@ -150,6 +172,12 @@ __all__ = [
     "AsyncChannelsResourceWithRawResponse",
     "ChannelsResourceWithStreamingResponse",
     "AsyncChannelsResourceWithStreamingResponse",
+    "ComplianceResource",
+    "AsyncComplianceResource",
+    "ComplianceResourceWithRawResponse",
+    "AsyncComplianceResourceWithRawResponse",
+    "ComplianceResourceWithStreamingResponse",
+    "AsyncComplianceResourceWithStreamingResponse",
     "MeResource",
     "AsyncMeResource",
     "MeResourceWithRawResponse",

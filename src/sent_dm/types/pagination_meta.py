@@ -3,24 +3,15 @@
 from typing import Optional
 
 from .._models import BaseModel
+from .pagination_cursors import PaginationCursors
 
-__all__ = ["PaginationMeta", "Cursors"]
-
-
-class Cursors(BaseModel):
-    """Cursor-based pagination. Never populated — see Cursors."""
-
-    after: Optional[str] = None
-    """Cursor to fetch the next page."""
-
-    before: Optional[str] = None
-    """Cursor to fetch the previous page."""
+__all__ = ["PaginationMeta"]
 
 
 class PaginationMeta(BaseModel):
     """Pagination metadata for list responses"""
 
-    cursors: Optional[Cursors] = None
+    cursors: Optional[PaginationCursors] = None
     """Cursor-based pagination. Never populated — see Cursors."""
 
     has_more: Optional[bool] = None

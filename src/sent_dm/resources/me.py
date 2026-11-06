@@ -15,7 +15,7 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
-from ..types.me_retrieve_response import MeRetrieveResponse
+from ..types.api_response_of_account import APIResponseOfAccount
 
 __all__ = ["MeResource", "AsyncMeResource"]
 
@@ -55,7 +55,7 @@ class MeResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> MeRetrieveResponse:
+    ) -> APIResponseOfAccount:
         """Returns the account associated with the provided API key.
 
         The response includes
@@ -105,7 +105,7 @@ class MeResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=MeRetrieveResponse,
+            cast_to=APIResponseOfAccount,
         )
 
 
@@ -144,7 +144,7 @@ class AsyncMeResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> MeRetrieveResponse:
+    ) -> APIResponseOfAccount:
         """Returns the account associated with the provided API key.
 
         The response includes
@@ -194,7 +194,7 @@ class AsyncMeResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=MeRetrieveResponse,
+            cast_to=APIResponseOfAccount,
         )
 
 
