@@ -17,7 +17,7 @@ from .._response import (
 )
 from ..pagination import SyncConversationsPage, AsyncConversationsPage
 from .._base_client import AsyncPaginator, make_request_options
-from ..types.conversation_messages_list import Message
+from ..types.message import Message
 
 __all__ = ["ConversationsResource", "AsyncConversationsResource"]
 

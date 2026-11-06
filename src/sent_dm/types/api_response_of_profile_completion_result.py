@@ -5,29 +5,15 @@ from typing import Optional
 from .._models import BaseModel
 from .api_meta import APIMeta
 from .error_detail import ErrorDetail
+from .profile_completion_result import ProfileCompletionResult
 
-__all__ = ["ProfileCompleteResponse", "Data"]
-
-
-class Data(BaseModel):
-    """
-    Response when a profile is already in the completed state and no further action is taken.
-    """
-
-    message: Optional[str] = None
-    """Human-readable message describing the result."""
-
-    status: Optional[str] = None
-    """
-    Current process status of the profile (e.g., "completed", "submitted",
-    "in_progress").
-    """
+__all__ = ["APIResponseOfProfileCompletionResult"]
 
 
-class ProfileCompleteResponse(BaseModel):
+class APIResponseOfProfileCompletionResult(BaseModel):
     """Standard API response envelope for all v3 endpoints"""
 
-    data: Optional[Data] = None
+    data: Optional[ProfileCompletionResult] = None
     """
     Response when a profile is already in the completed state and no further action
     is taken.

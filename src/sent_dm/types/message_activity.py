@@ -1,19 +1,16 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import List, Optional
+from typing import Optional
 from datetime import datetime
 
 from pydantic import Field as FieldInfo
 
 from .._models import BaseModel
-from .api_meta import APIMeta
-from .error_detail import ErrorDetail
-from .pagination_meta import PaginationMeta
 
-__all__ = ["MessageRetrieveActivitiesResponse", "Data", "DataActivity"]
+__all__ = ["MessageActivity"]
 
 
-class DataActivity(BaseModel):
+class MessageActivity(BaseModel):
     """
     A single message activity event for v3 API.
 
@@ -77,32 +74,3 @@ class DataActivity(BaseModel):
 
     timestamp: Optional[datetime] = None
     """When this activity occurred"""
-
-
-class Data(BaseModel):
-    """Response for GET /messages/{id}/activities"""
-
-    activities: Optional[List[DataActivity]] = None
-    """List of activity events ordered by most recent first"""
-
-    message_id: Optional[str] = None
-    """The message ID these activities belong to"""
-
-    pagination: Optional[PaginationMeta] = None
-    """Pagination metadata for list responses"""
-
-
-class MessageRetrieveActivitiesResponse(BaseModel):
-    """Standard API response envelope for all v3 endpoints"""
-
-    data: Optional[Data] = None
-    """Response for GET /messages/{id}/activities"""
-
-    error: Optional[ErrorDetail] = None
-    """Error information"""
-
-    meta: Optional[APIMeta] = None
-    """Request and response metadata"""
-
-    success: Optional[bool] = None
-    """Indicates whether the request was successful"""

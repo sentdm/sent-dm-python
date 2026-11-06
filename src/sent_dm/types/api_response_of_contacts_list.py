@@ -5,21 +5,16 @@ from typing import Optional
 from .._models import BaseModel
 from .api_meta import APIMeta
 from .error_detail import ErrorDetail
+from .contacts_list import ContactsList
 
-__all__ = ["WebhookRotateSecretResponse", "Data"]
-
-
-class Data(BaseModel):
-    """The response data (null if error)"""
-
-    signing_secret: Optional[str] = None
+__all__ = ["APIResponseOfContactsList"]
 
 
-class WebhookRotateSecretResponse(BaseModel):
+class APIResponseOfContactsList(BaseModel):
     """Standard API response envelope for all v3 endpoints"""
 
-    data: Optional[Data] = None
-    """The response data (null if error)"""
+    data: Optional[ContactsList] = None
+    """A paginated list of contacts."""
 
     error: Optional[ErrorDetail] = None
     """Error information"""

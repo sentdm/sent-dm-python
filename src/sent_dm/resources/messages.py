@@ -19,10 +19,12 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
+from ..types.template_ref_param import TemplateRefParam
 from ..types.message_send_response import MessageSendResponse
-from ..types.message_cancel_response import MessageCancelResponse
-from ..types.message_retrieve_status_response import MessageRetrieveStatusResponse
-from ..types.message_retrieve_activities_response import MessageRetrieveActivitiesResponse
+from ..types.api_response_of_message import APIResponseOfMessage
+from ..types.message_channel_options_param import MessageChannelOptionsParam
+from ..types.api_response_of_cancelled_message import APIResponseOfCancelledMessage
+from ..types.api_response_of_message_activities import APIResponseOfMessageActivities
 
 __all__ = ["MessagesResource", "AsyncMessagesResource"]
 
@@ -71,7 +73,7 @@ class MessagesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> MessageCancelResponse:
+    ) -> APIResponseOfCancelledMessage:
         """
         Calls off a message you scheduled with `scheduled_at`, before it is released for
         sending. The message moves to `CANCELLED`, which is terminal, and it is never
@@ -136,7 +138,7 @@ class MessagesResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=MessageCancelResponse,
+            cast_to=APIResponseOfCancelledMessage,
         )
 
     def resend(
@@ -227,7 +229,7 @@ class MessagesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> MessageRetrieveActivitiesResponse:
+    ) -> APIResponseOfMessageActivities:
         """Retrieves the activity log for a specific message.
 
         Activities track the message
@@ -252,7 +254,7 @@ class MessagesResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=MessageRetrieveActivitiesResponse,
+            cast_to=APIResponseOfMessageActivities,
         )
 
     def retrieve_status(
@@ -266,7 +268,7 @@ class MessagesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> MessageRetrieveStatusResponse:
+    ) -> APIResponseOfMessage:
         """Retrieves the current status and details of a message by ID.
 
         Includes delivery
@@ -294,19 +296,19 @@ class MessagesResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=MessageRetrieveStatusResponse,
+            cast_to=APIResponseOfMessage,
         )
 
     def send(
         self,
         *,
         channel: Optional[SequenceNotStr[str]] | Omit = omit,
-        channels: Optional[Dict[str, Iterable[message_send_params.Channel]]] | Omit = omit,
+        channels: Optional[Dict[str, Iterable[MessageChannelOptionsParam]]] | Omit = omit,
         media_urls: Optional[SequenceNotStr[str]] | Omit = omit,
         sandbox: bool | Omit = omit,
         scheduled_at: Union[str, datetime, None] | Omit = omit,
         subject: Optional[str] | Omit = omit,
-        template: Optional[message_send_params.Template] | Omit = omit,
+        template: Optional[TemplateRefParam] | Omit = omit,
         text: Optional[str] | Omit = omit,
         to: SequenceNotStr[str] | Omit = omit,
         idempotency_key: str | Omit = omit,
@@ -511,7 +513,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> MessageCancelResponse:
+    ) -> APIResponseOfCancelledMessage:
         """
         Calls off a message you scheduled with `scheduled_at`, before it is released for
         sending. The message moves to `CANCELLED`, which is terminal, and it is never
@@ -576,7 +578,7 @@ class AsyncMessagesResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=MessageCancelResponse,
+            cast_to=APIResponseOfCancelledMessage,
         )
 
     async def resend(
@@ -667,7 +669,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> MessageRetrieveActivitiesResponse:
+    ) -> APIResponseOfMessageActivities:
         """Retrieves the activity log for a specific message.
 
         Activities track the message
@@ -692,7 +694,7 @@ class AsyncMessagesResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=MessageRetrieveActivitiesResponse,
+            cast_to=APIResponseOfMessageActivities,
         )
 
     async def retrieve_status(
@@ -706,7 +708,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> MessageRetrieveStatusResponse:
+    ) -> APIResponseOfMessage:
         """Retrieves the current status and details of a message by ID.
 
         Includes delivery
@@ -734,19 +736,19 @@ class AsyncMessagesResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=MessageRetrieveStatusResponse,
+            cast_to=APIResponseOfMessage,
         )
 
     async def send(
         self,
         *,
         channel: Optional[SequenceNotStr[str]] | Omit = omit,
-        channels: Optional[Dict[str, Iterable[message_send_params.Channel]]] | Omit = omit,
+        channels: Optional[Dict[str, Iterable[MessageChannelOptionsParam]]] | Omit = omit,
         media_urls: Optional[SequenceNotStr[str]] | Omit = omit,
         sandbox: bool | Omit = omit,
         scheduled_at: Union[str, datetime, None] | Omit = omit,
         subject: Optional[str] | Omit = omit,
-        template: Optional[message_send_params.Template] | Omit = omit,
+        template: Optional[TemplateRefParam] | Omit = omit,
         text: Optional[str] | Omit = omit,
         to: SequenceNotStr[str] | Omit = omit,
         idempotency_key: str | Omit = omit,

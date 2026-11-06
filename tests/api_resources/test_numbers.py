@@ -9,7 +9,7 @@ import pytest
 
 from sent_dm import Sent, AsyncSent
 from tests.utils import assert_matches_type
-from sent_dm.types import NumberLookupResponse
+from sent_dm.types import APIResponseOfNumberLookupResult
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -23,7 +23,7 @@ class TestNumbers:
         number = client.numbers.lookup(
             phone_number="+12025551234",
         )
-        assert_matches_type(NumberLookupResponse, number, path=["response"])
+        assert_matches_type(APIResponseOfNumberLookupResult, number, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -32,7 +32,7 @@ class TestNumbers:
             phone_number="+12025551234",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(NumberLookupResponse, number, path=["response"])
+        assert_matches_type(APIResponseOfNumberLookupResult, number, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -44,7 +44,7 @@ class TestNumbers:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         number = response.parse()
-        assert_matches_type(NumberLookupResponse, number, path=["response"])
+        assert_matches_type(APIResponseOfNumberLookupResult, number, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -56,7 +56,7 @@ class TestNumbers:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             number = response.parse()
-            assert_matches_type(NumberLookupResponse, number, path=["response"])
+            assert_matches_type(APIResponseOfNumberLookupResult, number, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -80,7 +80,7 @@ class TestAsyncNumbers:
         number = await async_client.numbers.lookup(
             phone_number="+12025551234",
         )
-        assert_matches_type(NumberLookupResponse, number, path=["response"])
+        assert_matches_type(APIResponseOfNumberLookupResult, number, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -89,7 +89,7 @@ class TestAsyncNumbers:
             phone_number="+12025551234",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(NumberLookupResponse, number, path=["response"])
+        assert_matches_type(APIResponseOfNumberLookupResult, number, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -101,7 +101,7 @@ class TestAsyncNumbers:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         number = await response.parse()
-        assert_matches_type(NumberLookupResponse, number, path=["response"])
+        assert_matches_type(APIResponseOfNumberLookupResult, number, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -113,7 +113,7 @@ class TestAsyncNumbers:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             number = await response.parse()
-            assert_matches_type(NumberLookupResponse, number, path=["response"])
+            assert_matches_type(APIResponseOfNumberLookupResult, number, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

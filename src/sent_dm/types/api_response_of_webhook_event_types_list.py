@@ -2,30 +2,19 @@
 
 from __future__ import annotations
 
-from typing import List, Optional
+from typing import Optional
 
 from .._models import BaseModel
 from .api_meta import APIMeta
 from .error_detail import ErrorDetail
-from .pagination_meta import PaginationMeta
 
-__all__ = ["WebhookListEventTypesResponse", "Data"]
-
-
-class Data(BaseModel):
-    """The webhook event types a customer can subscribe to."""
-
-    event_types: Optional[List["WebhookEventType"]] = None
-    """The event_types on this page."""
-
-    pagination: Optional[PaginationMeta] = None
-    """Pagination metadata for list responses"""
+__all__ = ["APIResponseOfWebhookEventTypesList"]
 
 
-class WebhookListEventTypesResponse(BaseModel):
+class APIResponseOfWebhookEventTypesList(BaseModel):
     """Standard API response envelope for all v3 endpoints"""
 
-    data: Optional[Data] = None
+    data: Optional["WebhookEventTypesList"] = None
     """The webhook event types a customer can subscribe to."""
 
     error: Optional[ErrorDetail] = None
@@ -38,4 +27,4 @@ class WebhookListEventTypesResponse(BaseModel):
     """Indicates whether the request was successful"""
 
 
-from .webhook_event_type import WebhookEventType
+from .webhook_event_types_list import WebhookEventTypesList

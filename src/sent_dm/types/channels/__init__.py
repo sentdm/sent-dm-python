@@ -13,7 +13,9 @@ from .whatsapp_channel import WhatsappChannel as WhatsappChannel
 from .rcs_address_param import RcsAddressParam as RcsAddressParam
 from .sms_create_params import SMSCreateParams as SMSCreateParams
 from .sms_update_params import SMSUpdateParams as SMSUpdateParams
+from .supplied_document import SuppliedDocument as SuppliedDocument
 from .voice_test_params import VoiceTestParams as VoiceTestParams
+from .supplied_compliance import SuppliedCompliance as SuppliedCompliance
 from .voice_callback_test import VoiceCallbackTest as VoiceCallbackTest
 from .voice_create_params import VoiceCreateParams as VoiceCreateParams
 from .voice_update_params import VoiceUpdateParams as VoiceUpdateParams

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from .call import Call as Call
+from .call_leg import CallLeg as CallLeg
 from .call_party import CallParty as CallParty
 from .calls_list import CallsList as CallsList
 from .voice_agent import VoiceAgent as VoiceAgent

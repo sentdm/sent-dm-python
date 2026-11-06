@@ -10,12 +10,12 @@ import pytest
 from sent_dm import Sent, AsyncSent
 from tests.utils import assert_matches_type
 from sent_dm.types import (
+    WebhookDelivery,
     WebhookResponse,
     APIResponseWebhook,
-    WebhookTestResponse,
-    WebhookListEventsResponse,
-    WebhookRotateSecretResponse,
-    WebhookListEventTypesResponse,
+    APIResponseOfWebhookTest,
+    APIResponseOfWebhookSecret,
+    APIResponseOfWebhookEventTypesList,
 )
 from sent_dm.pagination import SyncWebhooksPage, AsyncWebhooksPage, SyncWebhookEventsPage, AsyncWebhookEventsPage
 
@@ -288,7 +288,7 @@ class TestWebhooks:
     @parametrize
     def test_method_list_event_types(self, client: Sent) -> None:
         webhook = client.webhooks.list_event_types()
-        assert_matches_type(WebhookListEventTypesResponse, webhook, path=["response"])
+        assert_matches_type(APIResponseOfWebhookEventTypesList, webhook, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -296,7 +296,7 @@ class TestWebhooks:
         webhook = client.webhooks.list_event_types(
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(WebhookListEventTypesResponse, webhook, path=["response"])
+        assert_matches_type(APIResponseOfWebhookEventTypesList, webhook, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -306,7 +306,7 @@ class TestWebhooks:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         webhook = response.parse()
-        assert_matches_type(WebhookListEventTypesResponse, webhook, path=["response"])
+        assert_matches_type(APIResponseOfWebhookEventTypesList, webhook, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -316,7 +316,7 @@ class TestWebhooks:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             webhook = response.parse()
-            assert_matches_type(WebhookListEventTypesResponse, webhook, path=["response"])
+            assert_matches_type(APIResponseOfWebhookEventTypesList, webhook, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -326,7 +326,7 @@ class TestWebhooks:
         webhook = client.webhooks.list_events(
             id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
         )
-        assert_matches_type(SyncWebhookEventsPage[WebhookListEventsResponse], webhook, path=["response"])
+        assert_matches_type(SyncWebhookEventsPage[WebhookDelivery], webhook, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -338,7 +338,7 @@ class TestWebhooks:
             search="search",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(SyncWebhookEventsPage[WebhookListEventsResponse], webhook, path=["response"])
+        assert_matches_type(SyncWebhookEventsPage[WebhookDelivery], webhook, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -350,7 +350,7 @@ class TestWebhooks:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         webhook = response.parse()
-        assert_matches_type(SyncWebhookEventsPage[WebhookListEventsResponse], webhook, path=["response"])
+        assert_matches_type(SyncWebhookEventsPage[WebhookDelivery], webhook, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -362,7 +362,7 @@ class TestWebhooks:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             webhook = response.parse()
-            assert_matches_type(SyncWebhookEventsPage[WebhookListEventsResponse], webhook, path=["response"])
+            assert_matches_type(SyncWebhookEventsPage[WebhookDelivery], webhook, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -380,7 +380,7 @@ class TestWebhooks:
         webhook = client.webhooks.rotate_secret(
             id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
         )
-        assert_matches_type(WebhookRotateSecretResponse, webhook, path=["response"])
+        assert_matches_type(APIResponseOfWebhookSecret, webhook, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -391,7 +391,7 @@ class TestWebhooks:
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(WebhookRotateSecretResponse, webhook, path=["response"])
+        assert_matches_type(APIResponseOfWebhookSecret, webhook, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -403,7 +403,7 @@ class TestWebhooks:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         webhook = response.parse()
-        assert_matches_type(WebhookRotateSecretResponse, webhook, path=["response"])
+        assert_matches_type(APIResponseOfWebhookSecret, webhook, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -415,7 +415,7 @@ class TestWebhooks:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             webhook = response.parse()
-            assert_matches_type(WebhookRotateSecretResponse, webhook, path=["response"])
+            assert_matches_type(APIResponseOfWebhookSecret, webhook, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -433,7 +433,7 @@ class TestWebhooks:
         webhook = client.webhooks.test(
             id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
         )
-        assert_matches_type(WebhookTestResponse, webhook, path=["response"])
+        assert_matches_type(APIResponseOfWebhookTest, webhook, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -445,7 +445,7 @@ class TestWebhooks:
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(WebhookTestResponse, webhook, path=["response"])
+        assert_matches_type(APIResponseOfWebhookTest, webhook, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -457,7 +457,7 @@ class TestWebhooks:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         webhook = response.parse()
-        assert_matches_type(WebhookTestResponse, webhook, path=["response"])
+        assert_matches_type(APIResponseOfWebhookTest, webhook, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -469,7 +469,7 @@ class TestWebhooks:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             webhook = response.parse()
-            assert_matches_type(WebhookTestResponse, webhook, path=["response"])
+            assert_matches_type(APIResponseOfWebhookTest, webhook, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -804,7 +804,7 @@ class TestAsyncWebhooks:
     @parametrize
     async def test_method_list_event_types(self, async_client: AsyncSent) -> None:
         webhook = await async_client.webhooks.list_event_types()
-        assert_matches_type(WebhookListEventTypesResponse, webhook, path=["response"])
+        assert_matches_type(APIResponseOfWebhookEventTypesList, webhook, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -812,7 +812,7 @@ class TestAsyncWebhooks:
         webhook = await async_client.webhooks.list_event_types(
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(WebhookListEventTypesResponse, webhook, path=["response"])
+        assert_matches_type(APIResponseOfWebhookEventTypesList, webhook, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -822,7 +822,7 @@ class TestAsyncWebhooks:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         webhook = await response.parse()
-        assert_matches_type(WebhookListEventTypesResponse, webhook, path=["response"])
+        assert_matches_type(APIResponseOfWebhookEventTypesList, webhook, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -832,7 +832,7 @@ class TestAsyncWebhooks:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             webhook = await response.parse()
-            assert_matches_type(WebhookListEventTypesResponse, webhook, path=["response"])
+            assert_matches_type(APIResponseOfWebhookEventTypesList, webhook, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -842,7 +842,7 @@ class TestAsyncWebhooks:
         webhook = await async_client.webhooks.list_events(
             id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
         )
-        assert_matches_type(AsyncWebhookEventsPage[WebhookListEventsResponse], webhook, path=["response"])
+        assert_matches_type(AsyncWebhookEventsPage[WebhookDelivery], webhook, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -854,7 +854,7 @@ class TestAsyncWebhooks:
             search="search",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(AsyncWebhookEventsPage[WebhookListEventsResponse], webhook, path=["response"])
+        assert_matches_type(AsyncWebhookEventsPage[WebhookDelivery], webhook, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -866,7 +866,7 @@ class TestAsyncWebhooks:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         webhook = await response.parse()
-        assert_matches_type(AsyncWebhookEventsPage[WebhookListEventsResponse], webhook, path=["response"])
+        assert_matches_type(AsyncWebhookEventsPage[WebhookDelivery], webhook, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -878,7 +878,7 @@ class TestAsyncWebhooks:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             webhook = await response.parse()
-            assert_matches_type(AsyncWebhookEventsPage[WebhookListEventsResponse], webhook, path=["response"])
+            assert_matches_type(AsyncWebhookEventsPage[WebhookDelivery], webhook, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -896,7 +896,7 @@ class TestAsyncWebhooks:
         webhook = await async_client.webhooks.rotate_secret(
             id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
         )
-        assert_matches_type(WebhookRotateSecretResponse, webhook, path=["response"])
+        assert_matches_type(APIResponseOfWebhookSecret, webhook, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -907,7 +907,7 @@ class TestAsyncWebhooks:
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(WebhookRotateSecretResponse, webhook, path=["response"])
+        assert_matches_type(APIResponseOfWebhookSecret, webhook, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -919,7 +919,7 @@ class TestAsyncWebhooks:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         webhook = await response.parse()
-        assert_matches_type(WebhookRotateSecretResponse, webhook, path=["response"])
+        assert_matches_type(APIResponseOfWebhookSecret, webhook, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -931,7 +931,7 @@ class TestAsyncWebhooks:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             webhook = await response.parse()
-            assert_matches_type(WebhookRotateSecretResponse, webhook, path=["response"])
+            assert_matches_type(APIResponseOfWebhookSecret, webhook, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -949,7 +949,7 @@ class TestAsyncWebhooks:
         webhook = await async_client.webhooks.test(
             id="d4f5a6b7-c8d9-4e0f-a1b2-c3d4e5f6a7b8",
         )
-        assert_matches_type(WebhookTestResponse, webhook, path=["response"])
+        assert_matches_type(APIResponseOfWebhookTest, webhook, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -961,7 +961,7 @@ class TestAsyncWebhooks:
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(WebhookTestResponse, webhook, path=["response"])
+        assert_matches_type(APIResponseOfWebhookTest, webhook, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -973,7 +973,7 @@ class TestAsyncWebhooks:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         webhook = await response.parse()
-        assert_matches_type(WebhookTestResponse, webhook, path=["response"])
+        assert_matches_type(APIResponseOfWebhookTest, webhook, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -985,7 +985,7 @@ class TestAsyncWebhooks:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             webhook = await response.parse()
-            assert_matches_type(WebhookTestResponse, webhook, path=["response"])
+            assert_matches_type(APIResponseOfWebhookTest, webhook, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

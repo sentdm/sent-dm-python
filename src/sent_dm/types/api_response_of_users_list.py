@@ -1,30 +1,19 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import List, Optional
+from typing import Optional
 
 from .._models import BaseModel
 from .api_meta import APIMeta
+from .users_list import UsersList
 from .error_detail import ErrorDetail
-from .user_response import UserResponse
-from .pagination_meta import PaginationMeta
 
-__all__ = ["UserListResponse", "Data"]
+__all__ = ["APIResponseOfUsersList"]
 
 
-class Data(BaseModel):
-    """The users in the organization."""
-
-    pagination: Optional[PaginationMeta] = None
-    """Pagination metadata for list responses"""
-
-    users: Optional[List[UserResponse]] = None
-    """The users on this page."""
-
-
-class UserListResponse(BaseModel):
+class APIResponseOfUsersList(BaseModel):
     """Standard API response envelope for all v3 endpoints"""
 
-    data: Optional[Data] = None
+    data: Optional[UsersList] = None
     """The users in the organization."""
 
     error: Optional[ErrorDetail] = None

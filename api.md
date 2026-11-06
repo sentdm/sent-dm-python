@@ -5,6 +5,11 @@ Types:
 ```python
 from sent_dm.types import (
     APIMeta,
+    APIResponseOfWebhookEventTypesList,
+    APIResponseOfWebhookEventsList,
+    APIResponseOfWebhookSecret,
+    APIResponseOfWebhookTest,
+    APIResponseOfWebhooksList,
     APIResponseWebhook,
     CallEvent,
     CallEventPayload,
@@ -13,20 +18,28 @@ from sent_dm.types import (
     ContactEvent,
     ContactEventPayload,
     ErrorDetail,
+    InboundMedia,
     InboundMessageEvent,
     InboundMessageEventPayload,
+    LinkEvent,
+    LinkEventPayload,
     MessageEvent,
     MessageEventPayload,
     MutationRequest,
+    PaginationCursors,
     PaginationMeta,
     TemplateEvent,
     TemplateEventPayload,
+    WebhookDelivery,
     WebhookEventType,
+    WebhookEventTypesList,
+    WebhookEventsList,
     WebhookResponse,
-    WebhookListEventTypesResponse,
-    WebhookListEventsResponse,
-    WebhookRotateSecretResponse,
-    WebhookTestResponse,
+    WebhookSecret,
+    WebhookSenderProfile,
+    WebhookSenderProfileConfig,
+    WebhookTest,
+    WebhooksList,
 )
 ```
 
@@ -37,10 +50,10 @@ Methods:
 - <code title="put /v3/webhooks/{id}">client.webhooks.<a href="./src/sent_dm/resources/webhooks.py">update</a>(id, \*\*<a href="src/sent_dm/types/webhook_update_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_webhook.py">APIResponseWebhook</a></code>
 - <code title="get /v3/webhooks">client.webhooks.<a href="./src/sent_dm/resources/webhooks.py">list</a>(\*\*<a href="src/sent_dm/types/webhook_list_params.py">params</a>) -> <a href="./src/sent_dm/types/webhook_response.py">SyncWebhooksPage[WebhookResponse]</a></code>
 - <code title="delete /v3/webhooks/{id}">client.webhooks.<a href="./src/sent_dm/resources/webhooks.py">delete</a>(id) -> None</code>
-- <code title="get /v3/webhooks/event-types">client.webhooks.<a href="./src/sent_dm/resources/webhooks.py">list_event_types</a>() -> <a href="./src/sent_dm/types/webhook_list_event_types_response.py">WebhookListEventTypesResponse</a></code>
-- <code title="get /v3/webhooks/{id}/events">client.webhooks.<a href="./src/sent_dm/resources/webhooks.py">list_events</a>(id, \*\*<a href="src/sent_dm/types/webhook_list_events_params.py">params</a>) -> <a href="./src/sent_dm/types/webhook_list_events_response.py">SyncWebhookEventsPage[WebhookListEventsResponse]</a></code>
-- <code title="post /v3/webhooks/{id}/rotate-secret">client.webhooks.<a href="./src/sent_dm/resources/webhooks.py">rotate_secret</a>(id, \*\*<a href="src/sent_dm/types/webhook_rotate_secret_params.py">params</a>) -> <a href="./src/sent_dm/types/webhook_rotate_secret_response.py">WebhookRotateSecretResponse</a></code>
-- <code title="post /v3/webhooks/{id}/test">client.webhooks.<a href="./src/sent_dm/resources/webhooks.py">test</a>(id, \*\*<a href="src/sent_dm/types/webhook_test_params.py">params</a>) -> <a href="./src/sent_dm/types/webhook_test_response.py">WebhookTestResponse</a></code>
+- <code title="get /v3/webhooks/event-types">client.webhooks.<a href="./src/sent_dm/resources/webhooks.py">list_event_types</a>() -> <a href="./src/sent_dm/types/api_response_of_webhook_event_types_list.py">APIResponseOfWebhookEventTypesList</a></code>
+- <code title="get /v3/webhooks/{id}/events">client.webhooks.<a href="./src/sent_dm/resources/webhooks.py">list_events</a>(id, \*\*<a href="src/sent_dm/types/webhook_list_events_params.py">params</a>) -> <a href="./src/sent_dm/types/webhook_delivery.py">SyncWebhookEventsPage[WebhookDelivery]</a></code>
+- <code title="post /v3/webhooks/{id}/rotate-secret">client.webhooks.<a href="./src/sent_dm/resources/webhooks.py">rotate_secret</a>(id, \*\*<a href="src/sent_dm/types/webhook_rotate_secret_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_of_webhook_secret.py">APIResponseOfWebhookSecret</a></code>
+- <code title="post /v3/webhooks/{id}/test">client.webhooks.<a href="./src/sent_dm/resources/webhooks.py">test</a>(id, \*\*<a href="src/sent_dm/types/webhook_test_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_of_webhook_test.py">APIResponseOfWebhookTest</a></code>
 - <code title="patch /v3/webhooks/{id}/toggle-status">client.webhooks.<a href="./src/sent_dm/resources/webhooks.py">toggle_status</a>(id, \*\*<a href="src/sent_dm/types/webhook_toggle_status_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_webhook.py">APIResponseWebhook</a></code>
 
 # Users
@@ -48,13 +61,13 @@ Methods:
 Types:
 
 ```python
-from sent_dm.types import APIResponseOfUser, UserResponse, UserListResponse
+from sent_dm.types import APIResponseOfUser, APIResponseOfUsersList, UserResponse, UsersList
 ```
 
 Methods:
 
 - <code title="get /v3/users/{userId}">client.users.<a href="./src/sent_dm/resources/users.py">retrieve</a>(user_id) -> <a href="./src/sent_dm/types/api_response_of_user.py">APIResponseOfUser</a></code>
-- <code title="get /v3/users">client.users.<a href="./src/sent_dm/resources/users.py">list</a>() -> <a href="./src/sent_dm/types/user_list_response.py">UserListResponse</a></code>
+- <code title="get /v3/users">client.users.<a href="./src/sent_dm/resources/users.py">list</a>() -> <a href="./src/sent_dm/types/api_response_of_users_list.py">APIResponseOfUsersList</a></code>
 - <code title="post /v3/users">client.users.<a href="./src/sent_dm/resources/users.py">invite</a>(\*\*<a href="src/sent_dm/types/user_invite_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_of_user.py">APIResponseOfUser</a></code>
 - <code title="delete /v3/users/{userId}">client.users.<a href="./src/sent_dm/resources/users.py">remove</a>(user_id, \*\*<a href="src/sent_dm/types/user_remove_params.py">params</a>) -> None</code>
 - <code title="patch /v3/users/{userId}">client.users.<a href="./src/sent_dm/resources/users.py">update_role</a>(user_id, \*\*<a href="src/sent_dm/types/user_update_role_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_of_user.py">APIResponseOfUser</a></code>
@@ -65,6 +78,7 @@ Types:
 
 ```python
 from sent_dm.types import (
+    APIResponseOfTemplatesList,
     APIResponseTemplate,
     AuthenticationConfig,
     Template,
@@ -75,7 +89,13 @@ from sent_dm.types import (
     TemplateDefinition,
     TemplateFooter,
     TemplateHeader,
+    TemplateHeaderLocation,
+    TemplateMediaItem,
+    TemplateMmsBodyContent,
+    TemplateRef,
     TemplateVariable,
+    TemplateVariableProps,
+    TemplatesList,
 )
 ```
 
@@ -93,19 +113,32 @@ Types:
 
 ```python
 from sent_dm.types import (
+    APIResponseOfProfileCompletionAccepted,
+    APIResponseOfProfileCompletionResult,
     APIResponseOfProfileDetail,
+    APIResponseOfProfilesList,
+    BillingContact,
     BillingContactInfo,
+    BrandBusiness,
     BrandBusinessInfo,
+    BrandCompliance,
     BrandComplianceInfo,
+    BrandContact,
     BrandContactInfo,
+    BrandWithKYC,
     BrandsBrandData,
     DestinationCountry,
+    EntityType,
     PaymentDetails,
+    ProfileCompletionAccepted,
+    ProfileCompletionResult,
     ProfileDetail,
+    ProfilesList,
+    TcrBrandIdentityStatus,
     TcrBrandRelationship,
+    TcrBrandStatus,
+    TcrCampaignStatus,
     TcrVertical,
-    ProfileListResponse,
-    ProfileCompleteResponse,
 )
 ```
 
@@ -114,9 +147,9 @@ Methods:
 - <code title="post /v3/profiles">client.profiles.<a href="./src/sent_dm/resources/profiles/profiles.py">create</a>(\*\*<a href="src/sent_dm/types/profile_create_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_of_profile_detail.py">APIResponseOfProfileDetail</a></code>
 - <code title="get /v3/profiles/{profileId}">client.profiles.<a href="./src/sent_dm/resources/profiles/profiles.py">retrieve</a>(profile_id) -> <a href="./src/sent_dm/types/api_response_of_profile_detail.py">APIResponseOfProfileDetail</a></code>
 - <code title="patch /v3/profiles/{profileId}">client.profiles.<a href="./src/sent_dm/resources/profiles/profiles.py">update</a>(profile_id, \*\*<a href="src/sent_dm/types/profile_update_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_of_profile_detail.py">APIResponseOfProfileDetail</a></code>
-- <code title="get /v3/profiles">client.profiles.<a href="./src/sent_dm/resources/profiles/profiles.py">list</a>() -> <a href="./src/sent_dm/types/profile_list_response.py">ProfileListResponse</a></code>
+- <code title="get /v3/profiles">client.profiles.<a href="./src/sent_dm/resources/profiles/profiles.py">list</a>() -> <a href="./src/sent_dm/types/api_response_of_profiles_list.py">APIResponseOfProfilesList</a></code>
 - <code title="delete /v3/profiles/{profileId}">client.profiles.<a href="./src/sent_dm/resources/profiles/profiles.py">delete</a>(profile_id, \*\*<a href="src/sent_dm/types/profile_delete_params.py">params</a>) -> None</code>
-- <code title="post /v3/profiles/{profileId}/complete">client.profiles.<a href="./src/sent_dm/resources/profiles/profiles.py">complete</a>(profile_id, \*\*<a href="src/sent_dm/types/profile_complete_params.py">params</a>) -> <a href="./src/sent_dm/types/profile_complete_response.py">ProfileCompleteResponse</a></code>
+- <code title="post /v3/profiles/{profileId}/complete">client.profiles.<a href="./src/sent_dm/resources/profiles/profiles.py">complete</a>(profile_id, \*\*<a href="src/sent_dm/types/profile_complete_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_of_profile_completion_result.py">APIResponseOfProfileCompletionResult</a></code>
 
 ## Campaigns
 
@@ -173,12 +206,12 @@ Methods:
 Types:
 
 ```python
-from sent_dm.types import NumberLookupResponse
+from sent_dm.types import APIResponseOfNumberLookupResult, NumberLookupResult
 ```
 
 Methods:
 
-- <code title="get /v3/numbers/lookup/{phoneNumber}">client.numbers.<a href="./src/sent_dm/resources/numbers.py">lookup</a>(phone_number) -> <a href="./src/sent_dm/types/number_lookup_response.py">NumberLookupResponse</a></code>
+- <code title="get /v3/numbers/lookup/{phoneNumber}">client.numbers.<a href="./src/sent_dm/resources/numbers.py">lookup</a>(phone_number) -> <a href="./src/sent_dm/types/api_response_of_number_lookup_result.py">APIResponseOfNumberLookupResult</a></code>
 
 # Messages
 
@@ -186,19 +219,31 @@ Types:
 
 ```python
 from sent_dm.types import (
+    APIResponseOfCancelledMessage,
+    APIResponseOfMessage,
+    APIResponseOfMessageActivities,
+    CancelledMessage,
+    Message,
+    MessageActivities,
+    MessageActivity,
+    MessageBody,
+    MessageButton,
+    MessageChannelOptions,
+    MessageHeaderMedia,
+    MessageMedia,
+    MessageRecipient,
     MessageSendResponse,
-    MessageCancelResponse,
-    MessageRetrieveActivitiesResponse,
-    MessageRetrieveStatusResponse,
+    MessageSendResult,
+    MessageStatusEvent,
 )
 ```
 
 Methods:
 
-- <code title="post /v3/messages/{id}/cancel">client.messages.<a href="./src/sent_dm/resources/messages.py">cancel</a>(id, \*\*<a href="src/sent_dm/types/message_cancel_params.py">params</a>) -> <a href="./src/sent_dm/types/message_cancel_response.py">MessageCancelResponse</a></code>
+- <code title="post /v3/messages/{id}/cancel">client.messages.<a href="./src/sent_dm/resources/messages.py">cancel</a>(id, \*\*<a href="src/sent_dm/types/message_cancel_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_of_cancelled_message.py">APIResponseOfCancelledMessage</a></code>
 - <code title="post /v3/messages/{id}/resend">client.messages.<a href="./src/sent_dm/resources/messages.py">resend</a>(id, \*\*<a href="src/sent_dm/types/message_resend_params.py">params</a>) -> <a href="./src/sent_dm/types/message_send_response.py">MessageSendResponse</a></code>
-- <code title="get /v3/messages/{id}/activities">client.messages.<a href="./src/sent_dm/resources/messages.py">retrieve_activities</a>(id) -> <a href="./src/sent_dm/types/message_retrieve_activities_response.py">MessageRetrieveActivitiesResponse</a></code>
-- <code title="get /v3/messages/{id}">client.messages.<a href="./src/sent_dm/resources/messages.py">retrieve_status</a>(id) -> <a href="./src/sent_dm/types/message_retrieve_status_response.py">MessageRetrieveStatusResponse</a></code>
+- <code title="get /v3/messages/{id}/activities">client.messages.<a href="./src/sent_dm/resources/messages.py">retrieve_activities</a>(id) -> <a href="./src/sent_dm/types/api_response_of_message_activities.py">APIResponseOfMessageActivities</a></code>
+- <code title="get /v3/messages/{id}">client.messages.<a href="./src/sent_dm/resources/messages.py">retrieve_status</a>(id) -> <a href="./src/sent_dm/types/api_response_of_message.py">APIResponseOfMessage</a></code>
 - <code title="post /v3/messages">client.messages.<a href="./src/sent_dm/resources/messages.py">send</a>(\*\*<a href="src/sent_dm/types/message_send_params.py">params</a>) -> <a href="./src/sent_dm/types/message_send_response.py">MessageSendResponse</a></code>
 
 # Contacts
@@ -209,8 +254,11 @@ Types:
 from sent_dm.types import (
     APIResponseOfContact,
     APIResponseOfContactMessageSummary,
+    APIResponseOfContactsList,
+    ChannelScore,
     ContactMessageSummary,
     ContactResponse,
+    ContactsList,
 )
 ```
 
@@ -233,8 +281,8 @@ from sent_dm.types import APIResponseOfConversationMessagesList, ConversationMes
 
 Methods:
 
-- <code title="get /v3/conversations">client.conversations.<a href="./src/sent_dm/resources/conversations.py">list</a>(\*\*<a href="src/sent_dm/types/conversation_list_params.py">params</a>) -> SyncConversationsPage[Message]</code>
-- <code title="get /v3/conversations/{id}">client.conversations.<a href="./src/sent_dm/resources/conversations.py">list_messages</a>(id, \*\*<a href="src/sent_dm/types/conversation_list_messages_params.py">params</a>) -> SyncConversationsPage[Message]</code>
+- <code title="get /v3/conversations">client.conversations.<a href="./src/sent_dm/resources/conversations.py">list</a>(\*\*<a href="src/sent_dm/types/conversation_list_params.py">params</a>) -> <a href="./src/sent_dm/types/message.py">SyncConversationsPage[Message]</a></code>
+- <code title="get /v3/conversations/{id}">client.conversations.<a href="./src/sent_dm/resources/conversations.py">list_messages</a>(id, \*\*<a href="src/sent_dm/types/conversation_list_messages_params.py">params</a>) -> <a href="./src/sent_dm/types/message.py">SyncConversationsPage[Message]</a></code>
 
 # Voice
 
@@ -248,6 +296,7 @@ from sent_dm.types.voice import (
     APIResponseOfCallRecordings,
     APIResponseOfCallsList,
     Call,
+    CallLeg,
     CallParty,
     CallRecording,
     CallRecordings,
@@ -366,6 +415,8 @@ from sent_dm.types.channels import (
     SMSMarket,
     SMSNumber,
     SMSNumberRequest,
+    SuppliedCompliance,
+    SuppliedDocument,
 )
 ```
 
@@ -453,9 +504,18 @@ Methods:
 Types:
 
 ```python
-from sent_dm.types import ProfileSettings, MeRetrieveResponse
+from sent_dm.types import (
+    Account,
+    AccountChannels,
+    AccountProfile,
+    AccountRcsChannel,
+    AccountSMSChannel,
+    AccountWhatsappChannel,
+    APIResponseOfAccount,
+    ProfileSettings,
+)
 ```
 
 Methods:
 
-- <code title="get /v3/me">client.me.<a href="./src/sent_dm/resources/me.py">retrieve</a>() -> <a href="./src/sent_dm/types/me_retrieve_response.py">MeRetrieveResponse</a></code>
+- <code title="get /v3/me">client.me.<a href="./src/sent_dm/resources/me.py">retrieve</a>() -> <a href="./src/sent_dm/types/api_response_of_account.py">APIResponseOfAccount</a></code>

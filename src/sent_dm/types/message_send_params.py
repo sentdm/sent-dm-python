@@ -8,8 +8,10 @@ from typing_extensions import Annotated, TypedDict
 
 from .._types import SequenceNotStr
 from .._utils import PropertyInfo
+from .template_ref_param import TemplateRefParam
+from .message_channel_options_param import MessageChannelOptionsParam
 
-__all__ = ["MessageSendParams", "Channel", "Template"]
+__all__ = ["MessageSendParams"]
 
 
 class MessageSendParams(TypedDict, total=False):
@@ -20,7 +22,7 @@ class MessageSendParams(TypedDict, total=False):
     "sent" = auto-detect. Defaults to ["sent"] (auto-detect) if omitted.
     """
 
-    channels: Optional[Dict[str, Iterable[Channel]]]
+    channels: Optional[Dict[str, Iterable[MessageChannelOptionsParam]]]
     """
     Which of your own numbers to send from, keyed by channel, each channel holding a
     list of entries: {"sms": [{"country": "US", "from": ["+12125550000",
@@ -94,7 +96,7 @@ class MessageSendParams(TypedDict, total=False):
     body, some ignore it entirely.
     """
 
-    template: Optional[Template]
+    template: Optional[TemplateRefParam]
     """
     SDK-style template reference: resolve by ID or by name, with optional
     parameters.
@@ -109,60 +111,3 @@ class MessageSendParams(TypedDict, total=False):
     idempotency_key: Annotated[str, PropertyInfo(alias="Idempotency-Key")]
 
     x_profile_id: Annotated[str, PropertyInfo(alias="x-profile-id")]
-
-
-_ChannelReservedKeywords = TypedDict(
-    "_ChannelReservedKeywords",
-    {
-        "from": Optional[SequenceNotStr[str]],
-    },
-    total=False,
-)
-
-
-class Channel(_ChannelReservedKeywords, total=False):
-    """
-    One entry of a channel's list in Channels, e.g.
-    {"country": "US", "from": ["+15559990002", "+15559990003"], "strategy": "sticky"}.
-    """
-
-    country: Optional[str]
-    """Recipient country this entry is meant for (ISO 3166-1 alpha-2, e.g.
-
-    US). Optional. Accepted and stored, not acted on yet.
-    """
-
-    strategy: Optional[str]
-    """How to pick a number from From, e.g.
-
-    sticky or geo. Optional. Accepted and stored, not acted on yet.
-    """
-
-
-class Template(TypedDict, total=False):
-    """
-    SDK-style template reference: resolve by ID or by name, with optional parameters.
-    """
-
-    id: Optional[str]
-    """Template ID (mutually exclusive with name)"""
-
-    name: Optional[str]
-    """Template name (mutually exclusive with id)"""
-
-    parameters: Optional[Dict[str, str]]
-    """Template variable parameters for personalization, keyed by variable name.
-
-    Every variable the template declares is required; GET /v3/templates/{id} lists
-    them. Supplying a key the template does not declare is ignored.
-
-    Media headers. A template whose header is an image (designed in WhatsApp Manager
-    and imported into Sent) declares a reserved header_image key. Its value is a
-    publicly reachable https URL that Meta fetches at send time — Sent does not host
-    the asset, and the sample approved with the template is not reused. The key is
-    derived from the header's media type, so header_video and header_document follow
-    the same shape when those formats ship.
-
-    "parameters": { "header_image": "https://cdn.example.com/banner.jpg", "name":
-    "John Doe" }
-    """

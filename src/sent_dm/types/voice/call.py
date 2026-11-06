@@ -5,37 +5,12 @@ from datetime import datetime
 
 from pydantic import Field as FieldInfo
 
+from .call_leg import CallLeg
 from ..._models import BaseModel
 from .call_party import CallParty
 from .call_timeline_entry import CallTimelineEntry
 
-__all__ = ["Call", "Leg"]
-
-
-class Leg(BaseModel):
-    """One leg of a call the price covers"""
-
-    billed_minutes: Optional[int] = None
-    """The whole minutes the leg was billed for"""
-
-    cost: Optional[float] = None
-    """What the leg cost, in the same unit as the call's price"""
-
-    currency: Optional[str] = None
-    """The currency of the cost: USD"""
-
-    direction: Optional[str] = None
-    """
-    inbound for the caller's leg to your number, outbound for a leg placed on your
-    behalf
-    """
-
-    number: Optional[str] = None
-    """
-    The phone number the leg reached, in E.164 format: your number for the inbound
-    leg, the number dialed for an outbound one. Null for a leg to one of your app
-    users or a room
-    """
+__all__ = ["Call"]
 
 
 class Call(BaseModel):
@@ -96,7 +71,7 @@ class Call(BaseModel):
     from_: Optional[CallParty] = FieldInfo(alias="from", default=None)
     """One end of a call"""
 
-    legs: Optional[List[Leg]] = None
+    legs: Optional[List[CallLeg]] = None
     """
     The legs the price covers, one entry per billed leg, each with its own cost: a
     call your answer connected to a phone number ran the caller's leg to your number

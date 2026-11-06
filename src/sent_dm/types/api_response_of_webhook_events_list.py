@@ -5,23 +5,16 @@ from typing import Optional
 from .._models import BaseModel
 from .api_meta import APIMeta
 from .error_detail import ErrorDetail
+from .webhook_events_list import WebhookEventsList
 
-__all__ = ["WebhookTestResponse", "Data"]
-
-
-class Data(BaseModel):
-    """The response data (null if error)"""
-
-    message: Optional[str] = None
-
-    success: Optional[bool] = None
+__all__ = ["APIResponseOfWebhookEventsList"]
 
 
-class WebhookTestResponse(BaseModel):
+class APIResponseOfWebhookEventsList(BaseModel):
     """Standard API response envelope for all v3 endpoints"""
 
-    data: Optional[Data] = None
-    """The response data (null if error)"""
+    data: Optional[WebhookEventsList] = None
+    """A paginated list of webhook delivery records."""
 
     error: Optional[ErrorDetail] = None
     """Error information"""
