@@ -33,11 +33,11 @@ from ..._response import (
 )
 from ..._base_client import make_request_options
 from ...types.payment_details_param import PaymentDetailsParam
-from ...types.profile_list_response import ProfileListResponse
 from ...types.brands_brand_data_param import BrandsBrandDataParam
-from ...types.profile_complete_response import ProfileCompleteResponse
 from ...types.billing_contact_info_param import BillingContactInfoParam
+from ...types.api_response_of_profiles_list import APIResponseOfProfilesList
 from ...types.api_response_of_profile_detail import APIResponseOfProfileDetail
+from ...types.api_response_of_profile_completion_result import APIResponseOfProfileCompletionResult
 
 __all__ = ["ProfilesResource", "AsyncProfilesResource"]
 
@@ -502,7 +502,7 @@ class ProfilesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ProfileListResponse:
+    ) -> APIResponseOfProfilesList:
         """
         **Deprecated.** This endpoint is replaced by `/v3/sender-profiles` and will be
         removed in a future release. It still behaves exactly as before, so nothing
@@ -530,7 +530,7 @@ class ProfilesResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ProfileListResponse,
+            cast_to=APIResponseOfProfilesList,
         )
 
     @typing_extensions.deprecated("deprecated")
@@ -607,7 +607,7 @@ class ProfilesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ProfileCompleteResponse:
+    ) -> APIResponseOfProfileCompletionResult:
         """
         **Deprecated.** This endpoint is replaced by `/v3/sender-profiles` and will be
         removed in a future release. It still behaves exactly as before, so nothing
@@ -690,7 +690,7 @@ class ProfilesResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ProfileCompleteResponse,
+            cast_to=APIResponseOfProfileCompletionResult,
         )
 
 
@@ -1154,7 +1154,7 @@ class AsyncProfilesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ProfileListResponse:
+    ) -> APIResponseOfProfilesList:
         """
         **Deprecated.** This endpoint is replaced by `/v3/sender-profiles` and will be
         removed in a future release. It still behaves exactly as before, so nothing
@@ -1182,7 +1182,7 @@ class AsyncProfilesResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ProfileListResponse,
+            cast_to=APIResponseOfProfilesList,
         )
 
     @typing_extensions.deprecated("deprecated")
@@ -1259,7 +1259,7 @@ class AsyncProfilesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ProfileCompleteResponse:
+    ) -> APIResponseOfProfileCompletionResult:
         """
         **Deprecated.** This endpoint is replaced by `/v3/sender-profiles` and will be
         removed in a future release. It still behaves exactly as before, so nothing
@@ -1342,7 +1342,7 @@ class AsyncProfilesResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ProfileCompleteResponse,
+            cast_to=APIResponseOfProfileCompletionResult,
         )
 
 
