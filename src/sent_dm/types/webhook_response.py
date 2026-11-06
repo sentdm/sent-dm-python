@@ -4,21 +4,9 @@ from typing import Dict, List, Optional
 from datetime import datetime
 
 from .._models import BaseModel
+from .webhook_sender_profile import WebhookSenderProfile
 
-__all__ = ["WebhookResponse", "SenderProfile"]
-
-
-class SenderProfile(BaseModel):
-    """
-    The events a version 1 webhook's sender profile clones receive, as a response reports them.
-
-    Its own type, field for field the same as the request's sender_profile. A response is not
-    a request, whatever it carries.
-    """
-
-    event_filters: Optional[Dict[str, List[str]]] = None
-
-    event_types: Optional[List[str]] = None
+__all__ = ["WebhookResponse"]
 
 
 class WebhookResponse(BaseModel):
@@ -70,7 +58,7 @@ class WebhookResponse(BaseModel):
 
     retry_count: Optional[int] = None
 
-    sender_profile: Optional[SenderProfile] = None
+    sender_profile: Optional[WebhookSenderProfile] = None
     """
     The events a version 1 webhook's sender profile clones receive, as a response
     reports them.

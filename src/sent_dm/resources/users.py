@@ -16,8 +16,8 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
-from ..types.user_list_response import UserListResponse
 from ..types.api_response_of_user import APIResponseOfUser
+from ..types.api_response_of_users_list import APIResponseOfUsersList
 
 __all__ = ["UsersResource", "AsyncUsersResource"]
 
@@ -93,7 +93,7 @@ class UsersResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> UserListResponse:
+    ) -> APIResponseOfUsersList:
         """
         Retrieves all users who have access to the organization or profile identified by
         the API key, including their roles and status. Shows invited users (pending
@@ -114,7 +114,7 @@ class UsersResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=UserListResponse,
+            cast_to=APIResponseOfUsersList,
         )
 
     def invite(
@@ -357,7 +357,7 @@ class AsyncUsersResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> UserListResponse:
+    ) -> APIResponseOfUsersList:
         """
         Retrieves all users who have access to the organization or profile identified by
         the API key, including their roles and status. Shows invited users (pending
@@ -378,7 +378,7 @@ class AsyncUsersResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=UserListResponse,
+            cast_to=APIResponseOfUsersList,
         )
 
     async def invite(
