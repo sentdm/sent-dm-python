@@ -35,6 +35,10 @@ __all__ = [
     "VoiceAgentsPagePagination",
     "SyncVoiceAgentsPage",
     "AsyncVoiceAgentsPage",
+    "SenderProfilesPageData",
+    "SenderProfilesPagePagination",
+    "SyncSenderProfilesPage",
+    "AsyncSenderProfilesPage",
 ]
 
 _T = TypeVar("_T")
@@ -594,6 +598,88 @@ class AsyncVoiceAgentsPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
         if not agents:
             return []
         return agents
+
+    @override
+    def has_next_page(self) -> bool:
+        has_more = None
+        if self.data is not None:
+            if self.data.pagination is not None:
+                if self.data.pagination.has_more is not None:
+                    has_more = self.data.pagination.has_more
+        if has_more is not None and has_more is False:
+            return False
+
+        return super().has_next_page()
+
+    @override
+    def next_page_info(self) -> Optional[PageInfo]:
+        last_page = cast("int | None", self._options.params.get("page")) or 1
+
+        return PageInfo(params={"page": last_page + 1})
+
+
+class SenderProfilesPagePagination(BaseModel):
+    has_more: Optional[bool] = None
+
+    page: Optional[int] = None
+
+    page_size: Optional[int] = None
+
+    total_count: Optional[int] = None
+
+    total_pages: Optional[int] = None
+
+
+class SenderProfilesPageData(GenericModel, Generic[_T]):
+    pagination: Optional[SenderProfilesPagePagination] = None
+
+    sender_profiles: Optional[List[_T]] = None
+
+
+class SyncSenderProfilesPage(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
+    data: Optional[SenderProfilesPageData[_T]] = None
+
+    @override
+    def _get_page_items(self) -> List[_T]:
+        sender_profiles = None
+        if self.data is not None:
+            if self.data.sender_profiles is not None:
+                sender_profiles = self.data.sender_profiles
+        if not sender_profiles:
+            return []
+        return sender_profiles
+
+    @override
+    def has_next_page(self) -> bool:
+        has_more = None
+        if self.data is not None:
+            if self.data.pagination is not None:
+                if self.data.pagination.has_more is not None:
+                    has_more = self.data.pagination.has_more
+        if has_more is not None and has_more is False:
+            return False
+
+        return super().has_next_page()
+
+    @override
+    def next_page_info(self) -> Optional[PageInfo]:
+        last_page = cast("int | None", self._options.params.get("page")) or 1
+
+        return PageInfo(params={"page": last_page + 1})
+
+
+class AsyncSenderProfilesPage(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
+    data: Optional[SenderProfilesPageData[_T]] = None
+
+    @override
+    def _get_page_items(self) -> List[_T]:
+        sender_profiles = None
+        if self.data is not None:
+            if self.data.sender_profiles is not None:
+                sender_profiles = self.data.sender_profiles
+        if not sender_profiles:
+            return []
+        return sender_profiles
 
     @override
     def has_next_page(self) -> bool:

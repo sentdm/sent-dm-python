@@ -141,6 +141,33 @@ Methods:
 - <code title="get /v3/profiles/{profileId}/campaigns">client.profiles.campaigns.<a href="./src/sent_dm/resources/profiles/campaigns.py">list</a>(profile_id) -> <a href="./src/sent_dm/types/profiles/api_response_of_list_of_brand_campaign.py">APIResponseOfListOfBrandCampaign</a></code>
 - <code title="delete /v3/profiles/{profileId}/campaigns/{campaignId}">client.profiles.campaigns.<a href="./src/sent_dm/resources/profiles/campaigns.py">delete</a>(campaign_id, \*, profile_id, \*\*<a href="src/sent_dm/types/profiles/campaign_delete_params.py">params</a>) -> None</code>
 
+# SenderProfiles
+
+Types:
+
+```python
+from sent_dm.types import (
+    APIResponseOfSenderProfile,
+    APIResponseOfSenderProfilesList,
+    SenderProfile,
+    SenderProfileBilling,
+    SenderProfileBillingRequest,
+    SenderProfileChannels,
+    SenderProfileRcs,
+    SenderProfileSMS,
+    SenderProfileWhatsapp,
+    SenderProfilesList,
+)
+```
+
+Methods:
+
+- <code title="post /v3/sender-profiles">client.sender_profiles.<a href="./src/sent_dm/resources/sender_profiles.py">create</a>(\*\*<a href="src/sent_dm/types/sender_profile_create_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_of_sender_profile.py">APIResponseOfSenderProfile</a></code>
+- <code title="get /v3/sender-profiles/{id}">client.sender_profiles.<a href="./src/sent_dm/resources/sender_profiles.py">retrieve</a>(id) -> <a href="./src/sent_dm/types/api_response_of_sender_profile.py">APIResponseOfSenderProfile</a></code>
+- <code title="patch /v3/sender-profiles/{id}">client.sender_profiles.<a href="./src/sent_dm/resources/sender_profiles.py">update</a>(id, \*\*<a href="src/sent_dm/types/sender_profile_update_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_of_sender_profile.py">APIResponseOfSenderProfile</a></code>
+- <code title="get /v3/sender-profiles">client.sender_profiles.<a href="./src/sent_dm/resources/sender_profiles.py">list</a>(\*\*<a href="src/sent_dm/types/sender_profile_list_params.py">params</a>) -> <a href="./src/sent_dm/types/sender_profile.py">SyncSenderProfilesPage[SenderProfile]</a></code>
+- <code title="delete /v3/sender-profiles/{id}">client.sender_profiles.<a href="./src/sent_dm/resources/sender_profiles.py">delete</a>(id) -> None</code>
+
 # Numbers
 
 Types:
@@ -160,6 +187,7 @@ Types:
 ```python
 from sent_dm.types import (
     MessageSendResponse,
+    MessageCancelResponse,
     MessageRetrieveActivitiesResponse,
     MessageRetrieveStatusResponse,
 )
@@ -167,6 +195,7 @@ from sent_dm.types import (
 
 Methods:
 
+- <code title="post /v3/messages/{id}/cancel">client.messages.<a href="./src/sent_dm/resources/messages.py">cancel</a>(id, \*\*<a href="src/sent_dm/types/message_cancel_params.py">params</a>) -> <a href="./src/sent_dm/types/message_cancel_response.py">MessageCancelResponse</a></code>
 - <code title="post /v3/messages/{id}/resend">client.messages.<a href="./src/sent_dm/resources/messages.py">resend</a>(id, \*\*<a href="src/sent_dm/types/message_resend_params.py">params</a>) -> <a href="./src/sent_dm/types/message_send_response.py">MessageSendResponse</a></code>
 - <code title="get /v3/messages/{id}/activities">client.messages.<a href="./src/sent_dm/resources/messages.py">retrieve_activities</a>(id) -> <a href="./src/sent_dm/types/message_retrieve_activities_response.py">MessageRetrieveActivitiesResponse</a></code>
 - <code title="get /v3/messages/{id}">client.messages.<a href="./src/sent_dm/resources/messages.py">retrieve_status</a>(id) -> <a href="./src/sent_dm/types/message_retrieve_status_response.py">MessageRetrieveStatusResponse</a></code>
@@ -315,6 +344,62 @@ Methods:
 
 # Channels
 
+Types:
+
+```python
+from sent_dm.types import APIResponseOfChannelsState, ChannelsState, MmsMarket
+```
+
+Methods:
+
+- <code title="get /v3/channels">client.channels.<a href="./src/sent_dm/resources/channels/channels.py">list</a>() -> <a href="./src/sent_dm/types/api_response_of_channels_state.py">APIResponseOfChannelsState</a></code>
+
+## SMS
+
+Types:
+
+```python
+from sent_dm.types.channels import (
+    APIResponseOfListOfSMSMarket,
+    APIResponseOfSMSMarket,
+    MarketCompliance,
+    SMSMarket,
+    SMSNumber,
+    SMSNumberRequest,
+)
+```
+
+Methods:
+
+- <code title="post /v3/channels/sms">client.channels.sms.<a href="./src/sent_dm/resources/channels/sms.py">create</a>(\*\*<a href="src/sent_dm/types/channels/sms_create_params.py">params</a>) -> <a href="./src/sent_dm/types/channels/api_response_of_sms_market.py">APIResponseOfSMSMarket</a></code>
+- <code title="get /v3/channels/sms/{country}/{type}">client.channels.sms.<a href="./src/sent_dm/resources/channels/sms.py">retrieve</a>(type, \*, country) -> <a href="./src/sent_dm/types/channels/api_response_of_sms_market.py">APIResponseOfSMSMarket</a></code>
+- <code title="patch /v3/channels/sms/{country}/{type}">client.channels.sms.<a href="./src/sent_dm/resources/channels/sms.py">update</a>(type, \*, country, \*\*<a href="src/sent_dm/types/channels/sms_update_params.py">params</a>) -> <a href="./src/sent_dm/types/channels/api_response_of_sms_market.py">APIResponseOfSMSMarket</a></code>
+- <code title="get /v3/channels/sms">client.channels.sms.<a href="./src/sent_dm/resources/channels/sms.py">list</a>() -> <a href="./src/sent_dm/types/channels/api_response_of_list_of_sms_market.py">APIResponseOfListOfSMSMarket</a></code>
+
+## Rcs
+
+Types:
+
+```python
+from sent_dm.types.channels import APIResponseOfRcsAgent, RcsAddress, RcsAgent
+```
+
+Methods:
+
+- <code title="post /v3/channels/rcs">client.channels.rcs.<a href="./src/sent_dm/resources/channels/rcs.py">create</a>(\*\*<a href="src/sent_dm/types/channels/rc_create_params.py">params</a>) -> <a href="./src/sent_dm/types/channels/api_response_of_rcs_agent.py">APIResponseOfRcsAgent</a></code>
+
+## Whatsapp
+
+Types:
+
+```python
+from sent_dm.types.channels import APIResponseOfWhatsappChannel, WhatsappChannel
+```
+
+Methods:
+
+- <code title="post /v3/channels/whatsapp">client.channels.whatsapp.<a href="./src/sent_dm/resources/channels/whatsapp.py">create</a>(\*\*<a href="src/sent_dm/types/channels/whatsapp_create_params.py">params</a>) -> <a href="./src/sent_dm/types/channels/api_response_of_whatsapp_channel.py">APIResponseOfWhatsappChannel</a></code>
+
 ## Voice
 
 Types:
@@ -344,6 +429,24 @@ Methods:
 - <code title="get /v3/channels/voice">client.channels.voice.<a href="./src/sent_dm/resources/channels/voice.py">list</a>() -> <a href="./src/sent_dm/types/channels/api_response_of_list_of_voice_number.py">APIResponseOfListOfVoiceNumber</a></code>
 - <code title="post /v3/channels/voice/{number}/rotate-secret">client.channels.voice.<a href="./src/sent_dm/resources/channels/voice.py">rotate_secret</a>(number, \*\*<a href="src/sent_dm/types/channels/voice_rotate_secret_params.py">params</a>) -> <a href="./src/sent_dm/types/channels/api_response_of_voice_secret.py">APIResponseOfVoiceSecret</a></code>
 - <code title="post /v3/channels/voice/{number}/test">client.channels.voice.<a href="./src/sent_dm/resources/channels/voice.py">test</a>(number, \*\*<a href="src/sent_dm/types/channels/voice_test_params.py">params</a>) -> <a href="./src/sent_dm/types/channels/api_response_of_voice_callback_test.py">APIResponseOfVoiceCallbackTest</a></code>
+
+# Compliance
+
+Types:
+
+```python
+from sent_dm.types import (
+    APIResponseOfComplianceRequirements,
+    ComplianceAttachmentTemplate,
+    ComplianceRequirement,
+    ComplianceRequirements,
+    ComplianceSetupStep,
+)
+```
+
+Methods:
+
+- <code title="get /v3/compliance/requirements">client.compliance.<a href="./src/sent_dm/resources/compliance.py">retrieve_requirements</a>(\*\*<a href="src/sent_dm/types/compliance_retrieve_requirements_params.py">params</a>) -> <a href="./src/sent_dm/types/api_response_of_compliance_requirements.py">APIResponseOfComplianceRequirements</a></code>
 
 # Me
 
