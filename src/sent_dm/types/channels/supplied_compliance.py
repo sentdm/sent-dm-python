@@ -57,6 +57,27 @@ class SuppliedCompliance(BaseModel):
     do.
     """
 
+    campaigns: Optional[List[Dict[str, object]]] = None
+    """
+    Every campaign this market registers, each with inherit saying whose it is —
+    oldest first.
+
+    A list, because a market can now be on more than one. POST
+    /v3/channels/sms/compliances/US/TEN_DLC/campaigns adds a campaign of the
+    customer's own beside the one it has, and a profile running on its
+    organization's campaign keeps that one when it adds its own. Campaign can only
+    show one of them, so it stays as it was, for callers that read it, and this is
+    where the rest are.
+
+    The organization's campaign reads "inherit": true and the customer's own read
+    "inherit": false. Each entry is the shape of Campaign plus id, the campaign's
+    own id, so several can be told apart. Campaign carries no id, because it is sent
+    back to PATCH, which refuses a key it does not declare; this list is read-only.
+
+    Absent for a market that registers with nobody; empty for one that registers and
+    has no campaign yet.
+    """
+
     documents: Optional[List[SuppliedDocument]] = None
     """What has been supplied for this market.
 
