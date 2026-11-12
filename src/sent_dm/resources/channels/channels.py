@@ -12,14 +12,6 @@ from .rcs import (
     RcsResourceWithStreamingResponse,
     AsyncRcsResourceWithStreamingResponse,
 )
-from .sms import (
-    SMSResource,
-    AsyncSMSResource,
-    SMSResourceWithRawResponse,
-    AsyncSMSResourceWithRawResponse,
-    SMSResourceWithStreamingResponse,
-    AsyncSMSResourceWithStreamingResponse,
-)
 from .voice import (
     VoiceResource,
     AsyncVoiceResource,
@@ -27,6 +19,14 @@ from .voice import (
     AsyncVoiceResourceWithRawResponse,
     VoiceResourceWithStreamingResponse,
     AsyncVoiceResourceWithStreamingResponse,
+)
+from .sms.sms import (
+    SMSResource,
+    AsyncSMSResource,
+    SMSResourceWithRawResponse,
+    AsyncSMSResourceWithRawResponse,
+    SMSResourceWithStreamingResponse,
+    AsyncSMSResourceWithStreamingResponse,
 )
 from ..._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
 from ..._utils import strip_not_given
