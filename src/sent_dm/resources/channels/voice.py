@@ -319,13 +319,6 @@ class VoiceResource(SyncAPIResource):
               ignoring case. Turning the default line off is refused while other active voice
               numbers remain.
 
-              - `ACTIVE` - Turns calls on for the number again. The callback URL and the
-                signing secret it had are kept; send `callback_url` in the same call to
-                replace the URL.
-              - `INACTIVE` - Turns calls off for the number. Refused while the number is the
-                default line for app calls and other active voice numbers remain; move the
-                default first. The callback URL and the secret stay on the number.
-
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -809,13 +802,6 @@ class AsyncVoiceResource(AsyncAPIResource):
           status: ACTIVE turns calls on for the number again, INACTIVE turns them off. Matched
               ignoring case. Turning the default line off is refused while other active voice
               numbers remain.
-
-              - `ACTIVE` - Turns calls on for the number again. The callback URL and the
-                signing secret it had are kept; send `callback_url` in the same call to
-                replace the URL.
-              - `INACTIVE` - Turns calls off for the number. Refused while the number is the
-                default line for app calls and other active voice numbers remain; move the
-                default first. The callback URL and the secret stay on the number.
 
           extra_headers: Send extra headers
 
