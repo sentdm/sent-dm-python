@@ -17,16 +17,6 @@ class RcCreateParams(TypedDict, total=False):
     """Which kind of traffic the agent carries.
 
     One of the accepted use cases; the error names the set.
-
-    - `VERIFICATION` - One-time passcodes and identity checks. Expects no reply, and
-      is held to the strictest delivery review.
-    - `NOTIFICATIONS` - Transactional updates the recipient asked for — orders,
-      deliveries, appointments, account activity.
-    - `MARKETING` - Promotional content. Requires the clearest opt-in evidence of
-      the four, because the carriers review consent hardest here.
-    - `MULTI_USE` - More than one of the above from a single agent. Vetted against
-      the strictest use case it covers, so declare it only if you genuinely need one
-      agent to do several jobs.
     """
 
     banner_url: str
