@@ -17,6 +17,14 @@ class SMSNumber(BaseModel):
          or null when it was asked for in any area code.
     """
 
+    campaign_id: Optional[str] = None
+    """
+    The campaign the number is on, or is owed for: the id of its entry in
+    compliance.campaigns. Omitted for a market that registers no campaigns, and
+    where the campaign is not known — a number recorded without one, or one owed on
+    a campaign inherited from the organization.
+    """
+
     sender_value: Optional[str] = None
     """The number, or null while it is still to be assigned."""
 
