@@ -7,22 +7,30 @@ from typing_extensions import Literal
 
 import httpx
 
-from ..._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
-from ..._utils import path_template, maybe_transform, strip_not_given, async_maybe_transform
-from ..._compat import cached_property
-from ..._resource import SyncAPIResource, AsyncAPIResource
-from ..._response import (
+from .ten_dlc import (
+    TenDlcResource,
+    AsyncTenDlcResource,
+    TenDlcResourceWithRawResponse,
+    AsyncTenDlcResourceWithRawResponse,
+    TenDlcResourceWithStreamingResponse,
+    AsyncTenDlcResourceWithStreamingResponse,
+)
+from ...._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
+from ...._utils import path_template, maybe_transform, strip_not_given, async_maybe_transform
+from ...._compat import cached_property
+from ...._resource import SyncAPIResource, AsyncAPIResource
+from ...._response import (
     to_raw_response_wrapper,
     to_streamed_response_wrapper,
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ..._base_client import make_request_options
-from ...types.channels import sms_create_params, sms_update_params
-from ...types.channels.market_compliance_param import MarketComplianceParam
-from ...types.channels.sms_number_request_param import SMSNumberRequestParam
-from ...types.channels.api_response_of_sms_market import APIResponseOfSMSMarket
-from ...types.channels.api_response_of_list_of_sms_market import APIResponseOfListOfSMSMarket
+from ...._base_client import make_request_options
+from ....types.channels import sms_create_params, sms_update_params
+from ....types.channels.market_compliance_param import MarketComplianceParam
+from ....types.channels.sms_number_request_param import SMSNumberRequestParam
+from ....types.channels.api_response_of_sms_market import APIResponseOfSMSMarket
+from ....types.channels.api_response_of_list_of_sms_market import APIResponseOfListOfSMSMarket
 
 __all__ = ["SMSResource", "AsyncSMSResource"]
 
@@ -40,6 +48,22 @@ class SMSResource(SyncAPIResource):
 
     Call `GET /v3/compliance/requirements` first — it answers what a market demands before you hold it, with a body you can fill in and post.
     """
+
+    @cached_property
+    def ten_dlc(self) -> TenDlcResource:
+        """The senders you send from, one per channel.
+
+        **SMS is a list of markets**, each keyed by `(country, number_type)` — a customer can hold `us/10dlc` and `gb/alphanumeric` at once, so a market is addressed by the pair rather than by country alone. **WhatsApp and RCS are single**: a customer has one business account and one agent. **Voice is per number**: each number you hold can carry phone calls on its own (`POST /v3/channels/voice`), each with the callback URL Sent asks what to do with its calls, one of them is the default line for calls placed from your app, and voice tokens are minted with `POST /v3/voice/tokens`. Read your voice numbers with `GET /v3/channels/voice` and change one with `PATCH /v3/channels/voice/{number}`.
+
+        ## Compliance lives on the market
+
+        Adding a market records everything that market registers with, in its `compliance` object. Only **US `TEN_DLC`** registers with a regime — The Campaign Registry — and it is the only market whose compliance carries `brand` and `campaign`. Everywhere else compliance is documents, and many markets ask for none at all.
+
+        `GET` and `PATCH` on a market return and accept the same shape, so what comes back can be sent back: an omitted key is left alone, and a key reported in `requirements` is the path into the body that clears it.
+
+        Call `GET /v3/compliance/requirements` first — it answers what a market demands before you hold it, with a body you can fill in and post.
+        """
+        return TenDlcResource(self._client)
 
     @cached_property
     def with_raw_response(self) -> SMSResourceWithRawResponse:
@@ -575,6 +599,22 @@ class AsyncSMSResource(AsyncAPIResource):
 
     Call `GET /v3/compliance/requirements` first — it answers what a market demands before you hold it, with a body you can fill in and post.
     """
+
+    @cached_property
+    def ten_dlc(self) -> AsyncTenDlcResource:
+        """The senders you send from, one per channel.
+
+        **SMS is a list of markets**, each keyed by `(country, number_type)` — a customer can hold `us/10dlc` and `gb/alphanumeric` at once, so a market is addressed by the pair rather than by country alone. **WhatsApp and RCS are single**: a customer has one business account and one agent. **Voice is per number**: each number you hold can carry phone calls on its own (`POST /v3/channels/voice`), each with the callback URL Sent asks what to do with its calls, one of them is the default line for calls placed from your app, and voice tokens are minted with `POST /v3/voice/tokens`. Read your voice numbers with `GET /v3/channels/voice` and change one with `PATCH /v3/channels/voice/{number}`.
+
+        ## Compliance lives on the market
+
+        Adding a market records everything that market registers with, in its `compliance` object. Only **US `TEN_DLC`** registers with a regime — The Campaign Registry — and it is the only market whose compliance carries `brand` and `campaign`. Everywhere else compliance is documents, and many markets ask for none at all.
+
+        `GET` and `PATCH` on a market return and accept the same shape, so what comes back can be sent back: an omitted key is left alone, and a key reported in `requirements` is the path into the body that clears it.
+
+        Call `GET /v3/compliance/requirements` first — it answers what a market demands before you hold it, with a body you can fill in and post.
+        """
+        return AsyncTenDlcResource(self._client)
 
     @cached_property
     def with_raw_response(self) -> AsyncSMSResourceWithRawResponse:
@@ -1114,6 +1154,22 @@ class SMSResourceWithRawResponse:
             sms.list,
         )
 
+    @cached_property
+    def ten_dlc(self) -> TenDlcResourceWithRawResponse:
+        """The senders you send from, one per channel.
+
+        **SMS is a list of markets**, each keyed by `(country, number_type)` — a customer can hold `us/10dlc` and `gb/alphanumeric` at once, so a market is addressed by the pair rather than by country alone. **WhatsApp and RCS are single**: a customer has one business account and one agent. **Voice is per number**: each number you hold can carry phone calls on its own (`POST /v3/channels/voice`), each with the callback URL Sent asks what to do with its calls, one of them is the default line for calls placed from your app, and voice tokens are minted with `POST /v3/voice/tokens`. Read your voice numbers with `GET /v3/channels/voice` and change one with `PATCH /v3/channels/voice/{number}`.
+
+        ## Compliance lives on the market
+
+        Adding a market records everything that market registers with, in its `compliance` object. Only **US `TEN_DLC`** registers with a regime — The Campaign Registry — and it is the only market whose compliance carries `brand` and `campaign`. Everywhere else compliance is documents, and many markets ask for none at all.
+
+        `GET` and `PATCH` on a market return and accept the same shape, so what comes back can be sent back: an omitted key is left alone, and a key reported in `requirements` is the path into the body that clears it.
+
+        Call `GET /v3/compliance/requirements` first — it answers what a market demands before you hold it, with a body you can fill in and post.
+        """
+        return TenDlcResourceWithRawResponse(self._sms.ten_dlc)
+
 
 class AsyncSMSResourceWithRawResponse:
     def __init__(self, sms: AsyncSMSResource) -> None:
@@ -1131,6 +1187,22 @@ class AsyncSMSResourceWithRawResponse:
         self.list = async_to_raw_response_wrapper(
             sms.list,
         )
+
+    @cached_property
+    def ten_dlc(self) -> AsyncTenDlcResourceWithRawResponse:
+        """The senders you send from, one per channel.
+
+        **SMS is a list of markets**, each keyed by `(country, number_type)` — a customer can hold `us/10dlc` and `gb/alphanumeric` at once, so a market is addressed by the pair rather than by country alone. **WhatsApp and RCS are single**: a customer has one business account and one agent. **Voice is per number**: each number you hold can carry phone calls on its own (`POST /v3/channels/voice`), each with the callback URL Sent asks what to do with its calls, one of them is the default line for calls placed from your app, and voice tokens are minted with `POST /v3/voice/tokens`. Read your voice numbers with `GET /v3/channels/voice` and change one with `PATCH /v3/channels/voice/{number}`.
+
+        ## Compliance lives on the market
+
+        Adding a market records everything that market registers with, in its `compliance` object. Only **US `TEN_DLC`** registers with a regime — The Campaign Registry — and it is the only market whose compliance carries `brand` and `campaign`. Everywhere else compliance is documents, and many markets ask for none at all.
+
+        `GET` and `PATCH` on a market return and accept the same shape, so what comes back can be sent back: an omitted key is left alone, and a key reported in `requirements` is the path into the body that clears it.
+
+        Call `GET /v3/compliance/requirements` first — it answers what a market demands before you hold it, with a body you can fill in and post.
+        """
+        return AsyncTenDlcResourceWithRawResponse(self._sms.ten_dlc)
 
 
 class SMSResourceWithStreamingResponse:
@@ -1150,6 +1222,22 @@ class SMSResourceWithStreamingResponse:
             sms.list,
         )
 
+    @cached_property
+    def ten_dlc(self) -> TenDlcResourceWithStreamingResponse:
+        """The senders you send from, one per channel.
+
+        **SMS is a list of markets**, each keyed by `(country, number_type)` — a customer can hold `us/10dlc` and `gb/alphanumeric` at once, so a market is addressed by the pair rather than by country alone. **WhatsApp and RCS are single**: a customer has one business account and one agent. **Voice is per number**: each number you hold can carry phone calls on its own (`POST /v3/channels/voice`), each with the callback URL Sent asks what to do with its calls, one of them is the default line for calls placed from your app, and voice tokens are minted with `POST /v3/voice/tokens`. Read your voice numbers with `GET /v3/channels/voice` and change one with `PATCH /v3/channels/voice/{number}`.
+
+        ## Compliance lives on the market
+
+        Adding a market records everything that market registers with, in its `compliance` object. Only **US `TEN_DLC`** registers with a regime — The Campaign Registry — and it is the only market whose compliance carries `brand` and `campaign`. Everywhere else compliance is documents, and many markets ask for none at all.
+
+        `GET` and `PATCH` on a market return and accept the same shape, so what comes back can be sent back: an omitted key is left alone, and a key reported in `requirements` is the path into the body that clears it.
+
+        Call `GET /v3/compliance/requirements` first — it answers what a market demands before you hold it, with a body you can fill in and post.
+        """
+        return TenDlcResourceWithStreamingResponse(self._sms.ten_dlc)
+
 
 class AsyncSMSResourceWithStreamingResponse:
     def __init__(self, sms: AsyncSMSResource) -> None:
@@ -1167,3 +1255,19 @@ class AsyncSMSResourceWithStreamingResponse:
         self.list = async_to_streamed_response_wrapper(
             sms.list,
         )
+
+    @cached_property
+    def ten_dlc(self) -> AsyncTenDlcResourceWithStreamingResponse:
+        """The senders you send from, one per channel.
+
+        **SMS is a list of markets**, each keyed by `(country, number_type)` — a customer can hold `us/10dlc` and `gb/alphanumeric` at once, so a market is addressed by the pair rather than by country alone. **WhatsApp and RCS are single**: a customer has one business account and one agent. **Voice is per number**: each number you hold can carry phone calls on its own (`POST /v3/channels/voice`), each with the callback URL Sent asks what to do with its calls, one of them is the default line for calls placed from your app, and voice tokens are minted with `POST /v3/voice/tokens`. Read your voice numbers with `GET /v3/channels/voice` and change one with `PATCH /v3/channels/voice/{number}`.
+
+        ## Compliance lives on the market
+
+        Adding a market records everything that market registers with, in its `compliance` object. Only **US `TEN_DLC`** registers with a regime — The Campaign Registry — and it is the only market whose compliance carries `brand` and `campaign`. Everywhere else compliance is documents, and many markets ask for none at all.
+
+        `GET` and `PATCH` on a market return and accept the same shape, so what comes back can be sent back: an omitted key is left alone, and a key reported in `requirements` is the path into the body that clears it.
+
+        Call `GET /v3/compliance/requirements` first — it answers what a market demands before you hold it, with a body you can fill in and post.
+        """
+        return AsyncTenDlcResourceWithStreamingResponse(self._sms.ten_dlc)
