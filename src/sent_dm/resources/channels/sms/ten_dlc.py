@@ -24,6 +24,7 @@ from ....types.channels.sms import (
 )
 from ....types.channels.sms_number_request_param import SMSNumberRequestParam
 from ....types.channels.api_response_of_sms_market import APIResponseOfSMSMarket
+from ....types.channels.sms.ten_dlc_campaign_use_case_param import TenDlcCampaignUseCaseParam
 from ....types.channels.sms.api_response_of_supplied_compliance import APIResponseOfSuppliedCompliance
 
 __all__ = ["TenDlcResource", "AsyncTenDlcResource"]
@@ -77,7 +78,7 @@ class TenDlcResource(SyncAPIResource):
         privacy_policy_link: str | Omit = omit,
         sandbox: bool | Omit = omit,
         terms_and_conditions_link: str | Omit = omit,
-        use_cases: Iterable[ten_dlc_add_campaign_params.UseCase] | Omit = omit,
+        use_cases: Iterable[TenDlcCampaignUseCaseParam] | Omit = omit,
         volume: str | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -361,7 +362,7 @@ class TenDlcResource(SyncAPIResource):
         privacy_policy_link: str | Omit = omit,
         sandbox: bool | Omit = omit,
         terms_and_conditions_link: str | Omit = omit,
-        use_cases: Iterable[ten_dlc_update_campaign_params.UseCase] | Omit = omit,
+        use_cases: Iterable[TenDlcCampaignUseCaseParam] | Omit = omit,
         volume: str | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -542,7 +543,7 @@ class AsyncTenDlcResource(AsyncAPIResource):
         privacy_policy_link: str | Omit = omit,
         sandbox: bool | Omit = omit,
         terms_and_conditions_link: str | Omit = omit,
-        use_cases: Iterable[ten_dlc_add_campaign_params.UseCase] | Omit = omit,
+        use_cases: Iterable[TenDlcCampaignUseCaseParam] | Omit = omit,
         volume: str | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -826,7 +827,7 @@ class AsyncTenDlcResource(AsyncAPIResource):
         privacy_policy_link: str | Omit = omit,
         sandbox: bool | Omit = omit,
         terms_and_conditions_link: str | Omit = omit,
-        use_cases: Iterable[ten_dlc_update_campaign_params.UseCase] | Omit = omit,
+        use_cases: Iterable[TenDlcCampaignUseCaseParam] | Omit = omit,
         volume: str | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,

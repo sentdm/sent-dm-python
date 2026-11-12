@@ -433,7 +433,7 @@ Methods:
 Types:
 
 ```python
-from sent_dm.types.channels.sms import APIResponseOfSuppliedCompliance
+from sent_dm.types.channels.sms import APIResponseOfSuppliedCompliance, TenDlcCampaignUseCase
 ```
 
 Methods:

@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 from typing import Iterable
-from typing_extensions import Literal, Required, Annotated, TypedDict
+from typing_extensions import Required, Annotated, TypedDict
 
 from ...._utils import PropertyInfo
+from .ten_dlc_campaign_use_case_param import TenDlcCampaignUseCaseParam
 
-__all__ = ["TenDlcAddCampaignParams", "UseCase"]
+__all__ = ["TenDlcAddCampaignParams"]
 
 
 class TenDlcAddCampaignParams(TypedDict, total=False):
@@ -93,7 +94,7 @@ class TenDlcAddCampaignParams(TypedDict, total=False):
     TCR termsAndConditionsLink. Required when `compliance.campaign.inherit != true`.
     """
 
-    use_cases: Iterable[UseCase]
+    use_cases: Iterable[TenDlcCampaignUseCaseParam]
     """Use cases.
 
     What the campaign sends, and an example of each. One to five entries; how they
@@ -111,32 +112,3 @@ class TenDlcAddCampaignParams(TypedDict, total=False):
     """
 
     x_profile_id: Annotated[str, PropertyInfo(alias="x-profile-id")]
-
-
-class UseCase(TypedDict, total=False):
-    sample_messages: Required[Iterable[object]]
-    """Sample messages.
-
-    TCR sample1..sample5 for this use case. One to five, each carrying the brand
-    name and an opt-out instruction.
-    """
-
-    use_case: Required[
-        Literal[
-            "MARKETING",
-            "ACCOUNT_NOTIFICATION",
-            "CUSTOMER_CARE",
-            "FRAUD_ALERT",
-            "2FA",
-            "DELIVERY_NOTIFICATION",
-            "SECURITY_ALERT",
-            "M2M",
-            "HIGHER_EDUCATION",
-            "POLLING_VOTING",
-            "PUBLIC_SERVICE_ANNOUNCEMENT",
-        ]
-    ]
-    """Use case.
-
-    What this entry sends. MIXED and LOW_VOLUME are refused — volume decides those.
-    """
