@@ -23,55 +23,34 @@ class TestTenDlc:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_add_campaign(self, client: Sent) -> None:
-        ten_dlc = client.channels.sms.ten_dlc.add_campaign()
+        ten_dlc = client.channels.sms.ten_dlc.add_campaign(
+            idempotency_key="req_abc123_retry1",
+        )
         assert_matches_type(APIResponseOfSMSMarket, ten_dlc, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_add_campaign_with_all_params(self, client: Sent) -> None:
         ten_dlc = client.channels.sms.ten_dlc.add_campaign(
-            compliance={
-                "brand": {
-                    "business_name": "business_name",
-                    "city": "city",
-                    "contact_email": "dev@stainless.com",
-                    "contact_name": "contact_name",
-                    "contact_phone": "contact_phone",
-                    "country": "country",
-                    "ein_issuing_country": "ein_issuing_country",
-                    "entity_type": "PRIVATE_PROFIT",
-                    "inherit": True,
-                    "legal_name": "legal_name",
-                    "postal_code": "postal_code",
-                    "state": "state",
-                    "street": "street",
-                    "tax_id": "tax_id",
-                    "tax_id_type": "tax_id_type",
-                    "website": "website",
-                },
-                "campaign": {
-                    "description": "description",
-                    "help_keywords": "help_keywords",
-                    "help_message": "help_message",
-                    "inherit": True,
-                    "message_flow": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-                    "opt_in_keywords": "opt_in_keywords",
-                    "opt_in_message": "opt_in_message",
-                    "opt_out_keywords": "opt_out_keywords",
-                    "opt_out_message": "opt_out_message",
-                    "privacy_policy_link": "privacy_policy_link",
-                    "terms_and_conditions_link": "terms_and_conditions_link",
-                    "use_cases": [
-                        {
-                            "sample_messages": [{}],
-                            "use_case": "MARKETING",
-                        }
-                    ],
-                    "volume": "volume",
-                },
-            },
-            sandbox=False,
             idempotency_key="req_abc123_retry1",
+            description="description",
+            help_keywords="help_keywords",
+            help_message="help_message",
+            message_flow="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            opt_in_keywords="opt_in_keywords",
+            opt_in_message="opt_in_message",
+            opt_out_keywords="opt_out_keywords",
+            opt_out_message="opt_out_message",
+            privacy_policy_link="privacy_policy_link",
+            sandbox=False,
+            terms_and_conditions_link="terms_and_conditions_link",
+            use_cases=[
+                {
+                    "sample_messages": [{}],
+                    "use_case": "MARKETING",
+                }
+            ],
+            volume="volume",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(APIResponseOfSMSMarket, ten_dlc, path=["response"])
@@ -79,7 +58,9 @@ class TestTenDlc:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_add_campaign(self, client: Sent) -> None:
-        response = client.channels.sms.ten_dlc.with_raw_response.add_campaign()
+        response = client.channels.sms.ten_dlc.with_raw_response.add_campaign(
+            idempotency_key="req_abc123_retry1",
+        )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -89,7 +70,9 @@ class TestTenDlc:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_add_campaign(self, client: Sent) -> None:
-        with client.channels.sms.ten_dlc.with_streaming_response.add_campaign() as response:
+        with client.channels.sms.ten_dlc.with_streaming_response.add_campaign(
+            idempotency_key="req_abc123_retry1",
+        ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -104,6 +87,7 @@ class TestTenDlc:
         ten_dlc = client.channels.sms.ten_dlc.add_numbers(
             campaign_id="8f14e45f-ceea-467f-a8f0-7c2a3d1b9e01",
             numbers=[{}],
+            idempotency_key="req_abc123_retry1",
         )
         assert_matches_type(APIResponseOfSMSMarket, ten_dlc, path=["response"])
 
@@ -118,8 +102,8 @@ class TestTenDlc:
                     "quantity": 2,
                 }
             ],
-            sandbox=False,
             idempotency_key="req_abc123_retry1",
+            sandbox=False,
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(APIResponseOfSMSMarket, ten_dlc, path=["response"])
@@ -130,6 +114,7 @@ class TestTenDlc:
         response = client.channels.sms.ten_dlc.with_raw_response.add_numbers(
             campaign_id="8f14e45f-ceea-467f-a8f0-7c2a3d1b9e01",
             numbers=[{}],
+            idempotency_key="req_abc123_retry1",
         )
 
         assert response.is_closed is True
@@ -143,6 +128,7 @@ class TestTenDlc:
         with client.channels.sms.ten_dlc.with_streaming_response.add_numbers(
             campaign_id="8f14e45f-ceea-467f-a8f0-7c2a3d1b9e01",
             numbers=[{}],
+            idempotency_key="req_abc123_retry1",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -201,47 +187,24 @@ class TestTenDlc:
     def test_method_update_campaign_with_all_params(self, client: Sent) -> None:
         ten_dlc = client.channels.sms.ten_dlc.update_campaign(
             campaign_id="3f2a6c1e-8b4d-4e2a-9c7f-1d5b0a9e4c21",
-            compliance={
-                "brand": {
-                    "business_name": "business_name",
-                    "city": "city",
-                    "contact_email": "dev@stainless.com",
-                    "contact_name": "contact_name",
-                    "contact_phone": "contact_phone",
-                    "country": "country",
-                    "ein_issuing_country": "ein_issuing_country",
-                    "entity_type": "PRIVATE_PROFIT",
-                    "inherit": True,
-                    "legal_name": "legal_name",
-                    "postal_code": "postal_code",
-                    "state": "state",
-                    "street": "street",
-                    "tax_id": "tax_id",
-                    "tax_id_type": "tax_id_type",
-                    "website": "website",
-                },
-                "campaign": {
-                    "description": "description",
-                    "help_keywords": "help_keywords",
-                    "help_message": "help_message",
-                    "inherit": True,
-                    "message_flow": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-                    "opt_in_keywords": "opt_in_keywords",
-                    "opt_in_message": "opt_in_message",
-                    "opt_out_keywords": "opt_out_keywords",
-                    "opt_out_message": "opt_out_message",
-                    "privacy_policy_link": "privacy_policy_link",
-                    "terms_and_conditions_link": "terms_and_conditions_link",
-                    "use_cases": [
-                        {
-                            "sample_messages": [{}],
-                            "use_case": "MARKETING",
-                        }
-                    ],
-                    "volume": "volume",
-                },
-            },
+            description="description",
+            help_keywords="help_keywords",
+            help_message="help_message",
+            message_flow="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            opt_in_keywords="opt_in_keywords",
+            opt_in_message="opt_in_message",
+            opt_out_keywords="opt_out_keywords",
+            opt_out_message="opt_out_message",
+            privacy_policy_link="privacy_policy_link",
             sandbox=False,
+            terms_and_conditions_link="terms_and_conditions_link",
+            use_cases=[
+                {
+                    "sample_messages": [{}],
+                    "use_case": "MARKETING",
+                }
+            ],
+            volume="volume",
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
@@ -290,55 +253,34 @@ class TestAsyncTenDlc:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_add_campaign(self, async_client: AsyncSent) -> None:
-        ten_dlc = await async_client.channels.sms.ten_dlc.add_campaign()
+        ten_dlc = await async_client.channels.sms.ten_dlc.add_campaign(
+            idempotency_key="req_abc123_retry1",
+        )
         assert_matches_type(APIResponseOfSMSMarket, ten_dlc, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_add_campaign_with_all_params(self, async_client: AsyncSent) -> None:
         ten_dlc = await async_client.channels.sms.ten_dlc.add_campaign(
-            compliance={
-                "brand": {
-                    "business_name": "business_name",
-                    "city": "city",
-                    "contact_email": "dev@stainless.com",
-                    "contact_name": "contact_name",
-                    "contact_phone": "contact_phone",
-                    "country": "country",
-                    "ein_issuing_country": "ein_issuing_country",
-                    "entity_type": "PRIVATE_PROFIT",
-                    "inherit": True,
-                    "legal_name": "legal_name",
-                    "postal_code": "postal_code",
-                    "state": "state",
-                    "street": "street",
-                    "tax_id": "tax_id",
-                    "tax_id_type": "tax_id_type",
-                    "website": "website",
-                },
-                "campaign": {
-                    "description": "description",
-                    "help_keywords": "help_keywords",
-                    "help_message": "help_message",
-                    "inherit": True,
-                    "message_flow": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-                    "opt_in_keywords": "opt_in_keywords",
-                    "opt_in_message": "opt_in_message",
-                    "opt_out_keywords": "opt_out_keywords",
-                    "opt_out_message": "opt_out_message",
-                    "privacy_policy_link": "privacy_policy_link",
-                    "terms_and_conditions_link": "terms_and_conditions_link",
-                    "use_cases": [
-                        {
-                            "sample_messages": [{}],
-                            "use_case": "MARKETING",
-                        }
-                    ],
-                    "volume": "volume",
-                },
-            },
-            sandbox=False,
             idempotency_key="req_abc123_retry1",
+            description="description",
+            help_keywords="help_keywords",
+            help_message="help_message",
+            message_flow="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            opt_in_keywords="opt_in_keywords",
+            opt_in_message="opt_in_message",
+            opt_out_keywords="opt_out_keywords",
+            opt_out_message="opt_out_message",
+            privacy_policy_link="privacy_policy_link",
+            sandbox=False,
+            terms_and_conditions_link="terms_and_conditions_link",
+            use_cases=[
+                {
+                    "sample_messages": [{}],
+                    "use_case": "MARKETING",
+                }
+            ],
+            volume="volume",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(APIResponseOfSMSMarket, ten_dlc, path=["response"])
@@ -346,7 +288,9 @@ class TestAsyncTenDlc:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_add_campaign(self, async_client: AsyncSent) -> None:
-        response = await async_client.channels.sms.ten_dlc.with_raw_response.add_campaign()
+        response = await async_client.channels.sms.ten_dlc.with_raw_response.add_campaign(
+            idempotency_key="req_abc123_retry1",
+        )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -356,7 +300,9 @@ class TestAsyncTenDlc:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_add_campaign(self, async_client: AsyncSent) -> None:
-        async with async_client.channels.sms.ten_dlc.with_streaming_response.add_campaign() as response:
+        async with async_client.channels.sms.ten_dlc.with_streaming_response.add_campaign(
+            idempotency_key="req_abc123_retry1",
+        ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -371,6 +317,7 @@ class TestAsyncTenDlc:
         ten_dlc = await async_client.channels.sms.ten_dlc.add_numbers(
             campaign_id="8f14e45f-ceea-467f-a8f0-7c2a3d1b9e01",
             numbers=[{}],
+            idempotency_key="req_abc123_retry1",
         )
         assert_matches_type(APIResponseOfSMSMarket, ten_dlc, path=["response"])
 
@@ -385,8 +332,8 @@ class TestAsyncTenDlc:
                     "quantity": 2,
                 }
             ],
-            sandbox=False,
             idempotency_key="req_abc123_retry1",
+            sandbox=False,
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
         assert_matches_type(APIResponseOfSMSMarket, ten_dlc, path=["response"])
@@ -397,6 +344,7 @@ class TestAsyncTenDlc:
         response = await async_client.channels.sms.ten_dlc.with_raw_response.add_numbers(
             campaign_id="8f14e45f-ceea-467f-a8f0-7c2a3d1b9e01",
             numbers=[{}],
+            idempotency_key="req_abc123_retry1",
         )
 
         assert response.is_closed is True
@@ -410,6 +358,7 @@ class TestAsyncTenDlc:
         async with async_client.channels.sms.ten_dlc.with_streaming_response.add_numbers(
             campaign_id="8f14e45f-ceea-467f-a8f0-7c2a3d1b9e01",
             numbers=[{}],
+            idempotency_key="req_abc123_retry1",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -468,47 +417,24 @@ class TestAsyncTenDlc:
     async def test_method_update_campaign_with_all_params(self, async_client: AsyncSent) -> None:
         ten_dlc = await async_client.channels.sms.ten_dlc.update_campaign(
             campaign_id="3f2a6c1e-8b4d-4e2a-9c7f-1d5b0a9e4c21",
-            compliance={
-                "brand": {
-                    "business_name": "business_name",
-                    "city": "city",
-                    "contact_email": "dev@stainless.com",
-                    "contact_name": "contact_name",
-                    "contact_phone": "contact_phone",
-                    "country": "country",
-                    "ein_issuing_country": "ein_issuing_country",
-                    "entity_type": "PRIVATE_PROFIT",
-                    "inherit": True,
-                    "legal_name": "legal_name",
-                    "postal_code": "postal_code",
-                    "state": "state",
-                    "street": "street",
-                    "tax_id": "tax_id",
-                    "tax_id_type": "tax_id_type",
-                    "website": "website",
-                },
-                "campaign": {
-                    "description": "description",
-                    "help_keywords": "help_keywords",
-                    "help_message": "help_message",
-                    "inherit": True,
-                    "message_flow": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-                    "opt_in_keywords": "opt_in_keywords",
-                    "opt_in_message": "opt_in_message",
-                    "opt_out_keywords": "opt_out_keywords",
-                    "opt_out_message": "opt_out_message",
-                    "privacy_policy_link": "privacy_policy_link",
-                    "terms_and_conditions_link": "terms_and_conditions_link",
-                    "use_cases": [
-                        {
-                            "sample_messages": [{}],
-                            "use_case": "MARKETING",
-                        }
-                    ],
-                    "volume": "volume",
-                },
-            },
+            description="description",
+            help_keywords="help_keywords",
+            help_message="help_message",
+            message_flow="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            opt_in_keywords="opt_in_keywords",
+            opt_in_message="opt_in_message",
+            opt_out_keywords="opt_out_keywords",
+            opt_out_message="opt_out_message",
+            privacy_policy_link="privacy_policy_link",
             sandbox=False,
+            terms_and_conditions_link="terms_and_conditions_link",
+            use_cases=[
+                {
+                    "sample_messages": [{}],
+                    "use_case": "MARKETING",
+                }
+            ],
+            volume="volume",
             idempotency_key="req_abc123_retry1",
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )

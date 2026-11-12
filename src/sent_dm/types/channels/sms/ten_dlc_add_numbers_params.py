@@ -27,12 +27,12 @@ class TenDlcAddNumbersParams(TypedDict, total=False):
     Added to what the campaign already asks for, never replacing it.
     """
 
+    idempotency_key: Required[Annotated[str, PropertyInfo(alias="Idempotency-Key")]]
+
     sandbox: bool
     """
     Sandbox flag - when true, the operation is simulated without side effects Useful
     for testing integrations without actual execution
     """
-
-    idempotency_key: Annotated[str, PropertyInfo(alias="Idempotency-Key")]
 
     x_profile_id: Annotated[str, PropertyInfo(alias="x-profile-id")]

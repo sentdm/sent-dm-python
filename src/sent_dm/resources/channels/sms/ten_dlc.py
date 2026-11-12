@@ -22,7 +22,6 @@ from ....types.channels.sms import (
     ten_dlc_add_campaign_params,
     ten_dlc_update_campaign_params,
 )
-from ....types.channels.market_compliance_param import MarketComplianceParam
 from ....types.channels.sms_number_request_param import SMSNumberRequestParam
 from ....types.channels.api_response_of_sms_market import APIResponseOfSMSMarket
 from ....types.channels.sms.api_response_of_supplied_compliance import APIResponseOfSuppliedCompliance
@@ -66,9 +65,20 @@ class TenDlcResource(SyncAPIResource):
     def add_campaign(
         self,
         *,
-        compliance: MarketComplianceParam | Omit = omit,
+        idempotency_key: str,
+        description: str | Omit = omit,
+        help_keywords: str | Omit = omit,
+        help_message: str | Omit = omit,
+        message_flow: str | Omit = omit,
+        opt_in_keywords: str | Omit = omit,
+        opt_in_message: str | Omit = omit,
+        opt_out_keywords: str | Omit = omit,
+        opt_out_message: str | Omit = omit,
+        privacy_policy_link: str | Omit = omit,
         sandbox: bool | Omit = omit,
-        idempotency_key: str | Omit = omit,
+        terms_and_conditions_link: str | Omit = omit,
+        use_cases: Iterable[ten_dlc_add_campaign_params.UseCase] | Omit = omit,
+        volume: str | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -118,9 +128,53 @@ class TenDlcResource(SyncAPIResource):
         with `202`.
 
         Args:
-          compliance: The compliance values a market registers with. `brand` and `campaign` apply to
-              US `TEN_DLC`; other markets fill this map with the document keys their own
-              requirements name.
+          description: What this programme sends. TCR description: what recipients will get and why, in
+              a sentence. The only one of these TCR takes verbatim as a description of the
+              programme, which is why it is asked for rather than derived from the customer's
+              name. Required when `compliance.campaign.inherit != true`.
+
+          help_keywords: Help keywords. TCR helpKeywords, comma separated, e.g. HELP,INFO. Required when
+              `compliance.campaign.inherit != true`.
+
+          help_message: Help reply. TCR helpMessage. Its presence is what sets subscriberHelp. Required
+              when `compliance.campaign.inherit != true`.
+
+          message_flow: Consent narrative. TCR messageFlow: how recipients opt in, in prose. Under 40
+              characters is refused, and carriers reject vague descriptions — say where opt-in
+              happens, that the box is unchecked by default, and that consent is not a
+              condition of purchase. Required when `compliance.campaign.inherit != true`.
+
+          opt_in_keywords: Opt-in keywords. TCR optinKeywords, comma separated, e.g. START,YES. Required
+              when `compliance.campaign.inherit != true`.
+
+          opt_in_message: Opt-in confirmation. TCR optinMessage. Should state message frequency and that
+              rates may apply. Its presence is what sets subscriberOptin. Required when
+              `compliance.campaign.inherit != true`.
+
+          opt_out_keywords: Opt-out keywords. TCR optoutKeywords, comma separated. STOP, END, CANCEL,
+              UNSUBSCRIBE and QUIT are honoured regardless of what is declared. Required when
+              `compliance.campaign.inherit != true`.
+
+          opt_out_message: Opt-out confirmation. TCR optoutMessage. Its presence is what sets
+              subscriberOptout. Required when `compliance.campaign.inherit != true`.
+
+          privacy_policy_link: Privacy policy URL. TCR privacyPolicyLink. Required when
+              `compliance.campaign.inherit != true`.
+
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
+
+          terms_and_conditions_link: Terms and conditions URL. TCR termsAndConditionsLink. Required when
+              `compliance.campaign.inherit != true`.
+
+          use_cases: Use cases. What the campaign sends, and an example of each. One to five entries;
+              how they register is decided by volume, never declared. Required when
+              `compliance.campaign.inherit != true`.
+
+          volume: Expected monthly volume. Decides how the campaign registers and which fee tier
+              applies: below the low-volume threshold it registers as LOW_VOLUME with
+              sub-use-cases, above it as a single use case or MIXED. Omitting it registers the
+              campaign at the higher-fee standard tier.
 
           extra_headers: Send extra headers
 
@@ -143,8 +197,19 @@ class TenDlcResource(SyncAPIResource):
             "/v3/channels/sms/compliances/US/TEN_DLC/campaigns",
             body=maybe_transform(
                 {
-                    "compliance": compliance,
+                    "description": description,
+                    "help_keywords": help_keywords,
+                    "help_message": help_message,
+                    "message_flow": message_flow,
+                    "opt_in_keywords": opt_in_keywords,
+                    "opt_in_message": opt_in_message,
+                    "opt_out_keywords": opt_out_keywords,
+                    "opt_out_message": opt_out_message,
+                    "privacy_policy_link": privacy_policy_link,
                     "sandbox": sandbox,
+                    "terms_and_conditions_link": terms_and_conditions_link,
+                    "use_cases": use_cases,
+                    "volume": volume,
                 },
                 ten_dlc_add_campaign_params.TenDlcAddCampaignParams,
             ),
@@ -159,8 +224,8 @@ class TenDlcResource(SyncAPIResource):
         *,
         campaign_id: str,
         numbers: Iterable[Optional[SMSNumberRequestParam]],
+        idempotency_key: str,
         sandbox: bool | Omit = omit,
-        idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -285,8 +350,19 @@ class TenDlcResource(SyncAPIResource):
         self,
         campaign_id: str,
         *,
-        compliance: MarketComplianceParam | Omit = omit,
+        description: str | Omit = omit,
+        help_keywords: str | Omit = omit,
+        help_message: str | Omit = omit,
+        message_flow: str | Omit = omit,
+        opt_in_keywords: str | Omit = omit,
+        opt_in_message: str | Omit = omit,
+        opt_out_keywords: str | Omit = omit,
+        opt_out_message: str | Omit = omit,
+        privacy_policy_link: str | Omit = omit,
         sandbox: bool | Omit = omit,
+        terms_and_conditions_link: str | Omit = omit,
+        use_cases: Iterable[ten_dlc_update_campaign_params.UseCase] | Omit = omit,
+        volume: str | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -324,9 +400,53 @@ class TenDlcResource(SyncAPIResource):
         Returns **the market**, in the shape `GET /v3/channels/sms/US/TEN_DLC` returns.
 
         Args:
-          compliance: The compliance values a market registers with. `brand` and `campaign` apply to
-              US `TEN_DLC`; other markets fill this map with the document keys their own
-              requirements name.
+          description: What this programme sends. TCR description: what recipients will get and why, in
+              a sentence. The only one of these TCR takes verbatim as a description of the
+              programme, which is why it is asked for rather than derived from the customer's
+              name. Required when `compliance.campaign.inherit != true`.
+
+          help_keywords: Help keywords. TCR helpKeywords, comma separated, e.g. HELP,INFO. Required when
+              `compliance.campaign.inherit != true`.
+
+          help_message: Help reply. TCR helpMessage. Its presence is what sets subscriberHelp. Required
+              when `compliance.campaign.inherit != true`.
+
+          message_flow: Consent narrative. TCR messageFlow: how recipients opt in, in prose. Under 40
+              characters is refused, and carriers reject vague descriptions — say where opt-in
+              happens, that the box is unchecked by default, and that consent is not a
+              condition of purchase. Required when `compliance.campaign.inherit != true`.
+
+          opt_in_keywords: Opt-in keywords. TCR optinKeywords, comma separated, e.g. START,YES. Required
+              when `compliance.campaign.inherit != true`.
+
+          opt_in_message: Opt-in confirmation. TCR optinMessage. Should state message frequency and that
+              rates may apply. Its presence is what sets subscriberOptin. Required when
+              `compliance.campaign.inherit != true`.
+
+          opt_out_keywords: Opt-out keywords. TCR optoutKeywords, comma separated. STOP, END, CANCEL,
+              UNSUBSCRIBE and QUIT are honoured regardless of what is declared. Required when
+              `compliance.campaign.inherit != true`.
+
+          opt_out_message: Opt-out confirmation. TCR optoutMessage. Its presence is what sets
+              subscriberOptout. Required when `compliance.campaign.inherit != true`.
+
+          privacy_policy_link: Privacy policy URL. TCR privacyPolicyLink. Required when
+              `compliance.campaign.inherit != true`.
+
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
+
+          terms_and_conditions_link: Terms and conditions URL. TCR termsAndConditionsLink. Required when
+              `compliance.campaign.inherit != true`.
+
+          use_cases: Use cases. What the campaign sends, and an example of each. One to five entries;
+              how they register is decided by volume, never declared. Required when
+              `compliance.campaign.inherit != true`.
+
+          volume: Expected monthly volume. Decides how the campaign registers and which fee tier
+              applies: below the low-volume threshold it registers as LOW_VOLUME with
+              sub-use-cases, above it as a single use case or MIXED. Omitting it registers the
+              campaign at the higher-fee standard tier.
 
           extra_headers: Send extra headers
 
@@ -351,8 +471,19 @@ class TenDlcResource(SyncAPIResource):
             path_template("/v3/channels/sms/compliances/US/TEN_DLC/campaigns/{campaign_id}", campaign_id=campaign_id),
             body=maybe_transform(
                 {
-                    "compliance": compliance,
+                    "description": description,
+                    "help_keywords": help_keywords,
+                    "help_message": help_message,
+                    "message_flow": message_flow,
+                    "opt_in_keywords": opt_in_keywords,
+                    "opt_in_message": opt_in_message,
+                    "opt_out_keywords": opt_out_keywords,
+                    "opt_out_message": opt_out_message,
+                    "privacy_policy_link": privacy_policy_link,
                     "sandbox": sandbox,
+                    "terms_and_conditions_link": terms_and_conditions_link,
+                    "use_cases": use_cases,
+                    "volume": volume,
                 },
                 ten_dlc_update_campaign_params.TenDlcUpdateCampaignParams,
             ),
@@ -399,9 +530,20 @@ class AsyncTenDlcResource(AsyncAPIResource):
     async def add_campaign(
         self,
         *,
-        compliance: MarketComplianceParam | Omit = omit,
+        idempotency_key: str,
+        description: str | Omit = omit,
+        help_keywords: str | Omit = omit,
+        help_message: str | Omit = omit,
+        message_flow: str | Omit = omit,
+        opt_in_keywords: str | Omit = omit,
+        opt_in_message: str | Omit = omit,
+        opt_out_keywords: str | Omit = omit,
+        opt_out_message: str | Omit = omit,
+        privacy_policy_link: str | Omit = omit,
         sandbox: bool | Omit = omit,
-        idempotency_key: str | Omit = omit,
+        terms_and_conditions_link: str | Omit = omit,
+        use_cases: Iterable[ten_dlc_add_campaign_params.UseCase] | Omit = omit,
+        volume: str | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -451,9 +593,53 @@ class AsyncTenDlcResource(AsyncAPIResource):
         with `202`.
 
         Args:
-          compliance: The compliance values a market registers with. `brand` and `campaign` apply to
-              US `TEN_DLC`; other markets fill this map with the document keys their own
-              requirements name.
+          description: What this programme sends. TCR description: what recipients will get and why, in
+              a sentence. The only one of these TCR takes verbatim as a description of the
+              programme, which is why it is asked for rather than derived from the customer's
+              name. Required when `compliance.campaign.inherit != true`.
+
+          help_keywords: Help keywords. TCR helpKeywords, comma separated, e.g. HELP,INFO. Required when
+              `compliance.campaign.inherit != true`.
+
+          help_message: Help reply. TCR helpMessage. Its presence is what sets subscriberHelp. Required
+              when `compliance.campaign.inherit != true`.
+
+          message_flow: Consent narrative. TCR messageFlow: how recipients opt in, in prose. Under 40
+              characters is refused, and carriers reject vague descriptions — say where opt-in
+              happens, that the box is unchecked by default, and that consent is not a
+              condition of purchase. Required when `compliance.campaign.inherit != true`.
+
+          opt_in_keywords: Opt-in keywords. TCR optinKeywords, comma separated, e.g. START,YES. Required
+              when `compliance.campaign.inherit != true`.
+
+          opt_in_message: Opt-in confirmation. TCR optinMessage. Should state message frequency and that
+              rates may apply. Its presence is what sets subscriberOptin. Required when
+              `compliance.campaign.inherit != true`.
+
+          opt_out_keywords: Opt-out keywords. TCR optoutKeywords, comma separated. STOP, END, CANCEL,
+              UNSUBSCRIBE and QUIT are honoured regardless of what is declared. Required when
+              `compliance.campaign.inherit != true`.
+
+          opt_out_message: Opt-out confirmation. TCR optoutMessage. Its presence is what sets
+              subscriberOptout. Required when `compliance.campaign.inherit != true`.
+
+          privacy_policy_link: Privacy policy URL. TCR privacyPolicyLink. Required when
+              `compliance.campaign.inherit != true`.
+
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
+
+          terms_and_conditions_link: Terms and conditions URL. TCR termsAndConditionsLink. Required when
+              `compliance.campaign.inherit != true`.
+
+          use_cases: Use cases. What the campaign sends, and an example of each. One to five entries;
+              how they register is decided by volume, never declared. Required when
+              `compliance.campaign.inherit != true`.
+
+          volume: Expected monthly volume. Decides how the campaign registers and which fee tier
+              applies: below the low-volume threshold it registers as LOW_VOLUME with
+              sub-use-cases, above it as a single use case or MIXED. Omitting it registers the
+              campaign at the higher-fee standard tier.
 
           extra_headers: Send extra headers
 
@@ -476,8 +662,19 @@ class AsyncTenDlcResource(AsyncAPIResource):
             "/v3/channels/sms/compliances/US/TEN_DLC/campaigns",
             body=await async_maybe_transform(
                 {
-                    "compliance": compliance,
+                    "description": description,
+                    "help_keywords": help_keywords,
+                    "help_message": help_message,
+                    "message_flow": message_flow,
+                    "opt_in_keywords": opt_in_keywords,
+                    "opt_in_message": opt_in_message,
+                    "opt_out_keywords": opt_out_keywords,
+                    "opt_out_message": opt_out_message,
+                    "privacy_policy_link": privacy_policy_link,
                     "sandbox": sandbox,
+                    "terms_and_conditions_link": terms_and_conditions_link,
+                    "use_cases": use_cases,
+                    "volume": volume,
                 },
                 ten_dlc_add_campaign_params.TenDlcAddCampaignParams,
             ),
@@ -492,8 +689,8 @@ class AsyncTenDlcResource(AsyncAPIResource):
         *,
         campaign_id: str,
         numbers: Iterable[Optional[SMSNumberRequestParam]],
+        idempotency_key: str,
         sandbox: bool | Omit = omit,
-        idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -618,8 +815,19 @@ class AsyncTenDlcResource(AsyncAPIResource):
         self,
         campaign_id: str,
         *,
-        compliance: MarketComplianceParam | Omit = omit,
+        description: str | Omit = omit,
+        help_keywords: str | Omit = omit,
+        help_message: str | Omit = omit,
+        message_flow: str | Omit = omit,
+        opt_in_keywords: str | Omit = omit,
+        opt_in_message: str | Omit = omit,
+        opt_out_keywords: str | Omit = omit,
+        opt_out_message: str | Omit = omit,
+        privacy_policy_link: str | Omit = omit,
         sandbox: bool | Omit = omit,
+        terms_and_conditions_link: str | Omit = omit,
+        use_cases: Iterable[ten_dlc_update_campaign_params.UseCase] | Omit = omit,
+        volume: str | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -657,9 +865,53 @@ class AsyncTenDlcResource(AsyncAPIResource):
         Returns **the market**, in the shape `GET /v3/channels/sms/US/TEN_DLC` returns.
 
         Args:
-          compliance: The compliance values a market registers with. `brand` and `campaign` apply to
-              US `TEN_DLC`; other markets fill this map with the document keys their own
-              requirements name.
+          description: What this programme sends. TCR description: what recipients will get and why, in
+              a sentence. The only one of these TCR takes verbatim as a description of the
+              programme, which is why it is asked for rather than derived from the customer's
+              name. Required when `compliance.campaign.inherit != true`.
+
+          help_keywords: Help keywords. TCR helpKeywords, comma separated, e.g. HELP,INFO. Required when
+              `compliance.campaign.inherit != true`.
+
+          help_message: Help reply. TCR helpMessage. Its presence is what sets subscriberHelp. Required
+              when `compliance.campaign.inherit != true`.
+
+          message_flow: Consent narrative. TCR messageFlow: how recipients opt in, in prose. Under 40
+              characters is refused, and carriers reject vague descriptions — say where opt-in
+              happens, that the box is unchecked by default, and that consent is not a
+              condition of purchase. Required when `compliance.campaign.inherit != true`.
+
+          opt_in_keywords: Opt-in keywords. TCR optinKeywords, comma separated, e.g. START,YES. Required
+              when `compliance.campaign.inherit != true`.
+
+          opt_in_message: Opt-in confirmation. TCR optinMessage. Should state message frequency and that
+              rates may apply. Its presence is what sets subscriberOptin. Required when
+              `compliance.campaign.inherit != true`.
+
+          opt_out_keywords: Opt-out keywords. TCR optoutKeywords, comma separated. STOP, END, CANCEL,
+              UNSUBSCRIBE and QUIT are honoured regardless of what is declared. Required when
+              `compliance.campaign.inherit != true`.
+
+          opt_out_message: Opt-out confirmation. TCR optoutMessage. Its presence is what sets
+              subscriberOptout. Required when `compliance.campaign.inherit != true`.
+
+          privacy_policy_link: Privacy policy URL. TCR privacyPolicyLink. Required when
+              `compliance.campaign.inherit != true`.
+
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
+
+          terms_and_conditions_link: Terms and conditions URL. TCR termsAndConditionsLink. Required when
+              `compliance.campaign.inherit != true`.
+
+          use_cases: Use cases. What the campaign sends, and an example of each. One to five entries;
+              how they register is decided by volume, never declared. Required when
+              `compliance.campaign.inherit != true`.
+
+          volume: Expected monthly volume. Decides how the campaign registers and which fee tier
+              applies: below the low-volume threshold it registers as LOW_VOLUME with
+              sub-use-cases, above it as a single use case or MIXED. Omitting it registers the
+              campaign at the higher-fee standard tier.
 
           extra_headers: Send extra headers
 
@@ -684,8 +936,19 @@ class AsyncTenDlcResource(AsyncAPIResource):
             path_template("/v3/channels/sms/compliances/US/TEN_DLC/campaigns/{campaign_id}", campaign_id=campaign_id),
             body=await async_maybe_transform(
                 {
-                    "compliance": compliance,
+                    "description": description,
+                    "help_keywords": help_keywords,
+                    "help_message": help_message,
+                    "message_flow": message_flow,
+                    "opt_in_keywords": opt_in_keywords,
+                    "opt_in_message": opt_in_message,
+                    "opt_out_keywords": opt_out_keywords,
+                    "opt_out_message": opt_out_message,
+                    "privacy_policy_link": privacy_policy_link,
                     "sandbox": sandbox,
+                    "terms_and_conditions_link": terms_and_conditions_link,
+                    "use_cases": use_cases,
+                    "volume": volume,
                 },
                 ten_dlc_update_campaign_params.TenDlcUpdateCampaignParams,
             ),
