@@ -44,6 +44,13 @@ class BrandCampaign(BaseModel):
 
     help_message: Optional[str] = FieldInfo(alias="helpMessage", default=None)
 
+    is_inherited: Optional[bool] = FieldInfo(alias="isInherited", default=None)
+    """
+    Whether the campaign is the organization's, which the profile runs on, rather
+    than one of the profile's own. A profile running on its organization's campaign
+    can hold campaigns of its own beside it, and the list returns both.
+    """
+
     message_flow: Optional[str] = FieldInfo(alias="messageFlow", default=None)
 
     name: Optional[str] = None
