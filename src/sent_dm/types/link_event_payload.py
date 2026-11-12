@@ -1,0 +1,159 @@
+# File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+
+from typing import Optional
+
+from .._models import BaseModel
+
+__all__ = ["LinkEventPayload"]
+
+
+class LinkEventPayload(BaseModel):
+    """
+    Body of a link event: something happened to a tracked link Sent published on the customer's
+    behalf. A link points either at a URL the customer supplied or at a file Sent hosts for them;
+    LinkKind says which. Delivered when an eligible request is served, or when a
+    published link reaches the end of its life.
+
+    A click is a request, not a read receipt. link.clicked means the redirect
+    was served; link.downloaded means bytes went out. Neither proves a person saw anything —
+    messaging providers and link scanners fetch URLs on their own, which is what
+    TrafficClass exists to tell apart. Filter on it before reporting a click-through
+    rate; treat likely_human as a hint, never as delivery confirmation.
+
+    RecordId identifies the link; the X-Webhook-Event-ID header
+    identifies the delivery. One link is hit many times, so those are the two keys a
+    subscriber needs: group by the first, deduplicate on the second — exactly as on every other
+    family. The payload carries no event identifier of its own, for the same reason none of the
+    others do.
+
+    Nothing here identifies the visitor. No IP address and no visitor token crosses
+    this boundary. Country, Device and Browser are coarse
+    buckets derived at the edge and are absent whenever the request did not supply enough to derive
+    them.
+    """
+
+    record_id: str
+    """
+    The link's public identifier — the eight-character code in the short URL, for
+    example A78B2BU0. Unique across both kinds, and never reused, so it is the
+    stable key to group one link's events by.
+    """
+
+    access_country: Optional[str] = None
+    """Where the request appeared to come from, as an ISO 3166-1 alpha-2 code.
+
+    Named separately from the country on a channel event, which is a destination
+    market the customer registered for — this one is a property of a single visitor
+    and is absent when the edge could not resolve it.
+    """
+
+    access_outcome: Optional[str] = None
+    """How the request was served, when the edge recorded it.
+
+    Free text describing the outcome — show it to a human rather than branching on
+    it.
+    """
+
+    browser: Optional[str] = None
+    """The requesting browser family, for example chrome or safari, or unknown.
+
+    Derived from the user agent.
+    """
+
+    bytes_served: Optional[int] = None
+    """How many bytes were served, for a file access.
+
+    A ranged request reports the bytes in that range, not the size of the file, so
+    several accesses of one file can each report a part.
+    """
+
+    channel: Optional[str] = None
+    """The channel the message carrying this link went out on: sms, whatsapp, or rcs."""
+
+    customer_id: Optional[str] = None
+    """The organization the link belongs to.
+
+    Always the parent account, never a sender profile — read SenderProfileId for
+    that.
+
+    This family publishes the owner as an explicit pair rather than the single
+    account_id the other families use. The pair says which organization and which
+    profile without the subscriber deriving either, which is the trade: one more key
+    against not having to know that account_id silently becomes the profile when one
+    exists.
+    """
+
+    device: Optional[str] = None
+    """The requesting device class: mobile, tablet, desktop or unknown.
+
+    Derived from the user agent.
+    """
+
+    link_kind: Optional[str] = None
+    """
+    What the link points at: url for a destination the customer supplied, file for
+    media Sent hosts. Always present, and implied by the event — link.clicked is
+    always url and link.downloaded always file — but published as its own field so a
+    subscriber can branch on the kind without parsing the event name, the same
+    separation the channel family keeps between its event and its status.
+    """
+
+    message_id: Optional[str] = None
+    """The message the link was published in.
+
+    The event can arrive before the message is readable through GET /v3/messages: a
+    provider may fetch a link within milliseconds of the send, and nothing here
+    waits for the message row. Retry the read rather than treating an unknown id as
+    an error.
+    """
+
+    occurred_at: Optional[str] = None
+    """
+    When the access or lifecycle change actually happened, in UTC
+    (yyyy-MM-ddTHH:mm:ssZ). The envelope's timestamp is when Sent emitted the event;
+    this is when the thing occurred, and the two differ by the ingest delay.
+    """
+
+    reference_key: Optional[str] = None
+    """
+    The caller-supplied label tying this link back to a position in the message, for
+    example body:0 for the first link in the body. Present when the link was created
+    with one.
+    """
+
+    referrer_host: Optional[str] = None
+    """The host of the page that linked here, when the request supplied one.
+
+    The host only — never a full referring URL.
+    """
+
+    request_method: Optional[str] = None
+    """The HTTP method of the request that was served, for an access event.
+
+    Omitted on link.expired and link.revoked, which describe no request.
+    """
+
+    sender_profile_id: Optional[str] = None
+    """
+    The sender profile that owns the link, or null when the organization owns it
+    directly. Always on the wire so a handler reads one shape rather than branching
+    on whether the key arrived.
+
+    sender_profile_id, not profile_id: the API already publishes
+    messaging_profile_id and sending_phone_number_profile_id for provider-side
+    profiles, which are a different thing entirely. The unqualified name would read
+    as one of those.
+    """
+
+    status_code: Optional[int] = None
+    """
+    The HTTP status Sent answered the request with: 302 for a link, 200 or 206 for a
+    file. Omitted on lifecycle events.
+    """
+
+    traffic_class: Optional[str] = None
+    """
+    A coarse guess at what made the request: likely_human, provider (a messaging
+    platform prefetching the link), bot, or unknown. Derived from the user agent, so
+    it is a hint for filtering noise rather than a fact to bill or report on.
+    """

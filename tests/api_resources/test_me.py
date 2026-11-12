@@ -9,7 +9,7 @@ import pytest
 
 from sent_dm import Sent, AsyncSent
 from tests.utils import assert_matches_type
-from sent_dm.types import MeRetrieveResponse
+from sent_dm.types import APIResponseOfAccount
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -21,7 +21,7 @@ class TestMe:
     @parametrize
     def test_method_retrieve(self, client: Sent) -> None:
         me = client.me.retrieve()
-        assert_matches_type(MeRetrieveResponse, me, path=["response"])
+        assert_matches_type(APIResponseOfAccount, me, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -29,7 +29,7 @@ class TestMe:
         me = client.me.retrieve(
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(MeRetrieveResponse, me, path=["response"])
+        assert_matches_type(APIResponseOfAccount, me, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -39,7 +39,7 @@ class TestMe:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         me = response.parse()
-        assert_matches_type(MeRetrieveResponse, me, path=["response"])
+        assert_matches_type(APIResponseOfAccount, me, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -49,7 +49,7 @@ class TestMe:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             me = response.parse()
-            assert_matches_type(MeRetrieveResponse, me, path=["response"])
+            assert_matches_type(APIResponseOfAccount, me, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -63,7 +63,7 @@ class TestAsyncMe:
     @parametrize
     async def test_method_retrieve(self, async_client: AsyncSent) -> None:
         me = await async_client.me.retrieve()
-        assert_matches_type(MeRetrieveResponse, me, path=["response"])
+        assert_matches_type(APIResponseOfAccount, me, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -71,7 +71,7 @@ class TestAsyncMe:
         me = await async_client.me.retrieve(
             x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(MeRetrieveResponse, me, path=["response"])
+        assert_matches_type(APIResponseOfAccount, me, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -81,7 +81,7 @@ class TestAsyncMe:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         me = await response.parse()
-        assert_matches_type(MeRetrieveResponse, me, path=["response"])
+        assert_matches_type(APIResponseOfAccount, me, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -91,6 +91,6 @@ class TestAsyncMe:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             me = await response.parse()
-            assert_matches_type(MeRetrieveResponse, me, path=["response"])
+            assert_matches_type(APIResponseOfAccount, me, path=["response"])
 
         assert cast(Any, response.is_closed) is True

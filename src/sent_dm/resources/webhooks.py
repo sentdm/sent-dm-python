@@ -27,12 +27,13 @@ from .._response import (
 )
 from ..pagination import SyncWebhooksPage, AsyncWebhooksPage, SyncWebhookEventsPage, AsyncWebhookEventsPage
 from .._base_client import AsyncPaginator, make_request_options
+from ..types.webhook_delivery import WebhookDelivery
 from ..types.webhook_response import WebhookResponse
 from ..types.api_response_webhook import APIResponseWebhook
-from ..types.webhook_test_response import WebhookTestResponse
-from ..types.webhook_list_events_response import WebhookListEventsResponse
-from ..types.webhook_rotate_secret_response import WebhookRotateSecretResponse
-from ..types.webhook_list_event_types_response import WebhookListEventTypesResponse
+from ..types.api_response_of_webhook_test import APIResponseOfWebhookTest
+from ..types.api_response_of_webhook_secret import APIResponseOfWebhookSecret
+from ..types.webhook_sender_profile_config_param import WebhookSenderProfileConfigParam
+from ..types.api_response_of_webhook_event_types_list import APIResponseOfWebhookEventTypesList
 
 __all__ = ["WebhooksResource", "AsyncWebhooksResource"]
 
@@ -74,7 +75,7 @@ class WebhooksResource(SyncAPIResource):
         is_inheritable: bool | Omit = omit,
         retry_count: int | Omit = omit,
         sandbox: bool | Omit = omit,
-        sender_profile: Optional[webhook_create_params.SenderProfile] | Omit = omit,
+        sender_profile: Optional[WebhookSenderProfileConfigParam] | Omit = omit,
         timeout_seconds: int | Omit = omit,
         webhook_version: Optional[int] | Omit = omit,
         idempotency_key: str | Omit = omit,
@@ -208,7 +209,7 @@ class WebhooksResource(SyncAPIResource):
         is_inheritable: Optional[bool] | Omit = omit,
         retry_count: int | Omit = omit,
         sandbox: bool | Omit = omit,
-        sender_profile: Optional[webhook_update_params.SenderProfile] | Omit = omit,
+        sender_profile: Optional[WebhookSenderProfileConfigParam] | Omit = omit,
         timeout_seconds: int | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -377,7 +378,7 @@ class WebhooksResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WebhookListEventTypesResponse:
+    ) -> APIResponseOfWebhookEventTypesList:
         """
         Retrieves all available webhook event types that can be subscribed to.
 
@@ -396,7 +397,7 @@ class WebhooksResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=WebhookListEventTypesResponse,
+            cast_to=APIResponseOfWebhookEventTypesList,
         )
 
     def list_events(
@@ -413,7 +414,7 @@ class WebhooksResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> SyncWebhookEventsPage[WebhookListEventsResponse]:
+    ) -> SyncWebhookEventsPage[WebhookDelivery]:
         """
         Retrieves a paginated list of delivery events for the specified webhook, newest
         first. If the webhook is cloned onto your sender profiles (version 1) or
@@ -435,7 +436,7 @@ class WebhooksResource(SyncAPIResource):
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._get_api_list(
             path_template("/v3/webhooks/{id}/events", id=id),
-            page=SyncWebhookEventsPage[WebhookListEventsResponse],
+            page=SyncWebhookEventsPage[WebhookDelivery],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -450,7 +451,7 @@ class WebhooksResource(SyncAPIResource):
                     webhook_list_events_params.WebhookListEventsParams,
                 ),
             ),
-            model=WebhookListEventsResponse,
+            model=WebhookDelivery,
         )
 
     def rotate_secret(
@@ -466,7 +467,7 @@ class WebhooksResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WebhookRotateSecretResponse:
+    ) -> APIResponseOfWebhookSecret:
         """Generates a new signing secret for the specified webhook.
 
         A version 1 webhook's
@@ -504,7 +505,7 @@ class WebhooksResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=WebhookRotateSecretResponse,
+            cast_to=APIResponseOfWebhookSecret,
         )
 
     def test(
@@ -521,7 +522,7 @@ class WebhooksResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WebhookTestResponse:
+    ) -> APIResponseOfWebhookTest:
         """Sends a test event to the specified webhook endpoint to verify connectivity.
 
         A
@@ -564,7 +565,7 @@ class WebhooksResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=WebhookTestResponse,
+            cast_to=APIResponseOfWebhookTest,
         )
 
     def toggle_status(
@@ -661,7 +662,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
         is_inheritable: bool | Omit = omit,
         retry_count: int | Omit = omit,
         sandbox: bool | Omit = omit,
-        sender_profile: Optional[webhook_create_params.SenderProfile] | Omit = omit,
+        sender_profile: Optional[WebhookSenderProfileConfigParam] | Omit = omit,
         timeout_seconds: int | Omit = omit,
         webhook_version: Optional[int] | Omit = omit,
         idempotency_key: str | Omit = omit,
@@ -795,7 +796,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
         is_inheritable: Optional[bool] | Omit = omit,
         retry_count: int | Omit = omit,
         sandbox: bool | Omit = omit,
-        sender_profile: Optional[webhook_update_params.SenderProfile] | Omit = omit,
+        sender_profile: Optional[WebhookSenderProfileConfigParam] | Omit = omit,
         timeout_seconds: int | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -964,7 +965,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WebhookListEventTypesResponse:
+    ) -> APIResponseOfWebhookEventTypesList:
         """
         Retrieves all available webhook event types that can be subscribed to.
 
@@ -983,7 +984,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=WebhookListEventTypesResponse,
+            cast_to=APIResponseOfWebhookEventTypesList,
         )
 
     def list_events(
@@ -1000,7 +1001,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> AsyncPaginator[WebhookListEventsResponse, AsyncWebhookEventsPage[WebhookListEventsResponse]]:
+    ) -> AsyncPaginator[WebhookDelivery, AsyncWebhookEventsPage[WebhookDelivery]]:
         """
         Retrieves a paginated list of delivery events for the specified webhook, newest
         first. If the webhook is cloned onto your sender profiles (version 1) or
@@ -1022,7 +1023,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
         extra_headers = {**strip_not_given({"x-profile-id": x_profile_id}), **(extra_headers or {})}
         return self._get_api_list(
             path_template("/v3/webhooks/{id}/events", id=id),
-            page=AsyncWebhookEventsPage[WebhookListEventsResponse],
+            page=AsyncWebhookEventsPage[WebhookDelivery],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -1037,7 +1038,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
                     webhook_list_events_params.WebhookListEventsParams,
                 ),
             ),
-            model=WebhookListEventsResponse,
+            model=WebhookDelivery,
         )
 
     async def rotate_secret(
@@ -1053,7 +1054,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WebhookRotateSecretResponse:
+    ) -> APIResponseOfWebhookSecret:
         """Generates a new signing secret for the specified webhook.
 
         A version 1 webhook's
@@ -1093,7 +1094,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=WebhookRotateSecretResponse,
+            cast_to=APIResponseOfWebhookSecret,
         )
 
     async def test(
@@ -1110,7 +1111,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WebhookTestResponse:
+    ) -> APIResponseOfWebhookTest:
         """Sends a test event to the specified webhook endpoint to verify connectivity.
 
         A
@@ -1153,7 +1154,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=WebhookTestResponse,
+            cast_to=APIResponseOfWebhookTest,
         )
 
     async def toggle_status(

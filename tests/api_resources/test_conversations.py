@@ -9,8 +9,8 @@ import pytest
 
 from sent_dm import Sent, AsyncSent
 from tests.utils import assert_matches_type
+from sent_dm.types import Message
 from sent_dm.pagination import SyncConversationsPage, AsyncConversationsPage
-from sent_dm.types.conversation_messages_list import Message
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 

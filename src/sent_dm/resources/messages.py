@@ -7,7 +7,7 @@ from datetime import datetime
 
 import httpx
 
-from ..types import message_send_params, message_resend_params
+from ..types import message_send_params, message_cancel_params, message_resend_params
 from .._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
 from .._utils import path_template, maybe_transform, strip_not_given, async_maybe_transform
 from .._compat import cached_property
@@ -19,9 +19,12 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
+from ..types.template_ref_param import TemplateRefParam
 from ..types.message_send_response import MessageSendResponse
-from ..types.message_retrieve_status_response import MessageRetrieveStatusResponse
-from ..types.message_retrieve_activities_response import MessageRetrieveActivitiesResponse
+from ..types.api_response_of_message import APIResponseOfMessage
+from ..types.message_channel_options_param import MessageChannelOptionsParam
+from ..types.api_response_of_cancelled_message import APIResponseOfCancelledMessage
+from ..types.api_response_of_message_activities import APIResponseOfMessageActivities
 
 __all__ = ["MessagesResource", "AsyncMessagesResource"]
 
@@ -56,6 +59,87 @@ class MessagesResource(SyncAPIResource):
         For more information, see https://www.github.com/sentdm/sent-dm-python#with_streaming_response
         """
         return MessagesResourceWithStreamingResponse(self)
+
+    def cancel(
+        self,
+        id: str,
+        *,
+        sandbox: bool | Omit = omit,
+        idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> APIResponseOfCancelledMessage:
+        """
+        Calls off a message you scheduled with `scheduled_at`, before it is released for
+        sending. The message moves to `CANCELLED`, which is terminal, and it is never
+        sent.
+
+        **Only a SCHEDULED message can be cancelled.** A message that has already been
+        released — queued, in flight, or finished — returns 409. The release sweeper
+        runs continuously, so a cancellation sent within about a minute of the scheduled
+        instant can lose that race and be refused; cancel with time to spare.
+
+        **One message per call.** A send to many recipients, or on several channels,
+        becomes one message per recipient × channel, each with its own id; cancel the
+        ones you want stopped. There is no bulk cancellation.
+
+        **Cancelling is free**, and nothing was charged for the hold in the first place
+        — a scheduled message is only priced and billed at release.
+
+        **A cancellation fires `message.cancelled`** on your webhook, exactly once,
+        carrying the `scheduled_at` that was called off so a consumer can un-record the
+        send it was expecting. Cancelling the same message again returns this same
+        response and fires no second event. `Idempotency-Key` is honoured.
+
+        A cancelled message cannot be resent — send a new one.
+
+        The response is the message itself, in the same shape `GET /v3/messages/{id}`
+        returns, so the `status` you read back is the one now stored on the row, and
+        `scheduled_at` is the time it would have gone out. `GET /v3/messages/{id}` keeps
+        reporting both afterwards.
+
+        `events` is the message lifecycle as it stood immediately before the
+        cancellation: the CANCELLED entry is written asynchronously and lands a moment
+        later, so read `status` for the outcome. If you need the entry itself, re-fetch
+        the message after a few seconds — `GET /v3/messages/{id}` is cached briefly, so
+        an immediate re-fetch can still show the pre-cancellation state.
+
+        Args:
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
+        return self._post(
+            path_template("/v3/messages/{id}/cancel", id=id),
+            body=maybe_transform({"sandbox": sandbox}, message_cancel_params.MessageCancelParams),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=APIResponseOfCancelledMessage,
+        )
 
     def resend(
         self,
@@ -145,7 +229,7 @@ class MessagesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> MessageRetrieveActivitiesResponse:
+    ) -> APIResponseOfMessageActivities:
         """Retrieves the activity log for a specific message.
 
         Activities track the message
@@ -170,7 +254,7 @@ class MessagesResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=MessageRetrieveActivitiesResponse,
+            cast_to=APIResponseOfMessageActivities,
         )
 
     def retrieve_status(
@@ -184,7 +268,7 @@ class MessagesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> MessageRetrieveStatusResponse:
+    ) -> APIResponseOfMessage:
         """Retrieves the current status and details of a message by ID.
 
         Includes delivery
@@ -212,19 +296,19 @@ class MessagesResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=MessageRetrieveStatusResponse,
+            cast_to=APIResponseOfMessage,
         )
 
     def send(
         self,
         *,
         channel: Optional[SequenceNotStr[str]] | Omit = omit,
-        channels: Optional[Dict[str, Iterable[message_send_params.Channel]]] | Omit = omit,
+        channels: Optional[Dict[str, Iterable[MessageChannelOptionsParam]]] | Omit = omit,
         media_urls: Optional[SequenceNotStr[str]] | Omit = omit,
         sandbox: bool | Omit = omit,
         scheduled_at: Union[str, datetime, None] | Omit = omit,
         subject: Optional[str] | Omit = omit,
-        template: Optional[message_send_params.Template] | Omit = omit,
+        template: Optional[TemplateRefParam] | Omit = omit,
         text: Optional[str] | Omit = omit,
         to: SequenceNotStr[str] | Omit = omit,
         idempotency_key: str | Omit = omit,
@@ -416,6 +500,87 @@ class AsyncMessagesResource(AsyncAPIResource):
         """
         return AsyncMessagesResourceWithStreamingResponse(self)
 
+    async def cancel(
+        self,
+        id: str,
+        *,
+        sandbox: bool | Omit = omit,
+        idempotency_key: str | Omit = omit,
+        x_profile_id: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> APIResponseOfCancelledMessage:
+        """
+        Calls off a message you scheduled with `scheduled_at`, before it is released for
+        sending. The message moves to `CANCELLED`, which is terminal, and it is never
+        sent.
+
+        **Only a SCHEDULED message can be cancelled.** A message that has already been
+        released — queued, in flight, or finished — returns 409. The release sweeper
+        runs continuously, so a cancellation sent within about a minute of the scheduled
+        instant can lose that race and be refused; cancel with time to spare.
+
+        **One message per call.** A send to many recipients, or on several channels,
+        becomes one message per recipient × channel, each with its own id; cancel the
+        ones you want stopped. There is no bulk cancellation.
+
+        **Cancelling is free**, and nothing was charged for the hold in the first place
+        — a scheduled message is only priced and billed at release.
+
+        **A cancellation fires `message.cancelled`** on your webhook, exactly once,
+        carrying the `scheduled_at` that was called off so a consumer can un-record the
+        send it was expecting. Cancelling the same message again returns this same
+        response and fires no second event. `Idempotency-Key` is honoured.
+
+        A cancelled message cannot be resent — send a new one.
+
+        The response is the message itself, in the same shape `GET /v3/messages/{id}`
+        returns, so the `status` you read back is the one now stored on the row, and
+        `scheduled_at` is the time it would have gone out. `GET /v3/messages/{id}` keeps
+        reporting both afterwards.
+
+        `events` is the message lifecycle as it stood immediately before the
+        cancellation: the CANCELLED entry is written asynchronously and lands a moment
+        later, so read `status` for the outcome. If you need the entry itself, re-fetch
+        the message after a few seconds — `GET /v3/messages/{id}` is cached briefly, so
+        an immediate re-fetch can still show the pre-cancellation state.
+
+        Args:
+          sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
+              for testing integrations without actual execution
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        extra_headers = {
+            **strip_not_given(
+                {
+                    "Idempotency-Key": idempotency_key,
+                    "x-profile-id": x_profile_id,
+                }
+            ),
+            **(extra_headers or {}),
+        }
+        return await self._post(
+            path_template("/v3/messages/{id}/cancel", id=id),
+            body=await async_maybe_transform({"sandbox": sandbox}, message_cancel_params.MessageCancelParams),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=APIResponseOfCancelledMessage,
+        )
+
     async def resend(
         self,
         id: str,
@@ -504,7 +669,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> MessageRetrieveActivitiesResponse:
+    ) -> APIResponseOfMessageActivities:
         """Retrieves the activity log for a specific message.
 
         Activities track the message
@@ -529,7 +694,7 @@ class AsyncMessagesResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=MessageRetrieveActivitiesResponse,
+            cast_to=APIResponseOfMessageActivities,
         )
 
     async def retrieve_status(
@@ -543,7 +708,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> MessageRetrieveStatusResponse:
+    ) -> APIResponseOfMessage:
         """Retrieves the current status and details of a message by ID.
 
         Includes delivery
@@ -571,19 +736,19 @@ class AsyncMessagesResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=MessageRetrieveStatusResponse,
+            cast_to=APIResponseOfMessage,
         )
 
     async def send(
         self,
         *,
         channel: Optional[SequenceNotStr[str]] | Omit = omit,
-        channels: Optional[Dict[str, Iterable[message_send_params.Channel]]] | Omit = omit,
+        channels: Optional[Dict[str, Iterable[MessageChannelOptionsParam]]] | Omit = omit,
         media_urls: Optional[SequenceNotStr[str]] | Omit = omit,
         sandbox: bool | Omit = omit,
         scheduled_at: Union[str, datetime, None] | Omit = omit,
         subject: Optional[str] | Omit = omit,
-        template: Optional[message_send_params.Template] | Omit = omit,
+        template: Optional[TemplateRefParam] | Omit = omit,
         text: Optional[str] | Omit = omit,
         to: SequenceNotStr[str] | Omit = omit,
         idempotency_key: str | Omit = omit,
@@ -748,6 +913,9 @@ class MessagesResourceWithRawResponse:
     def __init__(self, messages: MessagesResource) -> None:
         self._messages = messages
 
+        self.cancel = to_raw_response_wrapper(
+            messages.cancel,
+        )
         self.resend = to_raw_response_wrapper(
             messages.resend,
         )
@@ -766,6 +934,9 @@ class AsyncMessagesResourceWithRawResponse:
     def __init__(self, messages: AsyncMessagesResource) -> None:
         self._messages = messages
 
+        self.cancel = async_to_raw_response_wrapper(
+            messages.cancel,
+        )
         self.resend = async_to_raw_response_wrapper(
             messages.resend,
         )
@@ -784,6 +955,9 @@ class MessagesResourceWithStreamingResponse:
     def __init__(self, messages: MessagesResource) -> None:
         self._messages = messages
 
+        self.cancel = to_streamed_response_wrapper(
+            messages.cancel,
+        )
         self.resend = to_streamed_response_wrapper(
             messages.resend,
         )
@@ -802,6 +976,9 @@ class AsyncMessagesResourceWithStreamingResponse:
     def __init__(self, messages: AsyncMessagesResource) -> None:
         self._messages = messages
 
+        self.cancel = async_to_streamed_response_wrapper(
+            messages.cancel,
+        )
         self.resend = async_to_streamed_response_wrapper(
             messages.resend,
         )
