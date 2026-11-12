@@ -151,7 +151,10 @@ class SMSResource(SyncAPIResource):
         read as `PROVISIONING` in the response's `numbers`, each with the area code it
         was asked for. A profile inheriting your organization's campaign cannot request
         `numbers` (`400`). `numbers` on a `TEN_DLC` market you already hold is `409`:
-        its numbers belong to its one campaign and are set when the market is created.
+        change its campaign's numbers with `PATCH /v3/channels/sms/{country}/{type}`,
+        add numbers to one of its campaigns with
+        `POST /v3/channels/sms/numbers/US/TEN_DLC`, or add a new campaign with
+        `POST /v3/channels/sms/compliances/US/TEN_DLC/campaigns`.
 
         **A market you already send in is `409`**: adding what is already there is a
         mistake worth reporting rather than a silent no-op. A market is a
@@ -189,6 +192,23 @@ class SMSResource(SyncAPIResource):
               which works for country, whose wire name is its camel-cased C# name, and
               silently does not for number_type. A client generating a request from our
               OpenAPI therefore sent what the document called sufficient and was answered 400.
+
+              - `LOCAL` - A geographic number for the country. The ordinary choice:
+                recognisable to recipients, and available almost everywhere.
+              - `TOLL_FREE` - A toll-free number. High throughput and no per-country
+                registration, but US toll-free traffic goes through its own verification.
+              - `SHORT_CODE` - A short code — five or six digits, leased rather than
+                provisioned. Highest throughput, longest lead time, and the most expensive.
+              - `ALPHANUMERIC` - A sender name rather than a number, up to 11 characters.
+                Recipients cannot reply. Not available in every country, and several require
+                it to be pre-registered with documents.
+              - `TEN_DLC` - A US 10-digit long code registered with The Campaign Registry. The
+                only sender type that registers with a compliance regime, so it is the only
+                one whose market declares `compliance.brand` and `compliance.campaign`.
+              - `MOBILE` - A mobile number. Where a country distinguishes it from a landline,
+                some carriers treat mobile traffic differently.
+              - `10DLC` - The industry's spelling of `TEN_DLC`, accepted so an integrator can
+                send the term it knows. Resolves to the same market.
 
           area_codes: The area codes to put this sender in, in your own order of preference, e.g.
               ["415", "628"] for the US or ["20"] for London. Omit it and a number is claimed
@@ -666,7 +686,10 @@ class AsyncSMSResource(AsyncAPIResource):
         read as `PROVISIONING` in the response's `numbers`, each with the area code it
         was asked for. A profile inheriting your organization's campaign cannot request
         `numbers` (`400`). `numbers` on a `TEN_DLC` market you already hold is `409`:
-        its numbers belong to its one campaign and are set when the market is created.
+        change its campaign's numbers with `PATCH /v3/channels/sms/{country}/{type}`,
+        add numbers to one of its campaigns with
+        `POST /v3/channels/sms/numbers/US/TEN_DLC`, or add a new campaign with
+        `POST /v3/channels/sms/compliances/US/TEN_DLC/campaigns`.
 
         **A market you already send in is `409`**: adding what is already there is a
         mistake worth reporting rather than a silent no-op. A market is a
@@ -704,6 +727,23 @@ class AsyncSMSResource(AsyncAPIResource):
               which works for country, whose wire name is its camel-cased C# name, and
               silently does not for number_type. A client generating a request from our
               OpenAPI therefore sent what the document called sufficient and was answered 400.
+
+              - `LOCAL` - A geographic number for the country. The ordinary choice:
+                recognisable to recipients, and available almost everywhere.
+              - `TOLL_FREE` - A toll-free number. High throughput and no per-country
+                registration, but US toll-free traffic goes through its own verification.
+              - `SHORT_CODE` - A short code — five or six digits, leased rather than
+                provisioned. Highest throughput, longest lead time, and the most expensive.
+              - `ALPHANUMERIC` - A sender name rather than a number, up to 11 characters.
+                Recipients cannot reply. Not available in every country, and several require
+                it to be pre-registered with documents.
+              - `TEN_DLC` - A US 10-digit long code registered with The Campaign Registry. The
+                only sender type that registers with a compliance regime, so it is the only
+                one whose market declares `compliance.brand` and `compliance.campaign`.
+              - `MOBILE` - A mobile number. Where a country distinguishes it from a landline,
+                some carriers treat mobile traffic differently.
+              - `10DLC` - The industry's spelling of `TEN_DLC`, accepted so an integrator can
+                send the term it knows. Resolves to the same market.
 
           area_codes: The area codes to put this sender in, in your own order of preference, e.g.
               ["415", "628"] for the US or ["20"] for London. Omit it and a number is claimed
