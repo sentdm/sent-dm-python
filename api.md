@@ -415,6 +415,7 @@ from sent_dm.types.channels import (
     SMSMarket,
     SMSNumber,
     SMSNumberRequest,
+    SuppliedCampaign,
     SuppliedCompliance,
     SuppliedDocument,
 )
