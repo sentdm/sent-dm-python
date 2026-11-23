@@ -38,6 +38,15 @@ class ComplianceRequirement(BaseModel):
     max_items: Optional[int] = None
     """Most entries this value accepts, where the market caps it."""
 
+    max_length: Optional[int] = None
+    """Longest acceptable value, where the market caps it.
+
+    On a list of strings, each item's.
+    """
+
+    min_items: Optional[int] = None
+    """Fewest entries this value accepts, where the market sets a minimum."""
+
     min_length: Optional[int] = None
     """Shortest acceptable value, where the market sets one.
 

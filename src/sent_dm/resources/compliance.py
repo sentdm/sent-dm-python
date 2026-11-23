@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import typing_extensions
 from typing import Optional
 
 import httpx
@@ -52,6 +53,7 @@ class ComplianceResource(SyncAPIResource):
         """
         return ComplianceResourceWithStreamingResponse(self)
 
+    @typing_extensions.deprecated("deprecated")
     def retrieve_requirements(
         self,
         *,
@@ -67,6 +69,10 @@ class ComplianceResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> APIResponseOfComplianceRequirements:
         """
+        **Deprecated.** Use `GET /v3/channels/{channel}/{country}/compliance` instead,
+        and expect this to be removed in a future release. It answers exactly as before,
+        so nothing needs to change today.
+
         **Call this first.** It returns what a channel, country and sender type demand
         before you can send there — and `setup[]`, the calls that satisfy those demands,
         in order, each with a body you can copy and send as it stands. You never have to
@@ -203,6 +209,7 @@ class AsyncComplianceResource(AsyncAPIResource):
         """
         return AsyncComplianceResourceWithStreamingResponse(self)
 
+    @typing_extensions.deprecated("deprecated")
     async def retrieve_requirements(
         self,
         *,
@@ -218,6 +225,10 @@ class AsyncComplianceResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> APIResponseOfComplianceRequirements:
         """
+        **Deprecated.** Use `GET /v3/channels/{channel}/{country}/compliance` instead,
+        and expect this to be removed in a future release. It answers exactly as before,
+        so nothing needs to change today.
+
         **Call this first.** It returns what a channel, country and sender type demand
         before you can send there — and `setup[]`, the calls that satisfy those demands,
         in order, each with a body you can copy and send as it stands. You never have to
@@ -329,8 +340,10 @@ class ComplianceResourceWithRawResponse:
     def __init__(self, compliance: ComplianceResource) -> None:
         self._compliance = compliance
 
-        self.retrieve_requirements = to_raw_response_wrapper(
-            compliance.retrieve_requirements,
+        self.retrieve_requirements = (  # pyright: ignore[reportDeprecated]
+            to_raw_response_wrapper(
+                compliance.retrieve_requirements,  # pyright: ignore[reportDeprecated],
+            )
         )
 
 
@@ -338,8 +351,10 @@ class AsyncComplianceResourceWithRawResponse:
     def __init__(self, compliance: AsyncComplianceResource) -> None:
         self._compliance = compliance
 
-        self.retrieve_requirements = async_to_raw_response_wrapper(
-            compliance.retrieve_requirements,
+        self.retrieve_requirements = (  # pyright: ignore[reportDeprecated]
+            async_to_raw_response_wrapper(
+                compliance.retrieve_requirements,  # pyright: ignore[reportDeprecated],
+            )
         )
 
 
@@ -347,8 +362,10 @@ class ComplianceResourceWithStreamingResponse:
     def __init__(self, compliance: ComplianceResource) -> None:
         self._compliance = compliance
 
-        self.retrieve_requirements = to_streamed_response_wrapper(
-            compliance.retrieve_requirements,
+        self.retrieve_requirements = (  # pyright: ignore[reportDeprecated]
+            to_streamed_response_wrapper(
+                compliance.retrieve_requirements,  # pyright: ignore[reportDeprecated],
+            )
         )
 
 
@@ -356,6 +373,8 @@ class AsyncComplianceResourceWithStreamingResponse:
     def __init__(self, compliance: AsyncComplianceResource) -> None:
         self._compliance = compliance
 
-        self.retrieve_requirements = async_to_streamed_response_wrapper(
-            compliance.retrieve_requirements,
+        self.retrieve_requirements = (  # pyright: ignore[reportDeprecated]
+            async_to_streamed_response_wrapper(
+                compliance.retrieve_requirements,  # pyright: ignore[reportDeprecated],
+            )
         )

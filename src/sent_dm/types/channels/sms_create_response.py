@@ -4,15 +4,19 @@ from typing import List, Optional
 from typing_extensions import Literal
 
 from ..._models import BaseModel
+from ..api_meta import APIMeta
 from .sms_number import SMSNumber
+from ..error_detail import ErrorDetail
 from .supplied_compliance import SuppliedCompliance
 
-__all__ = ["SMSMarket"]
+__all__ = ["SMSCreateResponse", "Data"]
 
 
-class SMSMarket(BaseModel):
+class Data(BaseModel):
     """
-    One SMS market the profile sends in — its sender, where that sender stands, and what the market wants.
+    One market the profile sends in on a channel — its sender, where that sender stands, and what the market wants.
+    Named for no one channel, as the routes it answers are not (/v3/channels/{channel}/{country}/{type}); SMS is
+    the channel with markets today.
 
     A profile may send in several: it is a tenant, not a market. Each carries its own status, because
     a profile can be live in one country and mid-registration in another — and each carries what it still owes,
@@ -82,4 +86,51 @@ class SMSMarket(BaseModel):
     Describes whether the market can send, not each number: a market holding several
     numbers reads ACTIVE as soon as one of them is, whatever the others are doing.
     Each number's own status is in numbers.
+
+    - `PROVISIONING` - We are working on it and there is nothing for you to do — a
+      number is being procured, or a registration is being assembled. Minutes to
+      hours.
+    - `ACTION_NEEDED` - **Waiting on you.** Something the market asks for has not
+      been supplied, a regulator rejected what was, or we have asked you to correct
+      and resubmit your identity data. Nothing progresses until you act. For an SMS
+      market, `GET /v3/channels/sms/{country}/{type}` names what it wants and
+      `PATCH` on the same path supplies it — compliance values, documents and
+      numbers alike.
+    - `PENDING_REVIEW` - With a regulator or carrier — filed, or assembled and
+      queued for us to file — and their answer is what moves it, to `ACTIVE` or back
+      to `ACTION_NEEDED`. Nothing on your side changes it. Days for SMS, weeks for
+      RCS.
+    - `ACTIVE` - Can carry traffic now. A channel a sender profile runs on its
+      organization's reads `ACTIVE` too — it sends, which is what the field is
+      about.
+    - `INACTIVE` - **It had a working sender and no longer does** — the number was
+      released, or the campaign it carried lapsed. Distinct from `PROVISIONING`,
+      which means it has never sent yet: the same absence of a sender, opposite
+      news. Sends will fail until it returns to `ACTIVE`.
     """
+
+
+class SMSCreateResponse(BaseModel):
+    """Standard API response envelope for all v3 endpoints"""
+
+    data: Optional[Data] = None
+    """
+    One market the profile sends in on a channel — its sender, where that sender
+    stands, and what the market wants. Named for no one channel, as the routes it
+    answers are not (/v3/channels/{channel}/{country}/{type}); SMS is the channel
+    with markets today.
+
+    A profile may send in several: it is a tenant, not a market. Each carries its
+    own status, because a profile can be live in one country and mid-registration in
+    another — and each carries what it still owes, rather than that being reported
+    in a separate array a caller has to join on.
+    """
+
+    error: Optional[ErrorDetail] = None
+    """Error information"""
+
+    meta: Optional[APIMeta] = None
+    """Request and response metadata"""
+
+    success: Optional[bool] = None
+    """Indicates whether the request was successful"""

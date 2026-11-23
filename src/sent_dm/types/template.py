@@ -4,6 +4,7 @@ from typing import List, Optional
 from datetime import datetime
 
 from .._models import BaseModel
+from .template_definition import TemplateDefinition
 
 __all__ = ["Template"]
 
@@ -59,6 +60,12 @@ class Template(BaseModel):
     created_at: Optional[datetime] = None
     """When the template was created"""
 
+    definition: Optional[TemplateDefinition] = None
+    """
+    Complete definition of a message template including header, body, footer, and
+    buttons
+    """
+
     is_published: Optional[bool] = None
     """Whether the template is published and active"""
 
@@ -67,6 +74,13 @@ class Template(BaseModel):
 
     name: Optional[str] = None
     """Template display name"""
+
+    slug: Optional[str] = None
+    """
+    The template's slug: a stable, URL-safe name a send can use in place of the id
+    (template.slug on POST /v3/messages). Given at creation from the name and never
+    changed.
+    """
 
     status: Optional[str] = None
     """Template status: DRAFT, PENDING, APPROVED, REJECTED.
