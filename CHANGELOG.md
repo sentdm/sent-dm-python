@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.56.0](https://github.com/sentdm/sent-dm-python/compare/v0.55.0...v0.56.0) (2026-11-12)
+
+
+### Features
+
+* **api:** methods for the US 10DLC campaigns, numbers and market compliance ([273a3cd](https://github.com/sentdm/sent-dm-python/commit/273a3cdd68bb36b2b7bee811fded6233653a9391))
+
+## [0.55.0](https://github.com/sentdm/sent-dm-python/compare/v0.54.0...v0.55.0) (2026-11-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* **api:** sync OpenAPI spec from production
+
+### Features
+
+* **api:** sync OpenAPI spec from production ([a492eb1](https://github.com/sentdm/sent-dm-python/commit/a492eb1a8a57db542be2045ac8a6be27d535cf50))
+
 ## [0.54.0](https://github.com/sentdm/sent-dm-python/compare/v0.53.0...v0.54.0) (2026-11-06)
 
 

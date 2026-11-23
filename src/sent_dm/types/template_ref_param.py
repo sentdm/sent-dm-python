@@ -10,14 +10,14 @@ __all__ = ["TemplateRefParam"]
 
 class TemplateRefParam(TypedDict, total=False):
     """
-    SDK-style template reference: resolve by ID or by name, with optional parameters.
+    SDK-style template reference: resolve by id, by slug or by name (exactly one), with optional parameters.
     """
 
     id: Optional[str]
-    """Template ID (mutually exclusive with name)"""
+    """Template ID (mutually exclusive with slug and name)"""
 
     name: Optional[str]
-    """Template name (mutually exclusive with id)"""
+    """Template name (mutually exclusive with id and slug)"""
 
     parameters: Optional[Dict[str, str]]
     """Template variable parameters for personalization, keyed by variable name.
@@ -34,4 +34,11 @@ class TemplateRefParam(TypedDict, total=False):
 
     "parameters": { "header_image": "https://cdn.example.com/banner.jpg", "name":
     "John Doe" }
+    """
+
+    slug: Optional[str]
+    """
+    Template slug (mutually exclusive with id and name): the stable name every
+    template on this account carries (GET /v3/templates lists them). Compared
+    case-insensitively.
     """

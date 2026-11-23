@@ -77,9 +77,6 @@ class SMSCreateParams(TypedDict, total=False):
     the document keys their own requirements name.
     """
 
-    country: str
-    """ISO 3166-1 alpha-2 country the sender operates in."""
-
     numbers: Optional[Iterable[SMSNumberRequestParam]]
     """
     The numbers to assign, one entry per area code, e.g. [{"area_code": "212",

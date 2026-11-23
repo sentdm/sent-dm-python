@@ -51,6 +51,14 @@ class MessageEventPayload(BaseModel):
     outbound_number: Optional[str] = None
     """The recipient's number in E.164 format."""
 
+    parent_message_id: Optional[str] = None
+    """
+    When this message is another send of a message you sent earlier, the id of that
+    original message; omitted for every other message. The new send has its own
+    message_id, so this ties its events back to the message you sent. Always the
+    first message, however many sends lie between them.
+    """
+
     reason: Optional[str] = None
     """
     A human-readable sentence for ReasonCode, for example "The recipient is not
@@ -83,6 +91,19 @@ class MessageEventPayload(BaseModel):
     message.cancelled the release instant that was called off — the same instant,
     before and after. A consumer that recorded a future send from the first event
     has what it needs to un-record it from the second. Omitted on every other event.
+    """
+
+    sent_agent_id: Optional[str] = None
+    """The Sent agent (Sent Agents) that sent this message, when one did.
+
+    Not the RCS agent_id above: that names the RCS sender agent, this names the
+    autonomous agent running on the account.
+    """
+
+    sent_instance_id: Optional[str] = None
+    """
+    The conversation (agent × contact) the message belongs to, when a Sent agent
+    sent it.
     """
 
     template_id: Optional[str] = None

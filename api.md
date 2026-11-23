@@ -409,23 +409,27 @@ Types:
 
 ```python
 from sent_dm.types.channels import (
-    APIResponseOfListOfSMSMarket,
-    APIResponseOfSMSMarket,
     MarketCompliance,
-    SMSMarket,
     SMSNumber,
     SMSNumberRequest,
+    SuppliedCampaign,
     SuppliedCompliance,
     SuppliedDocument,
+    SMSCreateResponse,
 )
 ```
 
 Methods:
 
-- <code title="post /v3/channels/sms">client.channels.sms.<a href="./src/sent_dm/resources/channels/sms.py">create</a>(\*\*<a href="src/sent_dm/types/channels/sms_create_params.py">params</a>) -> <a href="./src/sent_dm/types/channels/api_response_of_sms_market.py">APIResponseOfSMSMarket</a></code>
-- <code title="get /v3/channels/sms/{country}/{type}">client.channels.sms.<a href="./src/sent_dm/resources/channels/sms.py">retrieve</a>(type, \*, country) -> <a href="./src/sent_dm/types/channels/api_response_of_sms_market.py">APIResponseOfSMSMarket</a></code>
-- <code title="patch /v3/channels/sms/{country}/{type}">client.channels.sms.<a href="./src/sent_dm/resources/channels/sms.py">update</a>(type, \*, country, \*\*<a href="src/sent_dm/types/channels/sms_update_params.py">params</a>) -> <a href="./src/sent_dm/types/channels/api_response_of_sms_market.py">APIResponseOfSMSMarket</a></code>
-- <code title="get /v3/channels/sms">client.channels.sms.<a href="./src/sent_dm/resources/channels/sms.py">list</a>() -> <a href="./src/sent_dm/types/channels/api_response_of_list_of_sms_market.py">APIResponseOfListOfSMSMarket</a></code>
+- <code title="post /v3/channels/sms">client.channels.sms.<a href="./src/sent_dm/resources/channels/sms.py">create</a>(\*\*<a href="src/sent_dm/types/channels/sms_create_params.py">params</a>) -> <a href="./src/sent_dm/types/channels/sms_create_response.py">SMSCreateResponse</a></code>
+
+### TenDlc
+
+Types:
+
+```python
+from sent_dm.types.channels.sms import TenDlcCampaignUseCase
+```
 
 ## Rcs
 

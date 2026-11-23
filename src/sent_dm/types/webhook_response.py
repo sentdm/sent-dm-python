@@ -12,6 +12,12 @@ __all__ = ["WebhookResponse"]
 class WebhookResponse(BaseModel):
     id: Optional[str] = None
 
+    agent_id: Optional[str] = None
+    """
+    The Sent agent whose events alone this webhook receives; absent on a webhook of
+    the whole account.
+    """
+
     consecutive_failures: Optional[int] = None
     """Failed attempts since the last success.
 

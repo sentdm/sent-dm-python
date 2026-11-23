@@ -11,6 +11,9 @@ __all__ = ["WebhookListParams"]
 
 
 class WebhookListParams(TypedDict, total=False):
+    agent_id: Optional[str]
+    """Only the webhooks of this Sent agent."""
+
     is_active: Optional[bool]
 
     page: int
