@@ -19,6 +19,7 @@ from ...._response import (
 from ...._base_client import make_request_options
 from ....types.channels.sms import ten_dlc_add_campaign_params, ten_dlc_update_campaign_params
 from ....types.channels.api_response_of_channel_market import APIResponseOfChannelMarket
+from ....types.channels.sms.ten_dlc_campaign_use_case_param import TenDlcCampaignUseCaseParam
 from ....types.channels.sms.ten_dlc_list_campaigns_response import TenDlcListCampaignsResponse
 
 __all__ = ["TenDlcResource", "AsyncTenDlcResource"]
@@ -70,7 +71,7 @@ class TenDlcResource(SyncAPIResource):
         opt_out_message: str,
         privacy_policy_link: str,
         terms_and_conditions_link: str,
-        use_cases: Iterable[ten_dlc_add_campaign_params.UseCase],
+        use_cases: Iterable[TenDlcCampaignUseCaseParam],
         volume: str,
         idempotency_key: str,
         sandbox: bool | Omit = omit,
@@ -273,7 +274,7 @@ class TenDlcResource(SyncAPIResource):
         privacy_policy_link: str | Omit = omit,
         sandbox: bool | Omit = omit,
         terms_and_conditions_link: str | Omit = omit,
-        use_cases: Iterable[ten_dlc_update_campaign_params.UseCase] | Omit = omit,
+        use_cases: Iterable[TenDlcCampaignUseCaseParam] | Omit = omit,
         volume: str | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,
@@ -453,7 +454,7 @@ class AsyncTenDlcResource(AsyncAPIResource):
         opt_out_message: str,
         privacy_policy_link: str,
         terms_and_conditions_link: str,
-        use_cases: Iterable[ten_dlc_add_campaign_params.UseCase],
+        use_cases: Iterable[TenDlcCampaignUseCaseParam],
         volume: str,
         idempotency_key: str,
         sandbox: bool | Omit = omit,
@@ -656,7 +657,7 @@ class AsyncTenDlcResource(AsyncAPIResource):
         privacy_policy_link: str | Omit = omit,
         sandbox: bool | Omit = omit,
         terms_and_conditions_link: str | Omit = omit,
-        use_cases: Iterable[ten_dlc_update_campaign_params.UseCase] | Omit = omit,
+        use_cases: Iterable[TenDlcCampaignUseCaseParam] | Omit = omit,
         volume: str | Omit = omit,
         idempotency_key: str | Omit = omit,
         x_profile_id: str | Omit = omit,

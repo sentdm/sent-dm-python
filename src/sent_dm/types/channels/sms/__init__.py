@@ -4,4 +4,5 @@ from __future__ import annotations
 
 from .ten_dlc_add_campaign_params import TenDlcAddCampaignParams as TenDlcAddCampaignParams
 from .ten_dlc_update_campaign_params import TenDlcUpdateCampaignParams as TenDlcUpdateCampaignParams
+from .ten_dlc_campaign_use_case_param import TenDlcCampaignUseCaseParam as TenDlcCampaignUseCaseParam
 from .ten_dlc_list_campaigns_response import TenDlcListCampaignsResponse as TenDlcListCampaignsResponse
