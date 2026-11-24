@@ -68,6 +68,7 @@ class WebhooksResource(SyncAPIResource):
     def create(
         self,
         *,
+        agent_id: Optional[str] | Omit = omit,
         display_name: str | Omit = omit,
         endpoint_url: str | Omit = omit,
         event_filters: Optional[Dict[str, SequenceNotStr[str]]] | Omit = omit,
@@ -100,6 +101,11 @@ class WebhooksResource(SyncAPIResource):
         sender_profile out.
 
         Args:
+          agent_id: One of your Sent agents: the webhook then receives only that agent's events, its
+              agent events and the messages it sent or received, and is never inheritable:
+              is_inheritable set with it is refused. Only the account the agent runs on can
+              set it, and only on a version 2 webhook.
+
           is_inheritable: Also delivers every sender profile's events to this webhook, at the same URL and
               with the same signing secret, and lets each profile see the webhook and read the
               events about itself. Off by default: the organization's own events only. Only an
@@ -142,6 +148,7 @@ class WebhooksResource(SyncAPIResource):
             "/v3/webhooks",
             body=maybe_transform(
                 {
+                    "agent_id": agent_id,
                     "display_name": display_name,
                     "endpoint_url": endpoint_url,
                     "event_filters": event_filters,
@@ -231,7 +238,7 @@ class WebhooksResource(SyncAPIResource):
         Args:
           is_inheritable: Makes this webhook inheritable by the organization's sender profiles (see
               create), or stops it being inheritable. Omit or pass null to keep it as it is.
-              Only a version 2 webhook can be inheritable.
+              Only a version 2 webhook can be inheritable, and never an agent's.
 
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
@@ -284,6 +291,7 @@ class WebhooksResource(SyncAPIResource):
     def list(
         self,
         *,
+        agent_id: Optional[str] | Omit = omit,
         is_active: Optional[bool] | Omit = omit,
         page: int | Omit = omit,
         page_size: int | Omit = omit,
@@ -302,6 +310,8 @@ class WebhooksResource(SyncAPIResource):
         version 1 webhook includes its sender_profile selection.
 
         Args:
+          agent_id: Only the webhooks of this Sent agent.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -321,6 +331,7 @@ class WebhooksResource(SyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform(
                     {
+                        "agent_id": agent_id,
                         "is_active": is_active,
                         "page": page,
                         "page_size": page_size,
@@ -655,6 +666,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
     async def create(
         self,
         *,
+        agent_id: Optional[str] | Omit = omit,
         display_name: str | Omit = omit,
         endpoint_url: str | Omit = omit,
         event_filters: Optional[Dict[str, SequenceNotStr[str]]] | Omit = omit,
@@ -687,6 +699,11 @@ class AsyncWebhooksResource(AsyncAPIResource):
         sender_profile out.
 
         Args:
+          agent_id: One of your Sent agents: the webhook then receives only that agent's events, its
+              agent events and the messages it sent or received, and is never inheritable:
+              is_inheritable set with it is refused. Only the account the agent runs on can
+              set it, and only on a version 2 webhook.
+
           is_inheritable: Also delivers every sender profile's events to this webhook, at the same URL and
               with the same signing secret, and lets each profile see the webhook and read the
               events about itself. Off by default: the organization's own events only. Only an
@@ -729,6 +746,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
             "/v3/webhooks",
             body=await async_maybe_transform(
                 {
+                    "agent_id": agent_id,
                     "display_name": display_name,
                     "endpoint_url": endpoint_url,
                     "event_filters": event_filters,
@@ -818,7 +836,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
         Args:
           is_inheritable: Makes this webhook inheritable by the organization's sender profiles (see
               create), or stops it being inheritable. Omit or pass null to keep it as it is.
-              Only a version 2 webhook can be inheritable.
+              Only a version 2 webhook can be inheritable, and never an agent's.
 
           sandbox: Sandbox flag - when true, the operation is simulated without side effects Useful
               for testing integrations without actual execution
@@ -871,6 +889,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
     def list(
         self,
         *,
+        agent_id: Optional[str] | Omit = omit,
         is_active: Optional[bool] | Omit = omit,
         page: int | Omit = omit,
         page_size: int | Omit = omit,
@@ -889,6 +908,8 @@ class AsyncWebhooksResource(AsyncAPIResource):
         version 1 webhook includes its sender_profile selection.
 
         Args:
+          agent_id: Only the webhooks of this Sent agent.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -908,6 +929,7 @@ class AsyncWebhooksResource(AsyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform(
                     {
+                        "agent_id": agent_id,
                         "is_active": is_active,
                         "page": page,
                         "page_size": page_size,
