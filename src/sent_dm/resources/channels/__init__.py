@@ -24,6 +24,14 @@ from .voice import (
     VoiceResourceWithStreamingResponse,
     AsyncVoiceResourceWithStreamingResponse,
 )
+from .markets import (
+    MarketsResource,
+    AsyncMarketsResource,
+    MarketsResourceWithRawResponse,
+    AsyncMarketsResourceWithRawResponse,
+    MarketsResourceWithStreamingResponse,
+    AsyncMarketsResourceWithStreamingResponse,
+)
 from .channels import (
     ChannelsResource,
     AsyncChannelsResource,
@@ -42,6 +50,12 @@ from .whatsapp import (
 )
 
 __all__ = [
+    "MarketsResource",
+    "AsyncMarketsResource",
+    "MarketsResourceWithRawResponse",
+    "AsyncMarketsResourceWithRawResponse",
+    "MarketsResourceWithStreamingResponse",
+    "AsyncMarketsResourceWithStreamingResponse",
     "SMSResource",
     "AsyncSMSResource",
     "SMSResourceWithRawResponse",

@@ -4,19 +4,21 @@ from typing import Optional
 
 from ..._models import BaseModel
 from ..api_meta import APIMeta
-from .sms_market import SMSMarket
 from ..error_detail import ErrorDetail
+from .channel_market import ChannelMarket
 
-__all__ = ["APIResponseOfSMSMarket"]
+__all__ = ["APIResponseOfChannelMarket"]
 
 
-class APIResponseOfSMSMarket(BaseModel):
+class APIResponseOfChannelMarket(BaseModel):
     """Standard API response envelope for all v3 endpoints"""
 
-    data: Optional[SMSMarket] = None
+    data: Optional[ChannelMarket] = None
     """
-    One SMS market the profile sends in — its sender, where that sender stands, and
-    what the market wants.
+    One market the profile sends in on a channel — its sender, where that sender
+    stands, and what the market wants. Named for no one channel, as the routes it
+    answers are not (/v3/channels/{channel}/{country}/{type}); SMS is the channel
+    with markets today.
 
     A profile may send in several: it is a tenant, not a market. Each carries its
     own status, because a profile can be live in one country and mid-registration in

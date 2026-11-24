@@ -12,8 +12,9 @@ class TenDlcCampaignUseCaseParam(TypedDict, total=False):
     sample_messages: Required[Iterable[object]]
     """Sample messages.
 
-    TCR sample1..sample5 for this use case. One to five, each carrying the brand
-    name and an opt-out instruction.
+    TCR sample1..sample5 for this use case. One to five, each 20 to 1024 characters
+    and carrying the brand name and an opt-out instruction. At most five across the
+    campaign, and at least two when a high-volume campaign has a single use case.
     """
 
     use_case: Required[

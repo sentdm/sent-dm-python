@@ -103,10 +103,12 @@ class TenDlcUpdateCampaignParams(TypedDict, total=False):
     volume: str
     """Expected monthly volume.
 
-    Decides how the campaign registers and which fee tier applies: below the
-    low-volume threshold it registers as LOW_VOLUME with sub-use-cases, above it as
-    a single use case or MIXED. Omitting it registers the campaign at the higher-fee
-    standard tier.
+    Required whenever the campaign's fields are written. A whole number of messages,
+    e.g. 1000 or 10000. Decides how the campaign registers and which fee tier
+    applies: below the low-volume threshold it registers as LOW_VOLUME with
+    sub-use-cases, above it as a single use case or MIXED. Omitting it registers the
+    campaign at the higher-fee standard tier. Required when
+    `compliance.campaign.inherit != true`, whenever its block is written.
     """
 
     idempotency_key: Annotated[str, PropertyInfo(alias="Idempotency-Key")]
