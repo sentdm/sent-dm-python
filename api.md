@@ -4,6 +4,8 @@ Types:
 
 ```python
 from sent_dm.types import (
+    AgentEvent,
+    AgentEventPayload,
     APIMeta,
     APIResponseOfWebhookEventTypesList,
     APIResponseOfWebhookEventsList,

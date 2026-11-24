@@ -19,6 +19,7 @@ from .call_event import CallEvent as CallEvent
 from .link_event import LinkEvent as LinkEvent
 from .mms_market import MmsMarket as MmsMarket
 from .users_list import UsersList as UsersList
+from .agent_event import AgentEvent as AgentEvent
 from .entity_type import EntityType as EntityType
 from .error_detail import ErrorDetail as ErrorDetail
 from .message_body import MessageBody as MessageBody
@@ -72,6 +73,7 @@ from .user_remove_params import UserRemoveParams as UserRemoveParams
 from .webhook_event_type import WebhookEventType as WebhookEventType
 from .account_rcs_channel import AccountRcsChannel as AccountRcsChannel
 from .account_sms_channel import AccountSMSChannel as AccountSMSChannel
+from .agent_event_payload import AgentEventPayload as AgentEventPayload
 from .contact_list_params import ContactListParams as ContactListParams
 from .destination_country import DestinationCountry as DestinationCountry
 from .message_send_params import MessageSendParams as MessageSendParams
