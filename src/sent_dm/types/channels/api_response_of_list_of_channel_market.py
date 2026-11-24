@@ -4,16 +4,16 @@ from typing import List, Optional
 
 from ..._models import BaseModel
 from ..api_meta import APIMeta
-from .sms_market import SMSMarket
 from ..error_detail import ErrorDetail
+from .channel_market import ChannelMarket
 
-__all__ = ["APIResponseOfListOfSMSMarket"]
+__all__ = ["APIResponseOfListOfChannelMarket"]
 
 
-class APIResponseOfListOfSMSMarket(BaseModel):
+class APIResponseOfListOfChannelMarket(BaseModel):
     """Standard API response envelope for all v3 endpoints"""
 
-    data: Optional[List[SMSMarket]] = None
+    data: Optional[List[ChannelMarket]] = None
     """The response data (null if error)"""
 
     error: Optional[ErrorDetail] = None

@@ -49,6 +49,13 @@ class Message(BaseModel):
     silently dropped on whichever path forgot it.
     """
 
+    parent_message_id: Optional[str] = None
+    """
+    When this message is another send of a message you sent earlier, the id of that
+    original message; null for every other message. Always the first message,
+    however many sends lie between them.
+    """
+
     phone: Optional[str] = None
 
     phone_international: Optional[str] = None
