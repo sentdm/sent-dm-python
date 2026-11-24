@@ -7,6 +7,7 @@ from typing_extensions import TypeAlias
 from .._models import BaseModel
 from .call_event import CallEvent
 from .link_event import LinkEvent
+from .agent_event import AgentEvent
 from .channel_event import ChannelEvent
 from .contact_event import ContactEvent
 from .message_event import MessageEvent
@@ -16,7 +17,7 @@ from .inbound_message_event import InboundMessageEvent
 __all__ = ["WebhookDelivery", "EventData"]
 
 EventData: TypeAlias = Union[
-    MessageEvent, InboundMessageEvent, TemplateEvent, ChannelEvent, ContactEvent, LinkEvent, CallEvent
+    MessageEvent, InboundMessageEvent, TemplateEvent, ChannelEvent, ContactEvent, LinkEvent, CallEvent, AgentEvent
 ]
 
 
