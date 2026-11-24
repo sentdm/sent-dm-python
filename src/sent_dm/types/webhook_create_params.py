@@ -13,6 +13,14 @@ __all__ = ["WebhookCreateParams"]
 
 
 class WebhookCreateParams(TypedDict, total=False):
+    agent_id: Optional[str]
+    """
+    One of your Sent agents: the webhook then receives only that agent's events, its
+    agent events and the messages it sent or received, and is never inheritable:
+    is_inheritable set with it is refused. Only the account the agent runs on can
+    set it, and only on a version 2 webhook.
+    """
+
     display_name: str
 
     endpoint_url: str
