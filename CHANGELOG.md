@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.57.0](https://github.com/sentdm/sent-dm-python/compare/v0.56.0...v0.57.0) (2026-11-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* **api:** markets move to channels.markets and 10DLC numbers to markets.add_numbers
+
+### Features
+
+* **api:** markets move to channels.markets and 10DLC numbers to markets.add_numbers ([2f9b5b9](https://github.com/sentdm/sent-dm-python/commit/2f9b5b925e2cc94b10f27cdb8f3029f7d3d35585))
+
 ## [0.56.0](https://github.com/sentdm/sent-dm-python/compare/v0.55.0...v0.56.0) (2026-11-12)
 
 
