@@ -3,12 +3,11 @@
 from __future__ import annotations
 
 from typing import Iterable
-from typing_extensions import Annotated, TypedDict
+from typing_extensions import Literal, Required, Annotated, TypedDict
 
 from ...._utils import PropertyInfo
-from .ten_dlc_campaign_use_case_param import TenDlcCampaignUseCaseParam
 
-__all__ = ["TenDlcUpdateCampaignParams"]
+__all__ = ["TenDlcUpdateCampaignParams", "UseCase"]
 
 
 class TenDlcUpdateCampaignParams(TypedDict, total=False):
@@ -92,7 +91,7 @@ class TenDlcUpdateCampaignParams(TypedDict, total=False):
     TCR termsAndConditionsLink. Required when `compliance.campaign.inherit != true`.
     """
 
-    use_cases: Iterable[TenDlcCampaignUseCaseParam]
+    use_cases: Iterable[UseCase]
     """Use cases.
 
     What the campaign sends, and an example of each. One to five entries; how they
@@ -103,12 +102,44 @@ class TenDlcUpdateCampaignParams(TypedDict, total=False):
     volume: str
     """Expected monthly volume.
 
-    Decides how the campaign registers and which fee tier applies: below the
-    low-volume threshold it registers as LOW_VOLUME with sub-use-cases, above it as
-    a single use case or MIXED. Omitting it registers the campaign at the higher-fee
-    standard tier.
+    Required whenever the campaign's fields are written. A whole number of messages,
+    e.g. 1000 or 10000. Decides how the campaign registers and which fee tier
+    applies: below the low-volume threshold it registers as LOW_VOLUME with
+    sub-use-cases, above it as a single use case or MIXED. Omitting it registers the
+    campaign at the higher-fee standard tier. Required when
+    `compliance.campaign.inherit != true`, whenever its block is written.
     """
 
     idempotency_key: Annotated[str, PropertyInfo(alias="Idempotency-Key")]
 
     x_profile_id: Annotated[str, PropertyInfo(alias="x-profile-id")]
+
+
+class UseCase(TypedDict, total=False):
+    sample_messages: Required[Iterable[object]]
+    """Sample messages.
+
+    TCR sample1..sample5 for this use case. One to five, each 20 to 1024 characters
+    and carrying the brand name and an opt-out instruction. At most five across the
+    campaign, and at least two when a high-volume campaign has a single use case.
+    """
+
+    use_case: Required[
+        Literal[
+            "MARKETING",
+            "ACCOUNT_NOTIFICATION",
+            "CUSTOMER_CARE",
+            "FRAUD_ALERT",
+            "2FA",
+            "DELIVERY_NOTIFICATION",
+            "SECURITY_ALERT",
+            "M2M",
+            "HIGHER_EDUCATION",
+            "POLLING_VOTING",
+            "PUBLIC_SERVICE_ANNOUNCEMENT",
+        ]
+    ]
+    """Use case.
+
+    What this entry sends. MIXED and LOW_VOLUME are refused — volume decides those.
+    """
