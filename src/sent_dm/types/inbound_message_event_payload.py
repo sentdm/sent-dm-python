@@ -59,6 +59,17 @@ class InboundMessageEventPayload(BaseModel):
     optional.
     """
 
+    sent_agent_id: Optional[str] = None
+    """
+    The Sent agent whose conversation this reply arrived in, when the contact is in
+    one, as on the messages it sent. Absent otherwise.
+    """
+
+    sent_instance_id: Optional[str] = None
+    """
+    The conversation (agent × contact) the reply belongs to, when it belongs to one.
+    """
+
     text: Optional[str] = None
     """The message body.
 
