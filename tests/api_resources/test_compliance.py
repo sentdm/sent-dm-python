@@ -11,6 +11,8 @@ from sent_dm import Sent, AsyncSent
 from tests.utils import assert_matches_type
 from sent_dm.types import APIResponseOfComplianceRequirements
 
+# pyright: reportDeprecated=false
+
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
 
@@ -20,24 +22,29 @@ class TestCompliance:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_retrieve_requirements(self, client: Sent) -> None:
-        compliance = client.compliance.retrieve_requirements()
+        with pytest.warns(DeprecationWarning):
+            compliance = client.compliance.retrieve_requirements()
+
         assert_matches_type(APIResponseOfComplianceRequirements, compliance, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_retrieve_requirements_with_all_params(self, client: Sent) -> None:
-        compliance = client.compliance.retrieve_requirements(
-            channel="channel",
-            country="country",
-            type="type",
-            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        )
+        with pytest.warns(DeprecationWarning):
+            compliance = client.compliance.retrieve_requirements(
+                channel="channel",
+                country="country",
+                type="type",
+                x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            )
+
         assert_matches_type(APIResponseOfComplianceRequirements, compliance, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_retrieve_requirements(self, client: Sent) -> None:
-        response = client.compliance.with_raw_response.retrieve_requirements()
+        with pytest.warns(DeprecationWarning):
+            response = client.compliance.with_raw_response.retrieve_requirements()
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -47,12 +54,13 @@ class TestCompliance:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_retrieve_requirements(self, client: Sent) -> None:
-        with client.compliance.with_streaming_response.retrieve_requirements() as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        with pytest.warns(DeprecationWarning):
+            with client.compliance.with_streaming_response.retrieve_requirements() as response:
+                assert not response.is_closed
+                assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
-            compliance = response.parse()
-            assert_matches_type(APIResponseOfComplianceRequirements, compliance, path=["response"])
+                compliance = response.parse()
+                assert_matches_type(APIResponseOfComplianceRequirements, compliance, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -65,24 +73,29 @@ class TestAsyncCompliance:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_retrieve_requirements(self, async_client: AsyncSent) -> None:
-        compliance = await async_client.compliance.retrieve_requirements()
+        with pytest.warns(DeprecationWarning):
+            compliance = await async_client.compliance.retrieve_requirements()
+
         assert_matches_type(APIResponseOfComplianceRequirements, compliance, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_retrieve_requirements_with_all_params(self, async_client: AsyncSent) -> None:
-        compliance = await async_client.compliance.retrieve_requirements(
-            channel="channel",
-            country="country",
-            type="type",
-            x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        )
+        with pytest.warns(DeprecationWarning):
+            compliance = await async_client.compliance.retrieve_requirements(
+                channel="channel",
+                country="country",
+                type="type",
+                x_profile_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+            )
+
         assert_matches_type(APIResponseOfComplianceRequirements, compliance, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_retrieve_requirements(self, async_client: AsyncSent) -> None:
-        response = await async_client.compliance.with_raw_response.retrieve_requirements()
+        with pytest.warns(DeprecationWarning):
+            response = await async_client.compliance.with_raw_response.retrieve_requirements()
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -92,11 +105,12 @@ class TestAsyncCompliance:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_retrieve_requirements(self, async_client: AsyncSent) -> None:
-        async with async_client.compliance.with_streaming_response.retrieve_requirements() as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        with pytest.warns(DeprecationWarning):
+            async with async_client.compliance.with_streaming_response.retrieve_requirements() as response:
+                assert not response.is_closed
+                assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
-            compliance = await response.parse()
-            assert_matches_type(APIResponseOfComplianceRequirements, compliance, path=["response"])
+                compliance = await response.parse()
+                assert_matches_type(APIResponseOfComplianceRequirements, compliance, path=["response"])
 
         assert cast(Any, response.is_closed) is True
