@@ -35,6 +35,7 @@ class TestWebhooks:
     @parametrize
     def test_method_create_with_all_params(self, client: Sent) -> None:
         webhook = client.webhooks.create(
+            agent_id=None,
             display_name="Order Notifications",
             endpoint_url="https://example.com/webhooks/orders",
             event_filters={
@@ -203,6 +204,7 @@ class TestWebhooks:
     @parametrize
     def test_method_list_with_all_params(self, client: Sent) -> None:
         webhook = client.webhooks.list(
+            agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             is_active=True,
             page=0,
             page_size=0,
@@ -551,6 +553,7 @@ class TestAsyncWebhooks:
     @parametrize
     async def test_method_create_with_all_params(self, async_client: AsyncSent) -> None:
         webhook = await async_client.webhooks.create(
+            agent_id=None,
             display_name="Order Notifications",
             endpoint_url="https://example.com/webhooks/orders",
             event_filters={
@@ -719,6 +722,7 @@ class TestAsyncWebhooks:
     @parametrize
     async def test_method_list_with_all_params(self, async_client: AsyncSent) -> None:
         webhook = await async_client.webhooks.list(
+            agent_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
             is_active=True,
             page=0,
             page_size=0,

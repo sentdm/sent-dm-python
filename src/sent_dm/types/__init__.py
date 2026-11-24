@@ -33,6 +33,7 @@ from .inbound_media import InboundMedia as InboundMedia
 from .message_event import MessageEvent as MessageEvent
 from .message_media import MessageMedia as MessageMedia
 from .profiles_list import ProfilesList as ProfilesList
+from .template_body import TemplateBody as TemplateBody
 from .user_response import UserResponse as UserResponse
 from .webhooks_list import WebhooksList as WebhooksList
 from .brand_business import BrandBusiness as BrandBusiness
@@ -47,6 +48,9 @@ from .webhook_secret import WebhookSecret as WebhookSecret
 from .account_profile import AccountProfile as AccountProfile
 from .billing_contact import BillingContact as BillingContact
 from .pagination_meta import PaginationMeta as PaginationMeta
+from .template_button import TemplateButton as TemplateButton
+from .template_footer import TemplateFooter as TemplateFooter
+from .template_header import TemplateHeader as TemplateHeader
 from .account_channels import AccountChannels as AccountChannels
 from .brand_compliance import BrandCompliance as BrandCompliance
 from .contact_response import ContactResponse as ContactResponse
@@ -57,6 +61,7 @@ from .webhook_delivery import WebhookDelivery as WebhookDelivery
 from .webhook_response import WebhookResponse as WebhookResponse
 from .cancelled_message import CancelledMessage as CancelledMessage
 from .message_recipient import MessageRecipient as MessageRecipient
+from .template_variable import TemplateVariable as TemplateVariable
 from .call_event_payload import CallEventPayload as CallEventPayload
 from .link_event_payload import LinkEventPayload as LinkEventPayload
 from .message_activities import MessageActivities as MessageActivities
@@ -73,6 +78,8 @@ from .message_send_params import MessageSendParams as MessageSendParams
 from .message_send_result import MessageSendResult as MessageSendResult
 from .tcr_campaign_status import TcrCampaignStatus as TcrCampaignStatus
 from .template_body_param import TemplateBodyParam as TemplateBodyParam
+from .template_definition import TemplateDefinition as TemplateDefinition
+from .template_media_item import TemplateMediaItem as TemplateMediaItem
 from .webhook_events_list import WebhookEventsList as WebhookEventsList
 from .webhook_list_params import WebhookListParams as WebhookListParams
 from .webhook_test_params import WebhookTestParams as WebhookTestParams
@@ -84,6 +91,7 @@ from .number_lookup_result import NumberLookupResult as NumberLookupResult
 from .sender_profiles_list import SenderProfilesList as SenderProfilesList
 from .template_list_params import TemplateListParams as TemplateListParams
 from .api_response_template import APIResponseTemplate as APIResponseTemplate
+from .authentication_config import AuthenticationConfig as AuthenticationConfig
 from .channel_event_payload import ChannelEventPayload as ChannelEventPayload
 from .compliance_setup_step import ComplianceSetupStep as ComplianceSetupStep
 from .contact_create_params import ContactCreateParams as ContactCreateParams
@@ -99,7 +107,9 @@ from .payment_details_param import PaymentDetailsParam as PaymentDetailsParam
 from .profile_create_params import ProfileCreateParams as ProfileCreateParams
 from .profile_delete_params import ProfileDeleteParams as ProfileDeleteParams
 from .profile_update_params import ProfileUpdateParams as ProfileUpdateParams
+from .template_body_content import TemplateBodyContent as TemplateBodyContent
 from .template_button_param import TemplateButtonParam as TemplateButtonParam
+from .template_button_props import TemplateButtonProps as TemplateButtonProps
 from .template_footer_param import TemplateFooterParam as TemplateFooterParam
 from .template_header_param import TemplateHeaderParam as TemplateHeaderParam
 from .webhook_create_params import WebhookCreateParams as WebhookCreateParams
@@ -120,12 +130,14 @@ from .compliance_requirements import ComplianceRequirements as ComplianceRequire
 from .contact_message_summary import ContactMessageSummary as ContactMessageSummary
 from .profile_complete_params import ProfileCompleteParams as ProfileCompleteParams
 from .template_variable_param import TemplateVariableParam as TemplateVariableParam
+from .template_variable_props import TemplateVariableProps as TemplateVariableProps
 from .user_update_role_params import UserUpdateRoleParams as UserUpdateRoleParams
 from .account_whatsapp_channel import AccountWhatsappChannel as AccountWhatsappChannel
 from .brand_contact_info_param import BrandContactInfoParam as BrandContactInfoParam
 from .conversation_list_params import ConversationListParams as ConversationListParams
 from .sender_profile_rcs_param import SenderProfileRcsParam as SenderProfileRcsParam
 from .sender_profile_sms_param import SenderProfileSMSParam as SenderProfileSMSParam
+from .template_header_location import TemplateHeaderLocation as TemplateHeaderLocation
 from .webhook_event_types_list import WebhookEventTypesList as WebhookEventTypesList
 from .brand_business_info_param import BrandBusinessInfoParam as BrandBusinessInfoParam
 from .destination_country_param import DestinationCountryParam as DestinationCountryParam
@@ -133,6 +145,7 @@ from .profile_completion_result import ProfileCompletionResult as ProfileComplet
 from .tcr_brand_identity_status import TcrBrandIdentityStatus as TcrBrandIdentityStatus
 from .template_definition_param import TemplateDefinitionParam as TemplateDefinitionParam
 from .template_media_item_param import TemplateMediaItemParam as TemplateMediaItemParam
+from .template_mms_body_content import TemplateMmsBodyContent as TemplateMmsBodyContent
 from .api_response_of_users_list import APIResponseOfUsersList as APIResponseOfUsersList
 from .billing_contact_info_param import BillingContactInfoParam as BillingContactInfoParam
 from .conversation_messages_list import ConversationMessagesList as ConversationMessagesList

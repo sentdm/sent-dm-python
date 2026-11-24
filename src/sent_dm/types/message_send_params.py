@@ -98,8 +98,8 @@ class MessageSendParams(TypedDict, total=False):
 
     template: Optional[TemplateRefParam]
     """
-    SDK-style template reference: resolve by ID or by name, with optional
-    parameters.
+    SDK-style template reference: resolve by id, by slug or by name (exactly one),
+    with optional parameters.
     """
 
     text: Optional[str]

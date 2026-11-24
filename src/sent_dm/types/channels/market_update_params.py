@@ -7,10 +7,12 @@ from typing_extensions import Required, Annotated, TypedDict
 from ..._utils import PropertyInfo
 from .market_compliance_param import MarketComplianceParam
 
-__all__ = ["SMSUpdateParams"]
+__all__ = ["MarketUpdateParams"]
 
 
-class SMSUpdateParams(TypedDict, total=False):
+class MarketUpdateParams(TypedDict, total=False):
+    channel: Required[str]
+
     country: Required[str]
 
     compliance: MarketComplianceParam

@@ -5,29 +5,36 @@ from __future__ import annotations
 from typing import Iterable, Optional
 from typing_extensions import Required, Annotated, TypedDict
 
-from ...._utils import PropertyInfo
-from ..sms_number_request_param import SMSNumberRequestParam
+from ..._utils import PropertyInfo
+from .sms_number_request_param import SMSNumberRequestParam
 
-__all__ = ["TenDlcAddNumbersParams"]
+__all__ = ["MarketAddNumbersParams"]
 
 
-class TenDlcAddNumbersParams(TypedDict, total=False):
-    campaign_id: Required[str]
-    """The campaign to add the numbers to, as compliance.campaigns[].id reports it.
+class MarketAddNumbersParams(TypedDict, total=False):
+    channel: Required[str]
 
-    Required.
-    """
+    country: Required[str]
 
     numbers: Required[Iterable[Optional[SMSNumberRequestParam]]]
-    """The numbers to add, one entry per area code, e.g.
+    """The numbers, one entry per area code, e.g.
 
     [{"area_code": "415", "quantity": 2}, {"quantity": 1}]. quantity defaults to 1,
     and an entry without area_code means any area code. Required.
 
-    Added to what the campaign already asks for, never replacing it.
+    POST adds them to what the market or campaign already asks for; PATCH replaces
+    that list with them, and has to cover every number already held, since none is
+    ever released.
     """
 
     idempotency_key: Required[Annotated[str, PropertyInfo(alias="Idempotency-Key")]]
+
+    campaign_id: Optional[str]
+    """The campaign to add the numbers to, as campaigns[].id reports it.
+
+    Required on SMS US TEN_DLC, where every number belongs to a campaign; refused on
+    a market without campaigns.
+    """
 
     sandbox: bool
     """

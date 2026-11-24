@@ -5,8 +5,8 @@ from typing import List, Optional
 from .._models import BaseModel
 from .mms_market import MmsMarket
 from .channels.rcs_agent import RcsAgent
-from .channels.sms_market import SMSMarket
 from .channels.voice_number import VoiceNumber
+from .channels.channel_market import ChannelMarket
 from .channels.whatsapp_channel import WhatsappChannel
 
 __all__ = ["ChannelsState"]
@@ -58,7 +58,7 @@ class ChannelsState(BaseModel):
     echoed.
     """
 
-    sms: Optional[List[SMSMarket]] = None
+    sms: Optional[List[ChannelMarket]] = None
 
     voice: Optional[List[VoiceNumber]] = None
     """
