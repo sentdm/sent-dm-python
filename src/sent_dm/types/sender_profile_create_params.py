@@ -14,6 +14,16 @@ __all__ = ["SenderProfileCreateParams"]
 
 
 class SenderProfileCreateParams(TypedDict, total=False):
+    agent_template_id: Optional[str]
+    """
+    One of the organization's agent templates (GET /v3/agents/templates with the
+    organization's key) to make an agent from on the new profile as soon as it
+    exists. The agent is a draft with the template's definition; give it the
+    profile's numbers and activate it through /v3/agents with the profile's
+    x-profile-id. Agents must be enabled for the organization. A sender profile's
+    own template cannot be used: it is that profile's alone.
+    """
+
     billing: Optional[SenderProfileBillingRequestParam]
     """Who pays for what a sender profile sends.
 

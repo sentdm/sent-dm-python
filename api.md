@@ -4,6 +4,8 @@ Types:
 
 ```python
 from sent_dm.types import (
+    AgentEvent,
+    AgentEventPayload,
     APIMeta,
     APIResponseOfWebhookEventTypesList,
     APIResponseOfWebhookEventsList,
@@ -403,6 +405,30 @@ Methods:
 
 - <code title="get /v3/channels">client.channels.<a href="./src/sent_dm/resources/channels/channels.py">list</a>() -> <a href="./src/sent_dm/types/api_response_of_channels_state.py">APIResponseOfChannelsState</a></code>
 
+## Markets
+
+Types:
+
+```python
+from sent_dm.types.channels import (
+    APIResponseOfChannelMarket,
+    APIResponseOfListOfChannelMarket,
+    APIResponseOfMarketNumbers,
+    ChannelMarket,
+    MarketNumber,
+    MarketNumbers,
+)
+```
+
+Methods:
+
+- <code title="get /v3/channels/{channel}/{country}/{type}">client.channels.markets.<a href="./src/sent_dm/resources/channels/markets.py">retrieve</a>(type, \*, channel, country) -> <a href="./src/sent_dm/types/channels/api_response_of_channel_market.py">APIResponseOfChannelMarket</a></code>
+- <code title="patch /v3/channels/{channel}/{country}/{type}">client.channels.markets.<a href="./src/sent_dm/resources/channels/markets.py">update</a>(type, \*, channel, country, \*\*<a href="src/sent_dm/types/channels/market_update_params.py">params</a>) -> <a href="./src/sent_dm/types/channels/api_response_of_channel_market.py">APIResponseOfChannelMarket</a></code>
+- <code title="get /v3/channels/{channel}">client.channels.markets.<a href="./src/sent_dm/resources/channels/markets.py">list</a>(channel) -> <a href="./src/sent_dm/types/channels/api_response_of_list_of_channel_market.py">APIResponseOfListOfChannelMarket</a></code>
+- <code title="post /v3/channels/{channel}/{country}/{type}/numbers">client.channels.markets.<a href="./src/sent_dm/resources/channels/markets.py">add_numbers</a>(type, \*, channel, country, \*\*<a href="src/sent_dm/types/channels/market_add_numbers_params.py">params</a>) -> <a href="./src/sent_dm/types/channels/api_response_of_channel_market.py">APIResponseOfChannelMarket</a></code>
+- <code title="get /v3/channels/{channel}/{country}/{type}/numbers">client.channels.markets.<a href="./src/sent_dm/resources/channels/markets.py">list_numbers</a>(type, \*, channel, country, \*\*<a href="src/sent_dm/types/channels/market_list_numbers_params.py">params</a>) -> <a href="./src/sent_dm/types/channels/api_response_of_market_numbers.py">APIResponseOfMarketNumbers</a></code>
+- <code title="patch /v3/channels/{channel}/{country}/{type}/numbers">client.channels.markets.<a href="./src/sent_dm/resources/channels/markets.py">replace_numbers</a>(type, \*, channel, country, \*\*<a href="src/sent_dm/types/channels/market_replace_numbers_params.py">params</a>) -> <a href="./src/sent_dm/types/channels/api_response_of_channel_market.py">APIResponseOfChannelMarket</a></code>
+
 ## SMS
 
 Types:
@@ -415,21 +441,26 @@ from sent_dm.types.channels import (
     SuppliedCampaign,
     SuppliedCompliance,
     SuppliedDocument,
-    SMSCreateResponse,
 )
 ```
 
 Methods:
 
-- <code title="post /v3/channels/sms">client.channels.sms.<a href="./src/sent_dm/resources/channels/sms.py">create</a>(\*\*<a href="src/sent_dm/types/channels/sms_create_params.py">params</a>) -> <a href="./src/sent_dm/types/channels/sms_create_response.py">SMSCreateResponse</a></code>
+- <code title="post /v3/channels/sms">client.channels.sms.<a href="./src/sent_dm/resources/channels/sms/sms.py">create</a>(\*\*<a href="src/sent_dm/types/channels/sms_create_params.py">params</a>) -> <a href="./src/sent_dm/types/channels/api_response_of_channel_market.py">APIResponseOfChannelMarket</a></code>
 
 ### TenDlc
 
 Types:
 
 ```python
-from sent_dm.types.channels.sms import TenDlcCampaignUseCase
+from sent_dm.types.channels.sms import TenDlcCampaignUseCase, TenDlcListCampaignsResponse
 ```
+
+Methods:
+
+- <code title="post /v3/channels/sms/US/TEN_DLC/campaigns">client.channels.sms.ten_dlc.<a href="./src/sent_dm/resources/channels/sms/ten_dlc.py">add_campaign</a>(\*\*<a href="src/sent_dm/types/channels/sms/ten_dlc_add_campaign_params.py">params</a>) -> <a href="./src/sent_dm/types/channels/api_response_of_channel_market.py">APIResponseOfChannelMarket</a></code>
+- <code title="get /v3/channels/sms/US/TEN_DLC/campaigns">client.channels.sms.ten_dlc.<a href="./src/sent_dm/resources/channels/sms/ten_dlc.py">list_campaigns</a>() -> <a href="./src/sent_dm/types/channels/sms/ten_dlc_list_campaigns_response.py">TenDlcListCampaignsResponse</a></code>
+- <code title="patch /v3/channels/sms/US/TEN_DLC/campaigns/{campaignId}">client.channels.sms.ten_dlc.<a href="./src/sent_dm/resources/channels/sms/ten_dlc.py">update_campaign</a>(campaign_id, \*\*<a href="src/sent_dm/types/channels/sms/ten_dlc_update_campaign_params.py">params</a>) -> <a href="./src/sent_dm/types/channels/api_response_of_channel_market.py">APIResponseOfChannelMarket</a></code>
 
 ## Rcs
 

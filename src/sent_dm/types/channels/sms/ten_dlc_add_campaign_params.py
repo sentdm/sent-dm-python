@@ -1,0 +1,116 @@
+# File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+
+from __future__ import annotations
+
+from typing import Iterable
+from typing_extensions import Required, Annotated, TypedDict
+
+from ...._utils import PropertyInfo
+from .ten_dlc_campaign_use_case_param import TenDlcCampaignUseCaseParam
+
+__all__ = ["TenDlcAddCampaignParams"]
+
+
+class TenDlcAddCampaignParams(TypedDict, total=False):
+    description: Required[str]
+    """What this programme sends.
+
+    TCR description: what recipients will get and why, in a sentence. The only one
+    of these TCR takes verbatim as a description of the programme, which is why it
+    is asked for rather than derived from the customer's name. Required when
+    `compliance.campaign.inherit != true`.
+    """
+
+    help_keywords: Required[str]
+    """Help keywords.
+
+    TCR helpKeywords, comma separated, e.g. HELP,INFO. Required when
+    `compliance.campaign.inherit != true`.
+    """
+
+    help_message: Required[str]
+    """Help reply.
+
+    TCR helpMessage. Its presence is what sets subscriberHelp. Required when
+    `compliance.campaign.inherit != true`.
+    """
+
+    message_flow: Required[str]
+    """Consent narrative.
+
+    TCR messageFlow: how recipients opt in, in prose. Under 40 characters is
+    refused, and carriers reject vague descriptions — say where opt-in happens, that
+    the box is unchecked by default, and that consent is not a condition of
+    purchase. Required when `compliance.campaign.inherit != true`.
+    """
+
+    opt_in_keywords: Required[str]
+    """Opt-in keywords.
+
+    TCR optinKeywords, comma separated, e.g. START,YES. Required when
+    `compliance.campaign.inherit != true`.
+    """
+
+    opt_in_message: Required[str]
+    """Opt-in confirmation.
+
+    TCR optinMessage. Should state message frequency and that rates may apply. Its
+    presence is what sets subscriberOptin. Required when
+    `compliance.campaign.inherit != true`.
+    """
+
+    opt_out_keywords: Required[str]
+    """Opt-out keywords.
+
+    TCR optoutKeywords, comma separated. STOP, END, CANCEL, UNSUBSCRIBE and QUIT are
+    honoured regardless of what is declared. Required when
+    `compliance.campaign.inherit != true`.
+    """
+
+    opt_out_message: Required[str]
+    """Opt-out confirmation.
+
+    TCR optoutMessage. Its presence is what sets subscriberOptout. Required when
+    `compliance.campaign.inherit != true`.
+    """
+
+    privacy_policy_link: Required[str]
+    """Privacy policy URL.
+
+    TCR privacyPolicyLink. Required when `compliance.campaign.inherit != true`.
+    """
+
+    terms_and_conditions_link: Required[str]
+    """Terms and conditions URL.
+
+    TCR termsAndConditionsLink. Required when `compliance.campaign.inherit != true`.
+    """
+
+    use_cases: Required[Iterable[TenDlcCampaignUseCaseParam]]
+    """Use cases.
+
+    What the campaign sends, and an example of each. One to five entries; how they
+    register is decided by volume, never declared. Required when
+    `compliance.campaign.inherit != true`.
+    """
+
+    volume: Required[str]
+    """Expected monthly volume.
+
+    Required whenever the campaign's fields are written. A whole number of messages,
+    e.g. 1000 or 10000. Decides how the campaign registers and which fee tier
+    applies: below the low-volume threshold it registers as LOW_VOLUME with
+    sub-use-cases, above it as a single use case or MIXED. Omitting it registers the
+    campaign at the higher-fee standard tier. Required when
+    `compliance.campaign.inherit != true`, whenever its block is written.
+    """
+
+    idempotency_key: Required[Annotated[str, PropertyInfo(alias="Idempotency-Key")]]
+
+    sandbox: bool
+    """
+    Sandbox flag - when true, the operation is simulated without side effects Useful
+    for testing integrations without actual execution
+    """
+
+    x_profile_id: Annotated[str, PropertyInfo(alias="x-profile-id")]
