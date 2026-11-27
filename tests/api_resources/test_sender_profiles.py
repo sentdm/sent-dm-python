@@ -31,6 +31,7 @@ class TestSenderProfiles:
     @parametrize
     def test_method_create_with_all_params(self, client: Sent) -> None:
         sender_profile = client.sender_profiles.create(
+            agent_template_id=None,
             billing={"inherit": True},
             channels={
                 "rcs": {
@@ -349,6 +350,7 @@ class TestAsyncSenderProfiles:
     @parametrize
     async def test_method_create_with_all_params(self, async_client: AsyncSent) -> None:
         sender_profile = await async_client.sender_profiles.create(
+            agent_template_id=None,
             billing={"inherit": True},
             channels={
                 "rcs": {
