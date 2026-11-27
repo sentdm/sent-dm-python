@@ -66,6 +66,7 @@ class SenderProfilesResource(SyncAPIResource):
     def create(
         self,
         *,
+        agent_template_id: Optional[str] | Omit = omit,
         billing: Optional[SenderProfileBillingRequestParam] | Omit = omit,
         channels: Optional[SenderProfileChannelsParam] | Omit = omit,
         compliance: MarketComplianceParam | Omit = omit,
@@ -277,6 +278,17 @@ class SenderProfilesResource(SyncAPIResource):
         needs. A carrier approval no API call can trigger is arranged offline, so the
         status reports `PROVISIONING` until it is.
 
+        ## An agent
+
+        `agent_template_id` (optional) names one of your organization's agent templates
+        (`GET /v3/agents/templates`). As soon as the profile exists, a draft agent is
+        made from it on the profile, and the answer's `agent_id` is that agent: give it
+        the profile's numbers and activate it through `/v3/agents` with the profile's
+        `x-profile-id`. The template is checked before the profile is made: one that is
+        not your organization's is a `404`, agents not enabled a `403`, and no profile
+        is made. Should the agent fail once the profile exists, the profile stands and
+        `agent_error` says why; make the agent with `POST /v3/agents` and `template_id`.
+
         ## Responses
 
         `201` when the profile is complete on return — the fully-inherited case, where
@@ -291,6 +303,13 @@ class SenderProfilesResource(SyncAPIResource):
         nothing was created, so retry.
 
         Args:
+          agent_template_id: One of the organization's agent templates (GET /v3/agents/templates with the
+              organization's key) to make an agent from on the new profile as soon as it
+              exists. The agent is a draft with the template's definition; give it the
+              profile's numbers and activate it through /v3/agents with the profile's
+              x-profile-id. Agents must be enabled for the organization. A sender profile's
+              own template cannot be used: it is that profile's alone.
+
           billing: Who pays for what a sender profile sends.
 
               Ownership reads the same way as BrandRequest and CampaignRequest: inherit: true
@@ -347,6 +366,7 @@ class SenderProfilesResource(SyncAPIResource):
             "/v3/sender-profiles",
             body=maybe_transform(
                 {
+                    "agent_template_id": agent_template_id,
                     "billing": billing,
                     "channels": channels,
                     "compliance": compliance,
@@ -660,6 +680,7 @@ class AsyncSenderProfilesResource(AsyncAPIResource):
     async def create(
         self,
         *,
+        agent_template_id: Optional[str] | Omit = omit,
         billing: Optional[SenderProfileBillingRequestParam] | Omit = omit,
         channels: Optional[SenderProfileChannelsParam] | Omit = omit,
         compliance: MarketComplianceParam | Omit = omit,
@@ -871,6 +892,17 @@ class AsyncSenderProfilesResource(AsyncAPIResource):
         needs. A carrier approval no API call can trigger is arranged offline, so the
         status reports `PROVISIONING` until it is.
 
+        ## An agent
+
+        `agent_template_id` (optional) names one of your organization's agent templates
+        (`GET /v3/agents/templates`). As soon as the profile exists, a draft agent is
+        made from it on the profile, and the answer's `agent_id` is that agent: give it
+        the profile's numbers and activate it through `/v3/agents` with the profile's
+        `x-profile-id`. The template is checked before the profile is made: one that is
+        not your organization's is a `404`, agents not enabled a `403`, and no profile
+        is made. Should the agent fail once the profile exists, the profile stands and
+        `agent_error` says why; make the agent with `POST /v3/agents` and `template_id`.
+
         ## Responses
 
         `201` when the profile is complete on return — the fully-inherited case, where
@@ -885,6 +917,13 @@ class AsyncSenderProfilesResource(AsyncAPIResource):
         nothing was created, so retry.
 
         Args:
+          agent_template_id: One of the organization's agent templates (GET /v3/agents/templates with the
+              organization's key) to make an agent from on the new profile as soon as it
+              exists. The agent is a draft with the template's definition; give it the
+              profile's numbers and activate it through /v3/agents with the profile's
+              x-profile-id. Agents must be enabled for the organization. A sender profile's
+              own template cannot be used: it is that profile's alone.
+
           billing: Who pays for what a sender profile sends.
 
               Ownership reads the same way as BrandRequest and CampaignRequest: inherit: true
@@ -941,6 +980,7 @@ class AsyncSenderProfilesResource(AsyncAPIResource):
             "/v3/sender-profiles",
             body=await async_maybe_transform(
                 {
+                    "agent_template_id": agent_template_id,
                     "billing": billing,
                     "channels": channels,
                     "compliance": compliance,

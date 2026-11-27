@@ -24,6 +24,19 @@ class SenderProfile(BaseModel):
 
     id: Optional[str] = None
 
+    agent_error: Optional[str] = None
+    """
+    Why no agent was made from agent_template_id, when the profile was created and
+    the agent could not be: the profile stands, and the agent can be made with POST
+    /v3/agents and template_id.
+    """
+
+    agent_id: Optional[str] = None
+    """The draft agent made from agent_template_id when the profile was created.
+
+    Only on that answer, and left out when none was asked for.
+    """
+
     api_key: Optional[str] = None
     """The API key for this profile.
 
